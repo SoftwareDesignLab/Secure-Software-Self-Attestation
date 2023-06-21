@@ -1,0 +1,21 @@
+<div class="rollable-content">
+  <p *ngIf="hasDescription()"> {{ description }} </p>
+  <ng-container *ngFor="let control of subControls">
+    <app-control 
+      [id]="control.id"
+      [title]="control.title"
+      [class]="control.class"
+      [params]="control.params"
+      [parts]="control.parts"
+      [links]="control.links"
+      [props]="control.props"
+      [controls]="control.controls"
+    ></app-control>
+  </ng-container>
+  <ng-container *ngFor="let part of parts">
+    <!-- TODO -->
+  </ng-container>
+  <ng-container *ngFor="let ex of examples">
+    <!-- TODO -->
+  </ng-container>
+</div>

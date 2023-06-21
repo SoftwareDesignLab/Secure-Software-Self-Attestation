@@ -1,0 +1,24 @@
+.checkbox-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  cursor: pointer;
+  margin-left: 5px;
+  user-select: none; /* Prevents text selection when clicking the label */
+  display: inline-flex;
+  align-items: center;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+

@@ -1,0 +1,13 @@
+<!-- TODO split processing vertically into upload and download sections -->
+<app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
+<app-catalog-info [uuid]="catalogData.uuid" [metadata]="catalogData.metadata"></app-catalog-info>
+<div id="grid-container" class="grid-container">
+  <div id="group-container" class="group-container">
+    <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
+    <app-group *ngFor="let group of catalogData.groups" 
+      [id]="group.id" 
+      [title]="group.title" 
+      [controls]="group.controls"
+    ></app-group>
+  </div>
+</div>

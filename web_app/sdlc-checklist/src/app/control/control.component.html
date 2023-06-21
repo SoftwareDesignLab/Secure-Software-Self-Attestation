@@ -1,0 +1,13 @@
+<div class="checkbox-item">
+  <div class="checkbox-container">
+    <input type="checkbox" [id]="'checkbox-' + id">
+    <label class="checkbox-label" (click)="toggleRollable()">
+      {{ id }}: {{ title }}
+    </label>
+  </div>
+  <app-rollable *ngIf="showRollable"
+    [description]="getDescription()"
+    [examples]="getExamples()"
+    [subControls]="controls"
+  ></app-rollable>
+</div>

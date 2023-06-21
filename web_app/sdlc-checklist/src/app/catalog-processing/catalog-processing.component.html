@@ -1,0 +1,20 @@
+<div class="file-upload">
+    <input
+      type="file"
+      id="file"
+      (change)="onFileSelected($event)"
+      [attr.accept]="accept"
+      #fileInput
+      hidden
+    />
+    <button (click)="fileInput.click()" class="upload-button">
+      Upload JSON File
+    </button>
+    <div
+      class="drag-drop-area"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)"
+    >
+      <p>Or drag and drop JSON file here</p>
+    </div>
+  </div>
