@@ -44,13 +44,11 @@ export class CatalogProcessingComponent {
 
   private validOscal(info: object): boolean{
     let isValid : boolean = true;
-    let test = info as Oscal;
-
-    if (test.metadata == undefined){
+    let oscalObj = Object.assign(new Oscal(), info);
+    if(!oscalObj.Check_metaData()){
       isValid = false;
-      console.log('metaData not found')
     }
-    if (test.uuid == undefined){
+    if (oscalObj.uuid == undefined){
       isValid = false;
       console.log('uid not found');
     }
