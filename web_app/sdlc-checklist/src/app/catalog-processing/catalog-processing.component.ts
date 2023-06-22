@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-
+import { Oscal } from '../oscalModel';
 @Component({
   selector: 'app-catalog-processing',
   templateUrl: './catalog-processing.component.html',
@@ -42,11 +42,33 @@ export class CatalogProcessingComponent {
     return file.type === 'application/json' || file.name.endsWith('.json');
   }
 
+  private validOscal(info: object): boolean{
+    let isValid : boolean = true;
+    let test = info as Oscal;
+
+    if (test.metadata == undefined){
+      isValid = false;
+      console.log('metaData not found')
+    }
+    if (test.uuid == undefined){
+      isValid = false;
+      console.log('uid not found');
+    }
+    if (!isValid){ 
+      alert('Given json file is not a valid Oscal file');
+    }
+    return isValid;
+  }
+
+
   private handleFile(file: File): void {
     const reader = new FileReader();
     reader.onload = () => {
       const json = JSON.parse(reader.result as string);
-      this.fileSelected.emit(json);
+      
+      if(this.validOscal(json)){
+        this.fileSelected.emit(json);
+      }
     };
     reader.readAsText(file);
   }
