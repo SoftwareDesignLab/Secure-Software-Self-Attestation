@@ -42,6 +42,13 @@ export class CatalogProcessingComponent {
     return file.type === 'application/json' || file.name.endsWith('.json');
   }
 
+
+  /**
+   * Checks if the provided JSON file is a valid OSCAL control catalog
+   * 
+   * @param info The json object that was recieved
+   * @returns boolean whether it a valid OSCAL or not
+   */
   private isValidOscal(info: object): boolean{
     let isValid : boolean = true;
     let oscalObj = info as Oscal;
@@ -92,7 +99,7 @@ export class CatalogProcessingComponent {
     const reader = new FileReader();
     reader.onload = () => {
       const json = JSON.parse(reader.result as string);
-      //quality checks OSCAL file
+      // quality checks OSCAL file
       if(this.isValidOscal(json)){
         this.fileSelected.emit(json);
       }
