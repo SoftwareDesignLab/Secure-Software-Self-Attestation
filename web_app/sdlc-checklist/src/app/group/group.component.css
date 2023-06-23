@@ -1,3 +1,9 @@
 h1 {
     cursor: pointer;
 }
+h1::after {
+    content: " ▲"
+}
+h1.expanded::after {
+    content: " ▼"
+}
