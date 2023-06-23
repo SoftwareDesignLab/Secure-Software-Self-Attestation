@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Oscal } from '../oscalModel';
+import { Oscal, metaData } from '../oscalModel';
 @Component({
   selector: 'app-catalog-processing',
   templateUrl: './catalog-processing.component.html',
@@ -42,24 +42,48 @@ export class CatalogProcessingComponent {
     return file.type === 'application/json' || file.name.endsWith('.json');
   }
 
-  private validOscal(info: object): boolean{
+  private isValidOscal(info: object): boolean{
     let isValid : boolean = true;
-    let oscalObj = Object.assign(new Oscal(), info);
-    if(!oscalObj.Check_metaData()){
-      isValid = false;
-    }
+    let oscalObj = info as Oscal;
     if (oscalObj.uuid == undefined){
       isValid = false;
       console.log('uid not found');
     }
+    if(oscalObj.metadata != undefined){
+      let metaData = oscalObj.metadata as metaData;
+      if(metaData.title == undefined){
+        isValid = false;
+        console.log("Missing MetaData: title ")
+      }
+      if(metaData.last_modified == undefined){
+          isValid = false;
+          console.log("Missing MetaData: last_modified ")
+      }
+      if(metaData.version == undefined){
+          isValid = false;
+          console.log("Missing MetaData: version ")
+      }
+      if(metaData.oscal_version == undefined){
+          isValid = false;
+          console.log("Missing MetaData: oscal_version ")
+      }
+      if(metaData.published == undefined){
+          isValid = false;
+          console.log("Missing MetaData: published ")
+      }
+    }
+    else{
+      isValid = false;
+      console.log("Missing MetaData");
+    }
     if (!isValid){ 
       alert('Given json file is not a valid OSCAL file');
     }
-    else if (oscalObj.groups == undefined){
+    else if (oscalObj.groups == undefined || oscalObj.groups.length==0){
       alert('Given OSCAL file has no controls')
+      console.log("No Controls Present")
       return false;
     }
-    
     return isValid;
   }
 
@@ -68,8 +92,8 @@ export class CatalogProcessingComponent {
     const reader = new FileReader();
     reader.onload = () => {
       const json = JSON.parse(reader.result as string);
-      
-      if(this.validOscal(json)){
+      //quality checks OSCAL file
+      if(this.isValidOscal(json)){
         this.fileSelected.emit(json);
       }
     };
