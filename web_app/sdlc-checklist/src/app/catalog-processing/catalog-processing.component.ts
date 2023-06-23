@@ -53,8 +53,13 @@ export class CatalogProcessingComponent {
       console.log('uid not found');
     }
     if (!isValid){ 
-      alert('Given json file is not a valid Oscal file');
+      alert('Given json file is not a valid OSCAL file');
     }
+    else if (oscalObj.groups == undefined){
+      alert('Given OSCAL file has no controls')
+      return false;
+    }
+    
     return isValid;
   }
 

@@ -1,7 +1,9 @@
+import {GroupComponent} from './group/group.component'
+
 export class Oscal {
     uuid?: String;
     metadata: metaData;
-    groups?: Array<any>;
+    groups?: Array<GroupComponent>;
 
     constructor(){
         this.metadata = new metaData();
