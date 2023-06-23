@@ -50,11 +50,20 @@ export class CatalogProcessingComponent {
    * @returns boolean whether it a valid OSCAL or not
    */
   private isValidOscal(info: object): boolean{
-    let isValid : boolean = true;
+    let isValid : boolean = false;
     let oscalObj = info as Oscal;
-    if (oscalObj.uuid == undefined){
-      isValid = false;
-      console.log('uid not found');
+    var regex = /\w+-uuid\b/;
+    if(oscalObj.uuid!= undefined){
+      isValid = true;
+    } else {
+      for (const key in oscalObj){
+        if (regex.test(key)){
+          isValid = true;
+        }
+      }
+    }
+    if(!isValid){
+      console.log("Missing uuid")
     }
     if(oscalObj.metadata != undefined){
       let metaData = oscalObj.metadata as metaData;
@@ -84,7 +93,7 @@ export class CatalogProcessingComponent {
       console.log("Missing MetaData");
     }
     if (!isValid){ 
-      alert('Given json file is not a valid OSCAL file');
+      alert('Given json file is not a valid OSCAL Catalog');
     }
     else if (oscalObj.groups == undefined || oscalObj.groups.length==0){
       alert('Given OSCAL file has no controls')

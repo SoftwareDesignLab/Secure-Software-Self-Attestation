@@ -3,7 +3,7 @@ import {GroupComponent} from './group/group.component'
 
     export interface metaData {
         title: String;
-        last_modified: String;
+        last_modified: Date;
         version: String;
         oscal_version: String;
         published?: String;
