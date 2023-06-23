@@ -1,5 +1,5 @@
 <div class="group">
-    <h1 (click)="toggleComponents">{{ id }}: {{ title }}</h1>
+    <h1 (click)="toggleComponents()">{{ id }}: {{ title }}</h1>
     <div class="group-rollable-content" *ngIf="showComponents">
         <p *ngIf="description">{{ description }}</p>
         <div id="checkbox-container" class="checkbox-container">
