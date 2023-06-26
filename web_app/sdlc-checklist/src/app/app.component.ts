@@ -16,11 +16,8 @@ export class AppComponent {
   }
 
   setAllGroupExpansion(toSet: boolean): void {
-    for(let i = this.childComponents.length - 1; i >= 0; i--) {
-      let child = this.childComponents.get(i);
-      if (child instanceof GroupComponent) {
-        child.showComponents = toSet;
-      }
-    }
+    this.childComponents.forEach((child) => {
+      child.showComponents = toSet;
+    });
   }
 }
