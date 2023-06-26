@@ -9,6 +9,6 @@ export class AppComponent {
   catalogData: any;
   
   onFileSelected(jsonData: any): void {
-    this.catalogData = jsonData;
+    this.catalogData = jsonData.catalog;
   }
 }

@@ -73,8 +73,6 @@ export class CatalogProcessingComponent {
     }
     if(catalog.metadata != undefined){
       let metaData = catalog.metadata as metaData;
-      const lastModified = 'metaData.last-modified';
-      const oscalVersion = 'oscal-version';
       if(metaData.title == undefined){
         isValid = false;
         console.log("Missing MetaData: title ")
