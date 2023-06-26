@@ -17,7 +17,7 @@ export class AppComponent {
 
   setAllGroupExpansion(toSet: boolean): void {
     this.childComponents.forEach((child) => {
-      child.showComponents = toSet;
+      child.setComponents(toSet);
     });
   }
 }

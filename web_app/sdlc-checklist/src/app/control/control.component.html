@@ -5,9 +5,17 @@
       {{ id }}: {{ title }}
     </label>
   </div>
-  <app-rollable *ngIf="showRollable"
-    [description]="getDescription()"
-    [examples]="getExamples()"
-    [subControls]="controls"
-  ></app-rollable>
+  <div [className]="showRollable ? 'examples-container' : 'examples-container hidden'">
+    <h3>Examples</h3>
+    <ul>
+      <li class="example" *ngFor="let example of parts">{{example.title}}</li>
+    </ul>
+  </div>
 </div>
+
+
+  <!--<app-rollable *ngIf="showRollable"
+    [description]="getDescription()"
+    [examples]="'getExamples()"
+    [subControls]="controls"
+  ></app-rollable>-->
