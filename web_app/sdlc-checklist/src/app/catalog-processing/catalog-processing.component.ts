@@ -53,7 +53,13 @@ export class CatalogProcessingComponent {
     let isValid : boolean = false;
     let oscalObj = info as Oscal;
     var regex = /\w+-uuid\b/;
-    if(oscalObj.uuid!= undefined){
+    if(oscalObj.catalog == undefined){
+      console.log("Not an OSCAL Catolog");
+      alert("Given JSON file is not a OSCAL Catalog");
+      return false;
+    }
+    let catalog = oscalObj.catalog;
+    if(catalog.uuid!= undefined){
       isValid = true;
     } else {
       for (const key in oscalObj){
@@ -65,27 +71,25 @@ export class CatalogProcessingComponent {
     if(!isValid){
       console.log("Missing uuid")
     }
-    if(oscalObj.metadata != undefined){
-      let metaData = oscalObj.metadata as metaData;
+    if(catalog.metadata != undefined){
+      let metaData = catalog.metadata as metaData;
+      const lastModified = 'metaData.last-modified';
+      const oscalVersion = 'oscal-version';
       if(metaData.title == undefined){
         isValid = false;
         console.log("Missing MetaData: title ")
       }
-      if(metaData.last_modified == undefined){
+      if(metaData['last-modified']== undefined){
           isValid = false;
-          console.log("Missing MetaData: last_modified ")
+          console.log("Missing MetaData: last-modified ")
       }
       if(metaData.version == undefined){
           isValid = false;
           console.log("Missing MetaData: version ")
       }
-      if(metaData.oscal_version == undefined){
+      if(metaData['oscal-version'] == undefined){
           isValid = false;
-          console.log("Missing MetaData: oscal_version ")
-      }
-      if(metaData.published == undefined){
-          isValid = false;
-          console.log("Missing MetaData: published ")
+          console.log("Missing MetaData: oscal-version ")
       }
     }
     else{
@@ -95,7 +99,7 @@ export class CatalogProcessingComponent {
     if (!isValid){ 
       alert('Given json file is not a valid OSCAL Catalog');
     }
-    else if (oscalObj.groups == undefined || oscalObj.groups.length==0){
+    else if (catalog.groups == undefined || catalog.groups.length==0){
       alert('Given OSCAL file has no controls')
       console.log("No Controls Present")
       return false;

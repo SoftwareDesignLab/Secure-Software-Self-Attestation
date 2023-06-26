@@ -1,13 +1,15 @@
 {
-    "uuid": "b22e3eaf-bab6-4244-8f78-de7a7a5f548c",
-    "random": 12,
-    "group": [
-        {
-            "id": "EX",
-            "title": "Example Group",
-            "description": "Example what a group is",
-            "controls": []
-        }
-    ]
-    
+    "catalog": {
+        "uuid": "b22e3eaf-bab6-4244-8f78-de7a7a5f548c",
+        "random": 12,
+        "group": [
+            {
+                "id": "EX",
+                "title": "Example Group",
+                "description": "Example what a group is",
+                "controls": []
+            }
+        ]
+        
+    }
 }
