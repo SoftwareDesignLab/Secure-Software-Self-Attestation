@@ -1,6 +1,6 @@
 <div class="group">
-    <h1 (click)="toggleComponents()" [className]="showComponents ? 'expanded' : ''">{{ id }}: {{ title }}</h1>
-    <div class="group-rollable-content" *ngIf="showComponents">
+    <h1 (click)="toggleComponents()" [className]="showComponents ? 'appendDownArrow' : 'appendUpArrow'">{{ id }}: {{ title }}</h1>
+    <div [className]="showComponents ? 'group-rollable-content' : 'group-rollable-content hidden'">
         <p *ngIf="description">{{ description }}</p>
         <div id="checkbox-container" class="checkbox-container">
             <app-control *ngFor="let item of controls" 

@@ -1,9 +1,13 @@
 h1 {
     cursor: pointer;
+    user-select: none;
 }
-h1::after {
+.appendUpArrow::after {
     content: " ▲"
 }
-h1.expanded::after {
+.appendDownArrow::after {
     content: " ▼"
+}
+.hidden {
+    display: none;
 }

@@ -3,6 +3,8 @@
 <app-catalog-info [uuid]="catalogData.uuid" [metadata]="catalogData.metadata"></app-catalog-info>
 <div id="grid-container" class="grid-container">
   <div id="group-container" class="group-container">
+    <button (click)="setAllGroupExpansion(false)">Collapse All</button>
+    <button (click)="setAllGroupExpansion(true)">Expand All</button>
     <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
     <app-group *ngFor="let group of catalogData.groups" 
       [id]="group.id" 
