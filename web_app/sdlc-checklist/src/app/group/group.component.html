@@ -1,5 +1,5 @@
-<div class="group">
-    <h1 (click)="toggleComponents()" [className]="showComponents ? 'appendDownArrow' : 'appendUpArrow'">{{ id }}: {{ title }}</h1>
+<section class="group">
+    <h2 (click)="toggleComponents()" [className]="showComponents ? 'appendDownArrow' : 'appendUpArrow'">{{ id }}: {{ title }}</h2>
     <div [className]="showComponents ? 'group-rollable-content' : 'group-rollable-content hidden'">
         <p *ngIf="description">{{ description }}</p>
         <div id="checkbox-container" class="checkbox-container">
@@ -15,4 +15,4 @@
             ></app-control>
         </div>
     </div>
-</div>
+</section>

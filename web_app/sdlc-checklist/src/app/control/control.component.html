@@ -5,11 +5,13 @@
       {{ id }}: {{ title }}
     </label>
   </div>
-  <div [className]="showRollable ? 'examples-container' : 'examples-container hidden'">
-    <h3>Examples</h3>
-    <ul>
-      <li class="example" *ngFor="let example of parts">{{example.title}}</li>
-    </ul>
+  <div [className]="showRollable ? 'rollable-div' : 'rollable-div hidden'" >
+    <section class="examples-section" *ngIf="getExamples().length">
+      <h3>Examples</h3>
+      <ul>
+        <li class="example" *ngFor="let example of getExamples()">{{example.title}}</li>
+      </ul>
+    </section>
   </div>
 </div>
 
