@@ -22,19 +22,6 @@ input[type="checkbox"] {
     margin-right: 5px;
 }
 
-.hidden {
-  display: none;
-}
-
-.example {
-  margin: .1em 3em .3 3em;
-  color: rgb(48, 48, 48);
-}
-
-h3 {
-  margin: .1em 1.5em;
-}
-
-ul {
-  margin: 0;
+.checkbox-label:hover {
+  text-decoration: underline;
 }

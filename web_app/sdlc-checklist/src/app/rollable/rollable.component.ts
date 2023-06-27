@@ -9,7 +9,6 @@ export class RollableComponent {
   @Input() description: any;
   @Input() examples: any;
   @Input() subControls: any;
-  @Input() parts: any;
 
   hasDescription(): boolean {
     return this.description !== undefined;
@@ -21,9 +20,5 @@ export class RollableComponent {
 
   hasSubControls(): boolean {
     return this.subControls !== undefined;
-  }
-
-  hasParts(): boolean {
-    return this.parts !== undefined;
   }
 }
