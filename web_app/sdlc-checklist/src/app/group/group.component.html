@@ -1,5 +1,11 @@
 <section class="group">
-    <h2 (click)="toggleComponents()" [className]="showComponents ? 'appendDownArrow' : 'appendUpArrow'">{{ id }}: {{ title }}</h2>
+    <div class="button-div" *ngIf="showComponents">
+        <button (click)="setAllChildren(true)" *ngIf="!areAllChecked()">Check All</button>
+        <button (click)="setAllChildren(false)" *ngIf="areAllChecked()">Uncheck All</button>
+    </div>
+    <h2 (click)="toggleComponents()" [className]="showComponents ? 'appendDownArrow' : 'appendUpArrow'">
+        {{ id }}: {{ title }}
+    </h2>
     <div [className]="showComponents ? 'group-rollable-content' : 'group-rollable-content hidden'">
         <p *ngIf="description">{{ description }}</p>
         <div id="checkbox-container" class="checkbox-container">

@@ -11,3 +11,6 @@ h2 {
 .hidden {
     display: none;
 }
+button {
+    float: right;
+}
