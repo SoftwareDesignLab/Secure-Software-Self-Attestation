@@ -52,18 +52,22 @@ export class CatalogProcessingComponent {
   private isValidOscal(info: object): boolean{
     let isValid : boolean = false;
     let oscalObj = info as Oscal;
-    var regex = /\w+-uuid\b/;
+    var UIDkey= /\w+-uuid\b/;
     if(oscalObj.catalog == undefined){
       console.log("Not an OSCAL Catolog");
       alert("Given JSON file is not a OSCAL Catalog");
       return false;
     }
     let catalog = oscalObj.catalog;
+    
+
     if(catalog.uuid!= undefined){
       isValid = true;
     } else {
       for (const key in oscalObj){
-        if (regex.test(key)){
+        if (UIDkey.test(key)){
+          var  UIDpattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/;
+          if(UIDpattern.test(catalog[key]))
           isValid = true;
         }
       }
