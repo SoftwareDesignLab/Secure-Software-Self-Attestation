@@ -10,7 +10,7 @@ import {GroupComponent} from './group/group.component'
     export interface metaData {
         title: string;
         published: string;
-        "last-modified": Date;
+        "last-modified": string;
         version: string;
         "oscal-version": string;
         revisions: any

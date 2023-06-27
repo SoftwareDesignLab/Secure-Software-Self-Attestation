@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Oscal, metaData } from '../oscalModel';
+import { Oscal, metaData, catalog } from '../oscalModel';
 @Component({
   selector: 'app-catalog-processing',
   templateUrl: './catalog-processing.component.html',
@@ -44,54 +44,55 @@ export class CatalogProcessingComponent {
 
 
   /**
-   * Checks if the provided JSON file is a valid OSCAL control catalog
+   * Checks if the provided JSON file is a valid OSCAL catalog and if it has an extra nest
+   * object
    * 
    * @param info The json object that was recieved
-   * @returns boolean whether it a valid OSCAL or not
+   * @returns returns 0 for fail, 1 for success and 2 for nested and succeeded
    */
-  private isValidOscal(info: object): boolean{
+  private isValidCatalog(info: object): number{
     let isValid : boolean = false;
     let oscalObj = info as Oscal;
-    var UIDkey= /\w+-uuid\b/;
-    if(oscalObj.catalog == undefined){
-      console.log("Not an OSCAL Catolog");
-      alert("Given JSON file is not a OSCAL Catalog");
-      return false;
+    let catalog = info as catalog;
+    var Nested = false;
+    if(oscalObj.catalog != undefined){
+        catalog = oscalObj.catalog;
+        Nested = true;
     }
-    let catalog = oscalObj.catalog;
-    
-
     if(catalog.uuid!= undefined){
+      var UIDpattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/
+      if(UIDpattern.test(catalog.uuid)){
       isValid = true;
+      }
     } else {
-      for (const key in oscalObj){
+      var UIDkey= /\w+-uuid\b/;
+      for (const key in catalog){
         if (UIDkey.test(key)){
-          var  UIDpattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/;
-          if(UIDpattern.test(catalog[key]))
           isValid = true;
         }
       }
     }
     if(!isValid){
-      console.log("Missing uuid")
+      console.log("Missing/invalid uuid")
     }
+   
     if(catalog.metadata != undefined){
       let metaData = catalog.metadata as metaData;
       if(metaData.title == undefined){
         isValid = false;
-        console.log("Missing MetaData: title ")
+        console.log("Missing MetaData: title ");
       }
       if(metaData['last-modified']== undefined){
           isValid = false;
-          console.log("Missing MetaData: last-modified ")
+          console.log("Missing MetaData: last-modified ");
       }
       if(metaData.version == undefined){
           isValid = false;
-          console.log("Missing MetaData: version ")
+          console.log("Missing MetaData: version ");
       }
       if(metaData['oscal-version'] == undefined){
           isValid = false;
-          console.log("Missing MetaData: oscal-version ")
+          console.log("Missing MetaData: oscal-version ");
       }
     }
     else{
@@ -104,9 +105,15 @@ export class CatalogProcessingComponent {
     else if (catalog.groups == undefined || catalog.groups.length==0){
       alert('Given OSCAL file has no controls')
       console.log("No Controls Present")
-      return false;
+      return 0;
     }
-    return isValid;
+    if (isValid && Nested){
+      return 2;
+
+    } else if (isValid){
+      return 1
+    }
+    return 0;
   }
 
 
@@ -115,8 +122,11 @@ export class CatalogProcessingComponent {
     reader.onload = () => {
       const json = JSON.parse(reader.result as string);
       // quality checks OSCAL file
-      if(this.isValidOscal(json)){
+      if(this.isValidCatalog(json) == 1){
         this.fileSelected.emit(json);
+      }
+      else if (this.isValidCatalog(json)== 2){
+        this.fileSelected.emit(json.catalog);
       }
     };
     reader.readAsText(file);
