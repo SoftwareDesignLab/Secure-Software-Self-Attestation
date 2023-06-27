@@ -73,9 +73,8 @@ export class CatalogProcessingComponent {
       }
     }
     if(!isValid){
-      console.log("Missing/invalid uuid")
+      console.log("Missing/invalid uuid");
     }
-   
     if(catalog.metadata != undefined){
       let metaData = catalog.metadata as metaData;
       if(metaData.title == undefined){
@@ -99,20 +98,13 @@ export class CatalogProcessingComponent {
       isValid = false;
       console.log("Missing MetaData");
     }
-    if (!isValid){ 
-      alert('Given json file is not a valid OSCAL Catalog');
-    }
-    else if (catalog.groups == undefined || catalog.groups.length==0){
-      alert('Given OSCAL file has no controls')
-      console.log("No Controls Present")
-      return 0;
-    }
     if (isValid && Nested){
       return 2;
 
     } else if (isValid){
-      return 1
+      return 1;
     }
+    alert('Given json file is not a valid OSCAL Catalog');
     return 0;
   }
 
@@ -122,10 +114,11 @@ export class CatalogProcessingComponent {
     reader.onload = () => {
       const json = JSON.parse(reader.result as string);
       // quality checks OSCAL file
-      if(this.isValidCatalog(json) == 1){
+      var output = this.isValidCatalog(json);
+      if(output == 1){
         this.fileSelected.emit(json);
       }
-      else if (this.isValidCatalog(json)== 2){
+      else if (output == 2){
         this.fileSelected.emit(json.catalog);
       }
     };

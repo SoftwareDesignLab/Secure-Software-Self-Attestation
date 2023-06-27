@@ -3,7 +3,7 @@ import {GroupComponent} from './group/group.component'
 
 
     export interface Oscal {
-        catalog: catalog
+        catalog: catalog;
     }
 
 
@@ -14,10 +14,10 @@ import {GroupComponent} from './group/group.component'
         version: string;
         "oscal-version": string;
         revisions: any
-        "document-ids": any
+        "document-ids": any;
         props: any;
-        links: any
-        roles: any
+        links: any;
+        roles: any;
         locations: any;
         parties: party[];
         "responsible-parties": any;
@@ -31,7 +31,7 @@ import {GroupComponent} from './group/group.component'
         groups: GroupComponent[];
         controls: control[];
         "back-matter": any;
-        params: any
+        params: any;
         
     }
 
