@@ -115,7 +115,7 @@ export class CatalogProcessingComponent {
       const catalog = this.isNested(json) ? json.catalog : json;
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
-        this.fileSelected.emit(json);
+        this.fileSelected.emit(catalog);
       }
       else{
         this.fileSelected.emit(json.catalog);
