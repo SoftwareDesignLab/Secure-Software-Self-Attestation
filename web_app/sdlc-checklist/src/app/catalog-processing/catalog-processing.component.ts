@@ -1,5 +1,13 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Oscal, metaData, catalog } from '../oscalModel';
+import { ErrorHandlerService } from '../error-handler.service';
+
+enum processingErrors{
+  Valid = 0,
+  WrongFileType = 1,
+  notCatalog = 2
+}
+
 @Component({
   selector: 'app-catalog-processing',
   templateUrl: './catalog-processing.component.html',
@@ -9,9 +17,27 @@ export class CatalogProcessingComponent {
   @Input() accept = '.json';
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
+  Error: processingErrors = processingErrors.Valid;
+  //issue: processingErrors = processingErrors.Valid;
 
-  onFileSelected(event: Event): void {
+  
+
+
+  constructor(private  errorService: ErrorHandlerService) {
+
+    this.errorService.hasIssue.subscribe( value => {
+        this.Error = value;
+    });
+}
+
+  public get processingErrors(): typeof processingErrors {
+    return processingErrors; 
+  }
+  //   <app-error-pop-up *ngIf="Error==processingErrors.notCatalog"></app-error-pop-up>
+
+  onFileSelected(event: Event): processingErrors {
     const file = (event.target as HTMLInputElement).files?.[0];
+    this.errorService.hasIssue.next(processingErrors.Valid);
     if (file && this.isJsonFile(file)) {
       // Process the JSON file
       //TODO verify that the file is an OSCAL Catalog
@@ -19,7 +45,9 @@ export class CatalogProcessingComponent {
       console.log('File selected:', file);
     } else {
       alert('Please upload an OSCAL Catalog JSON file.');
+      this.errorService.hasIssue.next(processingErrors.WrongFileType);
     }
+    return this.Error;
   }
 
   onDragOver(event: DragEvent): void {
@@ -116,6 +144,9 @@ export class CatalogProcessingComponent {
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
         this.fileSelected.emit(catalog);
+      }
+      else{
+        this.errorService.hasIssue.next(processingErrors.notCatalog);
       }
     };
     reader.readAsText(file);
