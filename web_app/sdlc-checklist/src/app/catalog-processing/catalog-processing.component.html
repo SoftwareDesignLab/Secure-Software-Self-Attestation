@@ -8,13 +8,13 @@
       hidden
     />
     <button (click)="fileInput.click()" class="upload-button">
-      Upload JSON File
+      Upload Another Catalog
     </button>
     <div
       class="drag-drop-area"
       (dragover)="onDragOver($event)"
       (drop)="onDrop($event)"
     >
-      <p>Or drag and drop JSON file here</p>
+      <p>Must be JSON formatted as an OSCAL Catalog Model</p>
     </div>
   </div>
