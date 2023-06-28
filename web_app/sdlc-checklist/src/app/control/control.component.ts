@@ -47,4 +47,7 @@ export class ChecklistItemComponent {
   toggleCheck(){
     this.isChecked = !this.isChecked;
   }
+  getCheck(){
+    return this.isChecked;
+  }
 }

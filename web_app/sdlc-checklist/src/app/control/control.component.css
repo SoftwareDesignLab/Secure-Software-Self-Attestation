@@ -25,3 +25,7 @@ input[type="checkbox"] {
 .checkbox-label:hover {
   text-decoration: underline;
 }
+
+input[name="explanation"] {
+  width: 300px;
+}
