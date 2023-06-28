@@ -117,9 +117,6 @@ export class CatalogProcessingComponent {
       if(this.isValidCatalog(catalog)){
         this.fileSelected.emit(catalog);
       }
-      else{
-        this.fileSelected.emit(json.catalog);
-      }
     };
     reader.readAsText(file);
   }
