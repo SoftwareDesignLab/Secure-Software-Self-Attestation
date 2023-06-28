@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   catalogData: any;
+  control: string = "Ungrouped Controls";
   
   onFileSelected(jsonData: any): void {
     this.catalogData = jsonData;
