@@ -53,6 +53,5 @@ export class ChecklistItemComponent {
   }
   onKey(event: any) { // without type info
     this.userComment = event.target.value;
-    console.log(this.userComment);
   }
 }
