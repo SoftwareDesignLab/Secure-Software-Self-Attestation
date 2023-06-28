@@ -1,0 +1,149 @@
+{
+    "catalog": {
+        "uuid": "d152b49c-39b4-4765-a961-75051dcf2293",
+        "metadata": {
+            "title": "Secure Software Development Attestation Form Requirements",
+            "last-modified": "2023-06-26T02:54:38Z",
+            "version": "1.0.0",
+            "oscal-version": "1.0.4",
+            "published": "2023-06-26T02:54:38Z"
+        },
+        "groups": [
+            {
+                "id": "4e(i)",
+                "title": "The software was developed and built in secure environments",
+                "controls": [
+                    {
+                        "id": "4e(i)(A)",
+                        "title": "Separate and protect each environment involved in developing and building software",
+                        "props": [
+                            {
+                                "name": "NIST SSDF Reference",
+                                "value": "PO.5.1",
+                                "class": "References"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "4e(i)(B)",
+                        "title": "Regularly logging, monitoring, and auditing trust relationships used for authorization and access to any software development and build environments, andamong components within each environment",
+                        "props": [
+                            {
+                                "name": "NIST SSDF Reference",
+                                "value": "PO.5.1",
+                                "class": "References"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "4e(i)(C)",
+                        "title": "Enforcing multi-factor authentication and conditional access across the environments relevant to developing and building software in a manner that minimizes security risk",
+                        "props": [
+                            {
+                                "name": "NIST SSDF Reference",
+                                "value": "PO.5.1, PO.5.2",
+                                "class": "References"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "4e(i)(D)",
+                        "title": "Taking consistent and reasonable steps to document, as well as minimize use or inclusion of software products that create undue risk, within the environments used to develop and build software",
+                        "props": [
+                            {
+                                "name": "NIST SSDF Reference",
+                                "value": "PO.5.1",
+                                "class": "References"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "4e(i)(E)",
+                        "title": "Encrypting sensitive data, such as credentials, to the extent practicable and based on risk",
+                        "props": [
+                            {
+                                "name": "NIST SSDF Reference",
+                                "value": "PO.5.2",
+                                "class": "References"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "4e(i)(F)",
+                        "title": "Implementing defensive cyber security practices, including continuous monitoring of operations and alerts and, as necessary, responding to suspected and confirmed cyber incidents",
+                        "props": [
+                            {
+                                "name": "NIST SSDF Reference",
+                                "value": "PO.3.2, PO.3.3, PO.5.1, PO.5.2",
+                                "class": "References"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "4e(iii)",
+                "title": "The software producer has made a good-faith effort to maintain trusted source code supply chains by:",
+                "controls": [
+                    {
+                        "id": "4e(iii)(a)",
+                        "title": "Employing automated tools or comparable processes"
+                    },
+                    {
+                        "id": "4e(iii)(b)",
+                        "title": "Establishing a process that includes reasonable steps to address the security of third-party components and manage related vulnerabilities"
+                    }
+                ],
+                "props": [
+                    {
+                        "name": "NIST SSDF Reference",
+                        "value": "PO 1.1, PO.3.1, PO.3.2, PO.5.1, PO.5.2, PS.1.1, PS.2.1, PS.3.1, PW.4.1, PW.4.4, PW 7.1, PW 8.1, RV 1.1",
+                        "class": "References"
+                    }
+                ]
+            },
+            {
+                "id": "4e(iv)",
+                "title": "The software producer employed automated tools or comparable processes that check for security vulnerabilitie",
+                "controls": [
+                    {
+                        "id": "4e(iv)(a)",
+                        "title": "The software producer ensured these processes operate on an ongoing basis and, at a minimum, prior to product, version, or update releases"
+                    },
+                    {
+                        "id": "4e(iv)(b)",
+                        "title": "The software producer has a policy or process to address discovered security vulnerabilities prior to product release"
+                    },
+                    {
+                        "id": "4e(iv)(c)",
+                        "title": "The software producer operates a vulnerability disclosure program and accepts, reviews, and addresses disclosed software vulnerabilities in a timely fashion"
+                    }
+                ],
+                "props": [
+                    {
+                        "name": "NIST SSDF Reference",
+                        "value": "PO.4.1, PO.4.2, PS.1.1, PW.2.1, PW.4.4, PW.5.1, PW.6.1, PW.6.2, PW.7.1, PW.7.2, PW.8.2, PW.9.1, PW.9.2,RV.1.1, RV.1.2, RV.1.3, RV.2.1, RV.2.2, RV.3.3",
+                        "class": "References"
+                    }
+                ]
+            },
+            {
+                "id": "4e(vi)",
+                "title": "Provenance data maintenance",
+                "controls": [
+                    {
+                        "id": "4e(vi)",
+                        "title": "The software producer maintains provenance data for internal and third-party code incorporated into the software"
+                    }
+                ],
+                "props": [
+                    {
+                        "name": "NIST SSDF Reference",
+                        "value": "PO.1.3, PO.3.2, PO.5.1, PO.5.2, PS.3.1, PS.3.2, PW.4.1, PW.4.4, RV.1.1, RV.1.2",
+                        "class": "References"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -10,6 +10,7 @@ export class AppComponent {
   catalogData: any;
   showComponentsArray: any;
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
+  control: string = "Ungrouped Controls";
   
   onFileSelected(jsonData: any): void {
     this.catalogData = jsonData;
