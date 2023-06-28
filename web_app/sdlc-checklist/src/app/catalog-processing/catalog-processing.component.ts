@@ -42,23 +42,25 @@ export class CatalogProcessingComponent {
     return file.type === 'application/json' || file.name.endsWith('.json');
   }
 
+  private isNested(data: object): boolean{
+    let oscalObj = data as Oscal;
+    if(oscalObj.catalog != undefined){
+        return true;
+    }
+    return false;
+  }
+
 
   /**
    * Checks if the provided JSON file is a valid OSCAL catalog and if it has an extra nest
    * object
    * 
-   * @param info The json object that was recieved
+   * @param data The json object that was recieved
    * @returns returns 0 for fail, 1 for success and 2 for nested and succeeded
    */
-  private isValidCatalog(info: object): number{
+  private isValidCatalog(data: object): boolean{
     let isValid : boolean = false;
-    let oscalObj = info as Oscal;
-    let catalog = info as catalog;
-    var Nested = false;
-    if(oscalObj.catalog != undefined){
-        catalog = oscalObj.catalog;
-        Nested = true;
-    }
+    let catalog = data as catalog;
     if(catalog.uuid!= undefined){
       var UIDpattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/
       if(UIDpattern.test(catalog.uuid)){
@@ -98,14 +100,11 @@ export class CatalogProcessingComponent {
       isValid = false;
       console.log("Missing MetaData");
     }
-    if (isValid && Nested){
-      return 2;
-
-    } else if (isValid){
-      return 1;
+    if (isValid){
+      return true;
     }
     alert('Given json file is not a valid OSCAL Catalog');
-    return 0;
+    return false;
   }
 
 
@@ -113,12 +112,12 @@ export class CatalogProcessingComponent {
     const reader = new FileReader();
     reader.onload = () => {
       const json = JSON.parse(reader.result as string);
+      const catalog = this.isNested(json) ? json.catalog : json;
       // quality checks OSCAL file
-      var output = this.isValidCatalog(json);
-      if(output == 1){
+      if(this.isValidCatalog(catalog)){
         this.fileSelected.emit(json);
       }
-      else if (output == 2){
+      else{
         this.fileSelected.emit(json.catalog);
       }
     };
