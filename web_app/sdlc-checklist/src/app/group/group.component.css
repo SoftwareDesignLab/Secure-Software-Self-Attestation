@@ -2,11 +2,11 @@ h2 {
     cursor: pointer;
     user-select: none;
 }
-.appendUpArrow::after {
-    content: " ▲"
+.prependUpArrow::before {
+    content: "▲ "
 }
-.appendDownArrow::after {
-    content: " ▼"
+.prependDownArrow::before {
+    content: "▼ "
 }
 .hidden {
     display: none;

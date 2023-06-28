@@ -3,7 +3,7 @@
         <button (click)="setAllChildren(true)" *ngIf="!areAllChecked()">Check All</button>
         <button (click)="setAllChildren(false)" *ngIf="areAllChecked()">Uncheck All</button>
     </div>
-    <h2 (click)="toggleComponents()" [className]="showComponents ? 'appendDownArrow' : 'appendUpArrow'">
+    <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">
         {{ id }}: {{ title }}
     </h2>
     <div [className]="showComponents ? 'group-rollable-content' : 'group-rollable-content hidden'">
