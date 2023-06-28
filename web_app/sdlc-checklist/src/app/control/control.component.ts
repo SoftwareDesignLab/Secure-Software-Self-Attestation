@@ -32,7 +32,14 @@ export class ChecklistItemComponent {
   getExamples() {
     if (this.parts) {
       // parts are objects. find all parts that have the class "Example"
-      return this.parts.filter((part: any) => part.class === 'Example');
+      return this.parts.filter((part: any) => part.part_class === 'Example');
+    }
+  }
+
+  getReferences() {
+    if (this.props) {
+      // parts are objects. find all parts that have the class "Example"
+      return this.props.filter((prop: any) => prop.property_class === 'Reference');
     }
   }
 }

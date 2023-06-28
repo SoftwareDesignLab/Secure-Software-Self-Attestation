@@ -22,3 +22,6 @@ input[type="checkbox"] {
     margin-right: 5px;
 }
 
+.checkbox-label:hover {
+  text-decoration: underline;
+}

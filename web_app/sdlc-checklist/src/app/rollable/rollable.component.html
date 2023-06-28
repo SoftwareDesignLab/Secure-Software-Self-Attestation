@@ -1,21 +1,37 @@
 <div class="rollable-content">
-  <p *ngIf="hasDescription()"> {{ description }} </p>
-  <ng-container *ngFor="let control of subControls">
-    <app-control 
-      [id]="control.id"
-      [title]="control.title"
-      [class]="control.class"
-      [params]="control.params"
-      [parts]="control.parts"
-      [links]="control.links"
-      [props]="control.props"
-      [controls]="control.controls"
-    ></app-control>
-  </ng-container>
-  <ng-container *ngFor="let part of parts">
-    <!-- TODO -->
-  </ng-container>
-  <ng-container *ngFor="let ex of examples">
-    <!-- TODO -->
-  </ng-container>
+  <section *ngIf="hasDescription()">
+    <h3>Description</h3>
+    <p>{{ description }}</p>
+  </section>
+  <section *ngIf="hasSubControls()">
+    <h3>Sub-Controls</h3>
+    <ul>
+      <li *ngFor="let control of subControls">
+        <app-control 
+          [id]="control.id"
+          [title]="control.title"
+          [class]="control.class"
+          [params]="control.params"
+          [parts]="control.parts"
+          [links]="control.links"
+          [props]="control.props"
+          [controls]="control.controls"
+        ></app-control>
+      </li>
+    </ul>
+  </section>
+  <!--<section *ngIf="hasReferences()">
+    <h3>References</h3>
+    <ul>
+      <li *ngFor="let prop of references">
+        {{prop.name}}: {{prop.value}}
+      </li>
+    </ul>
+  </section>-->
+  <section *ngIf="hasExamples()">
+    <h3>Examples</h3>
+    <ul>
+      <li class="example" *ngFor="let example of examples">{{example.title}}</li>
+    </ul>
+  </section>
 </div>
