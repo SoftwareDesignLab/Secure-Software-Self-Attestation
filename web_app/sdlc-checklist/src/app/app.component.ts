@@ -1,5 +1,18 @@
-import { Component, ViewChildren, QueryList } from '@angular/core';
+import { Component, ViewChildren, QueryList, OnInit } from '@angular/core';
 import { GroupComponent } from './group/group.component';
+import { ChecklistItemComponent } from './control/control.component';
+import catalog from './defaultCatalog';
+
+interface Catalog {
+  uuid: string;
+  metadata: object;
+  groups: GroupComponent[];
+  controls: ChecklistItemComponent[];
+}
+
+interface CatalogData {
+  catalogs: Catalog[];
+}
 
 @Component({
   selector: 'app-root',
@@ -7,13 +20,17 @@ import { GroupComponent } from './group/group.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  catalogData: any;
+  catalogData: CatalogData = {catalogs: []};
   showComponentsArray: any;
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   
+  ngOnInit(): void {
+    this.catalogData.catalogs.push(catalog as Catalog);    
+  }
+
   onFileSelected(jsonData: any): void {
-    this.catalogData = jsonData;
+    this.catalogData.catalogs.push(jsonData);
   }
 
   setAllGroupExpansion(toSet: boolean): void {
@@ -21,4 +38,5 @@ export class AppComponent {
       child.setComponents(toSet);
     });
   }
+
 }
