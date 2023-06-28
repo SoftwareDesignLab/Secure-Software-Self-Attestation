@@ -1,6 +1,6 @@
 <div class="checkbox-item">
   <div class="checkbox-container">
-    <input type="checkbox" [id]="'checkbox-' + id">
+    <input type="checkbox" [id]="'checkbox-' + id" (click)='toggleCheck()'>
     <label class="checkbox-label" (click)="toggleRollable()">
       {{ id }}: {{ title }}
     </label>
@@ -11,6 +11,7 @@
     [subControls]="controls"
     [references]="getReferences()"
   ></app-rollable>
+  <input type ="text" *ngIf="isChecked==true">
 </div>
 
 
