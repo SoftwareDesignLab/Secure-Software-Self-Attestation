@@ -7,5 +7,10 @@
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 100%;
-  height: 100vh;
+}
+
+.catalog-container {
+  width: 100%;
+  border: 2px solid black;
+  margin-top: 20px;
 }
