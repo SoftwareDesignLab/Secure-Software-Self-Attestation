@@ -16,6 +16,7 @@ export class ChecklistItemComponent {
   @Input() controls: any;
   showRollable = false;
   isChecked = false;
+  userComment: string = ""
 
   toggleRollable() {
     this.showRollable = !this.showRollable;
@@ -49,5 +50,9 @@ export class ChecklistItemComponent {
   }
   getCheck(){
     return this.isChecked;
+  }
+  onKey(event: any) { // without type info
+    this.userComment = event.target.value;
+    console.log(this.userComment);
   }
 }

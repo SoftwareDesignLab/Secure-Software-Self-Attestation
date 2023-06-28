@@ -11,7 +11,7 @@
     [subControls]="controls"
     [references]="getReferences()"
   ></app-rollable>
-  <input type ="text" name="explanation" *ngIf="isChecked==true" placeholder="Brief explanation of compliance">
+  <input type ="text" name="explanation" *ngIf="isChecked==true" (keyup)="onKey($event)" placeholder="Brief explanation of compliance">
 </div>
 
 
