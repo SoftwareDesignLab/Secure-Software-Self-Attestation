@@ -57,6 +57,9 @@ export class GroupComponent {
       let box = document.getElementById('checkbox-' + child.id);
       if(box instanceof HTMLInputElement) {
         box.checked = truth;
+        if(child.getCheck()!=truth)
+        child.toggleCheck();
+        
       }
     })
   }
