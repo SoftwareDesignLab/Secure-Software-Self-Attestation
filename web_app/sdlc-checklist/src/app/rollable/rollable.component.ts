@@ -24,6 +24,6 @@ export class RollableComponent {
   }
 
   hasReferences(): boolean {
-    return this.references !== undefined;
+    return this.references !== undefined && this.references.length > 0;
   }
 }
