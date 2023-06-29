@@ -10,3 +10,15 @@ mat-grid-tile{
 input[name="form"] {
     width: 90%;
   }
+
+
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.submit{
+    width: 20%;
+    height: 40px;
+}

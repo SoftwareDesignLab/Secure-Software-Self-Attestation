@@ -12,14 +12,18 @@
             <mat-grid-tile widht="50px">Product(s) or Product Line Name </mat-grid-tile> 
             <mat-grid-tile>Version Number (if applicable)</mat-grid-tile>
             <mat-grid-tile>Release/Publish Date </mat-grid-tile>
-            <div class = "row">
-                <mat-grid-tile width="50px"><input type ="text" name="form"> </mat-grid-tile> 
-                <mat-grid-tile><input type ="text" name="form" ></mat-grid-tile>
-                <mat-grid-tile><input type ="text" name="form"  placeholder="YYYY-MM-DD" ></mat-grid-tile>
+            <div class = "row" *ngFor="let row of info">
+                <mat-grid-tile width="50px"><input type ="text" name="form" (keyup)="onKey($event, row, 'name')"> </mat-grid-tile> 
+                <mat-grid-tile><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" ></mat-grid-tile>
+                <mat-grid-tile><input type ="text" name="form"  placeholder="YYYY-MM-DD" (keyup)="onKey($event, row, 'date')"></mat-grid-tile>
             </div>
     
         </mat-grid-list>
+        <button class="add" mat-button (click)="addRow()">+</button>
+        <button class="add" mat-button (click)="removeRow()" *ngIf="info.length>1">-</button>
+
     </div>
 </form>
-
-<button class="close" mat-button (click)="onSubmit() ">Submit</button>
+<div class="center">
+<button class="submit" [disabled]="!validComments()&&selectedValue!=='company'" mat-button (click)="onSubmit() ">Submit</button>
+</div>
