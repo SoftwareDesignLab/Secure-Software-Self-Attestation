@@ -1,0 +1,14 @@
+/* make the catalog info span the width of the screen. add a thin solid border around it. */
+.results-metadata {
+    width: 90%;
+    border: 4px dotted black;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+  }
+  
+  .results-metadata-content {
+    margin-left: 20px;
+    margin-top: 5px;
+  }

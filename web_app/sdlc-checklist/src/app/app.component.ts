@@ -29,7 +29,7 @@ export class AppComponent {
     this.catalogData.catalogs.push(catalog as Catalog);    
   }
 
-  onFileSelected(jsonData: any): void {
+  onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
     this.catalogData.catalogs.push(jsonData);
   }
 

@@ -1,0 +1,18 @@
+<div class="result-container">
+    <h1>{{ result.title }}</h1>
+    <p>{{ result.description }}</p>
+    <p>Relevant catalog: {{ catalogName }} </p>
+    <p>Relevant links:</p>
+    <div *ngFor="let link of links">
+        <a href="{{ link }}">{{ link }}</a>
+    </div>
+    <h2>Results by control:</h2>
+    <div *ngFor="let control of controls | keyvalue">
+        <h3>{{ control.key }}: {{ control.value.fullName }}</h3>
+        <h5 *ngIf="control.value.compliance !== undefined">Compliance: {{ control.value.compliance }}</h5>
+        <h5 *ngIf="control.value.explanation !== undefined">Explanation: {{ control.value.explanation }}</h5>
+        <div *ngFor="let extraData of control.value.extra | keyvalue">
+            <h5>*{{ extraData.key }}: {{ extraData.value }}</h5>
+        </div>
+    </div>
+</div>
