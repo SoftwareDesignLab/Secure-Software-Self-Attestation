@@ -5,7 +5,7 @@
 <main>
   <div class="upper-div">
     <app-catalog-processing class="catalog-processor" (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-    <form *ngIf="catalogData">
+    <form>
       <div class="form-column">
         <h3>Software Producer Information</h3>
         <label for="company-name">Company Name: </label>
@@ -40,7 +40,7 @@
       </div>
     </form>
   </div>
-  <button class="generate-report">Generate Report</button>
+  <button class="generate-report" *ngIf="catalogData">Generate Report</button>
   <div class="expansion-button-div">
     <button (click)="setAllGroupExpansion(false)">Collapse All</button>
     <button (click)="setAllGroupExpansion(true)">Expand All</button>
