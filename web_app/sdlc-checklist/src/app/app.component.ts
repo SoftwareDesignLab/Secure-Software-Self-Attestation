@@ -3,6 +3,7 @@ import { GroupComponent } from './group/group.component';
 import { ChecklistItemComponent } from './control/control.component';
 import catalog from './defaultCatalog';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { AttestationComponent } from './attestation/attestation.component';
 
 interface Catalog {
@@ -26,8 +27,8 @@ export class AppComponent {
   showComponentsArray: any;
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
-
-  constructor(private dialogRef: MatDialog){}
+  dialogRef!: MatDialogRef<AttestationComponent>;
+  constructor(private dialog: MatDialog){}
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
@@ -44,8 +45,11 @@ export class AppComponent {
   }
 
   openDialog(){
-    this.dialogRef.open(AttestationComponent, 
-      {width: '600px'});
+    this.dialogRef = this.dialog.open(AttestationComponent, {
+      width: '50%',
+    });
+    
   }
+
 
 }

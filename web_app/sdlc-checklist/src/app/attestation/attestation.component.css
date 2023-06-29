@@ -1,0 +1,12 @@
+mat-grid-list{
+    height: 20px;
+}
+mat-grid-tile{
+    width: "100px";
+    border: solid 1px #000;
+
+}
+
+input[name="form"] {
+    width: 90%;
+  }

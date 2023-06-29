@@ -12,6 +12,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AttestationComponent } from './attestation/attestation.component';
 import { FormsModule} from '@angular/forms'
+import {MatGridListModule} from '@angular/material/grid-list';
+
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { FormsModule} from '@angular/forms'
     AppRoutingModule,
     BrowserAnimationsModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
+    MatGridListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

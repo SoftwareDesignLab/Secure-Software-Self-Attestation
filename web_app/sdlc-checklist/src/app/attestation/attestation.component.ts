@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
 
 @Component({
@@ -10,7 +12,11 @@ import { FormsModule } from '@angular/forms';
 export class AttestationComponent {
   selectedValue: string = 'company'; 
 
+  constructor(private dialogRef: MatDialogRef<AttestationComponent>){}
+
+
   onSubmit() {
     console.log(this.selectedValue); 
+    this.dialogRef.close();
   }
 }
