@@ -8,6 +8,10 @@ import { RollableComponent } from './rollable/rollable.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { GroupComponent } from './group/group.component';
 import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AttestationComponent } from './attestation/attestation.component';
+import { FormsModule} from '@angular/forms'
 
 @NgModule({
   declarations: [
@@ -16,11 +20,15 @@ import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
     RollableComponent,
     CatalogProcessingComponent,
     GroupComponent,
-    CatalogInfoComponent
+    CatalogInfoComponent,
+    AttestationComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

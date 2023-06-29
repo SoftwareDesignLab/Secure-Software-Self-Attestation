@@ -1,0 +1,13 @@
+<form class="demo">
+    <input type="radio" id="company-wide" name="attestation" [(ngModel)]="selectedValue" value="company">
+    <label for="company-wide">Company-wide</label><br>
+    <input type="radio" id="product-line" name="attestation" [(ngModel)]="selectedValue" value="product">
+    <label for="product-line">Product line</label><br>
+    <input type="radio" id="indivdual" name="attestation"  [(ngModel)]="selectedValue" valu="individual">
+    <label for="individual">Individual Product</label><br>
+    <input type="radio" id="multiple" name="attestation" [(ngModel)]="selectedValue" value="multiple">
+    <label for="multiple">Multiple products or Specific Product Version(s)</label>
+</form>
+
+
+<button (click)="onSubmit()">"submit"</button>
