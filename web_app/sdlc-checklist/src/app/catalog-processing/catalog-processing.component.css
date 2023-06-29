@@ -1,21 +1,21 @@
+.upload-button {
+  margin-bottom: 1rem;
+  margin-top: 45px;
+}
+
+.drag-drop-area {
+  width: 100%;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  text-align: center;
+  margin-top: 50px;
+}
+
 .file-upload {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .upload-button {
-    margin-bottom: 1rem;
-    margin-top: 15px;
-  }
-  
-  .drag-drop-area {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100px;
-    border: 2px dashed #ccc;
-    border-radius: 4px;
-    text-align: center;
-  }
+  height: 100%;
+  padding-right: 25px;
+}
+
+p {
+  padding-bottom: 25px;
+}
