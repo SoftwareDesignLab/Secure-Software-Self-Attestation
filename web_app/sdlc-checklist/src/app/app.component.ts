@@ -22,6 +22,7 @@ interface CatalogData {
 export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
   showComponentsArray: any;
+  hiddenCatalogs = new Set<String>();
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   
@@ -33,10 +34,23 @@ export class AppComponent {
     this.catalogData.catalogs.push(jsonData);
   }
 
-  setAllGroupExpansion(toSet: boolean): void {
+  setAllGroupExpansion(toSet: boolean, uuid: String): void {
     this.childComponents.forEach((child) => {
-      child.setComponents(toSet);
+      if (child.catalogUUID === uuid) {
+        child.setComponents(toSet);
+      }
     });
   }
 
+  toggleExpansion(uuid: String): void {
+    if (this.hiddenCatalogs.has(uuid)) {
+      this.hiddenCatalogs.delete(uuid);
+    } else {
+      this.hiddenCatalogs.add(uuid);
+    }
+  }
+
+  isShown(uuid: any): boolean {
+    return !this.hiddenCatalogs.has(uuid);
+  }
 }

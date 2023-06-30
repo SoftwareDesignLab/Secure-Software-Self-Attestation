@@ -3,20 +3,23 @@
 <div *ngFor="let catalog of catalogData.catalogs"> 
   <div class="catalog-container">
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
-    <div id="grid-container" class="grid-container" *ngIf="catalog">
+    <button (click)="toggleExpansion(catalog.uuid)">Toggle Catalog Expansion</button>
+    <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">
       <div id="group-container" class="group-container">
-        <button (click)="setAllGroupExpansion(false)">Collapse All</button>
-        <button (click)="setAllGroupExpansion(true)">Expand All</button>
+        <button (click)="setAllGroupExpansion(false, catalog.uuid)">Collapse All</button>
+        <button (click)="setAllGroupExpansion(true, catalog.uuid)">Expand All</button>
         <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
         <app-group *ngFor="let group of catalog.groups" 
           [id]="group.id" 
           [title]="group.title" 
           [controls]="group.controls"
+          [catalogUUID]="catalog.uuid"
         ></app-group>
       <div *ngIf="catalog.controls">
         <app-group
           [title]="control"
           [controls]="catalog.controls"
+          [catalogUUID]="catalog.uuid"
         ></app-group>
         </div>
       </div>
