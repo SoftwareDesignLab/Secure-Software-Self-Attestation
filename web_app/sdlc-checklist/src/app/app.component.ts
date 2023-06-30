@@ -55,16 +55,17 @@ export class AppComponent {
   }
 
   removeCatalog(uuid: String): void {
-    let catalogs = this.catalogData.catalogs
-    catalogs = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}))
+    let catalogs = this.catalogData.catalogs;
+    console.log("Removing " + uuid);
+    catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1);
   }
 
   restoreDefaultCatalog(): void {
-    this.catalogData.catalogs.push(catalog as Catalog);   
+    this.catalogData.catalogs.unshift(catalog as Catalog);   
   }
   
   isDefaultPresent(): boolean {
-    let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid})
+    let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid});
     return index >= 0;
   }
 }
