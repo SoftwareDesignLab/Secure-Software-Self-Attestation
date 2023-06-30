@@ -50,7 +50,12 @@ export class AppComponent {
     }
   }
 
-  isShown(uuid: any): boolean {
+  isShown(uuid: String): boolean {
     return !this.hiddenCatalogs.has(uuid);
+  }
+
+  removeCatalog(uuid: String): void {
+    let catalogs = this.catalogData.catalogs
+    catalogs = catalogs.splice(catalogs.findIndex((value)=>{value.uuid === uuid}))
   }
 }
