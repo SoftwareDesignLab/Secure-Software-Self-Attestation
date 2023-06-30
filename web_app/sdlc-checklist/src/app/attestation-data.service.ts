@@ -7,36 +7,34 @@ import { attestationComment } from './attestationForm';
 export class AttestationDataService {
 
   private selectedValue: string = 'company'; 
-  private row: number = 1;
   private info: Array<attestationComment> = new Array<attestationComment>;
-  
+  private submit: boolean = false;
 
   constructor() {
     this.info.push(new attestationComment);
    }
 
-
   getSelectedValue(){
     return this.selectedValue;
-  }
-
-  getRow(){
-    return this.row;
   }
 
   getInfo(){
     return this.info;
   }
 
+  getSubmit(){
+    return this.submit
+  }
+
   setSelectedValue(data: string){
     this.selectedValue = data;
-  }
-  setRow(data: number){
-    this.row = data;
   }
 
   setInfo(data: Array<attestationComment>){
     this.info = data;
   }
 
+  toggleSubmit(){
+    this.submit = true;
+  }
 }

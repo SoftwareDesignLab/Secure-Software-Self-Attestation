@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { attestationComment } from '../attestationForm';
 import { AttestationDataService } from '../attestation-data.service';
@@ -13,36 +11,36 @@ import { AttestationDataService } from '../attestation-data.service';
 })
 export class AttestationComponent {
   selectedValue: string;
-  row: number;
   info: Array<attestationComment>;
+  dataService: AttestationDataService;
 
   constructor(private dialogRef: MatDialogRef<AttestationComponent>, DataService: AttestationDataService ){
+    this.dataService = DataService;
     this.selectedValue = DataService.getSelectedValue();
-    this.row = DataService.getRow();
     this.info = DataService.getInfo();
   }
 
 
   onSubmit() {
-    console.log(this.selectedValue); 
+    this.dataService.setSelectedValue(this.selectedValue);
+    this.dataService.toggleSubmit();
     this.dialogRef.close();
+    console.log("Attestation Submitted");
   }
   addRow(){
     this.info.push(new attestationComment);
-    console.log(this.info.length);
   }
   removeRow(){
     this.info.pop();
-    console.log(this.info.length);
   }
 
-  onKey(event: any, attest: attestationComment, target: string) { // without type info
+  onKey(event: any, attest: attestationComment, target: string) { 
     if(target==="name") {
       attest.addName(event.target.value);
     } else if (target==="version") {
-      attest.addVersion(event.target.value)
+      attest.addVersion(event.target.value);
     } else if (target==="date") {
-      attest.addDate(event.target.value)
+      attest.addDate(event.target.value);
     }
   }
 
@@ -56,10 +54,4 @@ export class AttestationComponent {
       return valid;
     }
 
-  debug(){
-    console.log(this.info[0].getName());
-    console.log(this.info[0].getVersion());
-    console.log(this.info[0].getDate());
-    console.warn(this.info[0].isFilled());
-  }
 }

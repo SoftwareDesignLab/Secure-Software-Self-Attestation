@@ -7,7 +7,7 @@
     <label for="individual">Individual Product</label><br>
     <input type="radio" id="multiple" name="attestation" [(ngModel)]="selectedValue" value="multiple">
     <label for="multiple">Multiple products or Specific Product Version(s)</label>
-    <div *ngIf="selectedValue!='company'" >
+    <div class="grid" *ngIf="selectedValue!='company'" >
         <mat-grid-list cols="3" rowHeight="35px">
             <mat-grid-tile>Product(s) or Product Line Name </mat-grid-tile> 
             <mat-grid-tile>Version Number (if applicable)</mat-grid-tile>

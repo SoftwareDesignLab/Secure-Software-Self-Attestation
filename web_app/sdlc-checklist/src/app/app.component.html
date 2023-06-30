@@ -1,6 +1,6 @@
 <!-- TODO split processing vertically into upload and download sections -->
 <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-<button (click)="openDialog()">Attestation Form</button>
+<button class="attest" (click)="openDialog()">Attestation Form</button>
 <div *ngFor="let catalog of catalogData.catalogs"> 
   <div class="catalog-container">
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
