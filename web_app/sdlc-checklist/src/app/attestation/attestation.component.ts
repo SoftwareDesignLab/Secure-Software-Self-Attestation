@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { attestationComment } from '../attestationForm';
 import { AttestationDataService } from '../attestation-data.service';
 
@@ -14,7 +13,7 @@ export class AttestationComponent {
   info: Array<attestationComment>;
   dataService: AttestationDataService;
 
-  constructor(private dialogRef: MatDialogRef<AttestationComponent>, DataService: AttestationDataService ){
+  constructor( DataService: AttestationDataService ){
     this.dataService = DataService;
     this.selectedValue = DataService.getSelectedValue();
     this.info = DataService.getInfo();
@@ -24,7 +23,7 @@ export class AttestationComponent {
   onSubmit() {
     this.dataService.setSelectedValue(this.selectedValue);
     this.dataService.toggleSubmit();
-    this.dialogRef.close();
+    //this.dialogRef.close();
     console.log("Attestation Submitted");
   }
   addRow(){
@@ -53,5 +52,8 @@ export class AttestationComponent {
       });  
       return valid;
     }
+  updateSelect(){
+    this.dataService.setSelectedValue(this.selectedValue);
+  }
 
 }
