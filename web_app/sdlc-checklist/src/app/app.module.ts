@@ -13,6 +13,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AttestationComponent } from './attestation/attestation.component';
 import { FormsModule} from '@angular/forms'
 import {MatGridListModule} from '@angular/material/grid-list';
+import { AttestationDataService } from './attestation-data.service';
+import { attestationComment } from './attestationForm';
 
 
 @NgModule({
@@ -33,7 +35,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
     FormsModule,
     MatGridListModule
   ],
-  providers: [],
+  providers: [attestationComment],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { attestationComment } from '../attestationForm';
+import { AttestationDataService } from '../attestation-data.service';
 
 
 @Component({
@@ -11,11 +12,15 @@ import { attestationComment } from '../attestationForm';
   styleUrls: ['./attestation.component.css']
 })
 export class AttestationComponent {
-  selectedValue: string = 'company'; 
-  row: number = 1;
-  info: Array<attestationComment> = new Array<attestationComment>;
+  selectedValue: string;
+  row: number;
+  info: Array<attestationComment>;
 
-  constructor(private dialogRef: MatDialogRef<AttestationComponent>){}
+  constructor(private dialogRef: MatDialogRef<AttestationComponent>, DataService: AttestationDataService ){
+    this.selectedValue = DataService.getSelectedValue();
+    this.row = DataService.getRow();
+    this.info = DataService.getInfo();
+  }
 
 
   onSubmit() {
@@ -29,10 +34,6 @@ export class AttestationComponent {
   removeRow(){
     this.info.pop();
     console.log(this.info.length);
-  }
-
-  ngOnInit(){
-    this.info.push(new attestationComment);
   }
 
   onKey(event: any, attest: attestationComment, target: string) { // without type info

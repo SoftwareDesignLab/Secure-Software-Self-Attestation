@@ -8,14 +8,14 @@
     <input type="radio" id="multiple" name="attestation" [(ngModel)]="selectedValue" value="multiple">
     <label for="multiple">Multiple products or Specific Product Version(s)</label>
     <div *ngIf="selectedValue!='company'" >
-        <mat-grid-list cols="3" rowHeight="30px" style="border: 1px solid black"  >
-            <mat-grid-tile widht="50px">Product(s) or Product Line Name </mat-grid-tile> 
+        <mat-grid-list cols="3" rowHeight="35px">
+            <mat-grid-tile>Product(s) or Product Line Name </mat-grid-tile> 
             <mat-grid-tile>Version Number (if applicable)</mat-grid-tile>
             <mat-grid-tile>Release/Publish Date </mat-grid-tile>
             <div class = "row" *ngFor="let row of info">
-                <mat-grid-tile width="50px"><input type ="text" name="form" (keyup)="onKey($event, row, 'name')"> </mat-grid-tile> 
-                <mat-grid-tile><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" ></mat-grid-tile>
-                <mat-grid-tile><input type ="text" name="form"  placeholder="YYYY-MM-DD" (keyup)="onKey($event, row, 'date')"></mat-grid-tile>
+                <mat-grid-tile width="50px"><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value="{{row.getName()}}"> </mat-grid-tile> 
+                <mat-grid-tile><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}} ></mat-grid-tile>
+                <mat-grid-tile><input type ="text" name="form"  placeholder="YYYY-MM-DD" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}}></mat-grid-tile>
             </div>
     
         </mat-grid-list>

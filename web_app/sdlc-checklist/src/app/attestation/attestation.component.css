@@ -1,5 +1,5 @@
 mat-grid-list{
-    height: 20px;
+    border: 1px solid black
 }
 mat-grid-tile{
     width: "100px";
