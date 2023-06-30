@@ -31,6 +31,8 @@ export class AppComponent {
   }
 
   onFileSelected(jsonData: any): void {
+    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
+      return;
     this.catalogData.catalogs.push(jsonData);
   }
 
