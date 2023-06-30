@@ -1,5 +1,6 @@
 <!-- TODO split processing vertically into upload and download sections -->
 <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
+<button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
 <div *ngFor="let catalog of catalogData.catalogs"> 
   <div class="catalog-container">
     <div class="button-panel">
@@ -8,8 +9,8 @@
       <div (click)="toggleExpansion(catalog.uuid)" 
            [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
       </div><br>
-      <p class="button-caption" *ngIf="isRemovable(catalog.uuid)">Remove Catalog</p>
-      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red" *ngIf="isRemovable(catalog.uuid)"></div>
+      <p class="button-caption">Remove Catalog</p>
+      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
     </div>
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
     <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">

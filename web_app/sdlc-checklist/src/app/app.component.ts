@@ -23,7 +23,6 @@ export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
   showComponentsArray: any;
   hiddenCatalogs = new Set<String>();
-  permanent = new Set<String>(["d152b49c-39b4-4765-a961-75051dcf2293"]);
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   
@@ -57,10 +56,15 @@ export class AppComponent {
 
   removeCatalog(uuid: String): void {
     let catalogs = this.catalogData.catalogs
-    catalogs = catalogs.splice(catalogs.findIndex((value)=>{value.uuid === uuid}))
+    catalogs = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}))
   }
 
-  isRemovable(uuid: String): boolean {
-    return !this.permanent.has(uuid);
+  restoreDefaultCatalog(): void {
+    this.catalogData.catalogs.push(catalog as Catalog);   
+  }
+  
+  isDefaultPresent(): boolean {
+    let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid})
+    return index >= 0;
   }
 }
