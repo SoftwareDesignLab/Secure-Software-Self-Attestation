@@ -1,5 +1,8 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Oscal, metaData, Catalog } from '../oscalModel';
+import { ErrorService, errorEnum } from '../error.service';
+
+
 @Component({
   selector: 'app-catalog-processing',
   templateUrl: './catalog-processing.component.html',
@@ -10,6 +13,9 @@ export class CatalogProcessingComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
 
+  constructor(private error: ErrorService){
+  }
+
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file && this.isJsonFile(file)) {
@@ -19,6 +25,7 @@ export class CatalogProcessingComponent {
       console.log('File selected:', file);
     } else {
       alert('Please upload an OSCAL Catalog JSON file.');
+      this.error.setError(errorEnum.wrongFileType);
     }
   }
 
@@ -35,6 +42,7 @@ export class CatalogProcessingComponent {
       console.log('File dropped:', file);
     } else {
       alert('Please drop an OSCAL Catalog JSON file.');
+      this.error.setError(errorEnum.wrongFileType);
     }
   }
 
@@ -104,6 +112,7 @@ export class CatalogProcessingComponent {
       return true;
     }
     alert('Given json file is not a valid OSCAL Catalog');
+    this.error.setError(errorEnum.notCatalog);
     return false;
   }
 

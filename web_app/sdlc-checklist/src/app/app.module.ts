@@ -8,6 +8,7 @@ import { RollableComponent } from './rollable/rollable.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { GroupComponent } from './group/group.component';
 import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
+import { ErrorService } from './error.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [ErrorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
