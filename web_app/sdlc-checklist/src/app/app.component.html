@@ -1,6 +1,5 @@
 <!-- TODO split processing vertically into upload and download sections -->
 <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-<app-error-pop-up *ngIf="issue!=processingErrors.Valid"></app-error-pop-up>
 <app-catalog-info [uuid]="catalogData.uuid" [metadata]="catalogData.metadata"></app-catalog-info>
 <div id="grid-container" class="grid-container">
   <div id="group-container" class="group-container">
