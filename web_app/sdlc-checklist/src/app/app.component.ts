@@ -33,9 +33,11 @@ export class AppComponent {
     this.catalogData.catalogs.push(jsonData);
   }
 
-  setAllGroupExpansion(toSet: boolean): void {
+  setAllGroupExpansion(cata: Catalog,toSet: boolean): void {
     this.childComponents.forEach((child) => {
-      child.setComponents(toSet);
+      if(child.uuid==cata.uuid){
+        child.setComponents(toSet);
+      }
     });
   }
 
