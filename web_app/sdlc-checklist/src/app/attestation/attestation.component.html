@@ -18,7 +18,7 @@
                 <div class = "row" *ngFor="let row of info">
                     <mat-grid-tile width="50px"><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value="{{row.getName()}}"> </mat-grid-tile> 
                     <mat-grid-tile><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}} ></mat-grid-tile>
-                    <mat-grid-tile><input type ="text" name="form"  placeholder="YYYY-MM-DD" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}}></mat-grid-tile>
+                    <mat-grid-tile><input type ="date" name="form" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}}></mat-grid-tile>
                 </div>
         
             </mat-grid-list>
