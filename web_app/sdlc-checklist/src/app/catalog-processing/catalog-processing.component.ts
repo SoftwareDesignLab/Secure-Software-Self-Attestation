@@ -11,7 +11,6 @@ export class CatalogProcessingComponent {
   @Output() fileSelected = new EventEmitter<File>();
 
   onFileSelected(event: Event): void {
-    console.log('Made it here');
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file && this.isJsonFile(file)) {
       // Process the JSON file
