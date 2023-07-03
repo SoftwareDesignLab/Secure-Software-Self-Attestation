@@ -1,6 +1,6 @@
 <!-- TODO split processing vertically into upload and download sections -->
 <header>
-  <!--<h1></h1> This is where the page title should go, probably something like "SDLC-Checklist" -->
+  <h1>SDLC Checklist</h1>
 </header>
 <main>
   <div class="upper-div">
@@ -46,7 +46,7 @@
     <button (click)="setAllGroupExpansion(false)">Collapse All</button>
     <button (click)="setAllGroupExpansion(true)">Expand All</button>
   </div>
-  <div class="catalog-container" *ngFor="let catalog of catalogData.catalogs"> 
+  <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs"> 
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
     <div id="grid-container" class="grid-container" *ngIf="catalog">
       <div id="group-container" class="group-container">
