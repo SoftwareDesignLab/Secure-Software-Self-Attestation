@@ -11,12 +11,17 @@ export class CatalogProcessingComponent {
   @Output() fileSelected = new EventEmitter<File>();
 
   onFileSelected(event: Event): void {
+    console.log('Made it here');
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file && this.isJsonFile(file)) {
       // Process the JSON file
       //TODO verify that the file is an OSCAL Catalog
       this.handleFile(file);
       console.log('File selected:', file);
+      let uploadButton = document.getElementById('file');
+      if (uploadButton instanceof HTMLInputElement) {
+        uploadButton.value = "";
+      }
     } else {
       alert('Please upload an OSCAL Catalog JSON file.');
     }
