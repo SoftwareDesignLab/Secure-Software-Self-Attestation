@@ -2,13 +2,7 @@ import { Component, ViewChildren, QueryList } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import { ChecklistItemComponent } from './control/control.component';
 import catalog from './defaultCatalog';
-
-interface Catalog {
-  uuid: string;
-  metadata: object;
-  groups: GroupComponent[];
-  controls: ChecklistItemComponent[];
-}
+import { Catalog } from './oscalModel';
 
 interface CatalogData {
   catalogs: Catalog[];

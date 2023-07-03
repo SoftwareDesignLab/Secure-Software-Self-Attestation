@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Oscal, metaData, catalog } from '../oscalModel';
+import { Oscal, metaData, Catalog } from '../oscalModel';
 @Component({
   selector: 'app-catalog-processing',
   templateUrl: './catalog-processing.component.html',
@@ -60,7 +60,7 @@ export class CatalogProcessingComponent {
    */
   private isValidCatalog(data: object): boolean{
     let isValid : boolean = false;
-    let catalog = data as catalog;
+    let catalog = data as Catalog;
     if(catalog.uuid!= undefined){
       var UIDpattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/
       if(UIDpattern.test(catalog.uuid)){
