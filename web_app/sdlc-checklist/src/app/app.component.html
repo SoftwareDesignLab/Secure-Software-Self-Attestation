@@ -5,7 +5,7 @@
 <main>
   <div class="upper-div">
     <app-catalog-processing class="catalog-processor" (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-    <form>
+    <form class="pane">
       <div class="form-column">
         <h3>Software Producer Information</h3>
         <label for="company-name">Company Name: </label>
@@ -23,6 +23,7 @@
         <label for="website">Website: </label>
         <input id="website" type="url">
       </div>
+      <div class="center-line"></div>
       <div class="form-column">
         <h3>Primary Contact for this Document</h3>
         <label for="first-name">First Name: </label>

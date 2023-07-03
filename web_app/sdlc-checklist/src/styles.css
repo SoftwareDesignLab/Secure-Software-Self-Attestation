@@ -1,1 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+
+.pane {
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 6px 6px 3px 0 rgba(0, 0, 0, .25);
+}
