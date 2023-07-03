@@ -28,3 +28,7 @@ body {
     margin: 0;
     background-color: #EFF2F4;
 }
+
+.hidden {
+    display: none;
+}

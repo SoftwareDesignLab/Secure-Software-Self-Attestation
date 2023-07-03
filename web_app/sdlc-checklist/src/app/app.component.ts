@@ -24,6 +24,7 @@ export class AppComponent {
   showComponentsArray: any;
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
+  showNav = false;
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
@@ -39,4 +40,15 @@ export class AppComponent {
     });
   }
 
+  toggleNav(): void {
+    this.showNav = !this.showNav;
+  }
+
+  getLinkName(catalog: Catalog): String {
+    let metadata: any = catalog.metadata;
+    if (metadata.title) {
+      return metadata.title;
+    }
+    return catalog.uuid;
+  }
 }

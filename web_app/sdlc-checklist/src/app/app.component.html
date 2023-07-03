@@ -2,10 +2,27 @@
 <header>
   <h1>SDLC Checklist</h1>
 </header>
+<nav>
+  <div [className]="showNav ? 'nav-icon shifted-nav' : 'nav-icon'" (click)="toggleNav()">
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+  </div>
+  <div [className]="showNav ? 'expanded-nav' : 'expanded-nav hidden'">
+    <h2>SDLC</h2>
+    <ul>
+      <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
+      <li *ngFor="let catalog of catalogData.catalogs">
+        <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
+      </li>
+      <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
+    </ul>
+  </div>
+</nav>
 <main>
   <div class="upper-div">
-    <app-catalog-processing class="catalog-processor" (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-    <form class="pane">
+    <app-catalog-processing class="catalog-processor" (fileSelected)="onFileSelected($event)" id="upload"></app-catalog-processing> 
+    <form class="pane" id="contact-form">
       <div class="form-column">
         <h3>Software Producer Information</h3>
         <label for="company-name">Company Name: </label>
@@ -46,7 +63,7 @@
     <button (click)="setAllGroupExpansion(false)">Collapse All</button>
     <button (click)="setAllGroupExpansion(true)">Expand All</button>
   </div>
-  <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs"> 
+  <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
     <div id="grid-container" class="grid-container" *ngIf="catalog">
       <div id="group-container" class="group-container">
