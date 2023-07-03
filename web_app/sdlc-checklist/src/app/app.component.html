@@ -1,5 +1,5 @@
 <!-- TODO split processing vertically into upload and download sections -->
-<app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
+<app-attestation></app-attestation>
 <div *ngFor="let catalog of catalogData.catalogs"> 
   <div class="catalog-container">
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
@@ -23,3 +23,4 @@
     </div>
   </div>
 </div>
+<app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
