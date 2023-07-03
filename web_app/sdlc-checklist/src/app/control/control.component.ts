@@ -15,6 +15,8 @@ export class ChecklistItemComponent {
   @Input() props: any;
   @Input() controls: any;
   showRollable = false;
+  isChecked = false;
+  userComment: string = ""
 
   toggleRollable() {
     this.showRollable = !this.showRollable;
@@ -32,7 +34,24 @@ export class ChecklistItemComponent {
   getExamples() {
     if (this.parts) {
       // parts are objects. find all parts that have the class "Example"
-      return this.parts.filter((part: any) => part.class === 'Example');
+      return this.parts.filter((part: any) => part.part_class === 'Example');
     }
+  }
+
+  getReferences() {
+    if (this.props) {
+      // parts are objects. find all parts that have the class "Example"
+      return this.props.filter((prop: any) => prop.property_class === 'Reference');
+    }
+  }
+
+  toggleCheck(){
+    this.isChecked = !this.isChecked;
+  }
+  getCheck(){
+    return this.isChecked;
+  }
+  onKey(event: any) { // without type info
+    this.userComment = event.target.value;
   }
 }

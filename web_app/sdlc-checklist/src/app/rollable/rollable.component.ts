@@ -9,7 +9,7 @@ export class RollableComponent {
   @Input() description: any;
   @Input() examples: any;
   @Input() subControls: any;
-  @Input() parts: any;
+  @Input() references: any;
 
   hasDescription(): boolean {
     return this.description !== undefined;
@@ -23,7 +23,7 @@ export class RollableComponent {
     return this.subControls !== undefined;
   }
 
-  hasParts(): boolean {
-    return this.parts !== undefined;
+  hasReferences(): boolean {
+    return this.references !== undefined;
   }
 }

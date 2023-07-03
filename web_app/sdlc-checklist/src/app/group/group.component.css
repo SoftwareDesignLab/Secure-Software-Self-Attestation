@@ -1,0 +1,16 @@
+h2 {
+    cursor: pointer;
+    user-select: none;
+}
+.prependUpArrow::before {
+    content: "▲ "
+}
+.prependDownArrow::before {
+    content: "▼ "
+}
+.hidden {
+    display: none;
+}
+button {
+    float: right;
+}
