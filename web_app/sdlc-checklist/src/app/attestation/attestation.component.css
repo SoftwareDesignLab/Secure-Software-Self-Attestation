@@ -12,7 +12,15 @@ input[name="form"] {
   width: 90%;
 }
 
-.main-table {
+.table-section {
   margin: 0 25px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  border: 1px solid gray;
 }
 

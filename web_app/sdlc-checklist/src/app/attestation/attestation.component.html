@@ -8,19 +8,19 @@
     <label for="individual">Individual Product</label><br>
     <input type="radio" id="multiple" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()" value="multiple">
     <label for="multiple">Multiple products or Specific Product Version(s)</label>
-    <div *ngIf="selectedValue!='company'" class="main-table">
-        <br>
-        <mat-grid-list cols="3" rowHeight="35px">
-            <mat-grid-tile>Product(s) or Product Line Name </mat-grid-tile> 
-            <mat-grid-tile>Version Number (if applicable)</mat-grid-tile>
-            <mat-grid-tile>Release/Publish Date </mat-grid-tile>
-            <div class = "row" *ngFor="let row of info">
-                <mat-grid-tile width="50px"><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value="{{row.getName()}}"> </mat-grid-tile> 
-                <mat-grid-tile><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}} ></mat-grid-tile>
-                <mat-grid-tile><input type ="date" name="form" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}}></mat-grid-tile>
-            </div>
-    
-        </mat-grid-list>
+    <div *ngIf="selectedValue!='company'" class="table-section">
+        <table>
+            <tr>
+                <th>Product(s) or Product Line Name</th>
+                <th>Version Number (if applicable)</th>
+                <th>Release/Publish Date</th>
+            </tr>
+            <tr *ngFor="let row of info">
+                <td><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value="{{row.getName()}}"></td>
+                <td><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}}></td>
+                <td><input type ="date" name="form" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}}></td>
+            </tr>
+        </table>
         <button class="add" mat-button (click)="addRow()">+</button>
         <button class="add" mat-button (click)="removeRow()" *ngIf="info.length>1">-</button>
     </div>
