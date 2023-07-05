@@ -3,12 +3,12 @@
 </header>
 
 <nav>
-  <div [className]="showNav ? 'nav-icon shifted-nav' : 'nav-icon'" (click)="toggleNav()">
+  <div class="nav-icon" (click)="toggleNav()">
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
   </div>
-  <div [className]="showNav ? 'expanded-nav' : 'expanded-nav hidden'">
+  <div class="expanded-nav" [hidden]="!showNav">
     <h2>SDLC</h2>
     <ul>
       <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
@@ -61,9 +61,18 @@
   <app-attestation></app-attestation>
 
   <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
+    <div class="button-panel">
+      <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
+      <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
+      <div (click)="toggleExpansion(catalog.uuid)" 
+           [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
+      </div><br>
+      <p class="button-caption">Remove Catalog</p>
+      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
+    </div>
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
-    <div class="grid-container" *ngIf="catalog">
-      <app-group *ngFor="let group of catalog.groups" 
+    <div [hidden]="!isShown(catalog.uuid)" *ngIf="catalog">
+      <app-group *ngFor="let group of catalog.groups " 
         [id]="group.id" 
         [title]="group.title" 
         [controls]="group.controls"
@@ -75,6 +84,12 @@
         ></app-group>
       </div>
     </div>
+  </div>
+
+  <div class="restore-container" [hidden]="isDefaultPresent()">
+    <p class="pane restore">
+      It looks like you deleted the default catalog &nbsp;&nbsp;<span class="blue-text" (click)="restoreDefaultCatalog()">Restore it?</span>
+    </p>
   </div>
 
   <div class="lower-div">

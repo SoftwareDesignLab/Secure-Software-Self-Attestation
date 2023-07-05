@@ -6,7 +6,7 @@
         <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ title }}</h2>
     </ng-template>  
     <input type="checkbox" [id]="'group-checkall-' + id" class="group-checkbox" (click)="setAllChildrenToParent()"> 
-    <div [className]="showComponents ? 'group-rollable-content' : 'group-rollable-content hidden'">
+    <div class="group-rollable-content" [hidden]="!showComponents">
         <p *ngIf="description">{{ description }}</p>
         <div id="checkbox-container" class="checkbox-container">
             <app-control *ngFor="let item of controls" 

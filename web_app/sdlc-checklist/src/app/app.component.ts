@@ -25,6 +25,7 @@ export class AppComponent {
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   showNav = false;
+  hiddenCatalogs = new Set<String>();
 
   constructor(){}
   
@@ -52,5 +53,32 @@ export class AppComponent {
       return metadata.title;
     }
     return catalog.uuid;
+  }
+
+  toggleExpansion(uuid: String): void {
+    if (this.hiddenCatalogs.has(uuid)) {
+      this.hiddenCatalogs.delete(uuid);
+    } else {
+      this.hiddenCatalogs.add(uuid);
+    }
+  }
+
+  isShown(uuid: String): boolean {
+    return !this.hiddenCatalogs.has(uuid);
+  }
+
+  removeCatalog(uuid: String): void {
+    let catalogs = this.catalogData.catalogs;
+    console.log("Removing " + uuid);
+    catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1);
+  }
+
+  restoreDefaultCatalog(): void {
+    this.catalogData.catalogs.unshift(catalog as Catalog);   
+  }
+  
+  isDefaultPresent(): boolean {
+    let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid});
+    return index >= 0;
   }
 }
