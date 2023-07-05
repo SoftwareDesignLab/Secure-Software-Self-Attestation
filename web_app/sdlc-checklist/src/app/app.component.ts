@@ -30,7 +30,6 @@ export class AppComponent {
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
   }
-
   onFileSelected(jsonData: any): void {
     if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
       return;
