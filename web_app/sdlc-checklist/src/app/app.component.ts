@@ -57,6 +57,7 @@ export class AppComponent {
       return metadata.title;
     }
     return catalog.uuid;
+  }
 
   toggleExpansion(uuid: String): void {
     if (this.hiddenCatalogs.has(uuid)) {
