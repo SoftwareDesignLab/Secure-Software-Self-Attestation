@@ -11,6 +11,10 @@ h2 {
 .hidden {
     display: none;
 }
-button {
+.right {
     float: right;
+}
+.group-checkbox {
+    width: 20px;
+    height: 20px;
 }
