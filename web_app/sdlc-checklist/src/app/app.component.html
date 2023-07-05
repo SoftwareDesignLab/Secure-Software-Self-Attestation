@@ -59,23 +59,35 @@
   <app-attestation></app-attestation>
   <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
-    <div id="grid-container" class="grid-container" *ngIf="catalog">
+    <div class="button-panel">
+      <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
+      <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
+      <div (click)="toggleExpansion(catalog.uuid)" 
+           [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
+      </div><br>
+      <p class="button-caption">Remove Catalog</p>
+      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
+    </div>
+    <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">
       <div id="group-container" class="group-container">
         <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
         <app-group *ngFor="let group of catalog.groups" 
           [id]="group.id" 
           [title]="group.title" 
           [controls]="group.controls"
+          [catalogUUID]="catalog.uuid"
         ></app-group>
       <div *ngIf="catalog.controls">
         <app-group
           [title]="control"
           [controls]="catalog.controls"
+          [catalogUUID]="catalog.uuid"
         ></app-group>
         </div>
       </div>
     </div>
   </div>
+  <button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
     <div class="generate-report-div">

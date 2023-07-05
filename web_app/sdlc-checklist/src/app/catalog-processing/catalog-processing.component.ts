@@ -17,6 +17,10 @@ export class CatalogProcessingComponent {
       //TODO verify that the file is an OSCAL Catalog
       this.handleFile(file);
       console.log('File selected:', file);
+      let uploadButton = document.getElementById('file');
+      if (uploadButton instanceof HTMLInputElement) {
+        uploadButton.value = "";
+      }
     } else {
       alert('Please upload an OSCAL Catalog JSON file.');
     }
