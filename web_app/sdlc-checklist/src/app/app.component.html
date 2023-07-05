@@ -63,6 +63,7 @@
     <button (click)="setAllGroupExpansion(false)">Collapse All</button>
     <button (click)="setAllGroupExpansion(true)">Expand All</button>
   </div>
+  <app-attestation></app-attestation>
   <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
     <div id="grid-container" class="grid-container" *ngIf="catalog">
@@ -82,4 +83,5 @@
       </div>
     </div>
   </div>
+  <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
 </main>

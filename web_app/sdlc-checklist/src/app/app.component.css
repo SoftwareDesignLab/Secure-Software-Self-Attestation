@@ -146,3 +146,8 @@ nav {
 .expanded-nav li:hover {
   background-color: #EFF2F4;
 }
+
+.attest{
+  width:200px;
+  height: 30px;
+}

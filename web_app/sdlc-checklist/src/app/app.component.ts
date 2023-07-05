@@ -25,6 +25,8 @@ export class AppComponent {
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   showNav = false;
+
+  constructor(){}
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    

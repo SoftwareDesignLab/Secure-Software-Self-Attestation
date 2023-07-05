@@ -27,6 +27,7 @@ header {
 body {
     margin: 0;
     background-color: #EFF2F4;
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
 }
 
 .hidden {

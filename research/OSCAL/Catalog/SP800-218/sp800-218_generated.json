@@ -2,9 +2,9 @@
     "uuid": "b22e3eaf-bab6-4244-8f78-de7a7a5f548c",
     "metadata": {
         "title": "Security catalog for SP800-218: Secure Software Development Lifecycle",
-        "last_modified": "2023-03-28T02:54:46.717540",
+        "last-modified": "2023-03-28T02:54:46.717540",
         "version": "1.0.0",
-        "oscal_version": "1.0.4",
+        "oscal-version": "1.0.4",
         "published": "2023-03-28T02:54:46.717540"
     },
     "groups": [
