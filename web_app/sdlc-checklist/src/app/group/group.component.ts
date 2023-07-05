@@ -11,6 +11,7 @@ export class GroupComponent {
   @Input() title: any;
   @Input() description: any;
   @Input() controls: any;
+  @Input() catalogUUID: any;
   @ViewChildren(ChecklistItemComponent) childComponents!: QueryList<ChecklistItemComponent>;
   showComponents = true;
 
@@ -59,8 +60,22 @@ export class GroupComponent {
         box.checked = truth;
         if(child.getCheck()!=truth)
         child.toggleCheck();
-        
       }
     })
+  }
+
+  setAllChildrenToParent(): void {
+    let parent = document.getElementById("group-checkall-" + this.id);
+    if (parent instanceof HTMLInputElement) {
+      this.setAllChildren(parent.checked);
+    }
+  }
+
+  update() {
+    let status = this.areAllChecked();
+    let parent = document.getElementById("group-checkall-" + this.id);
+    if (parent instanceof HTMLInputElement) {
+      parent.checked = status;
+    }
   }
 }
