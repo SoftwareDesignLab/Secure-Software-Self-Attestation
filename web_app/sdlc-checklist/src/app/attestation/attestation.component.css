@@ -1,28 +1,18 @@
-.attestation{
-  width: 90%;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 20px;
-}
-.border{
-    width: 90%;
-    border: 4px solid black;
-    border-radius: 25px;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20px;
-}
-
 mat-grid-tile{
-    width: "100px";
-    border: solid 1px #000;
+  width: "100px";
+  border: solid 1px #000;
+}
 
+.attestation {
+  padding: 20px;
+  padding-top: 10px;
 }
 
 input[name="form"] {
-    width: 90%;
-  }
+  width: 90%;
+}
 
+.main-table {
+  margin: 0 25px;
+}
 

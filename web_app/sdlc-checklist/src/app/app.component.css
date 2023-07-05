@@ -15,7 +15,7 @@
   margin-top: 20px;
 }
 
-.upper-div {
+.lower-div {
   display: grid;
   grid-template-columns: 50% 50%;
 }
@@ -25,15 +25,23 @@
 }
 
 .generate-report {
-  margin: 25px auto;
+  margin: 0 auto;
   display: block;
   font-size: larger;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.generate-report-div {
+  position: relative;
 }
 
 form {
   display: grid;
   grid-template-columns: 50% 1px 50%;
-  margin: 0px 25px;
+  margin: 0px 20vw;
 }
 
 .form-column {
@@ -148,6 +156,6 @@ nav {
 }
 
 .attest{
-  width:200px;
+  width: 200px;
   height: 30px;
 }
