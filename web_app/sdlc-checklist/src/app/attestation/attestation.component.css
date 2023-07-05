@@ -8,19 +8,50 @@ mat-grid-tile{
   padding-top: 10px;
 }
 
-input[name="form"] {
-  width: 90%;
-}
-
 .table-section {
   margin: 0 25px;
 }
 
 table {
   border-collapse: collapse;
+  width: 100%;
+  background-color: #e3eaec;
 }
 
 th {
   border: 1px solid gray;
+  width: 33%;
+  height: 2.5em;
+  font-weight: 500;
 }
 
+.table-field {
+  border: 0 !important;
+  padding: 0 5px;
+  width: calc(100% - 10px);
+  height: 100%;
+  background-color: inherit;
+}
+
+tr td:nth-child(1) {
+  border-left: 1px solid gray;
+}
+
+td {
+  border-right: 1px solid gray;
+  height: 1.5em;
+}
+
+tr:nth-child(2n){
+  background-color: white;
+}
+
+tr:last-child td {
+  border-bottom: 1px solid gray;
+}
+
+.table-field:focus {
+  outline: none;
+  background-color: #cbebf8;
+  border-radius: 2px;
+}

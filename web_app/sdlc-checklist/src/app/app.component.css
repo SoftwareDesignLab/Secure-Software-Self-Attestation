@@ -9,12 +9,6 @@
   grid-template-columns: 100%;
 }
 
-.catalog-container {
-  width: 100%;
-  border: 2px solid black;
-  margin-top: 20px;
-}
-
 .lower-div {
   display: grid;
   grid-template-columns: 50% 50%;

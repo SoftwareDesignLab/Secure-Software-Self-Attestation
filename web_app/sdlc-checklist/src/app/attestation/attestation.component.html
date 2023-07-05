@@ -4,7 +4,7 @@
     <label for="company-wide">Company-wide</label><br>
     <input type="radio" id="product-line" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()" value="product">
     <label for="product-line">Product line</label><br>
-    <input type="radio" id="indivdual" name="attestation"  [(ngModel)]="selectedValue" (change)="updateSelect()" valu="individual">
+    <input type="radio" id="indivdual" name="attestation"  [(ngModel)]="selectedValue" (change)="updateSelect()" value="individual">
     <label for="individual">Individual Product</label><br>
     <input type="radio" id="multiple" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()" value="multiple">
     <label for="multiple">Multiple products or Specific Product Version(s)</label>
@@ -16,9 +16,9 @@
                 <th>Release/Publish Date</th>
             </tr>
             <tr *ngFor="let row of info">
-                <td><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value="{{row.getName()}}"></td>
-                <td><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}}></td>
-                <td><input type ="date" name="form" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}}></td>
+                <td><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value={{row.getName()}} class="table-field"></td>
+                <td><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}} class="table-field"></td>
+                <td><input type ="date" name="form" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}} class="table-field"></td>
             </tr>
         </table>
         <button class="add" mat-button (click)="addRow()">+</button>

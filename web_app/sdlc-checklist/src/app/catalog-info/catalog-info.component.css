@@ -1,11 +1,9 @@
 /* make the catalog info span the width of the screen. add a thin solid border around it. */
 .catalog-info {
-  width: 90%;
-  border: 4px dotted black;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 20px;
+  width: 97%;
+  border-bottom: 1px solid black;
+  margin: 20px 0;
+  padding-left: 3%;
 }
 
 .catalog-info-content {
