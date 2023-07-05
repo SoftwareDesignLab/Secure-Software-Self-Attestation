@@ -1,4 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.pane {
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 6px 6px 3px 0 rgba(0, 0, 0, .25);
+    background-color: white;
+    margin: 25px 0;
+}
+
+main {
+    margin: 30px;
+}
+
+h1 {
+    font-size: xx-large;
+    color: white;
+    padding: 10px;
+    margin: 0;
+}
+
+header {
+    background-color: black;
+    margin: 0;
+    width: 100%
+}
+
+body {
+    margin: 0;
+    background-color: #EFF2F4;
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+.hidden {
+    display: none;
+}

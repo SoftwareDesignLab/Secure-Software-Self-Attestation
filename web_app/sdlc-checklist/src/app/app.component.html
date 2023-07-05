@@ -1,7 +1,63 @@
 <!-- TODO split processing vertically into upload and download sections -->
-<app-attestation></app-attestation>
-<div *ngFor="let catalog of catalogData.catalogs"> 
-  <div class="catalog-container">
+<header>
+  <h1>SDLC Checklist</h1>
+</header>
+<nav>
+  <div [className]="showNav ? 'nav-icon shifted-nav' : 'nav-icon'" (click)="toggleNav()">
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+  </div>
+  <div [className]="showNav ? 'expanded-nav' : 'expanded-nav hidden'">
+    <h2>SDLC</h2>
+    <ul>
+      <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
+      <li><a href="#attestation" (click)="toggleNav()">Attestation Form</a></li>
+      <li *ngFor="let catalog of catalogData.catalogs">
+        <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
+      </li>
+      <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
+    </ul>
+  </div>
+</nav>
+<main>
+  <form class="pane" id="contact-form">
+    <div class="form-column">
+      <h3>Software Producer Information</h3>
+      <label for="company-name">Company Name: </label>
+      <input id="company-name" type="text">
+      <label for="address">Address: </label>
+      <input id="address" type="text">
+      <label for="city">City: </label>
+      <input id="city" type="text">
+      <label for="state">State or Province: </label>
+      <input id="state" type="text">
+      <label for="zip">Postal Code: </label>
+      <input id="zip" type="text">
+      <label for="country">Country: </label>
+      <input id="country" type="text">
+      <label for="website">Website: </label>
+      <input id="website" type="url">
+    </div>
+    <div class="center-line"></div>
+    <div class="form-column">
+      <h3>Primary Contact for this Document</h3>
+      <label for="first-name">First Name: </label>
+      <input id="first-name" type="text">
+      <label for="last-name">Last Name: </label>
+      <input id="last-name" type="text">
+      <label for="title">Title: </label>
+      <input id="title" type="text">
+      <label for="contact-address">Address: </label>
+      <input id="contact-address" type="text">
+      <label for="phone">Phone: </label>
+      <input id="phone" type="tel">
+      <label for="email">Email: </label>
+      <input id="email" type="email">
+    </div>
+  </form>
+  <app-attestation></app-attestation>
+  <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
     <div class="button-panel">
       <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
@@ -14,8 +70,6 @@
     </div>
     <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">
       <div id="group-container" class="group-container">
-        <button (click)="setAllGroupExpansion(false, catalog.uuid)">Collapse All</button>
-        <button (click)="setAllGroupExpansion(true, catalog.uuid)">Expand All</button>
         <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
         <app-group *ngFor="let group of catalog.groups" 
           [id]="group.id" 
@@ -33,6 +87,11 @@
       </div>
     </div>
   </div>
-</div>
-<app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-<button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
+  <button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
+  <div class="lower-div">
+    <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
+    <div class="generate-report-div">
+      <button class="generate-report" *ngIf="catalogData">Generate Report</button>
+    </div>
+  </div>
+</main>

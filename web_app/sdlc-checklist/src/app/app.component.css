@@ -1,6 +1,6 @@
 .checkbox-container {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .grid-container {
@@ -67,7 +67,147 @@
   margin: 5px;
 }
 
+.lower-div {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.upper-div>*{
+  width: 100%;
+}
+
+.generate-report {
+  margin: 0 auto;
+  display: block;
+  font-size: larger;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.generate-report-div {
+  position: relative;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 50% 1px 50%;
+  margin: 0px 20vw;
+}
+
+.form-column {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin: 20px;
+}
+
+h3 {
+  grid-column: 1 / 3;
+  text-align: center;
+  margin-top: 0;
+}
+
+input {
+  margin-bottom: 20px;
+  width: 90%
+}
+
+.center-line {
+  background-color: black;
+  margin: 35px 0;
+}
+
+label {
+  margin-bottom: 20px;
+  margin-right: 5px;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  z-index: 3;
+}
+
+.nav-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #005EA2;
+  border-bottom: 3px solid darkgray;
+  border-left: 3px solid darkgray;
+  border-radius: 0 0 0 5px;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  cursor: pointer;
+}
+
+.nav-icon:hover {
+  background-color: #004577;
+}
+
+.hamburger-line {
+  background-color: white;
+  height: 5px;
+  width: 30px;
+  border-radius: 3px;
+  margin: auto;
+}
+
+.hamburger-line:nth-child(1) {
+  margin-top: 18px;
+}
+
+.hamburger-line:nth-child(3) {
+  margin-bottom: 18px;
+}
+
+.expanded-nav {
+  width: 20vw;
+  height: 100vh;
+  background-color: white;
+  border-left: 2px solid black;
+  box-shadow: -4px 0 4px 0 rgba(0, 0, 0, .4);
+}
+
+.expanded-nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.expanded-nav li {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid black;
+}
+
+.expanded-nav li:nth-child(1) {
+  border-top: 1px solid black;
+}
+
+.expanded-nav a {
+  padding: 15px 10px;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  text-indent: 20px;
+}
+
+.expanded-nav h2 {
+  text-align: center;
+  text-decoration: underline;
+  margin: 25px 0;
+}
+
+.expanded-nav li:hover {
+  background-color: #EFF2F4;
+}
+
 .attest{
-  width:200px;
+  width: 200px;
   height: 30px;
 }
