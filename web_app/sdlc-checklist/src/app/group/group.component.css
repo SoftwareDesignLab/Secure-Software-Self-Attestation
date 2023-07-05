@@ -10,12 +10,6 @@ h2 {
 .prependDownArrow::before {
     content: "▼ "
 }
-.hidden {
-    display: none;
-}
-button {
-    float: right;
-}
 .inline-block {
     display: inline-block;
     margin: 15px;

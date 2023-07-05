@@ -1,7 +1,4 @@
-.checkbox-container {
-  display: flex;
-  justify-content: center;
-}
+/* Structural Rules */
 
 .grid-container {
   display: grid;
@@ -14,9 +11,7 @@
   grid-template-columns: 50% 50%;
 }
 
-.upper-div>*{
-  width: 100%;
-}
+/* Report Button Rules */
 
 .generate-report {
   margin: 0 auto;
@@ -31,6 +26,8 @@
 .generate-report-div {
   position: relative;
 }
+
+/* Contact Form Rules */
 
 form {
   display: grid;
@@ -64,6 +61,8 @@ label {
   margin-bottom: 20px;
   margin-right: 5px;
 }
+
+/* Nav Rules */
 
 nav {
   position: fixed;
@@ -147,9 +146,4 @@ nav {
 
 .expanded-nav li:hover {
   background-color: #EFF2F4;
-}
-
-.attest{
-  width: 200px;
-  height: 30px;
 }
