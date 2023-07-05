@@ -1,7 +1,9 @@
 h2 {
     cursor: pointer;
     user-select: none;
+    margin: 0;
 }
+
 .prependUpArrow::before {
     content: "▲ "
 }
@@ -13,4 +15,12 @@ h2 {
 }
 button {
     float: right;
+}
+.inline-block {
+    display: inline-block;
+    margin: 15px;
+}
+.group-checkbox {
+    width: 20px;
+    height: 20px;
 }
