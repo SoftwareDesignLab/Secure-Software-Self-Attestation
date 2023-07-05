@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Oscal, metaData, Catalog } from '../oscalModel';
-import { ErrorService, errorEnum } from '../error.service';
+import { notifyService } from '../notify.service';
 
 
 @Component({
@@ -13,7 +13,7 @@ export class CatalogProcessingComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
 
-  constructor(private error: ErrorService){
+  constructor(private notifications: notifyService){
   }
 
   onFileSelected(event: Event): void {
@@ -24,8 +24,7 @@ export class CatalogProcessingComponent {
       this.handleFile(file);
       console.log('File selected:', file);
     } else {
-      alert('Please upload an OSCAL Catalog JSON file.');
-      this.error.setError(errorEnum.wrongFileType);
+      this.notifications.Error("Please drop an OSCAL Catalog JSON file.");
     }
   }
 
@@ -41,8 +40,7 @@ export class CatalogProcessingComponent {
       this.handleFile(file);
       console.log('File dropped:', file);
     } else {
-      alert('Please drop an OSCAL Catalog JSON file.');
-      this.error.setError(errorEnum.wrongFileType);
+      this.notifications.Error("Please drop an OSCAL Catalog JSON file.");
     }
   }
 
@@ -111,8 +109,7 @@ export class CatalogProcessingComponent {
     if (isValid){
       return true;
     }
-    alert('Given json file is not a valid OSCAL Catalog');
-    this.error.setError(errorEnum.notCatalog);
+    this.notifications.Error("Given json file is not a valid OSCAL Catalog")
     return false;
   }
 
@@ -125,6 +122,7 @@ export class CatalogProcessingComponent {
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
         this.fileSelected.emit(catalog);
+        this.notifications.Success("File uploaded")
       }
     };
     reader.readAsText(file);

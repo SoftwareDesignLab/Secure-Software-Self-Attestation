@@ -8,14 +8,15 @@ import { RollableComponent } from './rollable/rollable.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { GroupComponent } from './group/group.component';
 import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
-import { ErrorService } from './error.service';
+import { notifyService } from './notify.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AttestationComponent } from './attestation/attestation.component';
-import { FormsModule} from '@angular/forms'
-import {MatGridListModule} from '@angular/material/grid-list';
+import { FormsModule } from '@angular/forms'
+import { MatGridListModule } from '@angular/material/grid-list';
 import { AttestationDataService } from './attestation-data.service';
 import { attestationComment } from './attestationForm';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 
 @NgModule({
@@ -34,9 +35,10 @@ import { attestationComment } from './attestationForm';
     BrowserAnimationsModule,
     MatDialogModule,
     FormsModule,
-    MatGridListModule
+    MatGridListModule,
+    SimpleNotificationsModule.forRoot()
   ],
-  providers: [attestationComment,ErrorService],
+  providers: [attestationComment,notifyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

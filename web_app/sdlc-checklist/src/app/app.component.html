@@ -1,5 +1,6 @@
 <!-- TODO split processing vertically into upload and download sections -->
 <app-attestation></app-attestation>
+<simple-notifications></simple-notifications>
 <div *ngFor="let catalog of catalogData.catalogs"> 
   <div class="catalog-container">
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>

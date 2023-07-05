@@ -3,6 +3,7 @@ import { GroupComponent } from './group/group.component';
 import { ChecklistItemComponent } from './control/control.component';
 import catalog from './defaultCatalog';
 import { Catalog } from './oscalModel';
+import { notifyService } from './notify.service';
 
 interface CatalogData {
   catalogs: Catalog[];
@@ -18,7 +19,7 @@ export class AppComponent {
   showComponentsArray: any;
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
-  constructor(){}
+  constructor(private service: notifyService){}
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
@@ -36,5 +37,5 @@ export class AppComponent {
     });
   }
 
-
 }
+
