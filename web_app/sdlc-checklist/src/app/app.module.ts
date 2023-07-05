@@ -14,7 +14,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AttestationComponent } from './attestation/attestation.component';
 import { FormsModule } from '@angular/forms'
 import { MatGridListModule } from '@angular/material/grid-list';
-import { AttestationDataService } from './attestation-data.service';
 import { attestationComment } from './attestationForm';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 
@@ -36,7 +35,9 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     MatDialogModule,
     FormsModule,
     MatGridListModule,
-    SimpleNotificationsModule.forRoot()
+    SimpleNotificationsModule.forRoot({
+      position: ['bottom', 'right']
+    })
   ],
   providers: [attestationComment,notifyService],
   bootstrap: [AppComponent]

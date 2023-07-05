@@ -24,7 +24,7 @@ export class CatalogProcessingComponent {
       this.handleFile(file);
       console.log('File selected:', file);
     } else {
-      this.notifications.Error("Please drop an OSCAL Catalog JSON file.");
+      this.notifications.error("Please drop an OSCAL Catalog JSON file.");
     }
   }
 
@@ -40,7 +40,7 @@ export class CatalogProcessingComponent {
       this.handleFile(file);
       console.log('File dropped:', file);
     } else {
-      this.notifications.Error("Please drop an OSCAL Catalog JSON file.");
+      this.notifications.error("Please drop an OSCAL Catalog JSON file.");
     }
   }
 
@@ -109,7 +109,7 @@ export class CatalogProcessingComponent {
     if (isValid){
       return true;
     }
-    this.notifications.Error("Given json file is not a valid OSCAL Catalog")
+    this.notifications.error("Given json file is not a valid OSCAL Catalog")
     return false;
   }
 
@@ -122,7 +122,7 @@ export class CatalogProcessingComponent {
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
         this.fileSelected.emit(catalog);
-        this.notifications.Success("File uploaded")
+        this.notifications.success("File uploaded");
       }
     };
     reader.readAsText(file);

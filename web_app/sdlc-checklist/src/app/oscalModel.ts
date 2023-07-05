@@ -1,4 +1,3 @@
-import { ControlValueAccessor } from '@angular/forms';
 import {GroupComponent} from './group/group.component'
 import { ChecklistItemComponent } from './control/control.component';
 

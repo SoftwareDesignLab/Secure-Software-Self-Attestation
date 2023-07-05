@@ -1,6 +1,5 @@
 import { Component, ViewChildren, QueryList } from '@angular/core';
 import { GroupComponent } from './group/group.component';
-import { ChecklistItemComponent } from './control/control.component';
 import catalog from './defaultCatalog';
 import { Catalog } from './oscalModel';
 import { notifyService } from './notify.service';
