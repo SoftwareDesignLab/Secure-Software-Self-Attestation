@@ -1,0 +1,132 @@
+{
+    "assessment-results": {
+        "uuid": "",
+        "metadata": {
+            "title": "Attestation results for software company Inc. LLC",
+            "last-modified": "5 minutes ago",
+            "version": "0.0.0.0.0.0.1",
+            "oscal-version": "1.0.4"
+        },
+        "import-ap": {
+            "href": ""
+        },
+        "results": [
+            {
+                "uuid": "",
+                "title": "Name of this assessment",
+                "description": "Description of this assessment",
+                "start": "",
+                "reviewed-controls": {
+                    "props": [
+                        {
+                            "name": "Catalog Name",
+                            "value": "SSDF attestation requirements"
+                        }
+                    ],
+                    "links": [
+                        {
+                            "href": "https://www.cisa.gov/sites/default/files/2023-04/secure-software-self-attestation_common-form_508.pdf"
+                        }
+                    ],
+                    "control-selections": [
+                        {
+                            "include-all": {
+                                "whatisthis": "if this object exists then all controls are included in the assessment"
+                            },
+                            "include-controls": [
+                                {"control-id": ""},
+                                {"control-id": ""}
+                            ]
+                        }
+                    ]
+                },
+                "attestations": [
+                    {
+                        "responsible-parties": [
+                            {
+                                "role-id": "",
+                                "party-uuids": [
+
+                                ]
+                            }
+                        ],
+                        "parts": [
+                            {
+                                "name": "ctrl-1",
+                                "class": "Explanation",
+                                "title": "Explanation for <control>",
+                                "prose": "This is where the text attestation claim will be",
+                                "props": [
+                                    {
+                                        "name": "Control Name",
+                                        "value": "Test Control 1"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "ctrl-1",
+                                "class": "Compliance",
+                                "title": "Compliance for <control>",
+                                "prose": "Compliant",
+                                "props": [
+                                    {
+                                        "name": "Control Name",
+                                        "value": "Test Control 1"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "ctrl-2",
+                                "class": "Explanation",
+                                "title": "Explanation for <control>",
+                                "prose": "We did not implement this",
+                                "props": [
+                                    {
+                                        "name": "Control Name",
+                                        "value": "Test Control 2"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "ctrl-2",
+                                "class": "Compliance",
+                                "title": "Compliance for <control>",
+                                "prose": "Not Compliant",
+                                "props": [
+                                    {
+                                        "name": "Control Name",
+                                        "value": "Test Control 2"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "ctrl-3",
+                                "class": "Compliance",
+                                "title": "Compliance for <control>",
+                                "prose": "Not Compliant",
+                                "props": [
+                                    {
+                                        "name": "Control Name",
+                                        "value": "Test Control 3"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "ctrl-3",
+                                "class": "NVIP Scan Results",
+                                "title": "Compliance for <control>",
+                                "prose": "There are 100 vulnerable packages",
+                                "props": [
+                                    {
+                                        "name": "Control Name",
+                                        "value": "Test Control 3"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

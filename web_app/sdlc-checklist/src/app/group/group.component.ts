@@ -11,14 +11,14 @@ export class GroupComponent {
   @Input() title: any;
   @Input() description: any;
   @Input() controls: any;
-  @Input() uuid: any;
+  @Input() catalogUUID: any;
   @ViewChildren(ChecklistItemComponent) childComponents!: QueryList<ChecklistItemComponent>;
   showComponents = true;
   UID: any;  //Unique ID for this control for the program
 
 
   ngOnInit(){
-    this.UID = this.uuid + '-' + this.id
+    this.UID = this.catalogUUID + '-' + this.id
   }
 
   toggleComponents() {
@@ -64,11 +64,24 @@ export class GroupComponent {
       let box = document.getElementById('checkbox-' + child.UID);
       if(box instanceof HTMLInputElement) {
         box.checked = truth;
-        if(child.getCheck()!=truth){
-          child.toggleCheck();
-        }
-        
+        if(child.getCheck()!=truth)
+        child.toggleCheck();
       }
     })
+  }
+
+  setAllChildrenToParent(): void {
+    let parent = document.getElementById("group-checkall-" + this.id);
+    if (parent instanceof HTMLInputElement) {
+      this.setAllChildren(parent.checked);
+    }
+  }
+
+  update() {
+    let status = this.areAllChecked();
+    let parent = document.getElementById("group-checkall-" + this.id);
+    if (parent instanceof HTMLInputElement) {
+      parent.checked = status;
+    }
   }
 }

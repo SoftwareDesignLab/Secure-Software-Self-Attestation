@@ -1,14 +1,13 @@
 <section class="group">
-    <div class="button-div" *ngIf="showComponents">
-        <button (click)="setAllChildren(true)" *ngIf="!areAllChecked()">Check All</button>
-        <button (click)="setAllChildren(false)" *ngIf="areAllChecked()">Uncheck All</button>
+    <div class="right" *ngIf="showComponents">
+        <input type="checkbox" [id]="'group-checkall-' + id" class="group-checkbox" (click)="setAllChildrenToParent()"> 
     </div>
     <div *ngIf="id; else ungrouped">
         <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ id }}: {{ title }}</h2>
     </div>
     <ng-template #ungrouped>
         <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ title }}</h2>
-    </ng-template>   
+    </ng-template>  
     <div [className]="showComponents ? 'group-rollable-content' : 'group-rollable-content hidden'">
         <p *ngIf="description">{{ description }}</p>
         <div id="checkbox-container" class="checkbox-container">
@@ -21,7 +20,7 @@
               [links]="item.links"
               [props]="item.props"
               [controls]="item.controls"
-              [uuid]="uuid"
+              (update) = "update()"
             ></app-control>
         </div>
     </div>

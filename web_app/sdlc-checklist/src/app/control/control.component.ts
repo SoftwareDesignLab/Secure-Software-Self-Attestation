@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'app-control',
@@ -18,6 +18,7 @@ export class ChecklistItemComponent {
   showRollable = false;
   isChecked = false;
   userComment: string = ""
+  @Output() update = new EventEmitter();
   UID: any; //Unique ID for this control for the program
 
 
@@ -54,6 +55,7 @@ export class ChecklistItemComponent {
 
   toggleCheck(){
     this.isChecked = !this.isChecked;
+    this.update.emit();
   }
   getCheck(){
     return this.isChecked;
