@@ -18,6 +18,7 @@ export class AppComponent {
   showComponentsArray: any;
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
+  constructor(){}
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    

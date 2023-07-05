@@ -9,6 +9,14 @@ import { CatalogProcessingComponent } from './catalog-processing/catalog-process
 import { GroupComponent } from './group/group.component';
 import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
 import { ErrorService } from './error.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AttestationComponent } from './attestation/attestation.component';
+import { FormsModule} from '@angular/forms'
+import {MatGridListModule} from '@angular/material/grid-list';
+import { AttestationDataService } from './attestation-data.service';
+import { attestationComment } from './attestationForm';
+
 
 @NgModule({
   declarations: [
@@ -17,13 +25,18 @@ import { ErrorService } from './error.service';
     RollableComponent,
     CatalogProcessingComponent,
     GroupComponent,
-    CatalogInfoComponent
+    CatalogInfoComponent,
+    AttestationComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    FormsModule,
+    MatGridListModule
   ],
-  providers: [ErrorService],
+  providers: [attestationComment,ErrorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
