@@ -6,7 +6,7 @@ import { attestationComment } from './attestationForm';
 })
 export class AttestationDataService {
 
-  private selectedValue: string = 'company'; 
+  private selectedValue: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
   private submit: boolean = false;
 
@@ -43,5 +43,22 @@ export class AttestationDataService {
 
   toggleSubmit(){
     this.submit = true;
+  }
+
+  submitable(){
+    if(this.selectedValue=='company'){
+      return true
+    }
+    return this.info[0].isFilled()
+  }
+
+  validComments(){
+    let valid = true;
+    this.info.forEach(function(comment){
+      if(!comment.isFilled()){
+        valid=false;
+      }
+    });
+    return valid;
   }
 }

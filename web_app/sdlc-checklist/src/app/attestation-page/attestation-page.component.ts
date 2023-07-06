@@ -2,6 +2,9 @@ import { Component, ViewChildren, QueryList } from '@angular/core';
 import { GroupComponent } from '../group/group.component';
 import { ChecklistItemComponent } from '../control/control.component';
 import catalog from '../defaultCatalog';
+import { AttestationDataService } from '../attestation-data.service';
+import { attestationComment } from '../attestationForm';
+import { AttestationComponent } from '../attestation/attestation.component';
 
 interface Catalog {
   uuid: string;
@@ -27,11 +30,26 @@ export class AttestationPageComponent {
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   showNav = false;
+  completed = false
+
+  constructor(private attestationService: AttestationDataService){
+
+  }
 
 
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
   }
+
+  AttestationCompleted(){
+    if(this.attestationService.submitable()){
+      this.completed=true;
+    }
+    return this.completed;
+  
+  }
+
+
   onFileSelected(jsonData: any): void {
     if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
       return;

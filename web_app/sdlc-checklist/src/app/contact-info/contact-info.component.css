@@ -13,6 +13,7 @@
     display: grid;
     grid-template-columns: 50% 1px 50%;
     margin: 0px 20vw;
+    padding: 70px 0;
   }
 
   label {

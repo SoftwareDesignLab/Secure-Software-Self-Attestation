@@ -1,4 +1,5 @@
 <app-attestation></app-attestation>
+<div class="catalogs" *ngIf="AttestationCompleted()">
   <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
     <div class="button-panel">
@@ -36,3 +37,4 @@
       <button class="generate-report" *ngIf="catalogData">Generate Report</button>
     </div>
   </div>
+</div>
