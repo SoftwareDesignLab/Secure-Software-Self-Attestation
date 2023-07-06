@@ -2,34 +2,34 @@
     <div class="form-column">
       <h3>Software Producer Information</h3>
       <label for="company-name">Company Name: </label>
-      <input id="company-name" type="text">
+      <input id="company-name" type="text" (keyup)="updateCompanyName($event)" value="{{contactService.companyName}}" >
       <label for="address">Address: </label>
-      <input id="address" type="text">
+      <input id="address" type="text"(keyup)="updateCompanyAddress($event)" value="{{contactService.companyAddress}}">
       <label for="city">City: </label>
-      <input id="city" type="text">
+      <input id="city" type="text" (keyup)="updateCity($event)" value="{{contactService.city}}">
       <label for="state">State or Province: </label>
-      <input id="state" type="text">
+      <input id="state" type="text" (keyup)="updateState($event)" value="{{contactService.state}}">
       <label for="zip">Postal Code: </label>
-      <input id="zip" type="text">
+      <input id="zip" type="text" (keyup)="updatePostal($event)" value="{{contactService.postalCode}}">
       <label for="country">Country: </label>
-      <input id="country" type="text">
+      <input id="country" type="text" (keyup)="updateCountry($event)" value="{{contactService.country}}">
       <label for="website">Website: </label>
-      <input id="website" type="url">
+      <input id="website" type="url" (keyup)="updateWebsite($event)" value="{{contactService.website}}">
     </div>
     <div class="center-line"></div>
     <div class="form-column">
       <h3>Primary Contact for this Document</h3>
       <label for="first-name">First Name: </label>
-      <input id="first-name" type="text">
+      <input id="first-name" type="text" (keyup)="updateFirstName($event)" value="{{contactService.firstName}}">
       <label for="last-name">Last Name: </label>
-      <input id="last-name" type="text">
+      <input id="last-name" type="text" (keyup)="updateLastName($event)" value="{{contactService.lastName}}">
       <label for="title">Title: </label>
-      <input id="title" type="text">
+      <input id="title" type="text" (keyup)="updateTitle($event)" value="{{contactService.title}}">
       <label for="contact-address">Address: </label>
-      <input id="contact-address" type="text">
+      <input id="contact-address" type="text" (keyup)="updatePersonalAddress($event)" value="{{contactService.personalAddress}}">
       <label for="phone">Phone: </label>
-      <input id="phone" type="tel">
+      <input id="phone" type="tel" (keyup)="updatePhone($event)" value="{{contactService.phone}}">
       <label for="email">Email: </label>
-      <input id="email" type="email">
+      <input id="email" type="email" (keyup)="updateEmail($event)" value="{{contactService.email}}">
     </div>
   </form>

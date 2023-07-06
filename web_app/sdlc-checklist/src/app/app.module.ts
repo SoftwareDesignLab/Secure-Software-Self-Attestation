@@ -17,6 +17,7 @@ import { AttestationDataService } from './attestation-data.service';
 import { attestationComment } from './attestationForm';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
+import { ContactService } from './contact.service';
 
 
 @NgModule({
@@ -39,7 +40,11 @@ import { AttestationPageComponent } from './attestation-page/attestation-page.co
     FormsModule,
     MatGridListModule
   ],
-  providers: [attestationComment],
+  providers: [
+    attestationComment,
+    ContactService,
+    AttestationDataService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
