@@ -13,6 +13,7 @@
 .checkbox-label {
   cursor: pointer;
   margin-left: 5px;
+  margin-right: 10px;
   user-select: none; /* Prevents text selection when clicking the label */
   display: inline-flex;
   align-items: center;
