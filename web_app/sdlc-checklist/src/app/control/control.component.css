@@ -34,3 +34,41 @@ input[name="explanation"] {
   width: 300px;
   margin-left: 50px;
 }
+
+.button-set {
+  min-width: 70px;
+  margin-left: 10px;
+}
+
+img {
+  border: 1px solid gray;
+  padding: 2px;
+}
+
+input:checked + label>.check {
+  background-color: rgb(199, 243, 193)
+}
+
+input:checked + label>.x {
+  background-color: rgb(243, 193, 193)
+}
+
+input:checked + label>.na {
+  background-color: rgb(193, 229, 243)
+}
+
+img:hover {
+  background-color: rgb(180, 189, 192)
+}
+
+.individual-button {
+  display: inline;
+}
+
+.check {
+  border-radius: 4px 0 0 4px;
+}
+
+.na {
+  border-radius: 0 4px 4px 0;
+}

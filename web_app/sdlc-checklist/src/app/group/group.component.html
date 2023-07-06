@@ -1,11 +1,13 @@
 <section class="group">
-    <div *ngIf="id; else ungrouped" class="inline-block">
+    <div *ngIf="id; else ungrouped" [className]="areAllChildrenChecked() ? 'inline-block gray' : 'inline-block'">
         <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ id }}: {{ title }}</h2>
     </div>
-    <ng-template #ungrouped class="inline-block">
+    <ng-template #ungrouped>
         <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ title }}</h2>
     </ng-template>  
-    <input type="checkbox" [id]="'group-checkall-' + id" class="group-checkbox" (click)="setAllChildrenToParent()"> 
+    <div class="button-set">
+        <img *ngFor="let i of ['check', 'x', 'na']" [src]="'/assets/' + i + '.png'" [className]="i" [alt]="i" (click)="setAllChildrenSelection(i)">
+    </div>
     <div class="group-rollable-content" [hidden]="!showComponents">
         <p *ngIf="description">{{ description }}</p>
         <div id="checkbox-container" class="checkbox-container">
@@ -18,7 +20,6 @@
               [links]="item.links"
               [props]="item.props"
               [controls]="item.controls"
-              (update) = "update()"
             ></app-control>
         </div>
     </div>

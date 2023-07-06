@@ -2,6 +2,7 @@ h2 {
     cursor: pointer;
     user-select: none;
     margin: 0;
+    display: inline-block;
 }
 
 .prependUpArrow::before {
@@ -17,4 +18,35 @@ h2 {
 .group-checkbox {
     width: 20px;
     height: 20px;
+}
+
+.gray {
+    color: gray;
+}
+
+.button-set {
+    min-width: 70px;
+    margin-left: 10px;
+    display: inline-block;
+}
+  
+img {
+    border: 1px solid gray;
+    padding: 2px;
+}
+  
+img:hover {
+    background-color: rgb(180, 189, 192)
+}
+  
+.individual-button {
+    display: inline;
+}
+
+.check {
+    border-radius: 4px 0 0 4px;
+}
+  
+.na {
+    border-radius: 0 4px 4px 0;
 }

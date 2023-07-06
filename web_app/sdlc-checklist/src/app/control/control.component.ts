@@ -15,9 +15,8 @@ export class ChecklistItemComponent {
   @Input() props: any;
   @Input() controls: any;
   @Output() update = new EventEmitter();
+  selection: String = "no-selection";
   showRollable = false;
-  isChecked = false;
-  userComment: string = "";
 
   toggleRollable() {
     this.showRollable = !this.showRollable;
@@ -46,14 +45,15 @@ export class ChecklistItemComponent {
     }
   }
 
-  toggleCheck(){
-    this.isChecked = !this.isChecked;
-    this.update.emit();
+  getComment(): String {
+    let textbox = document.getElementById(this.id + '-comment');
+    if (textbox instanceof HTMLInputElement) {
+      return textbox.value;
+    }
+    return "";
   }
-  getCheck(){
-    return this.isChecked;
-  }
-  onKey(event: any) { // without type info
-    this.userComment = event.target.value;
+
+  isChecked(): boolean {
+    return this.selection !== "no-selection";
   }
 }
