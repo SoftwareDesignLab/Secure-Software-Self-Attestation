@@ -19,7 +19,9 @@ export class AppComponent {
   hiddenCatalogs = new Set<String>();
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
-  constructor(private service: notifyService){}
+  showNav = false;
+
+  constructor(){}
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
@@ -38,6 +40,18 @@ export class AppComponent {
     });
   }
 
+
+  toggleNav(): void {
+    this.showNav = !this.showNav;
+  }
+
+  getLinkName(catalog: Catalog): String {
+    let metadata: any = catalog.metadata;
+    if (metadata.title) {
+      return metadata.title;
+    }
+    return catalog.uuid;
+  }
 
   toggleExpansion(uuid: String): void {
     if (this.hiddenCatalogs.has(uuid)) {

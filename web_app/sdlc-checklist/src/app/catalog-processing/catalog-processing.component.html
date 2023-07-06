@@ -1,4 +1,4 @@
-<div class="file-upload">
+<div class="file-upload" id="upload">
     <input
       type="file"
       id="file"
@@ -7,14 +7,14 @@
       #fileInput
       hidden
     />
-    <button (click)="fileInput.click()" class="upload-button">
-      Upload Another Catalog
-    </button>
     <div
       class="drag-drop-area"
       (dragover)="onDragOver($event)"
       (drop)="onDrop($event)"
     >
-      <p>Must be JSON formatted as an OSCAL Catalog Model</p>
+      <button (click)="fileInput.click()" class="upload-button">
+        Upload Another Catalog
+      </button>
+      <p>-- or --<br><br>Drag and Drop Here<br>Must be JSON formatted as an OSCAL Catalog Model</p>
     </div>
   </div>

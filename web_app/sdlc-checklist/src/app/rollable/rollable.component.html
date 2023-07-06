@@ -20,18 +20,18 @@
       </li>
     </ul>
   </section>
-  <!--<section *ngIf="hasReferences()">
-    <h3>References</h3>
-    <ul>
-      <li *ngFor="let prop of references">
-        {{prop.name}}: {{prop.value}}
-      </li>
-    </ul>
-  </section>-->
   <section *ngIf="hasExamples()">
     <h3>Examples</h3>
     <ul>
       <li class="example" *ngFor="let example of examples">{{example.title}}</li>
+    </ul>
+  </section>
+  <section *ngIf="hasReferences()">
+    <h3>References</h3>
+    <ul class="multi-column">
+      <li *ngFor="let prop of references" class="reference">
+        {{prop.name}}: {{prop.value}}
+      </li>
     </ul>
   </section>
 </div>
