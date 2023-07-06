@@ -36,3 +36,20 @@
     padding: 70px 0;
     text-align: center;
   }
+
+  .bot-right {
+    position: absolute;
+    top: 88%;
+    right: 10%;
+    }
+
+  a {
+    text-align: right;
+    cursor: pointer;
+  }
+
+  .add{
+    background-color: rgb(43, 172, 43);
+  }
+
+  

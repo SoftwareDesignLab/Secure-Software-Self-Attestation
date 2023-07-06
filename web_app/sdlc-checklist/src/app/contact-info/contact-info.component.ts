@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { ContactService } from '../contact.service';
+import { Router } from '@angular/router';
+import { attestationComment } from '../attestationForm';
+import { AttestationDataService } from '../attestation-data.service';
 
 @Component({
   selector: 'app-contact-info',
@@ -8,7 +11,7 @@ import { ContactService } from '../contact.service';
 })
 export class ContactInfoComponent {
 
-constructor( public contactService: ContactService){
+constructor( public contactService: ContactService, private router: Router,private attestationService: AttestationDataService){
 
 }
   public carlos: string = ''
@@ -68,6 +71,20 @@ constructor( public contactService: ContactService){
     this.contactService.email = event.target.value;
   }
 
+  changePage(page: string){
+    this.router.navigate([page]);
+  }
+
+  isFilled(){
+    return !this.contactService.isFilled()
+  }
+
+  visitedAttestation(){
+    if(this.attestationService.submitable()){
+      return true
+    }
+    return false;
+  }
 
 
 }

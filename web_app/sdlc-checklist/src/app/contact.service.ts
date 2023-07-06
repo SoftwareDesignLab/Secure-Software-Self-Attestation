@@ -22,4 +22,22 @@ export class ContactService {
   public email: string = "";
 
 
+  isFilled(){
+    return(
+      this.companyName != "" &&
+      this.companyAddress != "" &&
+      this.city != "" &&
+      this.state != "" &&
+      this.postalCode != "" &&
+      this.country != "" &&
+      this.website != "" &&
+      this.firstName != "" &&
+      this.lastName != "" &&
+      this.title != "" &&
+      this.personalAddress != "" &&
+      this.phone != "" &&
+      this.email != ""
+    )
+  }
+
 }

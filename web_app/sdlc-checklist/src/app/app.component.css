@@ -86,3 +86,7 @@ nav {
   width: 200px;
   height: 30px;
 }
+
+a {
+  cursor: pointer;
+}

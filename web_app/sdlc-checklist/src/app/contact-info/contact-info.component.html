@@ -34,4 +34,15 @@
         <input id="email" type="email" (keyup)="updateEmail($event)" value="{{contactService.email}}">
       </div>
     </form>
+
+</div>
+<div class="bot-right">
+  <button *ngIf="!visitedAttestation()" [disabled]="isFilled()" (click)="changePage('attestation-form')">
+    Procceed to Attestation Form
+  </button>
+  <button class="add" *ngIf="visitedAttestation()"  (click)="changePage('attestation-form')">
+    add New Attestation
+  </button>
+
+
 </div>
