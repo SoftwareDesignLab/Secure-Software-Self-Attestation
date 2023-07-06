@@ -1,0 +1,32 @@
+.center-line {
+    background-color: black;
+    margin: 35px 0;
+  }
+
+  .form-column {
+    display: grid;
+    grid-template-columns: auto auto;
+    margin: 20px;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: 50% 1px 50%;
+    margin: 0px 20vw;
+  }
+
+  label {
+    margin-bottom: 20px;
+    margin-right: 5px;
+  }
+
+  h3 {
+    grid-column: 1 / 3;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  input {
+    margin-bottom: 20px;
+    width: 90%
+  }

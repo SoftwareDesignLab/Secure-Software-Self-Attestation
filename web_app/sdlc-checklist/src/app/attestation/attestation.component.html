@@ -14,7 +14,7 @@
             <mat-grid-tile>Product(s) or Product Line Name </mat-grid-tile> 
             <mat-grid-tile>Version Number (if applicable)</mat-grid-tile>
             <mat-grid-tile>Release/Publish Date </mat-grid-tile>
-            <div class = "row" *ngFor="let row of info">
+            <div class = "row" *ngFor="let row of dataService.getInfo()">
                 <mat-grid-tile width="50px"><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value="{{row.getName()}}"> </mat-grid-tile> 
                 <mat-grid-tile><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}} ></mat-grid-tile>
                 <mat-grid-tile><input type ="date" name="form" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}}></mat-grid-tile>
@@ -22,6 +22,6 @@
     
         </mat-grid-list>
         <button class="add" mat-button (click)="addRow()">+</button>
-        <button class="add" mat-button (click)="removeRow()" *ngIf="info.length>1">-</button>
+        <button class="add" mat-button (click)="removeRow()" *ngIf="dataService.getInfo().length>1">-</button>
     </div>
 </div>

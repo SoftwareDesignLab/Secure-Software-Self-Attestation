@@ -1,8 +1,7 @@
 import { Component, ViewChildren, QueryList } from '@angular/core';
-import { GroupComponent } from './group/group.component';
-import { ChecklistItemComponent } from './control/control.component';
-import catalog from './defaultCatalog';
-import { Router } from '@angular/router';
+import { GroupComponent } from '../group/group.component';
+import { ChecklistItemComponent } from '../control/control.component';
+import catalog from '../defaultCatalog';
 
 interface Catalog {
   uuid: string;
@@ -16,11 +15,12 @@ interface CatalogData {
 }
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-attestation-page',
+  templateUrl: './attestation-page.component.html',
+  styleUrls: ['./attestation-page.component.css']
 })
-export class AppComponent {
+export class AttestationPageComponent {
+
   catalogData: CatalogData = {catalogs: []};
   showComponentsArray: any;
   hiddenCatalogs = new Set<String>();
@@ -28,8 +28,7 @@ export class AppComponent {
   control: string = "Ungrouped Controls";
   showNav = false;
 
-  constructor(private router: Router){}
-  
+
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
   }
@@ -47,23 +46,6 @@ export class AppComponent {
     });
   }
 
-  changePage(page: string){
-    this.showNav = !this.showNav;
-    this.router.navigate([page]);
-  }
-
-
-  toggleNav(): void {
-    this.showNav = !this.showNav;
-  }
-
-  getLinkName(catalog: Catalog): String {
-    let metadata: any = catalog.metadata;
-    if (metadata.title) {
-      return metadata.title;
-    }
-    return catalog.uuid;
-  }
 
   toggleExpansion(uuid: String): void {
     if (this.hiddenCatalogs.has(uuid)) {
@@ -91,4 +73,5 @@ export class AppComponent {
     let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid});
     return index >= 0;
   }
+
 }

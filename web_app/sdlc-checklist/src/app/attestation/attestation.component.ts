@@ -10,27 +10,24 @@ import { AttestationDataService } from '../attestation-data.service';
 })
 export class AttestationComponent {
   selectedValue: string;
-  info: Array<attestationComment>;
-  dataService: AttestationDataService;
+  //dataService: AttestationDataService;
 
-  constructor( DataService: AttestationDataService ){
-    this.dataService = DataService;
-    this.selectedValue = DataService.getSelectedValue();
-    this.info = DataService.getInfo();
+  constructor( public dataService: AttestationDataService ){
+    this.selectedValue = dataService.getSelectedValue();
+    
   }
 
 
   onSubmit() {
     this.dataService.setSelectedValue(this.selectedValue);
     this.dataService.toggleSubmit();
-    //this.dialogRef.close();
     console.log("Attestation Submitted");
   }
   addRow(){
-    this.info.push(new attestationComment);
+    this.dataService.addInfo(new attestationComment);
   }
   removeRow(){
-    this.info.pop();
+    this.dataService.popInfo();
   }
 
   onKey(event: any, attest: attestationComment, target: string) { 
@@ -45,7 +42,7 @@ export class AttestationComponent {
 
   validComments(){
     let valid = true;
-    this.info.forEach(function (comment) {  
+    this.dataService.getInfo().forEach(function (comment) {  
       if(!comment.isFilled()){
         valid=false;
       }  

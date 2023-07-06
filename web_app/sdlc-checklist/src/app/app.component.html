@@ -11,87 +11,11 @@
   <div [className]="showNav ? 'expanded-nav' : 'expanded-nav hidden'">
     <h2>SDLC</h2>
     <ul>
-      <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
-      <li><a href="#attestation" (click)="toggleNav()">Attestation Form</a></li>
-      <li *ngFor="let catalog of catalogData.catalogs">
-        <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
-      </li>
-      <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
+      <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
+      <li><a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form</a></li>
     </ul>
   </div>
 </nav>
-<main>
-  <form class="pane" id="contact-form">
-    <div class="form-column">
-      <h3>Software Producer Information</h3>
-      <label for="company-name">Company Name: </label>
-      <input id="company-name" type="text">
-      <label for="address">Address: </label>
-      <input id="address" type="text">
-      <label for="city">City: </label>
-      <input id="city" type="text">
-      <label for="state">State or Province: </label>
-      <input id="state" type="text">
-      <label for="zip">Postal Code: </label>
-      <input id="zip" type="text">
-      <label for="country">Country: </label>
-      <input id="country" type="text">
-      <label for="website">Website: </label>
-      <input id="website" type="url">
-    </div>
-    <div class="center-line"></div>
-    <div class="form-column">
-      <h3>Primary Contact for this Document</h3>
-      <label for="first-name">First Name: </label>
-      <input id="first-name" type="text">
-      <label for="last-name">Last Name: </label>
-      <input id="last-name" type="text">
-      <label for="title">Title: </label>
-      <input id="title" type="text">
-      <label for="contact-address">Address: </label>
-      <input id="contact-address" type="text">
-      <label for="phone">Phone: </label>
-      <input id="phone" type="tel">
-      <label for="email">Email: </label>
-      <input id="email" type="email">
-    </div>
-  </form>
-  <app-attestation></app-attestation>
-  <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
-    <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
-    <div class="button-panel">
-      <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
-      <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
-      <div (click)="toggleExpansion(catalog.uuid)" 
-           [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
-      </div><br>
-      <p class="button-caption">Remove Catalog</p>
-      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
-    </div>
-    <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">
-      <div id="group-container" class="group-container">
-        <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
-        <app-group *ngFor="let group of catalog.groups" 
-          [id]="group.id" 
-          [title]="group.title" 
-          [controls]="group.controls"
-          [catalogUUID]="catalog.uuid"
-        ></app-group>
-      <div *ngIf="catalog.controls">
-        <app-group
-          [title]="control"
-          [controls]="catalog.controls"
-          [catalogUUID]="catalog.uuid"
-        ></app-group>
-        </div>
-      </div>
-    </div>
-  </div>
-  <button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
-  <div class="lower-div">
-    <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-    <div class="generate-report-div">
-      <button class="generate-report" *ngIf="catalogData">Generate Report</button>
-    </div>
-  </div>
-</main>
+<router-outlet></router-outlet>
+
+

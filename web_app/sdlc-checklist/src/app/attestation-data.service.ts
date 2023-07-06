@@ -34,6 +34,13 @@ export class AttestationDataService {
     this.info = data;
   }
 
+  addInfo(data: attestationComment){
+    this.info.push(data);
+  }
+  popInfo(){
+    this.info.pop();
+  }
+
   toggleSubmit(){
     this.submit = true;
   }

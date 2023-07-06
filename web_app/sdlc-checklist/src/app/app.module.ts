@@ -15,6 +15,8 @@ import { FormsModule} from '@angular/forms'
 import {MatGridListModule} from '@angular/material/grid-list';
 import { AttestationDataService } from './attestation-data.service';
 import { attestationComment } from './attestationForm';
+import { ContactInfoComponent } from './contact-info/contact-info.component';
+import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { attestationComment } from './attestationForm';
     CatalogProcessingComponent,
     GroupComponent,
     CatalogInfoComponent,
-    AttestationComponent
+    AttestationComponent,
+    ContactInfoComponent,
+    AttestationPageComponent
   ],
   imports: [
     BrowserModule,
