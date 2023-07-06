@@ -31,3 +31,8 @@
     margin-bottom: 20px;
     width: 90%
   }
+
+  .center {
+    padding: 70px 0;
+    text-align: center;
+  }
