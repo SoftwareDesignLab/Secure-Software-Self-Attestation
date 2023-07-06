@@ -61,7 +61,7 @@
   <app-attestation></app-attestation>
 
   <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
-    <div class="button-panel">
+    <div [className]="isShown(catalog.uuid) ? 'button-panel raised' : 'button-panel'">
       <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
       <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
       <div (click)="toggleExpansion(catalog.uuid)" 
