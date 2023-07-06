@@ -5,6 +5,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
+
 export class ChecklistItemComponent {
   @Input() id: any;
   @Input() title: any;
@@ -17,6 +18,13 @@ export class ChecklistItemComponent {
   @Output() update = new EventEmitter();
   selection: String = "no-selection";
   showRollable = false;
+  @Input() uuid: any;
+  UID: any; //Unique ID for this control for the program
+
+
+  ngOnInit(){
+    this.UID = this.uuid + '-' + this.id
+  }
 
   toggleRollable() {
     this.showRollable = !this.showRollable;

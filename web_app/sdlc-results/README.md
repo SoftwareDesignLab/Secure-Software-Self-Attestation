@@ -1,25 +1,10 @@
-## Installation (First time only)
+# SdlcResults
 
-Make sure you are in `sdlc-checklist` dir
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.1.
 
-run `npm install` 
-
-run `ng add @angular/material` and type `y` to begin installion. 
-
-During installing Choose `Indigo/Pink` for  theme, `n` for global typography and `Include and enable animations` for including angular animations.
-
-run `npm install --save angular2-notifications -f --legacy-peer-deps`
-
-
-## Running Development Server
+## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-
-# SdlcChecklist
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.6.
-
 
 ## Code scaffolding
 

@@ -1,0 +1,6 @@
+<app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
+<div *ngIf="assessmentResults !== undefined">
+  <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
+  <div *ngFor="let result of assessmentResults.results">
+    <app-result [result]="result"></app-result>
+</div>

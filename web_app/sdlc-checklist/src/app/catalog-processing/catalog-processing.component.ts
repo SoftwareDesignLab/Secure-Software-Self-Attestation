@@ -1,5 +1,8 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Oscal, metaData, catalog } from '../oscalModel';
+import { Oscal, metaData, Catalog } from '../oscalModel';
+import { notifyService } from '../notify.service';
+
+
 @Component({
   selector: 'app-catalog-processing',
   templateUrl: './catalog-processing.component.html',
@@ -10,6 +13,9 @@ export class CatalogProcessingComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
 
+  constructor(private notifications: notifyService){
+  }
+
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file && this.isJsonFile(file)) {
@@ -17,8 +23,12 @@ export class CatalogProcessingComponent {
       //TODO verify that the file is an OSCAL Catalog
       this.handleFile(file);
       console.log('File selected:', file);
+      let uploadButton = document.getElementById('file');
+      if (uploadButton instanceof HTMLInputElement) {
+        uploadButton.value = "";
+      }
     } else {
-      alert('Please upload an OSCAL Catalog JSON file.');
+      this.notifications.error("Please drop an OSCAL Catalog JSON file.");
     }
   }
 
@@ -34,7 +44,7 @@ export class CatalogProcessingComponent {
       this.handleFile(file);
       console.log('File dropped:', file);
     } else {
-      alert('Please drop an OSCAL Catalog JSON file.');
+      this.notifications.error("Please drop an OSCAL Catalog JSON file.");
     }
   }
 
@@ -60,7 +70,7 @@ export class CatalogProcessingComponent {
    */
   private isValidCatalog(data: object): boolean{
     let isValid : boolean = false;
-    let catalog = data as catalog;
+    let catalog = data as Catalog;
     if(catalog.uuid!= undefined){
       var UIDpattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/
       if(UIDpattern.test(catalog.uuid)){
@@ -103,7 +113,7 @@ export class CatalogProcessingComponent {
     if (isValid){
       return true;
     }
-    alert('Given json file is not a valid OSCAL Catalog');
+    this.notifications.error("Given json file is not a valid OSCAL Catalog")
     return false;
   }
 
@@ -116,6 +126,7 @@ export class CatalogProcessingComponent {
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
         this.fileSelected.emit(catalog);
+        this.notifications.success("File uploaded");
       }
     };
     reader.readAsText(file);

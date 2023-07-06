@@ -1,14 +1,8 @@
 import { Component, ViewChildren, QueryList } from '@angular/core';
 import { GroupComponent } from './group/group.component';
-import { ChecklistItemComponent } from './control/control.component';
 import catalog from './defaultCatalog';
-
-interface Catalog {
-  uuid: string;
-  metadata: object;
-  groups: GroupComponent[];
-  controls: ChecklistItemComponent[];
-}
+import { Catalog } from './oscalModel';
+import { notifyService } from './notify.service';
 
 interface CatalogData {
   catalogs: Catalog[];
@@ -22,26 +16,30 @@ interface CatalogData {
 export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
   showComponentsArray: any;
+  hiddenCatalogs = new Set<String>();
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   showNav = false;
-  hiddenCatalogs = new Set<String>();
 
   constructor(){}
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
   }
-
   onFileSelected(jsonData: any): void {
+    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
+      return;
     this.catalogData.catalogs.push(jsonData);
   }
 
-  setAllGroupExpansion(toSet: boolean): void {
+  setAllGroupExpansion(toSet: boolean, uuid: String): void {
     this.childComponents.forEach((child) => {
-      child.setComponents(toSet);
+      if (child.catalogUUID === uuid) {
+        child.setComponents(toSet);
+      }
     });
   }
+
 
   toggleNav(): void {
     this.showNav = !this.showNav;
@@ -82,3 +80,4 @@ export class AppComponent {
     return index >= 0;
   }
 }
+
