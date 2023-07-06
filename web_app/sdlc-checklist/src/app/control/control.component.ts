@@ -14,10 +14,17 @@ export class ChecklistItemComponent {
   @Input() links: any;
   @Input() props: any;
   @Input() controls: any;
-  @Output() update = new EventEmitter();
+  @Input() uuid: any;
   showRollable = false;
   isChecked = false;
-  userComment: string = "";
+  userComment: string = ""
+  @Output() update = new EventEmitter();
+  UID: any; //Unique ID for this control for the program
+
+
+  ngOnInit(){
+    this.UID = this.uuid + '-' + this.id
+  }
 
   toggleRollable() {
     this.showRollable = !this.showRollable;

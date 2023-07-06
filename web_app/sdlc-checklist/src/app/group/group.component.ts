@@ -14,6 +14,12 @@ export class GroupComponent {
   @Input() catalogUUID: any;
   @ViewChildren(ChecklistItemComponent) childComponents!: QueryList<ChecklistItemComponent>;
   showComponents = true;
+  UID: any;  //Unique ID for this control for the program
+
+
+  ngOnInit(){
+    this.UID = this.catalogUUID + '-' + this.id
+  }
 
   toggleComponents() {
     this.showComponents = !this.showComponents;
@@ -42,7 +48,7 @@ export class GroupComponent {
     for (let i = this.childComponents.length - 1; i >= 0; i--) {
       let child = this.childComponents.get(i);
       if (child instanceof ChecklistItemComponent) {
-        let box = document.getElementById('checkbox-'+ child.id);
+        let box = document.getElementById('checkbox-'+ child.UID);
         if (box instanceof HTMLInputElement) {
           if (!box.checked) {
             return false;
@@ -55,7 +61,7 @@ export class GroupComponent {
 
   setAllChildren(truth: boolean) {
     this.childComponents.forEach((child) => {
-      let box = document.getElementById('checkbox-' + child.id);
+      let box = document.getElementById('checkbox-' + child.UID);
       if(box instanceof HTMLInputElement) {
         box.checked = truth;
         if(child.getCheck()!=truth)

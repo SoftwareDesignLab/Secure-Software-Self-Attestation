@@ -8,6 +8,8 @@ run `ng add @angular/material` and type `y` to begin installion.
 
 During installing Choose `Indigo/Pink` for  theme, `n` for global typography and `Include and enable animations` for including angular animations.
 
+run `npm install --save angular2-notifications -f --legacy-peer-deps`
+
 
 ## Running Development Server
 
