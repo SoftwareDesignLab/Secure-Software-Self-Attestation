@@ -16,7 +16,7 @@
     [subControls]="controls"
     [references]="getReferences()"
   ></app-rollable>
-  <input type ="text" name="explanation" placeholder="Brief explanation of compliance" [id]="id + '-comment'">
+  <input type ="text" name="explanation" placeholder="Brief explanation" [id]="id + '-comment'" [hidden]="!isChecked()">
 </div>
 
 

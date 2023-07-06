@@ -72,7 +72,8 @@ h3 {
 
 input {
   margin-bottom: 20px;
-  width: 90%
+  width: 90%;
+  height: 1.25em;
 }
 
 .center-line {
