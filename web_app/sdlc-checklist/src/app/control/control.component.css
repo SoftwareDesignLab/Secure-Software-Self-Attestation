@@ -1,8 +1,8 @@
 .checkbox-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 10px 10px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
 }
 
 .checkbox-container {
@@ -13,17 +13,13 @@
 .checkbox-label {
   cursor: pointer;
   margin-left: 5px;
-  margin-right: 10px;
   user-select: none; /* Prevents text selection when clicking the label */
   display: inline-flex;
   align-items: center;
 }
 
 input[type="checkbox"] {
-  margin-right: 5px;
-  margin-left: 20px;
-  width: 15px;
-  height: 15px;
+    margin-right: 5px;
 }
 
 .checkbox-label:hover {
@@ -32,47 +28,4 @@ input[type="checkbox"] {
 
 input[name="explanation"] {
   width: 300px;
-  margin-left: 50px;
-}
-
-.button-set {
-  min-width: 80px;
-  margin-left: 10px;
-  position: relative;
-  top: 3px;
-}
-
-img {
-  border: 1px solid gray;
-  padding: 2px;
-  width: 20px;
-  height: 20px;
-}
-
-input:checked + label>.check {
-  background-color: rgb(199, 243, 193)
-}
-
-input:checked + label>.x {
-  background-color: rgb(243, 193, 193)
-}
-
-input:checked + label>.na {
-  background-color: rgb(193, 229, 243)
-}
-
-img:hover {
-  background-color: rgb(180, 189, 192)
-}
-
-.individual-button {
-  display: inline;
-}
-
-.check {
-  border-radius: 4px 0 0 4px;
-}
-
-.na {
-  border-radius: 0 4px 4px 0;
 }

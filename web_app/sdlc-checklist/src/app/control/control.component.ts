@@ -5,7 +5,6 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
-
 export class ChecklistItemComponent {
   @Input() id: any;
   @Input() title: any;
@@ -15,10 +14,11 @@ export class ChecklistItemComponent {
   @Input() links: any;
   @Input() props: any;
   @Input() controls: any;
-  @Output() update = new EventEmitter();
-  selection: String = "no-selection";
-  showRollable = false;
   @Input() uuid: any;
+  showRollable = false;
+  isChecked = false;
+  userComment: string = ""
+  @Output() update = new EventEmitter();
   UID: any; //Unique ID for this control for the program
 
 
@@ -53,15 +53,14 @@ export class ChecklistItemComponent {
     }
   }
 
-  getComment(): String {
-    let textbox = document.getElementById(this.id + '-comment');
-    if (textbox instanceof HTMLInputElement) {
-      return textbox.value;
-    }
-    return "";
+  toggleCheck(){
+    this.isChecked = !this.isChecked;
+    this.update.emit();
   }
-
-  isChecked(): boolean {
-    return this.selection !== "no-selection";
+  getCheck(){
+    return this.isChecked;
+  }
+  onKey(event: any) { // without type info
+    this.userComment = event.target.value;
   }
 }
