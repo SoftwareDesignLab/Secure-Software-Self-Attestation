@@ -14,7 +14,7 @@
     <ul>
       <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
       <li>
-      <div class="tree">
+      <div>
         <div class="tree-root">
         <a href="#attestation" (click)="toggleNav()">Attestation Form</a>
         <div>
@@ -22,15 +22,13 @@
         </div>
       </div>
       <br>
-      <div class="tree-branch">
-        <ul class="tree-branchs" *ngIf="showComponents">        
+        <ul class="tree-branch" *ngIf="showComponents">        
           <li  *ngFor="let catalog of catalogData.catalogs">
             <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
           </li>
           <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
         </ul>
       </div>
-    </div>
       </li>
     </ul>
   </div>
