@@ -6,12 +6,12 @@
         <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i"></label>
       </div>
     </div>
+    <img alt="Comment Button" 
+        [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
+        (click)="deploy()" class="pencil" [hidden]="!isChecked()">
     <label class="checkbox-label" (click)="toggleRollable()">
       {{ id }}: {{ title }}
     </label>
-    <div class="pencil">
-      <img alt="Comment Button" [src]="comment === '' ? '/assets/blank.png' : '/assets/complete.png'" (click)="deploy()" class="pencil">
-    </div>
   </div>
   <app-rollable *ngIf="showRollable"
     [description]="getDescription()"
@@ -23,13 +23,14 @@
 
 <div class="full-screen-fixed" *ngIf="popup" (click)="cancel()">
   <div class="pane popup" (click)="$event.stopPropagation()">
-    <label for="comment">Brief Explanation: </label><br>
-    <textarea id="comment" [value]="comment"></textarea>
+    <br>
+    <label for="comment" class="explanation-label">Brief Explanation: </label>
+    <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4"></textarea>
     <div class="bottom-buttons">
-      <button (click)="done()">Done</button>
-      <button (click)="save()">Save</button>
-      <button (click)="cancel()">Cancel</button>
-      <button (click)="del()">Delete</button>
+      <button (click)="done()" class="done">Done</button>
+      <button (click)="save()" class="save">Save</button>
+      <button (click)="cancel()" class="cancel">Cancel</button>
+      <button (click)="del()" class="delete">Delete</button>
     </div>
   </div>
 </div>

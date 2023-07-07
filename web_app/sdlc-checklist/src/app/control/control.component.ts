@@ -23,6 +23,7 @@ export class ChecklistItemComponent {
   UID: any; //Unique ID for this control for the program
   comment: string = "";
   popup: Boolean = false;
+  finalized: Boolean = false;
 
 
   ngOnInit(){
@@ -56,14 +57,6 @@ export class ChecklistItemComponent {
     }
   }
 
-  getComment(): String {
-    let textbox = document.getElementById(this.id + '-comment');
-    if (textbox instanceof HTMLInputElement) {
-      return textbox.value;
-    }
-    return "";
-  }
-
   isChecked(): boolean {
     return this.selection !== "no-selection";
   }
@@ -76,14 +69,19 @@ export class ChecklistItemComponent {
   }
 
   save() {
+    this.finalized = false;
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
+    this.cancel()
   }
 
   done() {
-    this.save();
-    this.cancel();
+    this.finalized = true;
+    let text = document.getElementById("comment")
+    if (text instanceof HTMLTextAreaElement)
+      this.comment = text.value;
+    this.cancel()
   }
 
   cancel() {
@@ -92,6 +90,7 @@ export class ChecklistItemComponent {
 
   del() {
     this.comment = "";
+    this.finalized = false;
     this.cancel();
   }
 
