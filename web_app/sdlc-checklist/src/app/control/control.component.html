@@ -10,13 +10,13 @@
       {{ id }}: {{ title }}
     </label>
   </div>
+  <input type ="text" name="explanation" placeholder="Brief explanation" [id]="id + '-comment'" [hidden]="!isChecked()">
   <app-rollable *ngIf="showRollable"
     [description]="getDescription()"
     [examples]="getExamples()"
     [subControls]="controls"
     [references]="getReferences()"
   ></app-rollable>
-  <input type ="text" name="explanation" placeholder="Brief explanation" [id]="id + '-comment'" [hidden]="!isChecked()">
 </div>
 
 
