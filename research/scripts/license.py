@@ -1,4 +1,9 @@
-/**
+import os
+import shutil
+import tempfile
+
+# The string to append
+append_string = """/**
  * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
  * government support under contract 70RSAT19CB0000020 awarded by the United
  * States Department of Homeland Security.
@@ -21,19 +26,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { TestBed } from '@angular/core/testing';
+"""
+copy_check = "/**\n * Copyright"
 
-import { notifyService } from './notify.service';
+# The directory to start from
+start_dir = "../../web_app"
 
-describe('notifyService', () => {
-  let service: notifyService;
+for dirpath, dirnames, filenames in os.walk(start_dir):
+    # Skip any directory named "node_modules"
+    if 'node_modules' in dirnames:
+        dirnames.remove('node_modules')
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(notifyService);
-  });
+    for filename in filenames:
+        if filename.endswith(".ts") or filename.endswith(".css"):
+            filepath = os.path.join(dirpath, filename)
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+            # Check if the file starts with the copyright
+            with open(filepath, 'r') as original:
+                if original.read(len(copy_check)) == copy_check:
+                    original.close()
+                    continue
+
+            # Create a temporary file and open it for writing
+            with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp:
+                # Write the string to append
+                temp.write(append_string)
+
+                # Copy the contents of the original file into the temporary file
+                with open(filepath, 'r') as original:
+                    shutil.copyfileobj(original, temp)
+
+            # Replace the original file with the temporary file
+            shutil.move(temp.name, filepath)

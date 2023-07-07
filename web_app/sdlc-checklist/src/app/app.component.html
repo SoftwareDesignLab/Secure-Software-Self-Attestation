@@ -1,15 +1,16 @@
-<!-- TODO split processing vertically into upload and download sections -->
 <simple-notifications></simple-notifications>
+
 <header>
   <h1>SDLC Checklist</h1>
 </header>
+
 <nav>
-  <div [className]="showNav ? 'nav-icon shifted-nav' : 'nav-icon'" (click)="toggleNav()">
+  <div class="nav-icon" (click)="toggleNav()">
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
   </div>
-  <div [className]="showNav ? 'expanded-nav' : 'expanded-nav hidden'">
+  <div class="expanded-nav" [hidden]="!showNav">
     <h2>SDLC</h2>
     <ul>
       <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
@@ -33,46 +34,56 @@
     </ul>
   </div>
 </nav>
+
 <main>
   <form class="pane" id="contact-form">
     <div class="form-column">
       <h3>Software Producer Information</h3>
       <label for="company-name">Company Name: </label>
-      <input id="company-name" type="text">
+      <input id="company-name" type="text" autocomplete="organization">
       <label for="address">Address: </label>
-      <input id="address" type="text">
+      <input id="address" type="text" autocomplete="address-line1">
       <label for="city">City: </label>
-      <input id="city" type="text">
+      <input id="city" type="text" autocomplete="address-level2">
       <label for="state">State or Province: </label>
-      <input id="state" type="text">
-      <label for="zip">Postal Code: </label>
-      <input id="zip" type="text">
+      <input id="state" type="text" autocomplete="address-level1">
       <label for="country">Country: </label>
-      <input id="country" type="text">
+      <input id="country" type="text" autocomplete="country-name">
+      <label for="zip">Postal Code: </label>
+      <input id="zip" type="text" autocomplete="postal-code">
       <label for="website">Website: </label>
-      <input id="website" type="url">
+      <input id="website" type="url" autocomplete="url">
     </div>
     <div class="center-line"></div>
     <div class="form-column">
       <h3>Primary Contact for this Document</h3>
       <label for="first-name">First Name: </label>
-      <input id="first-name" type="text">
+      <input id="first-name" type="text" autocomplete="given-name">
       <label for="last-name">Last Name: </label>
-      <input id="last-name" type="text">
+      <input id="last-name" type="text" autocomplete="family-name">
       <label for="title">Title: </label>
-      <input id="title" type="text">
+      <input id="title" type="text" autocomplete="organization-title">
       <label for="contact-address">Address: </label>
-      <input id="contact-address" type="text">
+      <input id="contact-address" type="text" autocomplete="address-line1">
+      <label for="contact-city">City: </label>
+      <input id="contact-city" type="text" autocomplete="address-level2">
+      <label for="contact-state">State: </label>
+      <input id="contact-state" type="text" autocomplete="address-level1">
+      <label for="contact-country">Country: </label>
+      <input id="contact-country" type="text" autocomplete="country-name">
+      <label for="contact-zip">Postal Code: </label>
+      <input id="contact-zip" type="text" autocomplete="postal-code">
       <label for="phone">Phone: </label>
-      <input id="phone" type="tel">
+      <input id="phone" type="tel" autocomplete="tel">
       <label for="email">Email: </label>
-      <input id="email" type="email">
+      <input id="email" type="email" autocomplete="email">
     </div>
   </form>
+
   <app-attestation></app-attestation>
+
   <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
-    <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
-    <div class="button-panel">
+    <div [className]="isShown(catalog.uuid) ? 'button-panel raised' : 'button-panel'">
       <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
       <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
       <div (click)="toggleExpansion(catalog.uuid)" 
@@ -81,26 +92,31 @@
       <p class="button-caption">Remove Catalog</p>
       <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
     </div>
-    <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">
-      <div id="group-container" class="group-container">
-        <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
-        <app-group *ngFor="let group of catalog.groups" 
-          [id]="group.id" 
-          [title]="group.title" 
-          [controls]="group.controls"
-          [catalogUUID]="catalog.uuid"
-        ></app-group>
+    <div [className]="isShown(catalog.uuid) ? 'underline' : ''">
+      <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
+    </div>
+    <div [hidden]="!isShown(catalog.uuid)" *ngIf="catalog">
+      <app-group *ngFor="let group of catalog.groups " 
+        [id]="group.id" 
+        [title]="group.title" 
+        [controls]="group.controls"
+      ></app-group>
       <div *ngIf="catalog.controls">
         <app-group
           [title]="control"
           [controls]="catalog.controls"
           [catalogUUID]="catalog.uuid"
         ></app-group>
-        </div>
       </div>
     </div>
   </div>
-  <button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
+
+  <div class="restore-container" [hidden]="isDefaultPresent()">
+    <p class="pane restore">
+      It looks like you deleted the default catalog &nbsp;&nbsp;<span class="blue-text" (click)="restoreDefaultCatalog()">Restore it?</span>
+    </p>
+  </div>
+
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
     <div class="generate-report-div">

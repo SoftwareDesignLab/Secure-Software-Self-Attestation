@@ -1,17 +1,22 @@
 <div class="checkbox-item">
   <div class="checkbox-container">
-    <input type="checkbox" [id]="'checkbox-' + UID" (click)='toggleCheck()'>
+    <div class="button-set">
+      <div class="individual-button" *ngFor="let i of ['check', 'x', 'na']">
+        <input [id]="id + '-' + i" hidden type="radio" [name]="id + '-selector'" [value]="i" hidden [(ngModel)]="selection">
+        <label [for]="id + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i"></label>
+      </div>
+    </div>
     <label class="checkbox-label" (click)="toggleRollable()">
       {{ id }}: {{ title }}
     </label>
   </div>
+  <input type ="text" name="explanation" placeholder="Brief explanation" [id]="id + '-comment'" [hidden]="!isChecked()">
   <app-rollable *ngIf="showRollable"
     [description]="getDescription()"
     [examples]="getExamples()"
     [subControls]="controls"
     [references]="getReferences()"
   ></app-rollable>
-  <input type ="text" name="explanation" *ngIf="isChecked==true" (keyup)="onKey($event)" placeholder="Brief explanation of compliance" value = '{{userComment}}'>
 </div>
 
 

@@ -1,18 +1,76 @@
-mat-grid-tile{
-  width: "100px";
-  border: solid 1px #000;
-}
-
+/**
+ * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+ * government support under contract 70RSAT19CB0000020 awarded by the United
+ * States Department of Homeland Security.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 .attestation {
   padding: 20px;
   padding-top: 10px;
 }
 
-input[name="form"] {
-  width: 90%;
-}
-
-.main-table {
+.table-section {
   margin: 0 25px;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: #e3eaec;
+  margin-top: 20px;
+}
+
+th {
+  border: 1px solid gray;
+  width: 33%;
+  height: 2.5em;
+  font-weight: 500;
+}
+
+.table-field {
+  border: 0 !important;
+  padding: 0 5px;
+  width: calc(100% - 10px);
+  height: 100%;
+  background-color: inherit;
+}
+
+tr td:nth-child(1) {
+  border-left: 1px solid gray;
+}
+
+td {
+  border-right: 1px solid gray;
+  height: 1.5em;
+}
+
+tr:nth-child(2n){
+  background-color: white;
+}
+
+tr:last-child td {
+  border-bottom: 1px solid gray;
+}
+
+.table-field:focus {
+  outline: none;
+  background-color: #cbebf8;
+  border-radius: 2px;
+}
