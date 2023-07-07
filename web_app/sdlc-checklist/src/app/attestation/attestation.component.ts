@@ -80,5 +80,11 @@ export class AttestationComponent {
 
   updateSelect(){
     this.dataService.setSelectedValue(this.selectedValue);
+    if (this.selectedValue !== 'multiple') {
+      if (this.info.length > 1) {
+        this.info.splice(1);
+      }
+    }
+    console.log(this.info.length);
   }
 }
