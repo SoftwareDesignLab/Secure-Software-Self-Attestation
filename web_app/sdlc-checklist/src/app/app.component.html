@@ -13,11 +13,25 @@
     <h2>SDLC</h2>
     <ul>
       <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
-      <li><a href="#attestation" (click)="toggleNav()">Attestation Form</a></li>
-      <li *ngFor="let catalog of catalogData.catalogs">
-        <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
+      <li>
+      <div class="tree">
+        <div class="tree-root">
+        <a href="#attestation" (click)="toggleNav()">Attestation Form</a>
+        <div>
+          <h4 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4>
+        </div>
+      </div>
+      <br>
+      <div class="tree-branch">
+        <ul class="tree-branchs" *ngIf="showComponents">        
+          <li  *ngFor="let catalog of catalogData.catalogs">
+            <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
+          </li>
+          <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
+        </ul>
+      </div>
+    </div>
       </li>
-      <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
     </ul>
   </div>
 </nav>
