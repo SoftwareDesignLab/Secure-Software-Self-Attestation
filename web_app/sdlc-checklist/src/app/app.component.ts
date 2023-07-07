@@ -20,12 +20,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
-import { Component, ViewChildren, QueryList } from '@angular/core';
+*/
+import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
 import { Catalog } from './oscalModel';
 import { notifyService } from './notify.service';
+import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 
 interface CatalogData {
   catalogs: Catalog[];
@@ -41,6 +42,7 @@ export class AppComponent {
   showComponentsArray: any;
   hiddenCatalogs = new Set<String>();
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
+  @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   control: string = "Ungrouped Controls";
   showNav = false;
 
@@ -49,9 +51,13 @@ export class AppComponent {
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
   }
-  onFileSelected(jsonData: any): void {
-    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
+
+  onFileSelected(jsonData: any) {
+    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) { // Prevents uploading the same file twice
+      this.catalogProcessingComponent.notifyOfFailure("Duplicate Catalog");
       return;
+    }
+    this.catalogProcessingComponent.notifyOfSuccess("File Loaded");
     this.catalogData.catalogs.push(jsonData);
   }
 
@@ -62,7 +68,6 @@ export class AppComponent {
       }
     });
   }
-
 
   toggleNav(): void {
     this.showNav = !this.showNav;
