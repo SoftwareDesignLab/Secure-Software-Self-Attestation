@@ -45,6 +45,7 @@ export class AppComponent {
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   control: string = "Ungrouped Controls";
   showNav = false;
+  showComponents = false;
 
   constructor(){}
   
@@ -106,6 +107,13 @@ export class AppComponent {
   isDefaultPresent(): boolean {
     let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid});
     return index >= 0;
+  }
+
+  toggleComponents(){
+    this.showComponents = !this.showComponents;
+    if (!this.showComponents) {
+      //this.hideChildRollable();
+    }
   }
 }
 

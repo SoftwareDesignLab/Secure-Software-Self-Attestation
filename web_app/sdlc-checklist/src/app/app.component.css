@@ -166,12 +166,13 @@ nav {
 
 .expanded-nav ul {
   list-style: none;
-  padding: 0;
+  padding: 20px;
   display: flex;
   flex-direction: column;
 }
 
 .expanded-nav li {
+  display: flex;
   margin: 0;
   padding: 0;
   border-bottom: 1px solid black;
@@ -179,6 +180,12 @@ nav {
 
 .expanded-nav li:nth-child(1) {
   border-top: 1px solid black;
+  padding-left: 40px;
+}
+.expanded-nav ul.tree-branch {
+  border-top: 1px solid black;
+  padding-left: 40px;
+  background-color: #FFFFFF;
 }
 
 .expanded-nav a {
@@ -203,6 +210,17 @@ nav {
 
 .orange {
   background-color: orange;
+}
+
+.prependUpArrow::before {
+  content: "▲ "
+}
+.prependDownArrow::before {
+  content: "▼ "
+}
+
+.tree-root {
+  display:flex
 }
 
 .orange:hover {
