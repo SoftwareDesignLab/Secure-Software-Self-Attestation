@@ -1,3 +1,4 @@
+<main>
 <div class="center">
   <form class="pane" id="contact-form">
       <div class="form-column">
@@ -37,12 +38,19 @@
 
 </div>
 <div class="bot-right">
-  <button *ngIf="!visitedAttestation()" [disabled]="isFilled()" (click)="changePage('attestation-form')">
+  <!--This Button will be removed pull request is made-->
+  <button (click)="toggleBut()">Toggle</button>
+  <br>
+  <br>
+
+  <button *ngIf="!visitedAttestation()&&isFilled()&&toggle==0||toggle===0" disabled (click)="changePage('attestation-form')">
     Procceed to Attestation Form
   </button>
-  <button class="add" *ngIf="visitedAttestation()"  (click)="changePage('attestation-form')">
-    add New Attestation
+  <button  class="blue" *ngIf="!visitedAttestation()&&!isFilled()||toggle===1"  (click)="changePage('attestation-form')">
+    Procceed to Attestation Form
   </button>
-
-
+  <button class="green" *ngIf="visitedAttestation()||toggle===2"  (click)="changePage('attestation-form')">
+    Add New Attestation
+  </button>
 </div>
+</main>

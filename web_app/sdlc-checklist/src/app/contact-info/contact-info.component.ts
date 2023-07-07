@@ -14,16 +14,7 @@ export class ContactInfoComponent {
 constructor( public contactService: ContactService, private router: Router,private attestationService: AttestationDataService){
 
 }
-  public carlos: string = ''
-
-
-
-  
-  onKey(event: any) { 
-    this.carlos = event.target.value;
-    this.contactService.companyName = event.target.value;
-  }
-
+  public toggle: number = 0;
 
   updateCompanyName(event: any){
     this.contactService.companyName = event.target.value;
@@ -84,6 +75,15 @@ constructor( public contactService: ContactService, private router: Router,priva
       return true
     }
     return false;
+  }
+
+  toggleBut(){
+    if(this.toggle<2){
+      this.toggle=this.toggle+1
+    }
+    else{
+      this.toggle=0;
+    }
   }
 
 

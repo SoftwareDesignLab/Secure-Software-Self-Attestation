@@ -5,6 +5,7 @@ import { ContactInfoComponent } from './contact-info/contact-info.component';
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
 const routes: Routes = [
+  {path: '', redirectTo: 'contact-info', pathMatch: 'full'},
   {path: 'contact-info', component: ContactInfoComponent},
   {path: 'attestation-form', component: AttestationPageComponent}
 ];
