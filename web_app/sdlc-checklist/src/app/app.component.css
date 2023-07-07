@@ -1,94 +1,60 @@
-.checkbox-container {
-  display: flex;
-  justify-content: center;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 100%;
-  grid-column: 1/3;
-  border-top: 1px solid black;
-}
-
-.catalog-container {
-  width: 100%;
-  border: 2px solid black;
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: 80% 20%;
-}
-
-.hidden {
-  display: none;
-}
-
-.orange {
-  background-color: orange;
-}
-
-.orange:hover {
-  box-shadow: inset 0 0 4px 1px rgb(163, 90, 0);
-}
-
-.red {
-  background-color: red;
-}
-
-.red:hover {
-  box-shadow: inset 0 0 4px 1px rgb(95, 1, 1);
-}
-
-.green {
-  background-color: rgb(5, 204, 5);
-}
-
-.green:hover {
-  box-shadow: inset 0 0 4px 1px rgb(18, 71, 1);
-}
-
-.circle-button {
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  display: inline-block;
-  position: relative;
-  top: 6px;
-  margin: 0 15px;
-}
-
-.button-panel {
-  text-align: right;
-  margin: 25px 25px 25px 0;
-}
-
-.button-caption {
-  display: inline-block;
-  margin: 5px;
-}
+/* Structural Rules */
 
 .lower-div {
   display: grid;
   grid-template-columns: 50% 50%;
 }
 
-.upper-div>*{
-  width: 100%;
+.restore-container {
+  text-align: center;
+  margin: 25px 0;
 }
+
+.restore {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0;
+}
+
+.blue-text {
+  color: #004577;
+  text-decoration: underline;
+  cursor: pointer;
+  user-select: none;
+}
+
+.underline {
+  border-bottom: 1px solid black;
+}
+
+/* Report Button Rules */
 
 .generate-report {
   margin: 0 auto;
   display: block;
-  font-size: larger;
+  font-size: x-large;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  background-color: #005ea2;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 5px 15px;
+  box-shadow: 4px 4px 2px 0 rgba(0, 0, 0, .4);
+}
+
+.generate-report:hover {
+  background-color: #003a63;
+  box-shadow: inset 1px 1px 4px 2px rgba(0, 0, 0, .5);
 }
 
 .generate-report-div {
   position: relative;
 }
+
+/* Contact Form Rules */
 
 form {
   display: grid;
@@ -110,7 +76,8 @@ h3 {
 
 input {
   margin-bottom: 20px;
-  width: 90%
+  width: 90%;
+  height: 1.25em;
 }
 
 .center-line {
@@ -122,6 +89,8 @@ label {
   margin-bottom: 20px;
   margin-right: 5px;
 }
+
+/* Nav Rules */
 
 nav {
   position: fixed;
@@ -207,7 +176,51 @@ nav {
   background-color: #EFF2F4;
 }
 
-.attest{
-  width: 200px;
-  height: 30px;
+/* Catalog Buttons */
+
+.orange {
+  background-color: orange;
+}
+
+.orange:hover {
+  box-shadow: inset 0 0 4px 1px rgb(163, 90, 0);
+}
+
+.red {
+  background-color: red;
+}
+
+.red:hover {
+  box-shadow: inset 0 0 4px 1px rgb(95, 1, 1);
+}
+
+.green {
+  background-color: rgb(5, 204, 5);
+}
+
+.green:hover {
+  box-shadow: inset 0 0 4px 1px rgb(18, 71, 1);
+}
+
+.circle-button {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+  top: 6px;
+  margin: 0 15px;
+}
+
+.button-panel {
+  text-align: right;
+  margin: 25px 25px 25px 0;
+  float: right;
+  position: relative;
+}
+
+.button-caption {
+  display: inline-block;
+  margin: 5px;
+  user-select: none;
 }
