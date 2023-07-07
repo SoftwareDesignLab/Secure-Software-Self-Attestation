@@ -26,11 +26,9 @@ export class AttestationComponent {
     //this.dialogRef.close();
     console.log("Attestation Submitted");
   }
-  
   addRow(){
     this.info.push(new attestationComment);
   }
-
   removeRow(){
     this.info.pop();
   }
@@ -51,11 +49,11 @@ export class AttestationComponent {
       if(!comment.isFilled()){
         valid=false;
       }  
-    });  
-    return valid;
-  }
-
+      });  
+      return valid;
+    }
   updateSelect(){
     this.dataService.setSelectedValue(this.selectedValue);
   }
+
 }

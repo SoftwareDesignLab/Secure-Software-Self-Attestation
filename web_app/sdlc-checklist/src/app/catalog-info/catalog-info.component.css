@@ -1,15 +1,14 @@
 /* make the catalog info span the width of the screen. add a thin solid border around it. */
 .catalog-info {
-  width: 97%;
-  margin: 20px 0 0;
-  padding-left: 3%;
+  width: 90%;
+  border: 4px dotted black;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
 }
 
 .catalog-info-content {
   margin-left: 20px;
   margin-top: 5px;
-}
-
-ul {
-  list-style-type: none;
 }

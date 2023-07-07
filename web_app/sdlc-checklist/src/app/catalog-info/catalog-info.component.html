@@ -1,10 +1,10 @@
 <div class="catalog-info">
     <h2 style="margin-left: 10px;">{{ metadata.title }}</h2>
-    <ul class="catalog-info-content">
+    <div class="catalog-info-content">
         <!-- metadata contains last_modified, version, oscal_version and published. show these attributes -->
-        <li *ngIf="metadata.published">Published: {{ metadata.published }}</li>
-        <li *ngIf="metadata.last_modified">Last Modified: {{ metadata.last_modified }}</li>
-        <li *ngIf="metadata.version">Version: {{ metadata.version }}</li>
-        <li *ngIf="metadata.oscal_version">OSCAL Version: {{ metadata.oscal_version }}</li>
-    </ul>
+        <p *ngIf="metadata.published">Published: {{ metadata.published }}</p>
+        <p *ngIf="metadata.last_modified">Last Modified: {{ metadata.last_modified }}</p>
+        <p *ngIf="metadata.version">Version: {{ metadata.version }}</p>
+        <p *ngIf="metadata.oscal_version">OSCAL Version: {{ metadata.oscal_version }}</p>
+    </div>
 </div>
