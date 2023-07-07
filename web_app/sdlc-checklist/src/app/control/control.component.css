@@ -76,3 +76,30 @@ img:hover {
 .na {
   border-radius: 0 4px 4px 0;
 }
+
+.full-screen-fixed {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(128, 128, 128, .5);
+  z-index: 5;
+}
+
+.popup {
+  width: 60vw;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 20vw;
+  z-index: 6;
+}
+
+.pencil {
+  border: 0;
+  border-radius: 4px;
+  position: relative;
+  top: 2px;
+
+}

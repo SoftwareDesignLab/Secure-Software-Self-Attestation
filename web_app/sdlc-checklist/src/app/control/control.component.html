@@ -2,15 +2,17 @@
   <div class="checkbox-container">
     <div class="button-set">
       <div class="individual-button" *ngFor="let i of ['check', 'x', 'na']">
-        <input [id]="id + '-' + i" hidden type="radio" [name]="id + '-selector'" [value]="i" hidden [(ngModel)]="selection">
-        <label [for]="id + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i"></label>
+        <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" hidden (click)="select(i)">
+        <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i"></label>
       </div>
     </div>
     <label class="checkbox-label" (click)="toggleRollable()">
       {{ id }}: {{ title }}
     </label>
+    <div class="pencil">
+      <img alt="Comment Button" [src]="comment === '' ? '/assets/blank.png' : '/assets/complete.png'" (click)="deploy()" class="pencil">
+    </div>
   </div>
-  <input type ="text" name="explanation" placeholder="Brief explanation" [id]="id + '-comment'" [hidden]="!isChecked()">
   <app-rollable *ngIf="showRollable"
     [description]="getDescription()"
     [examples]="getExamples()"
@@ -19,4 +21,15 @@
   ></app-rollable>
 </div>
 
-
+<div class="full-screen-fixed" *ngIf="popup" (click)="cancel()">
+  <div class="pane popup" (click)="$event.stopPropagation()">
+    <label for="comment">Brief Explanation: </label><br>
+    <textarea id="comment" [value]="comment"></textarea>
+    <div class="bottom-buttons">
+      <button (click)="done()">Done</button>
+      <button (click)="save()">Save</button>
+      <button (click)="cancel()">Cancel</button>
+      <button (click)="del()">Delete</button>
+    </div>
+  </div>
+</div>

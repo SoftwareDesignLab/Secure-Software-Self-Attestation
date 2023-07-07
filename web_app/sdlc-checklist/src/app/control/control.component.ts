@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { timeInterval } from 'rxjs';
 
 @Component({
   selector: 'app-control',
@@ -20,6 +21,8 @@ export class ChecklistItemComponent {
   showRollable = false;
   @Input() uuid: any;
   UID: any; //Unique ID for this control for the program
+  comment: string = "";
+  popup: Boolean = false;
 
 
   ngOnInit(){
@@ -63,5 +66,36 @@ export class ChecklistItemComponent {
 
   isChecked(): boolean {
     return this.selection !== "no-selection";
+  }
+
+  select(selection: String) {
+    if (this.selection === "no-selection") {
+      this.popup = true;
+    }
+    this.selection = selection
+  }
+
+  save() {
+    let text = document.getElementById("comment")
+    if (text instanceof HTMLTextAreaElement)
+      this.comment = text.value;
+  }
+
+  done() {
+    this.save();
+    this.cancel();
+  }
+
+  cancel() {
+    this.popup = false;
+  }
+
+  del() {
+    this.comment = "";
+    this.cancel();
+  }
+
+  deploy() {
+    this.popup = true;
   }
 }
