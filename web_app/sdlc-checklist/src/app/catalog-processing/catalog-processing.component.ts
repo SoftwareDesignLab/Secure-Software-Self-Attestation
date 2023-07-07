@@ -48,6 +48,14 @@ export class CatalogProcessingComponent {
     }
   }
 
+  notifyOfSuccess(message: string) {
+    this.notifications.success(message);
+  }
+
+  notifyOfFailure(message: string) {
+    this.notifications.error(message);
+  }
+
   private isJsonFile(file: File): boolean {
     return file.type === 'application/json' || file.name.endsWith('.json');
   }
@@ -59,7 +67,6 @@ export class CatalogProcessingComponent {
     }
     return false;
   }
-
 
   /**
    * Checks if the provided JSON file is a valid OSCAL catalog and if it has an extra nest
@@ -126,7 +133,6 @@ export class CatalogProcessingComponent {
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
         this.fileSelected.emit(catalog);
-        this.notifications.success("File uploaded");
       }
     };
     reader.readAsText(file);
