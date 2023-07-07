@@ -41,47 +41,22 @@ export class GroupComponent {
     })
   }
 
-  areAllChecked(): boolean {
-    if (this.childComponents === undefined) {
-      return false;
-    }
-    for (let i = this.childComponents.length - 1; i >= 0; i--) {
+  areAllChildrenChecked(): boolean {
+    if (this.childComponents === undefined) {return false;}
+    for (let i = this.childComponents.length - 1; i>=0; i--) {
       let child = this.childComponents.get(i);
       if (child instanceof ChecklistItemComponent) {
-        let box = document.getElementById('checkbox-'+ child.UID);
-        if (box instanceof HTMLInputElement) {
-          if (!box.checked) {
-            return false;
-          }
+        if (!child.isChecked()) {
+          return false;
         }
       }
     }
     return true;
   }
 
-  setAllChildren(truth: boolean) {
+  setAllChildrenSelection(selection: String): void {
     this.childComponents.forEach((child) => {
-      let box = document.getElementById('checkbox-' + child.UID);
-      if(box instanceof HTMLInputElement) {
-        box.checked = truth;
-        if(child.getCheck()!=truth)
-        child.toggleCheck();
-      }
+      child.selection = selection;
     })
-  }
-
-  setAllChildrenToParent(): void {
-    let parent = document.getElementById("group-checkall-" + this.id);
-    if (parent instanceof HTMLInputElement) {
-      this.setAllChildren(parent.checked);
-    }
-  }
-
-  update() {
-    let status = this.areAllChecked();
-    let parent = document.getElementById("group-checkall-" + this.id);
-    if (parent instanceof HTMLInputElement) {
-      parent.checked = status;
-    }
   }
 }
