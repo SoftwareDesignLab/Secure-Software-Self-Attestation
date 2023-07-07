@@ -10,7 +10,6 @@ import { AttestationDataService } from '../attestation-data.service';
 })
 export class AttestationComponent {
   selectedValue: string;
-  //dataService: AttestationDataService;
 
   constructor( public dataService: AttestationDataService ){
     this.selectedValue = dataService.getSelectedValue();
@@ -18,11 +17,6 @@ export class AttestationComponent {
   }
 
 
-  onSubmit() {
-    this.dataService.setSelectedValue(this.selectedValue);
-    this.dataService.toggleSubmit();
-    console.log("Attestation Submitted");
-  }
   addRow(){
     this.dataService.addInfo(new attestationComment);
   }

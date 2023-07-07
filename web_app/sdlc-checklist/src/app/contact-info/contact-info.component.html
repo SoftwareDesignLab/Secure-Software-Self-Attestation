@@ -37,10 +37,8 @@
     </form>
 
 </div>
-<div class="bot-right">
-  <button  class="blue" *ngIf="visitedAttestation()||toggle===1"  (click)="changePage('attestation-form')">
-    Procceed to Attestation Form
-  </button>
-  <button class="green" *ngIf="!visitedAttestation()||toggle===2"  (click)="changePage('attestation-form')">+ New Attestation</button>
-</div>
+  <div class="bot-right">
+    <button  class="blue" *ngIf="visitedAttestation()||toggle===1"  (click)="changePage('attestation-form')">Procceed to Attestation Form</button>
+    <button class="green" *ngIf="!visitedAttestation()||toggle===2"  (click)="changePage('attestation-form')">+ New Attestation</button>
+  </div>
 </main>

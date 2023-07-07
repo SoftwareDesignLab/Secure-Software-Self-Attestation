@@ -41,9 +41,6 @@ export class AttestationDataService {
     this.info.pop();
   }
 
-  toggleSubmit(){
-    this.submit = true;
-  }
 
   submitable(){
     if(this.selectedValue=='company'){
