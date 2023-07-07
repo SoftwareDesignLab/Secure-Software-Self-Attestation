@@ -23,6 +23,10 @@
   user-select: none;
 }
 
+.underline {
+  border-bottom: 1px solid black;
+}
+
 /* Report Button Rules */
 
 .generate-report {
@@ -213,10 +217,6 @@ nav {
   margin: 25px 25px 25px 0;
   float: right;
   position: relative;
-}
-
-.raised {
-  top: -20px;
 }
 
 .button-caption {

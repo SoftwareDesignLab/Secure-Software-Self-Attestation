@@ -80,7 +80,9 @@
       <p class="button-caption">Remove Catalog</p>
       <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
     </div>
-    <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
+    <div [className]="isShown(catalog.uuid) ? 'underline' : ''">
+      <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
+    </div>
     <div [hidden]="!isShown(catalog.uuid)" *ngIf="catalog">
       <app-group *ngFor="let group of catalog.groups " 
         [id]="group.id" 

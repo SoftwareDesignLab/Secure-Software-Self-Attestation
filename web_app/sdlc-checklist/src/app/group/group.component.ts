@@ -46,16 +46,8 @@ export class GroupComponent {
     for (let i = this.childComponents.length - 1; i>=0; i--) {
       let child = this.childComponents.get(i);
       if (child instanceof ChecklistItemComponent) {
-<<<<<<< HEAD
         if (!child.isChecked()) {
           return false;
-=======
-        let box = document.getElementById('checkbox-'+ child.UID);
-        if (box instanceof HTMLInputElement) {
-          if (!box.checked) {
-            return false;
-          }
->>>>>>> main
         }
       }
     }
@@ -64,31 +56,7 @@ export class GroupComponent {
 
   setAllChildrenSelection(selection: String): void {
     this.childComponents.forEach((child) => {
-<<<<<<< HEAD
       child.selection = selection;
-=======
-      let box = document.getElementById('checkbox-' + child.UID);
-      if(box instanceof HTMLInputElement) {
-        box.checked = truth;
-        if(child.getCheck()!=truth)
-        child.toggleCheck();
-      }
->>>>>>> main
     })
-  }
-
-  setAllChildrenToParent(): void {
-    let parent = document.getElementById("group-checkall-" + this.id);
-    if (parent instanceof HTMLInputElement) {
-      this.setAllChildren(parent.checked);
-    }
-  }
-
-  update() {
-    let status = this.areAllChecked();
-    let parent = document.getElementById("group-checkall-" + this.id);
-    if (parent instanceof HTMLInputElement) {
-      parent.checked = status;
-    }
   }
 }
