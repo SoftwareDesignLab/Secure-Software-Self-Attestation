@@ -52,6 +52,13 @@ export class AttestationDataService {
     return this.info[0].isFilled()
   }
 
+  visited(){
+    return this.submit;
+  }
+  seen(){
+    this.submit = true;
+  }
+
   validComments(){
     let valid = true;
     this.info.forEach(function(comment){

@@ -3,6 +3,7 @@ import { GroupComponent } from './group/group.component';
 import { ChecklistItemComponent } from './control/control.component';
 import catalog from './defaultCatalog';
 import { Router } from '@angular/router';
+import { AttestationDataService } from './attestation-data.service';
 
 interface Catalog {
   uuid: string;
@@ -28,7 +29,7 @@ export class AppComponent {
   control: string = "Ungrouped Controls";
   showNav = false;
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private attestationService: AttestationDataService ){}
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
@@ -51,7 +52,6 @@ export class AppComponent {
     this.showNav = !this.showNav;
     this.router.navigate([page]);
   }
-
 
   toggleNav(): void {
     this.showNav = !this.showNav;
@@ -91,4 +91,13 @@ export class AppComponent {
     let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid});
     return index >= 0;
   }
+
+  visitedAttestation(){
+    if(this.attestationService.visited()){
+      return true
+    }
+    return false;
+  }
+
 }
+

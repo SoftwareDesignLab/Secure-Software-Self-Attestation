@@ -12,7 +12,8 @@
     <h2>SDLC</h2>
     <ul>
       <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
-      <li><a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form</a></li>
+      <li *ngIf="visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form 1</a></li>
+      <li class="add" *ngIf="!visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">+ New Attestation</a></li>
     </ul>
   </div>
 </nav>

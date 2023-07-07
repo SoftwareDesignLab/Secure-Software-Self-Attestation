@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ContactService } from '../contact.service';
 import { Router } from '@angular/router';
-import { attestationComment } from '../attestationForm';
 import { AttestationDataService } from '../attestation-data.service';
 
 @Component({
@@ -71,20 +70,12 @@ constructor( public contactService: ContactService, private router: Router,priva
   }
 
   visitedAttestation(){
-    if(this.attestationService.submitable()){
+    if(this.attestationService.visited()){
       return true
     }
     return false;
   }
 
-  toggleBut(){
-    if(this.toggle<2){
-      this.toggle=this.toggle+1
-    }
-    else{
-      this.toggle=0;
-    }
-  }
 
 
 }

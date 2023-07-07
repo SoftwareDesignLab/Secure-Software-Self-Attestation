@@ -39,6 +39,7 @@ export class AttestationPageComponent {
 
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
+    this.attestationService.seen();
   }
 
   AttestationCompleted(){
