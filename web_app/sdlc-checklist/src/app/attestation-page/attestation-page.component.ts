@@ -32,8 +32,12 @@ export class AttestationPageComponent {
   showNav = false;
   completed = false
 
-  constructor(private attestationService: AttestationDataService){
+  selectedValue: string;
+  info: any;
 
+  constructor(public attestationService: AttestationDataService){
+      this.selectedValue = attestationService.getdata(0).getSelectedValue;
+      this.info = attestationService.getdata(0).getInfo;
   }
 
 
@@ -43,11 +47,34 @@ export class AttestationPageComponent {
   }
 
   AttestationCompleted(){
-    if(this.attestationService.submitable()){
+    if(this.attestationService.getdata(0).submitable()){
       this.completed=true;
     }
     return this.completed;
-  
+  }
+
+  updateSelect(){
+    this.attestationService.getdata(0).setSelectedValue(this.selectedValue);
+  }
+
+  addRow(){
+    this.info.push(new attestationComment)
+    //this.dataService.addInfo(new attestationComment);
+  }
+
+  removeRow(){
+    this.info.pop();
+    //this.dataService.popInfo();
+  }
+
+  onKey(event: any, attest: attestationComment, target: string) { 
+    if(target==="name") {
+      attest.addName(event.target.value);
+    } else if (target==="version") {
+      attest.addVersion(event.target.value);
+    } else if (target==="date") {
+      attest.addDate(event.target.value);
+    }
   }
 
 

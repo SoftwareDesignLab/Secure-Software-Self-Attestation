@@ -9,23 +9,49 @@ import { AttestationDataService } from '../attestation-data.service';
   styleUrls: ['./attestation.component.css']
 })
 export class AttestationComponent {
-  selectedValue: string;
-  info: Array<attestationComment>;
-  dataService: AttestationDataService;
 
-  constructor( public DataService: AttestationDataService ){
-    this.selectedValue = DataService.getSelectedValue();
-    this.dataService = DataService;
-    this.info = DataService.getInfo();
+
+  private selectedValue: string = ''; 
+  private info: Array<attestationComment> = new Array<attestationComment>;
+  private submit: boolean = false;
+  private position: any;
+
+  constructor (){
+    this.info.push(new attestationComment);
   }
 
+
+  setPosition(pos: number){
+    this.position = pos;
+   }
+
+   get getPosition(){
+    return this.position;
+   }
   
+
   addRow(){
-    this.dataService.addInfo(new attestationComment);
+    this.info.push(new attestationComment)
+    //this.dataService.addInfo(new attestationComment);
   }
 
   removeRow(){
-    this.dataService.popInfo();
+    this.info.pop();
+    //this.dataService.popInfo();
+  }
+
+
+
+  get getSelectedValue(){
+    return this.selectedValue;
+  }
+
+  setSelectedValue(value: string){
+    this.selectedValue = value;
+  }
+
+  get getInfo(){
+    return this.info;
   }
 
   onKey(event: any, attest: attestationComment, target: string) { 
@@ -38,17 +64,13 @@ export class AttestationComponent {
     }
   }
 
-  validComments(){
-    let valid = true;
-    this.dataService.getInfo().forEach(function (comment) {  
-      if(!comment.isFilled()){
-        valid=false;
-      }  
-    });  
-    return valid;
+
+  submitable(){
+    if(this.selectedValue=='company'){
+      return true;
+    }
+    return this.info[0].isFilled();
   }
 
-  updateSelect(){
-    this.dataService.setSelectedValue(this.selectedValue);
-  }
+    
 }

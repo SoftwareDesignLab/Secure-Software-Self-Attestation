@@ -1,68 +1,42 @@
 import { Injectable } from '@angular/core';
 import { attestationComment } from './attestationForm';
+import { AttestationComponent } from './attestation/attestation.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttestationDataService {
 
-  private selectedValue: string = ''; 
+
+  private forms: Array<AttestationComponent> = new Array<AttestationComponent>
+  private beenVisited: boolean = false;
+
+  //private selectedValue: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
   private submit: boolean = false;
 
   constructor() {
-    this.info.push(new attestationComment);
+    this.forms.push(new AttestationComponent)
    }
 
-  getSelectedValue(){
-    return this.selectedValue;
-  }
 
-  getInfo(){
-    return this.info;
+   getdata(index: number){
+    return this.forms[index];
   }
-
-  getSubmit(){
-    return this.submit
-  }
-
-  setSelectedValue(data: string){
-    this.selectedValue = data;
-  }
-
-  setInfo(data: Array<attestationComment>){
-    this.info = data;
-  }
-
-  addInfo(data: attestationComment){
-    this.info.push(data);
-  }
-  popInfo(){
-    this.info.pop();
-  }
-
-
-  submitable(){
-    if(this.selectedValue=='company'){
-      return true
-    }
-    return this.info[0].isFilled()
+  get getRawData(){
+    return this.forms;
   }
 
   visited(){
-    return this.submit;
+    return this.beenVisited;
   }
   seen(){
-    this.submit = true;
+    this.beenVisited = true;
   }
 
-  validComments(){
-    let valid = true;
-    this.info.forEach(function(comment){
-      if(!comment.isFilled()){
-        valid=false;
-      }
-    });
-    return valid;
+  addform(){
+    this.forms.push(new AttestationComponent);
+    let pos = this.forms.length;
+    this.forms[pos-1].setPosition(pos);
   }
 }
