@@ -4,7 +4,6 @@ import { ChecklistItemComponent } from '../control/control.component';
 import catalog from '../defaultCatalog';
 import { AttestationDataService } from '../attestation-data.service';
 import { attestationComment } from '../attestationForm';
-import { AttestationComponent } from '../attestation/attestation.component';
 
 interface Catalog {
   uuid: string;
@@ -26,7 +25,7 @@ export class AttestationPageComponent {
 
   catalogData: CatalogData = {catalogs: []};
   showComponentsArray: any;
-  hiddenCatalogs = new Set<String>();
+  hiddenCatalogs: any
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   showNav = false;
@@ -38,12 +37,14 @@ export class AttestationPageComponent {
   constructor(public attestationService: AttestationDataService){
       this.selectedValue = attestationService.getdata(0).getSelectedValue;
       this.info = attestationService.getdata(0).getInfo;
+      this.catalogData = this.attestationService.getdata(0).getCatalogs;
+      this.hiddenCatalogs = this.attestationService.getdata(0).getHiddenCatalogs();
   }
 
 
   ngOnInit(): void {
-    this.catalogData.catalogs.push(catalog as Catalog);    
     this.attestationService.seen();
+    this.catalogData = this.attestationService.getdata(0).getCatalogs;
   }
 
   AttestationCompleted(){
@@ -59,12 +60,10 @@ export class AttestationPageComponent {
 
   addRow(){
     this.info.push(new attestationComment)
-    //this.dataService.addInfo(new attestationComment);
   }
 
   removeRow(){
     this.info.pop();
-    //this.dataService.popInfo();
   }
 
   onKey(event: any, attest: attestationComment, target: string) { 
@@ -79,9 +78,7 @@ export class AttestationPageComponent {
 
 
   onFileSelected(jsonData: any): void {
-    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
-      return;
-    this.catalogData.catalogs.push(jsonData);
+    this.attestationService.getdata(0).onFileSelected(jsonData);
   }
 
   setAllGroupExpansion(toSet: boolean, uuid: String): void {
@@ -94,11 +91,7 @@ export class AttestationPageComponent {
 
 
   toggleExpansion(uuid: String): void {
-    if (this.hiddenCatalogs.has(uuid)) {
-      this.hiddenCatalogs.delete(uuid);
-    } else {
-      this.hiddenCatalogs.add(uuid);
-    }
+    this.attestationService.getdata(0).toggleExpansion(uuid);
   }
 
   isShown(uuid: String): boolean {
@@ -106,13 +99,11 @@ export class AttestationPageComponent {
   }
 
   removeCatalog(uuid: String): void {
-    let catalogs = this.catalogData.catalogs;
-    console.log("Removing " + uuid);
-    catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1);
+    this.attestationService.getdata(0).removeCatalog(uuid);
   }
 
   restoreDefaultCatalog(): void {
-    this.catalogData.catalogs.unshift(catalog as Catalog);   
+    this.attestationService.getdata(0).restoreDefaultCatalog();
   }
   
   isDefaultPresent(): boolean {
