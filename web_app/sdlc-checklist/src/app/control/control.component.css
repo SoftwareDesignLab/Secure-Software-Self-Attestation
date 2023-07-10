@@ -130,6 +130,7 @@ img:hover {
 
 textarea {
   margin: 10px 40px;
+  max-width: calc(30vw - 90px);
   width: calc(30vw - 90px);
   position: relative;
   top: -10px;

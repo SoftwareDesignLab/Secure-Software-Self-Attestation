@@ -21,8 +21,8 @@
   ></app-rollable>
 </div>
 
-<div class="full-screen-fixed" *ngIf="popup" (click)="cancel()">
-  <div class="pane popup" (click)="$event.stopPropagation()">
+<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()">
+  <div class="pane popup" (mouseenter)="enter(true)" (mouseleave)="enter(false)">
     <br>
     <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
     <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4"></textarea>

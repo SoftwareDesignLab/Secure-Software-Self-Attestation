@@ -47,6 +47,8 @@ export class ChecklistItemComponent {
   comment: string = "";
   popup: Boolean = false;
   finalized: Boolean = false;
+  onPopup: Boolean = false;
+  primed: Boolean = false;
 
 
   ngOnInit(){
@@ -96,7 +98,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
-    this.cancel()
+    this.cancel();
   }
 
   done() {
@@ -104,11 +106,12 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
-    this.cancel()
+    this.cancel();
   }
 
   cancel() {
     this.popup = false;
+    this.primed = false;
   }
 
   del() {
@@ -119,5 +122,24 @@ export class ChecklistItemComponent {
 
   deploy() {
     this.popup = true;
+  }
+
+  enter(loc: boolean) {
+    this.onPopup = loc;
+  }
+
+  down() {
+    if (!this.onPopup)
+      this.primed = true;
+  }
+
+  up() {
+    if (this.primed) {
+      if (!this.onPopup) {
+        this.cancel();
+      } else {
+        this.primed = false;
+      }
+    }
   }
 }
