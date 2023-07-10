@@ -87,4 +87,12 @@ export class ChecklistItemComponent {
   isChecked(): boolean {
     return this.selection !== "no-selection";
   }
+
+  deselect(option: string){
+    if (this.selection === option) {
+      this.selection = "no-selection";
+    } else {
+      this.selection = option;
+    }
+  }
 }
