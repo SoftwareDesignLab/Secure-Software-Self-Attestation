@@ -10,16 +10,20 @@ import { AttestationDataService } from '../attestation-data.service';
 })
 export class AttestationComponent {
   selectedValue: string;
+  info: Array<attestationComment>;
+  dataService: AttestationDataService;
 
-  constructor( public dataService: AttestationDataService ){
-    this.selectedValue = dataService.getSelectedValue();
-    
+  constructor( public DataService: AttestationDataService ){
+    this.selectedValue = DataService.getSelectedValue();
+    this.dataService = DataService;
+    this.info = DataService.getInfo();
   }
 
-
+  
   addRow(){
     this.dataService.addInfo(new attestationComment);
   }
+
   removeRow(){
     this.dataService.popInfo();
   }
@@ -40,11 +44,11 @@ export class AttestationComponent {
       if(!comment.isFilled()){
         valid=false;
       }  
-      });  
-      return valid;
-    }
+    });  
+    return valid;
+  }
+
   updateSelect(){
     this.dataService.setSelectedValue(this.selectedValue);
   }
-
 }

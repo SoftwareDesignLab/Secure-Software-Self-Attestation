@@ -1,14 +1,16 @@
-<!-- TODO split processing vertically into upload and download sections -->
+<simple-notifications></simple-notifications>
+
 <header>
   <h1>SDLC Checklist</h1>
 </header>
+
 <nav>
-  <div [className]="showNav ? 'nav-icon shifted-nav' : 'nav-icon'" (click)="toggleNav()">
+  <div class="nav-icon" (click)="toggleNav()">
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
   </div>
-  <div [className]="showNav ? 'expanded-nav' : 'expanded-nav hidden'">
+  <div class="expanded-nav" [hidden]="!showNav">
     <h2>SDLC</h2>
     <ul>
       <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
@@ -17,6 +19,7 @@
     </ul>
   </div>
 </nav>
+
 <main>
   <router-outlet></router-outlet>
 </main>

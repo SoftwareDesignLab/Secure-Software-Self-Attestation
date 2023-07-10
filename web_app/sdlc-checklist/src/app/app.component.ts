@@ -1,9 +1,11 @@
 import { Component, ViewChildren, QueryList } from '@angular/core';
 import { GroupComponent } from './group/group.component';
-import { ChecklistItemComponent } from './control/control.component';
 import catalog from './defaultCatalog';
 import { Router } from '@angular/router';
 import { AttestationDataService } from './attestation-data.service';
+import { notifyService } from './notify.service';
+import { ChecklistItemComponent } from './control/control.component';
+
 
 interface Catalog {
   uuid: string;

@@ -1,9 +1,9 @@
-import { ControlValueAccessor } from '@angular/forms';
 import {GroupComponent} from './group/group.component'
+import { ChecklistItemComponent } from './control/control.component';
 
 
     export interface Oscal {
-        catalog: catalog;
+        catalog: Catalog;
     }
 
 
@@ -25,25 +25,14 @@ import {GroupComponent} from './group/group.component'
     }
 
 
-    export interface catalog {
+    export interface Catalog {
         uuid: string;
         metadata: metaData;
         groups: GroupComponent[];
-        controls: control[];
+        controls: ChecklistItemComponent[];
         "back-matter": any;
         params: any;
         
-    }
-
-    export interface control {
-        id: string;
-        class: string;
-        title: string;
-        props: any;
-        links: any;
-        parts: any;
-        controls: control[];
-     
     }
 
     export interface part {
