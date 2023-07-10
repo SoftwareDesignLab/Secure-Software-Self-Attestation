@@ -99,7 +99,7 @@ h3 {
 
 input {
   outline: none;
-  padding: .2em 1em;
+  padding: .2em .5em;
   margin-bottom: 20px;
   width: 90%;
   height: 1.25em;
