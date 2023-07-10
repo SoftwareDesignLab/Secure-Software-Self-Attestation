@@ -72,6 +72,16 @@ export class AppComponent {
 
   toggleNav(): void {
     this.showNav = !this.showNav;
+    let nav = document.getElementById('nav');
+    if (nav instanceof HTMLElement) {
+      if (this.showNav) {
+        nav.classList.add('nav-opening');
+        nav.classList.remove('nav-closing');
+      } else {
+        nav.classList.add('nav-closing');
+        nav.classList.remove('nav-opening');
+      }
+    }
   }
 
   getLinkName(catalog: Catalog): String {
