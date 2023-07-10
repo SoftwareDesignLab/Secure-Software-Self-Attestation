@@ -132,6 +132,7 @@ textarea {
   margin: 10px 40px;
   width: calc(30vw - 90px);
   position: relative;
+  top: -10px;
 }
 
 .bottom-buttons {
@@ -140,45 +141,59 @@ textarea {
   margin-bottom: 15px;
 }
 
-.done {
+#done {
   background-color: rgb(20, 190, 20);
 }
 
-.save {
+#save {
   background-color: yellow;
 }
 
-.cancel {
+#cancel {
   background-color: skyblue;
 }
 
-.delete {
+#delete {
   background-color: rgb(248, 50, 50);
 }
 
-.done:hover {
+.bottom-buttons>div:hover>#done {
   background-color: rgb(14, 155, 14);
 }
 
-.save:hover {
+.bottom-buttons>div:hover>#save {
   background-color: rgb(196, 153, 10);
 }
 
-.cancel:hover {
+.bottom-buttons>div:hover>#cancel {
   background-color: rgb(86, 146, 170);
 }
 
-.delete:hover {
+.bottom-buttons>div:hover>#delete {
   background-color: rgb(185, 26, 47);
 }
 
-.bottom-buttons>button {
+.bottom-buttons>div>div {
   border: 0;
   border-radius: 10px;
+  height: 20px;
+  width: 20px;
   box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .25);
-  padding: 5px 15px;
+  display: inline-block;
 }
 
-.bottom-buttons>button:hover {
+.bottom-buttons p {
+  display: inline;
+  position: relative;
+  top: -4px;
+  margin-left: 10px;
+  user-select: none;
+}
+
+.bottom-buttons>div:hover>div {
   box-shadow: inset 0px 0px 5px 2px rgba(0, 0, 0, .4);
+}
+
+.bottom-buttons>div {
+  cursor: pointer;
 }

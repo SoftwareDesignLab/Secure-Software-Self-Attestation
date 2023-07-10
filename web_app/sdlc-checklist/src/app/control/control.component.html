@@ -24,13 +24,25 @@
 <div class="full-screen-fixed" *ngIf="popup" (click)="cancel()">
   <div class="pane popup" (click)="$event.stopPropagation()">
     <br>
-    <label for="comment" class="explanation-label">Brief Explanation: </label>
+    <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
     <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4"></textarea>
     <div class="bottom-buttons">
-      <button (click)="done()" class="done">Done</button>
-      <button (click)="save()" class="save">Save</button>
-      <button (click)="cancel()" class="cancel">Cancel</button>
-      <button (click)="del()" class="delete">Delete</button>
+      <div (click)="done()">
+        <div id="done"></div>
+        <p>Done</p>
+      </div>
+      <div (click)="save()">
+        <div id="save"></div>
+        <p>Save</p>
+      </div>
+      <div (click)="cancel()">
+        <div id="cancel"></div>
+        <p>Cancel</p>
+      </div>
+      <div (click)="del()">
+        <div id="delete"></div>
+        <p>Delete</p>
+      </div>
     </div>
   </div>
 </div>
