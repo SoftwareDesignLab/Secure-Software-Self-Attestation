@@ -86,11 +86,10 @@ export class ChecklistItemComponent {
     return this.selection !== "no-selection";
   }
 
-  select(selection: String) {
+  select() {
     if (this.selection === "no-selection") {
       this.popup = true;
     }
-    this.selection = selection
   }
 
   save() {

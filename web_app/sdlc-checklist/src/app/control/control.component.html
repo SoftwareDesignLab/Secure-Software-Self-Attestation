@@ -2,7 +2,7 @@
   <div class="checkbox-container">
     <div class="button-set">
       <div class="individual-button" *ngFor="let i of ['check', 'x', 'na']">
-        <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" hidden (click)="select(i)">
+        <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" (click)="select()" [(ngModel)]="selection">
         <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i"></label>
       </div>
     </div>
