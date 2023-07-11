@@ -1,12 +1,14 @@
 <section class="group">
-    <div *ngIf="id; else ungrouped" [className]="areAllChildrenChecked() ? 'inline-block gray' : 'inline-block'">
-        <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ id }}: {{ title }}</h2>
-    </div>
-    <ng-template #ungrouped>
-        <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ title }}</h2>
-    </ng-template>  
-    <div class="button-set">
-        <img *ngFor="let i of ['check', 'x', 'na']" [src]="'/assets/' + i + '.png'" [className]="i" [alt]="i" (click)="setAllChildrenSelection(i)">
+    <div class="header"> 
+        <div *ngIf="id; else ungrouped" [className]="areAllChildrenChecked() ? 'inline-block gray' : 'inline-block'">
+            <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ id }}: {{ title }}</h2>
+        </div>
+        <ng-template #ungrouped>
+            <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ title }}</h2>
+        </ng-template>  
+        <div class="button-set">
+            <img *ngFor="let i of ['check', 'x', 'na']" [src]="'/assets/' + i + '.png'" [className]="i" [alt]="i" (click)="setAllChildrenSelection(i)">
+        </div>
     </div>
     <div class="group-rollable-content" [hidden]="!showComponents">
         <p *ngIf="description">{{ description }}</p>

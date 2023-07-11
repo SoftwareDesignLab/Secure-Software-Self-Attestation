@@ -2,15 +2,17 @@
   <div class="checkbox-container">
     <div class="button-set">
       <div class="individual-button" *ngFor="let i of ['check', 'x', 'na']">
-        <input [id]="id + '-' + i" hidden type="radio" [name]="id + '-selector'" [value]="i" hidden [(ngModel)]="selection">
-        <label [for]="id + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i"></label>
+        <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" (click)="select(i)" [(ngModel)]="selection">
+        <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i"></label>
       </div>
     </div>
+    <img alt="Comment Button" 
+        [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
+        (click)="deploy()" class="pencil" [hidden]="!isChecked()">
     <label class="checkbox-label" (click)="toggleRollable()">
       {{ id }}: {{ title }}
     </label>
   </div>
-  <input type ="text" name="explanation" placeholder="Brief explanation" [id]="id + '-comment'" [hidden]="!isChecked()">
   <app-rollable *ngIf="showRollable"
     [description]="getDescription()"
     [examples]="getExamples()"
@@ -19,4 +21,28 @@
   ></app-rollable>
 </div>
 
-
+<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()">
+  <div class="pane popup" (mouseenter)="enter(true)" (mouseleave)="enter(false)">
+    <br>
+    <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
+    <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4"></textarea>
+    <div class="bottom-buttons">
+      <div (click)="done()">
+        <div id="done"></div>
+        <p>Done</p>
+      </div>
+      <div (click)="save()">
+        <div id="save"></div>
+        <p>Save</p>
+      </div>
+      <div (click)="cancel()">
+        <div id="cancel"></div>
+        <p>Cancel</p>
+      </div>
+      <div (click)="del()">
+        <div id="delete"></div>
+        <p>Delete</p>
+      </div>
+    </div>
+  </div>
+</div>
