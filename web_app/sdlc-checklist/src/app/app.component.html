@@ -15,23 +15,24 @@
     <ul>
       <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
       <li>
-      <div>
-        <div class="tree-root">
-        <a href="#attestation" (click)="toggleNav()">Attestation Form</a>
         <div>
-          <h4 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4>
+          <div class="tree-root">
+            <a href="#attestation" (click)="toggleNav()">Attestation Form</a>
+            <div>
+              <h4 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4>
+            </div>
+          </div>
+          <br>
+          <ul class="tree-branch" *ngIf="showComponents">        
+            <li  *ngFor="let catalog of catalogData.catalogs">
+              <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
+            </li>
+            <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
+          </ul>
         </div>
-      </div>
-      <br>
-        <ul class="tree-branch" *ngIf="showComponents">        
-          <li  *ngFor="let catalog of catalogData.catalogs">
-            <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
-          </li>
-          <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
-        </ul>
-      </div>
       </li>
     </ul>
+    <p class="bottom" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
   </div>
 </nav>
 
@@ -120,7 +121,7 @@
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
     <div class="generate-report-div">
-      <button class="save-progress">Save Attestation</button>
+      <button class="save-progress" (click)="alert('This would save progress, but right now it\'s useless')">Save Attestation</button>
       <button class="generate-report" *ngIf="catalogData">Generate Report</button>
     </div>
   </div>

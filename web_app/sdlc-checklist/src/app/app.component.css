@@ -74,7 +74,7 @@
   color: rgb(0, 0, 0);
   border-radius: 10px;
   padding: 5px 15px;
-  box-shadow: 4px 4px 2px 0 rgba(0, 0, 0, .4);
+  box-shadow: 3px 3px 2px 0 rgba(0, 0, 0, .4);
 }
 
 .generate-report:hover {
@@ -209,6 +209,7 @@ nav {
   background-color: white;
   border-left: 2px solid black;
   box-shadow: -4px 0 4px 0 rgba(0, 0, 0, .4);
+  text-align: center;
 }
 
 .expanded-nav ul {
@@ -251,6 +252,23 @@ nav {
 
 .expanded-nav li:hover {
   background-color: #EFF2F4;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+  padding: 20px 10px 25px;
+  margin: 0;
+  background-color: #005EA2;
+  color: white;
+  width: 20vw;
+  text-indent: -20px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.bottom:hover {
+  background-color: #003a63;
 }
 
 @keyframes navOpening {

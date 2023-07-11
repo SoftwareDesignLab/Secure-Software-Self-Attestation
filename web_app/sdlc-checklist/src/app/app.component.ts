@@ -125,5 +125,9 @@ export class AppComponent {
       //this.hideChildRollable();
     }
   }
+
+  alert(message: string) {
+    alert(message);
+  }
 }
 
