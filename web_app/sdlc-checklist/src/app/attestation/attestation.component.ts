@@ -1,7 +1,7 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import { attestationComment } from '../attestationForm';
 import { AttestationDataService } from '../attestation-data.service';
-import { Catalog } from '../oscalModel';
+import { Catalog, ControlInfo } from '../oscalModel';
 import { GroupComponent } from '../group/group.component';
 import catalog from '../defaultCatalog';
 
@@ -22,6 +22,9 @@ export class AttestationComponent {
   hiddenCatalogs = new Set<String>();
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
+
+
+
   private selectedValue: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
   private position: any;
@@ -105,6 +108,7 @@ export class AttestationComponent {
       this.hiddenCatalogs.add(uuid);
     }
   }
+
 
 
  

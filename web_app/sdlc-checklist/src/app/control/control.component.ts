@@ -1,4 +1,6 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { AttestationDataService } from '../attestation-data.service';
+import { ControlInfo } from '../oscalModel';
 
 @Component({
   selector: 'app-control',
@@ -19,11 +21,19 @@ export class ChecklistItemComponent {
   selection: String = "no-selection";
   showRollable = false;
   @Input() uuid: any;
+  info!: ControlInfo; 
   UID: any; //Unique ID for this control for the program
+
+  constructor(private attestationDataService: AttestationDataService){
+    this.UID = this.uuid + '-' + this.id
+   
+  }
 
 
   ngOnInit(){
     this.UID = this.uuid + '-' + this.id
+    this.info = this.attestationDataService.setUpControl(this.UID)!;
+    this.selection= this.info.selection;
   }
 
   toggleRollable() {
@@ -63,5 +73,9 @@ export class ChecklistItemComponent {
 
   isChecked(): boolean {
     return this.selection !== "no-selection";
+  }
+
+  select(i: String) {
+    this.attestationDataService.updateControlSelection(this.UID, i);
   }
 }

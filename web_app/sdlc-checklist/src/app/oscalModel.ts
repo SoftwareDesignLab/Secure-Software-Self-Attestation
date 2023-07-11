@@ -78,3 +78,20 @@ import { ChecklistItemComponent } from './control/control.component';
         remarks: any;
 
     }
+
+
+
+    export class ControlInfo {
+        comment: String;
+        selection: String;
+    
+        constructor(comment: string = "", selection: string = "no-selection") {
+            this.comment = comment;
+            this.selection = selection;
+        }
+    }
+
+
+
+
+    

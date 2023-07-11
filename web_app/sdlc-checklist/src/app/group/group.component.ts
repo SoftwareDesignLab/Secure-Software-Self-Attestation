@@ -1,5 +1,6 @@
 import { Component, Input, ViewChildren, QueryList} from '@angular/core';
 import { ChecklistItemComponent } from '../control/control.component'
+import { AttestationDataService } from '../attestation-data.service';
 
 @Component({
   selector: 'app-group',
@@ -15,6 +16,10 @@ export class GroupComponent {
   @ViewChildren(ChecklistItemComponent) childComponents!: QueryList<ChecklistItemComponent>;
   showComponents = true;
   UID: any;  //Unique ID for this control for the program
+
+  constructor(private attestationDataService: AttestationDataService){
+
+  }
 
 
   ngOnInit(){
@@ -57,6 +62,7 @@ export class GroupComponent {
   setAllChildrenSelection(selection: String): void {
     this.childComponents.forEach((child) => {
       child.selection = selection;
+      this.attestationDataService.updateControlSelection(child.UID, selection);
     })
   }
 }
