@@ -34,7 +34,7 @@ export class AttestationDataService {
 
   private forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
-  controlMap: Map<string, ControlInfo> = new Map<string, ControlInfo>
+  controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
 
   constructor() {
     this.forms.push(new AttestationComponent)
@@ -61,7 +61,7 @@ export class AttestationDataService {
     this.forms[pos-1].setPosition(pos);
   }
 
-  setUpControl(UID: string): ControlInfo | undefined{
+  setUpControl(UID: String): ControlInfo | undefined{
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
     }
@@ -72,13 +72,46 @@ export class AttestationDataService {
     }
   }
 
-  updateControlSelection(UID: string, selection: String){
+  updateControlSelection(UID: String, selection: String){
     let temp = this.controlMap.get(UID);
     if(temp!=undefined){
-      temp.selection=selection
+      temp.selection=selection;
     }
     else{
       console.log("Something went wrong")
     }
+  }
+
+  saveControlComment(UID: String, comment: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!=undefined){
+      temp.finalized=false;
+      temp.comment=comment;
+    }
+    else{
+      console.log("Something went wrong")
+    }
+
+
+  }
+  finalizeControlComment(UID: String, comment: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!=undefined){
+      temp.finalized=true;
+      temp.comment=comment;
+    }
+    else{
+      console.log("Something went wrong")
+    }
+
+
+  }
+  deleteControlComment(UID: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!=undefined){
+      temp.comment = "";
+      temp.finalized = false;
+    }
+
   }
 }

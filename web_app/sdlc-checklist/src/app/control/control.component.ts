@@ -47,7 +47,7 @@ export class ChecklistItemComponent {
   showRollable = false;
   info!: ControlInfo; 
   UID: any; //Unique ID for this control for the program
-  comment: string = "";
+  comment: String = "";
   popup: Boolean = false;
   finalized: Boolean = false;
   onPopup: Boolean = false;
@@ -63,6 +63,8 @@ export class ChecklistItemComponent {
     this.UID = this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpControl(this.UID)!;
     this.selection= this.info.selection;
+    this.comment = this.info.comment;
+    this.finalized = this.info.finalized
   }
 
   toggleRollable() {
@@ -113,6 +115,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
+      this.attestationDataService.saveControlComment(this.UID,this.comment);
     this.cancel();
   }
 
@@ -121,6 +124,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
+      this.attestationDataService.finalizeControlComment(this.UID,this.comment);
     this.cancel();
   }
 
@@ -133,6 +137,7 @@ export class ChecklistItemComponent {
     this.comment = "";
     this.finalized = false;
     this.cancel();
+    this.attestationDataService.deleteControlComment(this.UID);
   }
 
   deploy() {
