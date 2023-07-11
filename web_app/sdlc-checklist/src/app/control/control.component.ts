@@ -86,9 +86,14 @@ export class ChecklistItemComponent {
     return this.selection !== "no-selection";
   }
 
-  select() {
+  select(option: string) {
     if (this.selection === "no-selection") {
       this.popup = true;
+    }
+    if (this.selection === option) {
+      this.selection = "no-selection";
+    } else {
+      this.selection = option;
     }
   }
 
@@ -142,11 +147,4 @@ export class ChecklistItemComponent {
     }
   }
   
-  deselect(option: string){
-    if (this.selection === option) {
-      this.selection = "no-selection";
-    } else {
-      this.selection = option;
-    }
-  }
 }
