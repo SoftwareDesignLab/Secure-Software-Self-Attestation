@@ -7,7 +7,7 @@
             <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ title }}</h2>
         </ng-template>  
         <div class="button-set">
-            <img *ngFor="let i of ['check', 'x', 'na']" [src]="'/assets/' + i + '.png'" [className]="i" [alt]="i" (click)="setAllChildrenSelection(i)">
+            <img *ngFor="let i of ['check', 'x', 'na']" [src]="'/assets/' + i + '.png'" [className]="i" [alt]="i" (click)="setAllChildrenSelection(i)" (keydown.enter)="setAllChildrenSelection(i)" tabindex=0>
         </div>
     </div>
     <div class="group-rollable-content" [hidden]="!showComponents">

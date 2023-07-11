@@ -49,7 +49,7 @@ export class ChecklistItemComponent {
   finalized: Boolean = false;
   onPopup: Boolean = false;
   primed: Boolean = false;
-
+  j = 0;
 
   ngOnInit(){
     this.UID = this.uuid + '-' + this.id
@@ -88,7 +88,7 @@ export class ChecklistItemComponent {
 
   select(option: string) {
     if (this.selection === "no-selection") {
-      this.popup = true;
+      this.deploy();
     }
     if (this.selection === option) {
       this.selection = "no-selection";
@@ -146,5 +146,12 @@ export class ChecklistItemComponent {
       }
     }
   }
-  
+ 
+  commentFocus() {
+    let comment = document.getElementById("comment");
+    if (comment instanceof HTMLElement) {
+      comment.focus();
+    }
+    alert('ran')
+  }
 }

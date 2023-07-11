@@ -5,7 +5,7 @@
 </header>
 
 <nav id="nav">
-  <div class="nav-icon" (click)="toggleNav()">
+  <div class="nav-icon" (click)="toggleNav()" (keydown.enter)="toggleNav()" tabindex=0>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
@@ -13,21 +13,21 @@
   <div class="expanded-nav">
     <h2>SDLC</h2>
     <ul>
-      <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
+      <li><a href="#contact-form" (click)="toggleNav()" (keydown.enter)="toggleNav()" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
       <li>
       <div>
         <div class="tree-root">
-        <a href="#attestation" (click)="toggleNav()">Attestation Form</a>
+        <a href="#attestation" (click)="toggleNav()" (keydown.enter)="toggleNav()" [tabindex]="showNav ? 0 : -1">Attestation Form</a>
         <div>
-          <h4 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4>
+          <h4 (click)="toggleComponents()" (keydown.enter)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4>
         </div>
       </div>
       <br>
         <ul class="tree-branch" *ngIf="showComponents">        
           <li  *ngFor="let catalog of catalogData.catalogs">
-            <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
+            <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()" (keydown.enter)="toggleNav()" [tabindex]="showNav ? 1 : 0">{{getLinkName(catalog)}}</a>
           </li>
-          <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
+          <li><a href="#upload" (click)="toggleNav()" (keydown.enter)="toggleNav()" [tabindex]="showNav ? 1 : 0">Upload or Generate Report</a></li>
         </ul>
       </div>
       </li>
@@ -86,11 +86,11 @@
     <div [className]="isShown(catalog.uuid) ? 'button-panel raised' : 'button-panel'">
       <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
       <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
-      <div (click)="toggleExpansion(catalog.uuid)" 
+      <div (click)="toggleExpansion(catalog.uuid)" tabindex=0 (keydown.enter)="toggleExpansion(catalog.uuid)"
            [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
       </div><br>
       <p class="button-caption">Remove Catalog</p>
-      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
+      <div (click)="removeCatalog(catalog.uuid)" (keydown.enter)="removeCatalog(catalog.uuid)" class="circle-button red" tabindex=0></div>
     </div>
     <div [className]="isShown(catalog.uuid) ? 'underline' : ''">
       <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
@@ -113,7 +113,7 @@
 
   <div class="restore-container" [hidden]="isDefaultPresent()">
     <p class="pane restore">
-      It looks like you deleted the default catalog &nbsp;&nbsp;<span class="blue-text" (click)="restoreDefaultCatalog()">Restore it?</span>
+      It looks like you deleted the default catalog &nbsp;&nbsp;<span class="blue-text" (click)="restoreDefaultCatalog()" (keydown.enter)="restoreDefaultCatalog()">Restore it?</span>
     </p>
   </div>
 
