@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { timeInterval } from 'rxjs';
 
 @Component({
   selector: 'app-control',
@@ -43,6 +44,11 @@ export class ChecklistItemComponent {
   showRollable = false;
   @Input() uuid: any;
   UID: any; //Unique ID for this control for the program
+  comment: string = "";
+  popup: Boolean = false;
+  finalized: Boolean = false;
+  onPopup: Boolean = false;
+  primed: Boolean = false;
 
 
   ngOnInit(){
@@ -76,18 +82,66 @@ export class ChecklistItemComponent {
     }
   }
 
-  getComment(): String {
-    let textbox = document.getElementById(this.id + '-comment');
-    if (textbox instanceof HTMLInputElement) {
-      return textbox.value;
-    }
-    return "";
-  }
-
   isChecked(): boolean {
     return this.selection !== "no-selection";
   }
 
+  select() {
+    if (this.selection === "no-selection") {
+      this.popup = true;
+    }
+  }
+
+  save() {
+    this.finalized = false;
+    let text = document.getElementById("comment")
+    if (text instanceof HTMLTextAreaElement)
+      this.comment = text.value;
+    this.cancel();
+  }
+
+  done() {
+    this.finalized = true;
+    let text = document.getElementById("comment")
+    if (text instanceof HTMLTextAreaElement)
+      this.comment = text.value;
+    this.cancel();
+  }
+
+  cancel() {
+    this.popup = false;
+    this.primed = false;
+  }
+
+  del() {
+    this.comment = "";
+    this.finalized = false;
+    this.cancel();
+  }
+
+  deploy() {
+    this.popup = true;
+  }
+
+  enter(loc: boolean) {
+    this.onPopup = loc;
+  }
+
+  down() {
+    if (!this.onPopup)
+      this.primed = true;
+  }
+
+  up() {
+    if (this.primed) {
+      if (!this.onPopup) {
+        this.cancel();
+      } else {
+        this.primed = false;
+      }
+    }
+  }
+  
   deselect(option: string){
     if (this.selection === option) {
       this.selection = "no-selection";
