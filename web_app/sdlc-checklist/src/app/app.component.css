@@ -287,4 +287,7 @@ nav {
   .form-column {
     display: block;
   }
+  form {
+    margin: 0 10vw;
+  }
 }
