@@ -49,7 +49,7 @@ h2 {
 }
 
 .button-set {
-    min-width: 70px;
+    min-width: 100px;
     margin-left: 10px;
     display: inline-block;
     position: relative;
