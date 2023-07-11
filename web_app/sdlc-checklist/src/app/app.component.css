@@ -118,10 +118,22 @@ label {
 nav {
   position: fixed;
   top: 0;
-  right: 0;
   display: grid;
   grid-template-columns: auto auto;
   z-index: 3;
+  right: -20vw;
+}
+
+.nav-opening {
+  animation-name: navOpening;
+  animation-duration: .5s;
+  right: 0vw;
+}
+
+.nav-closing {
+  animation-name: navClosing;
+  animation-duration: .5s;
+  right: -20vw;
 }
 
 .nav-icon {
@@ -204,6 +216,16 @@ nav {
 
 .expanded-nav li:hover {
   background-color: #EFF2F4;
+}
+
+@keyframes navOpening {
+  from {right: -20vw;}
+  to {right: 0vw;}
+}
+
+@keyframes navClosing {
+  from {right: 0vw;}
+  to {right: -20vw;}
 }
 
 /* Catalog Buttons */
