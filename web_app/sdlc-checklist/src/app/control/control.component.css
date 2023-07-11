@@ -1,3 +1,26 @@
+/**
+ * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+ * government support under contract 70RSAT19CB0000020 awarded by the United
+ * States Department of Homeland Security.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 .checkbox-item {
   display: flex;
   flex-direction: column;
@@ -75,4 +98,103 @@ img:hover {
 
 .na {
   border-radius: 0 4px 4px 0;
+}
+
+.full-screen-fixed {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(24, 24, 24, 0.6);
+  z-index: 5;
+}
+
+.popup {
+  width: 30vw;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 35vw;
+  z-index: 6;
+}
+
+.pencil {
+  border: 0;
+  border-radius: 4px;
+}
+
+.explanation-label {
+  margin: 10px 30px;
+}
+
+textarea {
+  margin: 10px 40px;
+  max-width: calc(30vw - 90px);
+  width: calc(30vw - 90px);
+  position: relative;
+  top: -10px;
+}
+
+.bottom-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+#done {
+  background-color: rgb(20, 190, 20);
+}
+
+#save {
+  background-color: yellow;
+}
+
+#cancel {
+  background-color: skyblue;
+}
+
+#delete {
+  background-color: rgb(248, 50, 50);
+}
+
+.bottom-buttons>div:hover>#done {
+  background-color: rgb(14, 155, 14);
+}
+
+.bottom-buttons>div:hover>#save {
+  background-color: rgb(196, 153, 10);
+}
+
+.bottom-buttons>div:hover>#cancel {
+  background-color: rgb(86, 146, 170);
+}
+
+.bottom-buttons>div:hover>#delete {
+  background-color: rgb(185, 26, 47);
+}
+
+.bottom-buttons>div>div {
+  border: 0;
+  border-radius: 10px;
+  height: 20px;
+  width: 20px;
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .25);
+  display: inline-block;
+}
+
+.bottom-buttons p {
+  display: inline;
+  position: relative;
+  top: -4px;
+  margin-left: 10px;
+  user-select: none;
+}
+
+.bottom-buttons>div:hover>div {
+  box-shadow: inset 0px 0px 5px 2px rgba(0, 0, 0, .4);
+}
+
+.bottom-buttons>div {
+  cursor: pointer;
 }

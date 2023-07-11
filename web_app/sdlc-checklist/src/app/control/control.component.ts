@@ -1,6 +1,30 @@
+/**
+ * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+ * government support under contract 70RSAT19CB0000020 awarded by the United
+ * States Department of Homeland Security.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { AttestationDataService } from '../attestation-data.service';
 import { ControlInfo } from '../oscalModel';
+import { timeInterval } from 'rxjs';
 
 @Component({
   selector: 'app-control',
@@ -23,6 +47,11 @@ export class ChecklistItemComponent {
   @Input() uuid: any;
   info!: ControlInfo; 
   UID: any; //Unique ID for this control for the program
+  comment: string = "";
+  popup: Boolean = false;
+  finalized: Boolean = false;
+  onPopup: Boolean = false;
+  primed: Boolean = false;
 
   constructor(private attestationDataService: AttestationDataService){
     this.UID = this.uuid + '-' + this.id
@@ -63,19 +92,70 @@ export class ChecklistItemComponent {
     }
   }
 
-  getComment(): String {
-    let textbox = document.getElementById(this.id + '-comment');
-    if (textbox instanceof HTMLInputElement) {
-      return textbox.value;
-    }
-    return "";
-  }
-
   isChecked(): boolean {
     return this.selection !== "no-selection";
   }
 
-  select(i: String) {
-    this.attestationDataService.updateControlSelection(this.UID, i);
+  select(option: string) {
+    this.attestationDataService.updateControlSelection(this.UID, option);
+    if (this.selection === "no-selection") {
+      this.popup = true;
+    }
+    if (this.selection === option) {
+      this.selection = "no-selection";
+    } else {
+      this.selection = option;
+    }
   }
+
+  save() {
+    this.finalized = false;
+    let text = document.getElementById("comment")
+    if (text instanceof HTMLTextAreaElement)
+      this.comment = text.value;
+    this.cancel();
+  }
+
+  done() {
+    this.finalized = true;
+    let text = document.getElementById("comment")
+    if (text instanceof HTMLTextAreaElement)
+      this.comment = text.value;
+    this.cancel();
+  }
+
+  cancel() {
+    this.popup = false;
+    this.primed = false;
+  }
+
+  del() {
+    this.comment = "";
+    this.finalized = false;
+    this.cancel();
+  }
+
+  deploy() {
+    this.popup = true;
+  }
+
+  enter(loc: boolean) {
+    this.onPopup = loc;
+  }
+
+  down() {
+    if (!this.onPopup)
+      this.primed = true;
+  }
+
+  up() {
+    if (this.primed) {
+      if (!this.onPopup) {
+        this.cancel();
+      } else {
+        this.primed = false;
+      }
+    }
+  }
+  
 }

@@ -23,7 +23,7 @@
         <td><input type ="date" name="form" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}} class="table-field"></td>
       </tr>
     </table>
-    <button class="add" mat-button (click)="addRow()">+</button>
+    <button class="add" mat-button (click)="addRow()" [hidden]="selectedValue!=='multiple'">+</button>
     <button class="add" mat-button (click)="removeRow()" *ngIf="info.length>1">-</button>
   </div>
 </div>

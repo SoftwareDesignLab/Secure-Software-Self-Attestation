@@ -1,3 +1,26 @@
+/**
+ * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+ * government support under contract 70RSAT19CB0000020 awarded by the United
+ * States Department of Homeland Security.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Oscal, metaData, Catalog } from '../oscalModel';
 import { notifyService } from '../notify.service';
@@ -48,6 +71,14 @@ export class CatalogProcessingComponent {
     }
   }
 
+  notifyOfSuccess(message: string) {
+    this.notifications.success(message);
+  }
+
+  notifyOfFailure(message: string) {
+    this.notifications.error(message);
+  }
+
   private isJsonFile(file: File): boolean {
     return file.type === 'application/json' || file.name.endsWith('.json');
   }
@@ -59,7 +90,6 @@ export class CatalogProcessingComponent {
     }
     return false;
   }
-
 
   /**
    * Checks if the provided JSON file is a valid OSCAL catalog and if it has an extra nest
@@ -126,7 +156,6 @@ export class CatalogProcessingComponent {
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
         this.fileSelected.emit(catalog);
-        this.notifications.success("File uploaded");
       }
     };
     reader.readAsText(file);

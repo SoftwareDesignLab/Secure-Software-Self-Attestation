@@ -1,3 +1,26 @@
+/**
+ * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+ * government support under contract 70RSAT19CB0000020 awarded by the United
+ * States Department of Homeland Security.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 /* Structural Rules */
 
 .lower-div {
@@ -75,9 +98,27 @@ h3 {
 }
 
 input {
+  outline: none;
+  padding: .2em .5em;
   margin-bottom: 20px;
   width: 90%;
   height: 1.25em;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .25);
+}
+
+input:hover {
+  background-color: rgb(228, 245, 252);
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, .25);
+  border: 1px solid darkgray;
+}
+
+input:focus {
+  border: 1px solid rgb(161, 183, 192);
+  box-shadow: 0 0 2px 2px rgba(5, 157, 196, 0.4);
+  background-color: white;
 }
 
 .center-line {
@@ -94,10 +135,22 @@ label {
 nav {
   position: fixed;
   top: 0;
-  right: 0;
   display: grid;
   grid-template-columns: auto auto;
   z-index: 3;
+  right: -20vw;
+}
+
+.nav-opening {
+  animation-name: navOpening;
+  animation-duration: .5s;
+  right: 0vw;
+}
+
+.nav-closing {
+  animation-name: navClosing;
+  animation-duration: .5s;
+  right: -20vw;
 }
 
 .nav-icon {
@@ -142,12 +195,13 @@ nav {
 
 .expanded-nav ul {
   list-style: none;
-  padding: 0;
+  padding: 20px;
   display: flex;
   flex-direction: column;
 }
 
 .expanded-nav li {
+  display: flex;
   margin: 0;
   padding: 0;
   border-bottom: 1px solid black;
@@ -155,6 +209,12 @@ nav {
 
 .expanded-nav li:nth-child(1) {
   border-top: 1px solid black;
+  padding-left: 40px;
+}
+.expanded-nav ul.tree-branch {
+  border-top: 1px solid black;
+  padding-left: 40px;
+  background-color: #FFFFFF;
 }
 
 .expanded-nav a {
@@ -175,3 +235,72 @@ nav {
   background-color: #EFF2F4;
 }
 
+@keyframes navOpening {
+  from {right: -20vw;}
+  to {right: 0vw;}
+}
+
+@keyframes navClosing {
+  from {right: 0vw;}
+  to {right: -20vw;}
+}
+
+/* Catalog Buttons */
+
+.orange {
+  background-color: orange;
+}
+
+.prependUpArrow::before {
+  content: "▲ "
+}
+.prependDownArrow::before {
+  content: "▼ "
+}
+
+.tree-root {
+  display:flex
+}
+
+.orange:hover {
+  box-shadow: inset 0 0 4px 1px rgb(163, 90, 0);
+}
+
+.red {
+  background-color: red;
+}
+
+.red:hover {
+  box-shadow: inset 0 0 4px 1px rgb(95, 1, 1);
+}
+
+.green {
+  background-color: rgb(5, 204, 5);
+}
+
+.green:hover {
+  box-shadow: inset 0 0 4px 1px rgb(18, 71, 1);
+}
+
+.circle-button {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+  top: 6px;
+  margin: 0 15px;
+}
+
+.button-panel {
+  text-align: right;
+  margin: 25px 25px 25px 0;
+  float: right;
+  position: relative;
+}
+
+.button-caption {
+  display: inline-block;
+  margin: 5px;
+  user-select: none;
+}

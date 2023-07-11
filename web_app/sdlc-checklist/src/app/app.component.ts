@@ -1,10 +1,35 @@
-import { Component, ViewChildren, QueryList } from '@angular/core';
+/**
+ * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+ * government support under contract 70RSAT19CB0000020 awarded by the United
+ * States Department of Homeland Security.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+*/
+import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
 import { Router } from '@angular/router';
 import { AttestationDataService } from './attestation-data.service';
 import { notifyService } from './notify.service';
 import { ChecklistItemComponent } from './control/control.component';
+import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
+
 
 
 interface Catalog {
@@ -28,17 +53,23 @@ export class AppComponent {
   showComponentsArray: any;
   hiddenCatalogs = new Set<String>();
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
+  @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   control: string = "Ungrouped Controls";
   showNav = false;
+  showComponents = false;
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
   ngOnInit(): void {
     this.catalogData.catalogs.push(catalog as Catalog);    
   }
-  onFileSelected(jsonData: any): void {
-    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
+
+  onFileSelected(jsonData: any) {
+    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) { // Prevents uploading the same file twice
+      this.catalogProcessingComponent.notifyOfFailure("Duplicate Catalog");
       return;
+    }
+    this.catalogProcessingComponent.notifyOfSuccess("File Loaded");
     this.catalogData.catalogs.push(jsonData);
   }
 
@@ -57,6 +88,16 @@ export class AppComponent {
 
   toggleNav(): void {
     this.showNav = !this.showNav;
+    let nav = document.getElementById('nav');
+    if (nav instanceof HTMLElement) {
+      if (this.showNav) {
+        nav.classList.add('nav-opening');
+        nav.classList.remove('nav-closing');
+      } else {
+        nav.classList.add('nav-closing');
+        nav.classList.remove('nav-opening');
+      }
+    }
   }
 
   getLinkName(catalog: Catalog): String {
@@ -101,5 +142,11 @@ export class AppComponent {
     return false;
   }
 
+  toggleComponents(){
+    this.showComponents = !this.showComponents;
+    if (!this.showComponents) {
+      //this.hideChildRollable();
+    }
+  }
 }
 
