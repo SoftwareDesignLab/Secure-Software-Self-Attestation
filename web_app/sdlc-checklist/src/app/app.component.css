@@ -98,9 +98,27 @@ h3 {
 }
 
 input {
+  outline: none;
+  padding: .2em .5em;
   margin-bottom: 20px;
   width: 90%;
   height: 1.25em;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .25);
+}
+
+input:hover {
+  background-color: rgb(228, 245, 252);
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, .25);
+  border: 1px solid darkgray;
+}
+
+input:focus {
+  border: 1px solid rgb(161, 183, 192);
+  box-shadow: 0 0 2px 2px rgba(5, 157, 196, 0.4);
+  background-color: white;
 }
 
 .center-line {
@@ -118,10 +136,22 @@ label {
 nav {
   position: fixed;
   top: 0;
-  right: 0;
   display: grid;
   grid-template-columns: auto auto;
   z-index: 3;
+  right: -20vw;
+}
+
+.nav-opening {
+  animation-name: navOpening;
+  animation-duration: .5s;
+  right: 0vw;
+}
+
+.nav-closing {
+  animation-name: navClosing;
+  animation-duration: .5s;
+  right: -20vw;
 }
 
 .nav-icon {
@@ -204,6 +234,16 @@ nav {
 
 .expanded-nav li:hover {
   background-color: #EFF2F4;
+}
+
+@keyframes navOpening {
+  from {right: -20vw;}
+  to {right: 0vw;}
+}
+
+@keyframes navClosing {
+  from {right: 0vw;}
+  to {right: -20vw;}
 }
 
 /* Catalog Buttons */

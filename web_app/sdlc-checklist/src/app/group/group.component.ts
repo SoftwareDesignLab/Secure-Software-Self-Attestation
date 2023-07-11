@@ -77,9 +77,29 @@ export class GroupComponent {
     return true;
   }
 
-  setAllChildrenSelection(selection: String): void {
-    this.childComponents.forEach((child) => {
-      child.selection = selection;
-    })
+  deselectAll(selection: string){
+    if (this.childComponents === undefined) {return true;}
+    for (let i = this.childComponents.length - 1; i>=0; i--) {
+      let child = this.childComponents.get(i);
+      if (child instanceof ChecklistItemComponent) {
+        if (child.selection != selection) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  setAllChildrenSelection(selection: string): void {
+    if(this.deselectAll(selection)){
+      this.childComponents.forEach((child) => {
+        child.selection = selection;
+      })
+    }
+    else{
+      this.childComponents.forEach((child) => {
+        child.selection = "no-selection";
+      })
+    }
   }
 }
