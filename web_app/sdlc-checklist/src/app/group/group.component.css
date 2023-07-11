@@ -55,6 +55,14 @@ h2 {
     position: relative;
     top: 5px;
 }
+
+.header{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+}
   
 img {
     border: 1px solid gray;
