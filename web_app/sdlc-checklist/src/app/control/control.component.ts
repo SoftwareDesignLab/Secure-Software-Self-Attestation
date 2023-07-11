@@ -41,10 +41,10 @@ export class ChecklistItemComponent {
   @Input() links: any;
   @Input() props: any;
   @Input() controls: any;
+  @Input() catalogUUID: any;
   @Output() update = new EventEmitter();
   selection: String = "no-selection";
   showRollable = false;
-  @Input() uuid: any;
   info!: ControlInfo; 
   UID: any; //Unique ID for this control for the program
   comment: string = "";
@@ -54,13 +54,13 @@ export class ChecklistItemComponent {
   primed: Boolean = false;
 
   constructor(private attestationDataService: AttestationDataService){
-    this.UID = this.uuid + '-' + this.id
+    //this.UID = this.uuid + '-' + this.id
    
   }
 
 
   ngOnInit(){
-    this.UID = this.uuid + '-' + this.id
+    this.UID = this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpControl(this.UID)!;
     this.selection= this.info.selection;
   }

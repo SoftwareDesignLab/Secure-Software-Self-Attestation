@@ -107,6 +107,8 @@ import { ChecklistItemComponent } from './control/control.component';
     export class ControlInfo {
         comment: String;
         selection: String;
+        finalized: Boolean = false;
+
     
         constructor(comment: string = "", selection: string = "no-selection") {
             this.comment = comment;
