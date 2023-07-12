@@ -53,10 +53,7 @@ export class ChecklistItemComponent {
   onPopup: Boolean = false;
   primed: Boolean = false;
 
-  constructor(private attestationDataService: AttestationDataService){
-    //this.UID = this.uuid + '-' + this.id
-   
-  }
+  constructor(private attestationDataService: AttestationDataService){  }
 
 
   ngOnInit(){

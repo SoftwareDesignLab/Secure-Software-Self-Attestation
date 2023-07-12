@@ -58,28 +58,13 @@ export class AppComponent {
   showNav = false;
   showComponents = false;
 
+
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
-  ngOnInit(): void {
-    this.catalogData.catalogs.push(catalog as Catalog);    
-  }
+ ngOnInit(){
+  this.catalogData = this.attestationService.getdata(0).catalogData
 
-  onFileSelected(jsonData: any) {
-    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) { // Prevents uploading the same file twice
-      this.catalogProcessingComponent.notifyOfFailure("Duplicate Catalog");
-      return;
-    }
-    this.catalogProcessingComponent.notifyOfSuccess("File Loaded");
-    this.catalogData.catalogs.push(jsonData);
-  }
-
-  setAllGroupExpansion(toSet: boolean, uuid: String): void {
-    this.childComponents.forEach((child) => {
-      if (child.catalogUUID === uuid) {
-        child.setComponents(toSet);
-      }
-    });
-  }
+ }
 
   changePage(page: string){
     this.showNav = !this.showNav;
@@ -140,6 +125,10 @@ export class AppComponent {
       return true
     }
     return false;
+  }
+
+  showNavTree(){
+    return(this.attestationService.getdata(0).submitable());
   }
 
   toggleComponents(){

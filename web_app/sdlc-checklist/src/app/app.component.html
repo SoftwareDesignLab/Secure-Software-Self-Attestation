@@ -14,33 +14,31 @@
     <h2>SDLC</h2>
     <ul>
       <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
-      <li *ngIf="visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form 1</a></li>
-      <li class="add" *ngIf="!visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">+ New Attestation</a></li>
-
-<!--                                                Disabled for now
-
-      <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
-      <li>
-        
-      <div>
-        
-        <div class="tree-root">
-        <a href="#attestation" (click)="toggleNav()">Attestation Form</a>
+      <li *ngIf="visitedAttestation()">
         <div>
-          <h4 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4>
+          <div class="tree-root">
+          <a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form 1</a>
+          <div>
+            <h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4>
+          </div>
         </div>
       </div>
+      </li>
+
+      <li class="add" *ngIf="!visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">+ New Attestation</a></li>
+      <li>
+      <div>
       <br>
-        <ul class="tree-branch" *ngIf="showComponents">        
+        <ul class="tree-branch" *ngIf="showComponents" >        
           <li  *ngFor="let catalog of catalogData.catalogs">
-            <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
+            <a [href]="'attestation-form#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
           </li>
-          <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
+          <li><a href="attestation-form#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
         </ul>
       </div>
    
       </li>
-       -->
+       
     </ul>
   </div>
 </nav>
