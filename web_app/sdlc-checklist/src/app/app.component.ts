@@ -70,9 +70,19 @@ export class AppComponent {
 
  }
 
+ get getForms(){
+  return this.attestationService.getRawData
+}
+
   changePage(page: string){
     this.showNav = !this.showNav;
     this.router.navigate([page]);
+  }
+
+  newForm(){
+    this.attestationService.addform();
+    console.log(this.attestationService.getRawData.length);
+    this.changePage("attestation-form");
   }
 
 

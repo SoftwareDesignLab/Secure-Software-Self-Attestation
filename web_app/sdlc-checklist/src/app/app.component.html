@@ -14,19 +14,21 @@
     <h2>SDLC</h2>
     <ul>
       <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
-      <li *ngIf="visitedAttestation()">
+      <li *ngFor="let form of getForms">
         <div>
           <div class="tree-root">
-          <a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form 1</a>
+              <a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form {{form.getPosition}}</a>
           <div>
             <!-- Nav Tree Code, Disabled for now, Check Issue for more info  -->
             <!-- h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4> -->
           </div>
         </div>
       </div>
-      </li>
 
-      <li class="add" *ngIf="!visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">+ New Attestation</a></li>
+      </li>
+      <li class="add"><a routerlink="attestation-form" (click)="newForm()">+ New Attestation</a></li>
+
+
       
       <!--  Nav Tree Code, Disabled for now, Check Issue for more info
 

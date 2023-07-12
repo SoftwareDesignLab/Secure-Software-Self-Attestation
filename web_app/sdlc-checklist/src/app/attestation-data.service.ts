@@ -36,9 +36,7 @@ export class AttestationDataService {
   private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
   private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
 
-  constructor() {
-    this.forms.push(new AttestationComponent)
-   }
+  constructor() {}
 
 
   getdata(index: number){
