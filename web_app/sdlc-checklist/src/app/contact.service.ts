@@ -18,10 +18,16 @@ export class ContactService {
   public lastName: string = "";
   public title: string = "";
   public personalAddress: string = "";
+  public personalCity: string = "";
+  public personalState: string = "";
+  public personalCountry: string = "";
+  public personalPostal: string = "";
   public phone: string = "";
   public email: string = "";
 
 
+
+  // Checks if contact form has acceptable amount of info 
   isFilled(){
     return(
       this.companyName != "" &&
@@ -35,6 +41,9 @@ export class ContactService {
       this.lastName != "" &&
       this.title != "" &&
       this.personalAddress != "" &&
+      this.personalCity != "" &&
+      this.personalState != "" &&
+      this.personalCountry != "" &&
       this.phone != "" &&
       this.email != ""
     )

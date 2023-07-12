@@ -53,6 +53,21 @@ constructor( public contactService: ContactService, private router: Router,priva
     this.contactService.personalAddress = event.target.value;
   }
 
+  updatePersonalCity(event: any){
+    this.contactService.personalCity = event.target.value;
+  }
+  
+  updatePersonalCountry(event: any){
+    this.contactService.personalCountry = event.target.value;
+  }
+
+  updatePersonalState(event: any){
+    this.contactService.personalState = event.target.value;
+  }
+
+  updatePersonalPostal(event: any){
+    this.contactService.personalPostal = event.target.value;
+  }
   updatePhone(event: any){
     this.contactService.phone = event.target.value;
   }
