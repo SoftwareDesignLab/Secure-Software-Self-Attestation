@@ -62,7 +62,7 @@ export class AppComponent {
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
  ngOnInit(){
-  this.catalogData = this.attestationService.getdata(0).catalogData
+  this.catalogData = this.attestationService.getdata(0).getCatalogs
 
  }
 
@@ -121,7 +121,7 @@ export class AppComponent {
   }
 
   visitedAttestation(){
-    if(this.attestationService.visited()){
+    if(this.attestationService.checkVisited()){
       return true
     }
     return false;
@@ -134,7 +134,6 @@ export class AppComponent {
   toggleComponents(){
     this.showComponents = !this.showComponents;
     if (!this.showComponents) {
-      //this.hideChildRollable();
     }
   }
 }

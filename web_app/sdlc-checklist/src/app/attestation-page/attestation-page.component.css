@@ -1,3 +1,29 @@
+/**
+ * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+ * government support under contract 70RSAT19CB0000020 awarded by the United
+ * States Department of Homeland Security.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+
+
 .checkbox-container {
     display: flex;
     justify-content: center;
@@ -141,4 +167,60 @@ tr:last-child td {
   outline: none;
   background-color: #cbebf8;
   border-radius: 2px;
+}
+
+/* Report Button Rules */
+
+.generate-report {
+  margin: 0 auto;
+  display: block;
+  font-size: x-large;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: #005ea2;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 5px 15px;
+  box-shadow: 4px 4px 2px 0 rgba(0, 0, 0, .4);
+}
+
+.generate-report:hover {
+  background-color: #003a63;
+  box-shadow: inset 1px 1px 4px 2px rgba(0, 0, 0, .5);
+}
+
+.generate-report-div {
+  position: relative;
+}
+
+/* Structural Rules */
+
+.lower-div {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.restore-container {
+  text-align: center;
+  margin: 25px 0;
+}
+
+.restore {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0;
+}
+
+.blue-text {
+  color: #004577;
+  text-decoration: underline;
+  cursor: pointer;
+  user-select: none;
+}
+
+.underline {
+  border-bottom: 1px solid black;
 }

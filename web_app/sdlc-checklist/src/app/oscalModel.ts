@@ -101,7 +101,10 @@ import { ChecklistItemComponent } from './control/control.component';
         remarks: any;
 
     }
-
+    
+    export interface CatalogData{
+            catalogs: Catalog[];
+    }
 
 
     export class ControlInfo {

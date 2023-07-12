@@ -25,15 +25,11 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import { attestationComment } from '../attestationForm';
 import { AttestationDataService } from '../attestation-data.service';
-import { Catalog, ControlInfo } from '../oscalModel';
-import { GroupComponent } from '../group/group.component';
+import { Catalog, CatalogData } from '../oscalModel';
 import catalog from '../defaultCatalog';
 
 
 
-interface CatalogData {
-  catalogs: Catalog[];
-}
 @Component({
   selector: 'app-attestation',
   templateUrl: './attestation.component.html',
@@ -41,14 +37,8 @@ interface CatalogData {
 })
 export class AttestationComponent {
 
-  catalogData: CatalogData = {catalogs: []};
-  showComponentsArray: any;
-  hiddenCatalogs = new Set<String>();
-  @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
-  control: string = "Ungrouped Controls";
-
-
-
+  private catalogData: CatalogData = {catalogs: []};
+  private hiddenCatalogs = new Set<String>();
   private selectedValue: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
   private position: any;
@@ -67,6 +57,8 @@ export class AttestationComponent {
     return this.position;
    }
   
+
+  // Attestation Comments Methods 
 
   addRow(){
     this.info.push(new attestationComment)
@@ -97,7 +89,7 @@ export class AttestationComponent {
   }
 
 
-  // Catalogs Methods
+  // Catalogs Methods 
 
   get getCatalogs(){
     return this.catalogData;
@@ -132,15 +124,5 @@ export class AttestationComponent {
       this.hiddenCatalogs.add(uuid);
     }
   }
-
-
-  updateSelect(){
-    //this.dataService.setSelectedValue(this.selectedValue);
-    if (this.selectedValue !== 'multiple') {
-      if (this.info.length > 1) {
-        this.info.splice(1);
-      }
-    }
-    console.log(this.info.length);
-  }
 }
+

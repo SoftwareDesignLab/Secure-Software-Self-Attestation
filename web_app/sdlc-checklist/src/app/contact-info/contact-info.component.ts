@@ -13,7 +13,6 @@ export class ContactInfoComponent {
 constructor( public contactService: ContactService, private router: Router,private attestationService: AttestationDataService){
 
 }
-  public toggle: number = 0;
 
   updateCompanyName(event: any){
     this.contactService.companyName = event.target.value;
@@ -70,7 +69,7 @@ constructor( public contactService: ContactService, private router: Router,priva
   }
 
   visitedAttestation(){
-    if(this.attestationService.visited()){
+    if(this.attestationService.checkVisited()){
       return true
     }
     return false;

@@ -34,24 +34,24 @@ export class AttestationDataService {
 
   private forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
-  controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
+  private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
 
   constructor() {
     this.forms.push(new AttestationComponent)
    }
 
 
-   getdata(index: number){
+  getdata(index: number){
     return this.forms[index];
   }
   get getRawData(){
     return this.forms;
   }
 
-  visited(){
+  checkVisited(){
     return this.beenVisited;
   }
-  seen(){
+  setVisited(){
     this.beenVisited = true;
   }
 
@@ -60,6 +60,10 @@ export class AttestationDataService {
     let pos = this.forms.length;
     this.forms[pos-1].setPosition(pos);
   }
+
+
+
+  // Control Methods 
 
   setUpControl(UID: String): ControlInfo | undefined{
     if(this.controlMap.has(UID)){
