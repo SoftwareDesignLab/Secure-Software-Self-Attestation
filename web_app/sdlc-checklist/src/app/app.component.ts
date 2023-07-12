@@ -24,11 +24,15 @@
 import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd  } from '@angular/router';
 import { AttestationDataService } from './attestation-data.service';
 import { notifyService } from './notify.service';
 import { ChecklistItemComponent } from './control/control.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
+import { ViewportScroller } from '@angular/common';
+import { filter, takeUntil  } from 'rxjs/operators';
+import { Subject } from 'rxjs'
+
 
 
 
@@ -70,6 +74,39 @@ export class AppComponent {
     this.showNav = !this.showNav;
     this.router.navigate([page]);
   }
+
+
+  // Experimental Navtree change page method, Does not work as intended
+
+
+  /*
+  gotoLocation(page: string, location: string) {
+
+    this.showNav = !this.showNav;
+  
+    const unsubscribe$ = new Subject<void>();
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(unsubscribe$)
+      )
+      .subscribe(() => {
+        setTimeout(() => {
+          const element = document.getElementById(location);
+          if (element) {
+            element.scrollIntoView({ behavior: 'auto' });
+          }
+          unsubscribe$.next(); // Unsubscribe after the first navigation
+          unsubscribe$.complete();
+        }, 0);
+      });
+  
+    this.router.navigate([page]);
+  
+  }
+  */
+
+
 
   toggleNav(): void {
     this.showNav = !this.showNav;

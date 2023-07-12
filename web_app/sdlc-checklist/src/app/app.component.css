@@ -139,4 +139,15 @@ nav {
   to {right: -20vw;}
 }
 
+.prependUpArrow::before {
+  content: "▲ "
+}
+.prependDownArrow::before {
+  content: "▼ "
+}
+
+.tree-root {
+  display:flex
+}
+
 
