@@ -18,7 +18,7 @@
       <tr *ngFor="let row of info">
         <td><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value={{row.getName()}} class="table-field"></td>
         <td><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}} class="table-field"></td>
-        <td><input type ="date" name="form" (keyup)="onKey($event, row, 'date')" value={{row.getDate()}} class="table-field"></td>
+        <td><input type ="date" name="form" (change)="onKey($event, row, 'date')" value={{row.getDate()}} class="table-field"></td>
       </tr>
     </table>
     <button class="add" mat-button (click)="addRow()" [hidden]="selectedValue!=='multiple'">+</button>
