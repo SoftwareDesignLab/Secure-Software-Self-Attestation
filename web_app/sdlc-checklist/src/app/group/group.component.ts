@@ -40,10 +40,7 @@ export class GroupComponent {
   showComponents = true;
   UID: any;  //Unique ID for this control for the program
 
-  constructor(private attestationDataService: AttestationDataService){
-
-  }
-
+  constructor(private attestationDataService: AttestationDataService){}
 
   ngOnInit(){
     this.UID = this.catalogUUID + '-' + this.id

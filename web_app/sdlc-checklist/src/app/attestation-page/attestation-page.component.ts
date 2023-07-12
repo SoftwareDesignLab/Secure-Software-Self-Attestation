@@ -25,21 +25,11 @@
 
 import { Component, ViewChildren, QueryList } from '@angular/core';
 import { GroupComponent } from '../group/group.component';
-import { ChecklistItemComponent } from '../control/control.component';
 import catalog from '../defaultCatalog';
 import { AttestationDataService } from '../attestation-data.service';
 import { attestationComment } from '../attestationForm';
+import { CatalogData, Catalog} from '../oscalModel';
 
-interface Catalog {
-  uuid: string;
-  metadata: object;
-  groups: GroupComponent[];
-  controls: ChecklistItemComponent[];
-}
-
-interface CatalogData {
-  catalogs: Catalog[];
-}
 
 @Component({
   selector: 'app-attestation-page',
@@ -79,9 +69,17 @@ export class AttestationPageComponent {
     return this.completed;
   }
 
+
   updateSelect(){
     this.attestationService.getdata(0).setSelectedValue(this.selectedValue);
+    if (this.selectedValue !== 'multiple') {
+      if (this.info.length > 1) {
+        this.info.splice(1);
+      }
+    }
+    console.log(this.info.length);
   }
+
 
   addRow(){
     this.info.push(new attestationComment)
