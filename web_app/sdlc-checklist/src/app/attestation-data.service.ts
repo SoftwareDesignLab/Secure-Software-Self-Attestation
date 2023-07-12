@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 import { Injectable } from '@angular/core';
-import { attestationComment } from './attestationForm';
 import { AttestationComponent } from './attestation/attestation.component';
-import { ControlInfo } from './oscalModel';
+import { ControlInfo, GroupInfo } from './oscalModel';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +34,7 @@ export class AttestationDataService {
   private forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
   private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
+  private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
 
   constructor() {
     this.forms.push(new AttestationComponent)
@@ -117,5 +117,33 @@ export class AttestationDataService {
       temp.finalized = false;
     }
 
+  }
+
+  toggleControlRollable(UID: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!=undefined){
+      temp.showRollable = !temp.showRollable;
+    }
+  }
+
+
+  // Group methods
+  
+  setUpGroup(UID: String): GroupInfo | undefined{
+    if(this.groupMap.has(UID)){
+      return(this.groupMap.get(UID));
+    }
+    else{
+     let info = new GroupInfo();
+     this.groupMap.set(UID, info);
+     return info;
+    }
+  }
+
+  toggleGroupRollable(UID: String){
+    let temp = this.groupMap.get(UID);
+    if(temp!=undefined){
+      temp.showRollable = !temp.showRollable;
+    }
   }
 }

@@ -111,12 +111,17 @@ import { ChecklistItemComponent } from './control/control.component';
         comment: String;
         selection: String;
         finalized: Boolean = false;
+        showRollable: boolean = false;
 
     
         constructor(comment: string = "", selection: string = "no-selection") {
             this.comment = comment;
             this.selection = selection;
         }
+    }
+
+    export class GroupInfo{
+        showRollable: boolean = true;
     }
 
 

@@ -61,11 +61,13 @@ export class ChecklistItemComponent {
     this.info = this.attestationDataService.setUpControl(this.UID)!;
     this.selection= this.info.selection;
     this.comment = this.info.comment;
-    this.finalized = this.info.finalized
+    this.finalized = this.info.finalized;
+    this.showRollable = this.info.showRollable;
   }
 
   toggleRollable() {
     this.showRollable = !this.showRollable;
+    this.attestationDataService.toggleControlRollable(this.UID);
   }
 
   getDescription() {
