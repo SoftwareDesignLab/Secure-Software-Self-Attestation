@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input, Output, EventEmitter} from '@angular/core';
-import { timeInterval } from 'rxjs';
+import { Component, Input, Output, EventEmitter, Directive, AfterViewInit} from '@angular/core';
 
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
+
 
 export class ChecklistItemComponent {
   @Input() id: any;
@@ -49,7 +49,7 @@ export class ChecklistItemComponent {
   finalized: Boolean = false;
   onPopup: Boolean = false;
   primed: Boolean = false;
-  j = 0;
+  focused: Boolean = false;
 
   ngOnInit(){
     this.UID = this.uuid + '-' + this.id
@@ -116,6 +116,7 @@ export class ChecklistItemComponent {
   cancel() {
     this.popup = false;
     this.primed = false;
+    this.focused = false;
   }
 
   del() {
@@ -125,6 +126,10 @@ export class ChecklistItemComponent {
   }
 
   deploy() {
+    let active = document.activeElement;
+    if (active instanceof HTMLElement) {
+      active.blur;
+    }
     this.popup = true;
   }
 
@@ -146,12 +151,15 @@ export class ChecklistItemComponent {
       }
     }
   }
- 
+
   commentFocus() {
+    if (this.focused) 
+      return
     let comment = document.getElementById("comment");
     if (comment instanceof HTMLElement) {
       comment.focus();
+      this.focused = true;
     }
-    alert('ran')
   }
 }
+

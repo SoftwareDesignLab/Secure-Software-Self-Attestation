@@ -21,11 +21,11 @@
   ></app-rollable>
 </div>
 
-<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()">
+<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()" (mouseenter)="commentFocus()">
   <div class="pane popup" (mouseenter)="enter(true)" (mouseleave)="enter(false)">
     <br>
     <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
-    <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4" onload="commentFocus()"></textarea>
+    <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4"></textarea>
     <div class="bottom-buttons">
       <div (click)="done()" (keydown.enter)="done()" tabindex=0>
         <div id="done"></div>
