@@ -26,7 +26,7 @@
 import { Component, ViewChildren, QueryList } from '@angular/core';
 import { GroupComponent } from '../group/group.component';
 import catalog from '../defaultCatalog';
-import { AttestationDataService } from '../attestation-data.service';
+import { AttestationDataService } from '../services/attestation-data.service';
 import { attestationComment } from '../attestationForm';
 import { CatalogData, Catalog} from '../oscalModel';
 

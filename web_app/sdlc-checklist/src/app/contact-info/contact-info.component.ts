@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ContactService } from '../contact.service';
+import { ContactService } from '../services/contact.service';
 import { Router } from '@angular/router';
-import { AttestationDataService } from '../attestation-data.service';
+import { AttestationDataService } from '../services/attestation-data.service';
 
 @Component({
   selector: 'app-contact-info',

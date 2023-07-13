@@ -23,7 +23,7 @@
  */
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Oscal, metaData, Catalog } from '../oscalModel';
-import { notifyService } from '../notify.service';
+import { notifyService } from '../services/notify.service';
 
 
 @Component({

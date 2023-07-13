@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 import { Injectable } from '@angular/core';
-import { AttestationComponent } from './attestation/attestation.component';
-import { ControlInfo, GroupInfo } from './oscalModel';
+import { AttestationComponent } from '../attestation/attestation.component';
+import { ControlInfo, GroupInfo } from '../oscalModel';
 
 @Injectable({
   providedIn: 'root'

@@ -31,7 +31,7 @@ import { RollableComponent } from './rollable/rollable.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { GroupComponent } from './group/group.component';
 import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
-import { notifyService } from './notify.service';
+import { notifyService } from './services/notify.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AttestationComponent } from './attestation/attestation.component';
@@ -40,9 +40,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { attestationComment } from './attestationForm';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
-import { ContactService } from './contact.service';
+import { ContactService } from './services/contact.service';
 import { SimpleNotificationsModule } from 'angular2-notifications';
-import { AttestationDataService } from './attestation-data.service';
+import { AttestationDataService } from './services/attestation-data.service';
 
 
 @NgModule({

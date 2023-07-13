@@ -23,7 +23,7 @@
  */
 import { TestBed } from '@angular/core/testing';
 
-import { notifyService } from './notify.service';
+import { notifyService } from './services/notify.service';
 
 describe('notifyService', () => {
   let service: notifyService;

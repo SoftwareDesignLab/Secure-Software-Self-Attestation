@@ -23,7 +23,7 @@
  */
 import { TestBed } from '@angular/core/testing';
 
-import { AttestationDataService } from './attestation-data.service';
+import { AttestationDataService } from './services/attestation-data.service';
 
 describe('AttestationDataService', () => {
   let service: AttestationDataService;

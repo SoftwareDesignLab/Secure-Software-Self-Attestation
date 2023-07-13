@@ -24,7 +24,7 @@
 import { Component, Input, ViewChildren, QueryList} from '@angular/core';
 import { ChecklistItemComponent } from '../control/control.component'
 import { GroupInfo } from '../oscalModel';
-import { AttestationDataService } from '../attestation-data.service';
+import { AttestationDataService } from '../services/attestation-data.service';
 
 @Component({
   selector: 'app-group',
