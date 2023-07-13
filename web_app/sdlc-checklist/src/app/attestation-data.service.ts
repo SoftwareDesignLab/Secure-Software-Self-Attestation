@@ -25,6 +25,8 @@ import { Injectable } from '@angular/core';
 import { AttestationComponent } from './attestation/attestation.component';
 import { ControlInfo, GroupInfo } from './oscalModel';
 
+import { BehaviorSubject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -39,8 +41,14 @@ export class AttestationDataService {
   private viewPosition: number = 0;
 
 
+  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent);
+  public dynamicForm$ = this.dynamicFormSubject.asObservable();
+
   constructor() {}
 
+  updateDynamicForm(form: AttestationComponent) {
+    this.dynamicFormSubject.next(form);
+  }
 
   getdata(index: number){
     return this.forms[index];

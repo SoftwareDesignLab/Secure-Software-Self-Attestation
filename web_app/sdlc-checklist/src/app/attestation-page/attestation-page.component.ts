@@ -29,6 +29,7 @@ import catalog from '../defaultCatalog';
 import { AttestationDataService } from '../attestation-data.service';
 import { attestationComment } from '../attestationForm';
 import { CatalogData, Catalog} from '../oscalModel';
+import { AttestationComponent } from '../attestation/attestation.component';
 
 
 
@@ -45,12 +46,12 @@ export class AttestationPageComponent {
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   showNav = false;
-  completed = false;
   viewPosition = 0;
   position;
 
+  observedForm!: AttestationComponent;
 
-  selectedValue: string;
+  selectedValue!: string;
   info: any;
 
   constructor(public attestationService: AttestationDataService){
@@ -65,13 +66,25 @@ export class AttestationPageComponent {
   ngOnInit(): void {
     this.attestationService.setVisited();
     this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
+
+
+     this.attestationService.dynamicForm$.subscribe(form => {
+      this.observedForm = form;
+      this.selectedValue = form.getSelectedValue;
+      this.info = form.getInfo
+      this.position = form.getPosition
+      this.catalogData = form.getCatalogs;
+      this.hiddenCatalogs = form.getHiddenCatalogs();
+    });
   }
 
   AttestationCompleted(){
-    if(this.attestationService.getCurrentForm.submitable()){
-      this.completed=true;
+    if(this.observedForm.submitable()){
+      return true;
     }
-    return this.completed;
+    else{
+      return false;
+      }
   }
 
 

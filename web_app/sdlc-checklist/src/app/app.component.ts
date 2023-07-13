@@ -81,7 +81,10 @@ export class AppComponent {
   }
 
   changeAttestion(position: number){
+    //this.attestationService.forms[position] = this.attestationService.dynamicInfo$.sub;
+    //his.attestationService.updateDynamicInfo(this.attestationService.getCurrentForm);
     this.attestationService.setView(position);
+    this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.changePage('contact-info');
     this.changePage('attestation-form');
     this.toggleNav();
