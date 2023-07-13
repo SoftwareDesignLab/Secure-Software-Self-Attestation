@@ -13,114 +13,43 @@
   <div class="expanded-nav">
     <h2>SDLC</h2>
     <ul>
-      <li><a href="#contact-form" (click)="toggleNav()">Software Producer Information / Primary Contact Form</a></li>
-      <li>
-      <div>
-        <div class="tree-root">
-        <a href="#attestation" (click)="toggleNav()">Attestation Form</a>
+      <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
+      <li *ngIf="visitedAttestation()">
         <div>
-          <h4 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4>
+          <div class="tree-root">
+          <a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form 1</a>
+          <div>
+            <!-- Nav Tree Code, Disabled for now, Check Issue for more info  -->
+            <!-- h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4> -->
+          </div>
         </div>
       </div>
+      </li>
+
+      <li class="add" *ngIf="!visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">+ New Attestation</a></li>
+      
+      <!--  Nav Tree Code, Disabled for now, Check Issue for more info
+
+      <li>
+      <div>
       <br>
-        <ul class="tree-branch" *ngIf="showComponents">        
+        <ul class="tree-branch" *ngIf="showComponents" >        
           <li  *ngFor="let catalog of catalogData.catalogs">
-            <a [href]="'#catalog-' + catalog.uuid" (click)="toggleNav()">{{getLinkName(catalog)}}</a>
+            <a [routerLink]="['/attestation-form']" fragment="upload" (click)="gotoLocation('attestation-form', catalog.uuid)">{{getLinkName(catalog)}}</a>
           </li>
-          <li><a href="#upload" (click)="toggleNav()">Upload or Generate Report</a></li>
+          <li><a [routerLink]="['/attestation-form']" fragment="upload" (click)="gotoLocation('attestation-form',  'upload')">Upload or Generate Report</a></li>
         </ul>
       </div>
       </li>
+      -->
+       
     </ul>
   </div>
 </nav>
 
 <main>
-  <form class="pane" id="contact-form">
-    <div class="form-column">
-      <h3>Software Producer Information</h3>
-      <label for="company-name">Company Name: </label>
-      <input id="company-name" type="text" autocomplete="organization">
-      <label for="address">Address: </label>
-      <input id="address" type="text" autocomplete="address-line1">
-      <label for="city">City: </label>
-      <input id="city" type="text" autocomplete="address-level2">
-      <label for="state">State or Province: </label>
-      <input id="state" type="text" autocomplete="address-level1">
-      <label for="country">Country: </label>
-      <input id="country" type="text" autocomplete="country-name">
-      <label for="zip">Postal Code: </label>
-      <input id="zip" type="text" autocomplete="postal-code">
-      <label for="website">Website: </label>
-      <input id="website" type="url" autocomplete="url">
-    </div>
-    <div class="center-line"></div>
-    <div class="form-column">
-      <h3>Primary Contact for this Document</h3>
-      <label for="first-name">First Name: </label>
-      <input id="first-name" type="text" autocomplete="given-name">
-      <label for="last-name">Last Name: </label>
-      <input id="last-name" type="text" autocomplete="family-name">
-      <label for="title">Title: </label>
-      <input id="title" type="text" autocomplete="organization-title">
-      <label for="contact-address">Address: </label>
-      <input id="contact-address" type="text" autocomplete="address-line1">
-      <label for="contact-city">City: </label>
-      <input id="contact-city" type="text" autocomplete="address-level2">
-      <label for="contact-state">State: </label>
-      <input id="contact-state" type="text" autocomplete="address-level1">
-      <label for="contact-country">Country: </label>
-      <input id="contact-country" type="text" autocomplete="country-name">
-      <label for="contact-zip">Postal Code: </label>
-      <input id="contact-zip" type="text" autocomplete="postal-code">
-      <label for="phone">Phone: </label>
-      <input id="phone" type="tel" autocomplete="tel">
-      <label for="email">Email: </label>
-      <input id="email" type="email" autocomplete="email">
-    </div>
-  </form>
-
-  <app-attestation></app-attestation>
-
-  <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
-    <div [className]="isShown(catalog.uuid) ? 'button-panel raised' : 'button-panel'">
-      <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
-      <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
-      <div (click)="toggleExpansion(catalog.uuid)" 
-           [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
-      </div><br>
-      <p class="button-caption">Remove Catalog</p>
-      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
-    </div>
-    <div [className]="isShown(catalog.uuid) ? 'underline' : ''">
-      <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
-    </div>
-    <div [hidden]="!isShown(catalog.uuid)" *ngIf="catalog">
-      <app-group *ngFor="let group of catalog.groups " 
-        [id]="group.id" 
-        [title]="group.title" 
-        [controls]="group.controls"
-      ></app-group>
-      <div *ngIf="catalog.controls">
-        <app-group
-          [title]="control"
-          [controls]="catalog.controls"
-          [catalogUUID]="catalog.uuid"
-        ></app-group>
-      </div>
-    </div>
-  </div>
-
-  <div class="restore-container" [hidden]="isDefaultPresent()">
-    <p class="pane restore">
-      It looks like you deleted the default catalog &nbsp;&nbsp;<span class="blue-text" (click)="restoreDefaultCatalog()">Restore it?</span>
-    </p>
-  </div>
-
-  <div class="lower-div">
-    <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-    <div class="generate-report-div">
-      <button class="generate-report" *ngIf="catalogData">Generate Report</button>
-    </div>
-  </div>
+  <router-outlet></router-outlet>
 </main>
+
+
+

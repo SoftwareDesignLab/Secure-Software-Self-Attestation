@@ -21,20 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AttestationComponent } from './attestation/attestation.component';
-import { ContactInfoComponent } from './contact-info/contact-info.component';
-import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
-const routes: Routes = [
-  {path: '', redirectTo: 'contact-info', pathMatch: 'full'},
-  {path: 'contact-info', component: ContactInfoComponent},
-  {path: 'attestation-form', component: AttestationPageComponent}
-];
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { AttestationPageComponent } from './attestation-page.component';
+
+describe('AttestationPageComponent', () => {
+  let component: AttestationPageComponent;
+  let fixture: ComponentFixture<AttestationPageComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ AttestationPageComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(AttestationPageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
