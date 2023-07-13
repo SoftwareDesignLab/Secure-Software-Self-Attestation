@@ -35,6 +35,7 @@ export class AttestationDataService {
   private beenVisited: boolean = false;
   private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
   private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
+  private count: number = 1;
 
   constructor() {}
 
@@ -55,8 +56,12 @@ export class AttestationDataService {
 
   addform(){
     this.forms.push(new AttestationComponent);
-    let pos = this.forms.length;
-    this.forms[pos-1].setPosition(pos);
+    let index = this.forms.length-1;
+    this.forms[index].setPosition(this.count);
+    this.forms[index].setIndex(index);
+    this.count = this.count + 1;
+
+
   }
 
 

@@ -66,12 +66,12 @@ export class AppComponent {
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
  ngOnInit(){
-  this.catalogData = this.attestationService.getdata(0).getCatalogs
+  this.catalogData = this.attestationService.getdata(0).getCatalogs;
 
  }
 
  get getForms(){
-  return this.attestationService.getRawData
+  return this.attestationService.getRawData;
 
 }
 
@@ -86,13 +86,13 @@ export class AppComponent {
     this.changePage("attestation-form");
   }
   deleteForm(position: number){
-    let firsthalf = this.attestationService.forms.slice(0,position-1);
-    let secondhalf = this.attestationService.forms.slice(position);
+    let firsthalf = this.attestationService.forms.slice(0,position);
+    let secondhalf = this.attestationService.forms.slice(position+1);
     this.attestationService.forms = firsthalf.concat(secondhalf);
 
-    let newPos = 1;
+    let newPos = 0;
     this.attestationService.forms.forEach(child => {
-    child.setPosition(newPos);
+    child.setIndex(newPos);
     newPos = newPos+1;
     });
   }

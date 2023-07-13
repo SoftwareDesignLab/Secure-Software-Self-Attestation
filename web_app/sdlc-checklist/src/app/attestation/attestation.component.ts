@@ -41,6 +41,7 @@ export class AttestationComponent {
   private hiddenCatalogs = new Set<String>();
   private selectedValue: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
+  private index: any;
   private position: any;
 
   constructor (){
@@ -52,16 +53,21 @@ export class AttestationComponent {
   setPosition(pos: number){
     this.position = pos;
    }
+   setIndex(ind: number){
+    this.index = ind; 
+   }
 
    get getPosition(){
     return this.position;
    }
-  
+  get getIndex(){
+    return this.index;
+  }
 
   // Attestation Comments Methods 
 
   addRow(){
-    this.info.push(new attestationComment)
+    this.info.push(new attestationComment);
   }
 
   removeRow(){
@@ -124,5 +130,7 @@ export class AttestationComponent {
       this.hiddenCatalogs.add(uuid);
     }
   }
+
+
 }
 
