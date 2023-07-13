@@ -38,7 +38,11 @@ import { AttestationComponent } from './attestation/attestation.component';
 import { FormsModule } from '@angular/forms'
 import { MatGridListModule } from '@angular/material/grid-list';
 import { attestationComment } from './attestationForm';
+import { ContactInfoComponent } from './contact-info/contact-info.component';
+import { AttestationPageComponent } from './attestation-page/attestation-page.component';
+import { ContactService } from './contact.service';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { AttestationDataService } from './attestation-data.service';
 
 
 @NgModule({
@@ -49,7 +53,9 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     CatalogProcessingComponent,
     GroupComponent,
     CatalogInfoComponent,
-    AttestationComponent
+    AttestationComponent,
+    ContactInfoComponent,
+    AttestationPageComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +68,12 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
       position: ['bottom', 'right']
     })
   ],
-  providers: [attestationComment,notifyService],
+  providers: [
+    attestationComment,
+    ContactService,
+    AttestationDataService,
+    notifyService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

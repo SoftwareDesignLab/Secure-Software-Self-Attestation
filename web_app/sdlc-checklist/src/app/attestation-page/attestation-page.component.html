@@ -1,0 +1,71 @@
+<div class="attestation pane" id="attestation">
+  <h2>Secure Software Development Attestation Form</h2>
+  <input type="radio" id="company-wide" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()"  value="company">
+  <label for="company-wide">Company-wide</label><br>
+  <input type="radio" id="product-line" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()" value="product">
+  <label for="product-line">Product line</label><br>
+  <input type="radio" id="individual" name="attestation"  [(ngModel)]="selectedValue"  (change)="updateSelect()" value="individual">
+  <label for="individual">Individual Product</label><br>
+  <input type="radio" id="multiple" name="attestation" [(ngModel)]="selectedValue"  (change)="updateSelect()" value="multiple">
+  <label for="multiple">Multiple products or Specific Product Version(s)</label>
+  <div *ngIf="selectedValue!=='company' && selectedValue!==''" class="table-section">
+    <table>
+      <tr>
+        <th>Product(s) or Product Line Name</th>
+        <th>Version Number (if applicable)</th>
+        <th>Release/Publish Date</th>
+      </tr>
+      <tr *ngFor="let row of info">
+        <td><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value={{row.getName()}} class="table-field"></td>
+        <td><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}} class="table-field"></td>
+        <td><input type ="date" name="form" (change)="onKey($event, row, 'date')" value={{row.getDate()}} class="table-field"></td>
+      </tr>
+    </table>
+    <button class="add" mat-button (click)="addRow()" [hidden]="selectedValue!=='multiple'">+</button>
+    <button class="add" mat-button (click)="removeRow()" *ngIf="info.length>1">-</button>
+  </div>
+</div>
+
+
+
+
+<div class="catalogs" *ngIf="AttestationCompleted()">
+  <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
+    <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog"></app-catalog-info>
+    <div class="button-panel">
+      <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
+      <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
+      <div (click)="toggleExpansion(catalog.uuid)" 
+           [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
+      </div><br>
+      <p class="button-caption">Remove Catalog</p>
+      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
+    </div>
+    <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">
+      <div id="group-container" class="group-container">
+        <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
+        <app-group *ngFor="let group of catalog.groups" 
+          [id]="group.id" 
+          [title]="group.title" 
+          [controls]="group.controls"
+          [catalogUUID]="catalog.uuid"
+        ></app-group>
+      <div *ngIf="catalog.controls">
+        <app-group
+          [title]="control"
+          [controls]="catalog.controls"
+          [catalogUUID]="catalog.uuid"
+        ></app-group>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
+  <div class="lower-div">
+    <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
+    <div class="generate-report-div">
+      <button class="save-progress" (click)="alert('This would save progress, but right now it\'s useless')">Save Attestation</button>
+      <button class="generate-report" *ngIf="catalogData">Generate Report</button>
+    </div>
+  </div>
+</div>

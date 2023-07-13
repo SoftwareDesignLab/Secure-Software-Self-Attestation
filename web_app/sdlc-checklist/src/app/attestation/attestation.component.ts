@@ -21,9 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component } from '@angular/core';
+
+import { Component, QueryList, ViewChildren } from '@angular/core';
 import { attestationComment } from '../attestationForm';
 import { AttestationDataService } from '../attestation-data.service';
+import { Catalog, CatalogData } from '../oscalModel';
+import catalog from '../defaultCatalog';
+
 
 
 @Component({
@@ -32,59 +36,93 @@ import { AttestationDataService } from '../attestation-data.service';
   styleUrls: ['./attestation.component.css']
 })
 export class AttestationComponent {
-  selectedValue: string;
-  info: Array<attestationComment>;
-  dataService: AttestationDataService;
 
-  constructor( DataService: AttestationDataService ){
-    this.dataService = DataService;
-    this.selectedValue = DataService.getSelectedValue();
-    this.info = DataService.getInfo();
-  }
+  private catalogData: CatalogData = {catalogs: []};
+  private hiddenCatalogs = new Set<String>();
+  private selectedValue: string = ''; 
+  private info: Array<attestationComment> = new Array<attestationComment>;
+  private position: any;
 
-
-  onSubmit() {
-    this.dataService.setSelectedValue(this.selectedValue);
-    this.dataService.toggleSubmit();
-    //this.dialogRef.close();
-    console.log("Attestation Submitted");
-  }
-  
-  addRow(){
+  constructor (){
     this.info.push(new attestationComment);
+    this.catalogData.catalogs.push(catalog as Catalog);    
+  }
+
+
+  setPosition(pos: number){
+    this.position = pos;
+   }
+
+   get getPosition(){
+    return this.position;
+   }
+  
+
+  // Attestation Comments Methods 
+
+  addRow(){
+    this.info.push(new attestationComment)
   }
 
   removeRow(){
     this.info.pop();
   }
 
-  onKey(event: any, attest: attestationComment, target: string) { 
-    if(target==="name") {
-      attest.addName(event.target.value);
-    } else if (target==="version") {
-      attest.addVersion(event.target.value);
-    } else if (target==="date") {
-      attest.addDate(event.target.value);
-    }
+  get getSelectedValue(){
+    return this.selectedValue;
   }
 
-  validComments(){
-    let valid = true;
-    this.info.forEach(function (comment) {  
-      if(!comment.isFilled()){
-        valid=false;
-      }  
-    });  
-    return valid;
+  setSelectedValue(value: string){
+    this.selectedValue = value;
   }
 
-  updateSelect(){
-    this.dataService.setSelectedValue(this.selectedValue);
-    if (this.selectedValue !== 'multiple') {
-      if (this.info.length > 1) {
-        this.info.splice(1);
-      }
+  get getInfo(){
+    return this.info;
+  }
+
+
+  submitable(){
+    if(this.selectedValue=='company'){
+      return true;
     }
-    console.log(this.info.length);
+    return this.info[0].isFilled();
+  }
+
+
+  // Catalogs Methods 
+
+  get getCatalogs(){
+    return this.catalogData;
+  }
+
+
+  
+  onFileSelected(jsonData: any): void {
+    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
+      return;
+    this.catalogData.catalogs.push(jsonData);
+  }
+
+  removeCatalog(uuid: String): void {
+    let catalogs = this.catalogData.catalogs;
+    console.log("Removing " + uuid);
+    catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1);
+  }
+
+  restoreDefaultCatalog(): void {
+    this.catalogData.catalogs.unshift(catalog as Catalog);   
+  }
+
+  getHiddenCatalogs(){
+    return this.hiddenCatalogs;
+  }
+
+  toggleExpansion(uuid: String): void {
+    if (this.hiddenCatalogs.has(uuid)) {
+      this.hiddenCatalogs.delete(uuid);
+    } else {
+      this.hiddenCatalogs.add(uuid);
+    }
   }
 }
+

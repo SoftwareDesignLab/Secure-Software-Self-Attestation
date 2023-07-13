@@ -1,0 +1,116 @@
+/* Contact Form Rules */
+
+form {
+  display: grid;
+  grid-template-columns: 50% 1px 50%;
+  margin: 0px 20vw;
+}
+
+.form-column {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin: 20px;
+}
+
+h3 {
+  grid-column: 1 / 3;
+  text-align: center;
+  margin-top: 0;
+}
+
+input {
+  outline: none;
+  padding: .2em .5em;
+  margin-bottom: 20px;
+  width: 90%;
+  height: 1.25em;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .25);
+}
+
+input:hover {
+  background-color: rgb(228, 245, 252);
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, .25);
+  border: 1px solid darkgray;
+}
+
+input:focus {
+  border: 1px solid rgb(161, 183, 192);
+  box-shadow: 0 0 2px 2px rgba(5, 157, 196, 0.4);
+  background-color: white;
+}
+
+.center-line {
+  background-color: black;
+  margin: 35px 0;
+}
+
+label {
+  margin-bottom: 20px;
+  margin-right: 5px;
+}
+
+.center {
+  padding: 100px 0;
+  text-align: center;
+}
+
+@media screen and (max-width: 1000px) {
+  .form-column {
+    display: block;
+  }
+  form {
+    margin: 0 10vw;
+  }
+}
+
+/* Attestation Button */
+
+.bot-right {
+  display: fix;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+}
+
+a {
+  text-align: right;
+  cursor: pointer;
+}
+
+
+.green{
+  background-color: rgb(4,170, 109);
+  color: white;
+}
+
+.green:hover{
+  background-color: rgb(0,150, 89);
+  color: white;
+}
+
+
+.blue{
+  background-color: rgb(22, 123, 254);
+}
+
+.blue:hover{
+  background-color: rgb(2,103,234);
+}
+
+button{
+  border: none;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 12px;
+}
+  
+  

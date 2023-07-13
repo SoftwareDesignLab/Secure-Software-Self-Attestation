@@ -22,42 +22,128 @@
  * SOFTWARE.
  */
 import { Injectable } from '@angular/core';
-import { attestationComment } from './attestationForm';
+import { AttestationComponent } from './attestation/attestation.component';
+import { ControlInfo, GroupInfo } from './oscalModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttestationDataService {
 
-  private selectedValue: string = 'company'; 
-  private info: Array<attestationComment> = new Array<attestationComment>;
-  private submit: boolean = false;
+
+  private forms: Array<AttestationComponent> = new Array<AttestationComponent>
+  private beenVisited: boolean = false;
+  private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
+  private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
 
   constructor() {
-    this.info.push(new attestationComment);
+    this.forms.push(new AttestationComponent)
    }
 
-  getSelectedValue(){
-    return this.selectedValue;
+
+  getdata(index: number){
+    return this.forms[index];
+  }
+  get getRawData(){
+    return this.forms;
   }
 
-  getInfo(){
-    return this.info;
+  checkVisited(){
+    return this.beenVisited;
+  }
+  setVisited(){
+    this.beenVisited = true;
   }
 
-  getSubmit(){
-    return this.submit
+  addform(){
+    this.forms.push(new AttestationComponent);
+    let pos = this.forms.length;
+    this.forms[pos-1].setPosition(pos);
   }
 
-  setSelectedValue(data: string){
-    this.selectedValue = data;
+
+
+  // Control Methods 
+
+  setUpControl(UID: String): ControlInfo | undefined{
+    if(this.controlMap.has(UID)){
+      return(this.controlMap.get(UID));
+    }
+    else{
+     let info = new ControlInfo();
+     this.controlMap.set(UID, info);
+     return info;
+    }
   }
 
-  setInfo(data: Array<attestationComment>){
-    this.info = data;
+  updateControlSelection(UID: String, selection: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!==undefined){
+      temp.selection=selection;
+    }
+    else{
+      console.log("Something went wrong")
+    }
   }
 
-  toggleSubmit(){
-    this.submit = true;
+  saveControlComment(UID: String, comment: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!==undefined){
+      temp.finalized=false;
+      temp.comment=comment;
+    }
+    else{
+      console.log("Something went wrong")
+    }
+
+
+  }
+  finalizeControlComment(UID: String, comment: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!==undefined){
+      temp.finalized=true;
+      temp.comment=comment;
+    }
+    else{
+      console.log("Something went wrong")
+    }
+
+
+  }
+  deleteControlComment(UID: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!==undefined){
+      temp.comment = "";
+      temp.finalized = false;
+    }
+
+  }
+
+  toggleControlRollable(UID: String){
+    let temp = this.controlMap.get(UID);
+    if(temp!==undefined){
+      temp.showRollable = !temp.showRollable;
+    }
+  }
+
+
+  // Group methods
+  
+  setUpGroup(UID: String): GroupInfo | undefined{
+    if(this.groupMap.has(UID)){
+      return(this.groupMap.get(UID));
+    }
+    else{
+     let info = new GroupInfo();
+     this.groupMap.set(UID, info);
+     return info;
+    }
+  }
+
+  toggleGroupRollable(UID: String){
+    let temp = this.groupMap.get(UID);
+    if(temp!==undefined){
+      temp.showRollable = !temp.showRollable;
+    }
   }
 }
