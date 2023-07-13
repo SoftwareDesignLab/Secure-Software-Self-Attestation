@@ -31,7 +31,7 @@ describe('ChecklistItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChecklistItemComponent ]
+      declarations: [ ChecklistItemComponent]
     })
     .compileComponents();
 

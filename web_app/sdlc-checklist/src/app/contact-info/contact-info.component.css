@@ -57,6 +57,14 @@ label {
   text-align: center;
 }
 
+@media screen and (max-width: 1000px) {
+  .form-column {
+    display: block;
+  }
+  form {
+    margin: 0 10vw;
+  }
+}
 
 /* Attestation Button */
 
@@ -66,7 +74,7 @@ label {
   right: 0;
   padding: 10px;
   z-index: 2;
-  }
+}
 
 a {
   text-align: right;

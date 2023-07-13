@@ -176,5 +176,9 @@ export class AppComponent {
   toggleFooter() {
     this.showFullFooter = !this.showFullFooter;
   }
+
+  alert(message: string) {
+    alert(message);
+  }
 }
 
