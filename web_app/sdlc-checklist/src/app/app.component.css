@@ -150,4 +150,11 @@ nav {
   display:flex
 }
 
+footer span {
+  color: #005EA2;
+  text-decoration: underline;
+}
 
+footer p {
+  margin: 10px 30px;
+}
