@@ -57,7 +57,8 @@ export class ChecklistItemComponent {
 
 
   ngOnInit(){
-    this.UID = this.catalogUUID + '-' + this.id
+    this.UID = this.attestationDataService.getCurrentForm.getPosition +
+     '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpControl(this.UID)!;
     this.selection= this.info.selection;
     this.comment = this.info.comment;

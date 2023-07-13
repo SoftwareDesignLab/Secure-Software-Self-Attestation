@@ -45,7 +45,8 @@ export class GroupComponent {
   constructor(private attestationDataService: AttestationDataService){}
 
   ngOnInit(){
-    this.UID = this.catalogUUID + '-' + this.id
+    this.UID = this.attestationDataService.getCurrentForm.getPosition +
+     '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpGroup(this.UID)!;
     this.showComponents = this.info.showRollable
   }
