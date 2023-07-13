@@ -30,6 +30,11 @@
   border-top: 1px solid black;
 }
 
+.catalog-container {
+  display: grid;
+  grid-template-columns: auto 225px;
+}
+
 .hidden {
   display: none;
 }

@@ -31,17 +31,14 @@ h2 {
 .prependUpArrow::before {
     content: "▲ "
 }
+
 .prependDownArrow::before {
     content: "▼ "
 }
+
 .inline-block {
     display: inline-block;
     margin: 15px;
-}
-
-.group-checkbox {
-    width: 20px;
-    height: 20px;
 }
 
 .gray {
@@ -73,10 +70,6 @@ img {
   
 img:hover {
     background-color: rgb(180, 189, 192)
-}
-  
-.individual-button {
-    display: inline;
 }
 
 .check {
