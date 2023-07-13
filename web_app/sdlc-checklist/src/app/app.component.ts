@@ -24,9 +24,24 @@
 import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
-import { Catalog } from './oscalModel';
+import { Router, NavigationEnd  } from '@angular/router';
+import { AttestationDataService } from './attestation-data.service';
 import { notifyService } from './notify.service';
+import { ChecklistItemComponent } from './control/control.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
+import { ViewportScroller } from '@angular/common';
+import { filter, takeUntil  } from 'rxjs/operators';
+import { Subject } from 'rxjs'
+
+
+
+
+interface Catalog {
+  uuid: string;
+  metadata: object;
+  groups: GroupComponent[];
+  controls: ChecklistItemComponent[];
+}
 
 interface CatalogData {
   catalogs: Catalog[];
@@ -47,28 +62,51 @@ export class AppComponent {
   showNav = false;
   showComponents = false;
 
-  constructor(){}
+
+  constructor(private router: Router, private attestationService: AttestationDataService ){}
   
-  ngOnInit(): void {
-    this.catalogData.catalogs.push(catalog as Catalog);    
+ ngOnInit(){
+  this.catalogData = this.attestationService.getdata(0).getCatalogs
+
+ }
+
+  changePage(page: string){
+    this.toggleNav();
+    this.router.navigate([page]);
   }
 
-  onFileSelected(jsonData: any) {
-    if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) { // Prevents uploading the same file twice
-      this.catalogProcessingComponent.notifyOfFailure("Duplicate Catalog");
-      return;
-    }
-    this.catalogProcessingComponent.notifyOfSuccess("File Loaded");
-    this.catalogData.catalogs.push(jsonData);
-  }
 
-  setAllGroupExpansion(toSet: boolean, uuid: String): void {
-    this.childComponents.forEach((child) => {
-      if (child.catalogUUID === uuid) {
-        child.setComponents(toSet);
-      }
-    });
+  // Experimental Navtree change page method, Does not work as intended
+
+
+  /*
+  gotoLocation(page: string, location: string) {
+
+    this.toggleNav();
+  
+    const unsubscribe$ = new Subject<void>();
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(unsubscribe$)
+      )
+      .subscribe(() => {
+        setTimeout(() => {
+          const element = document.getElementById(location);
+          if (element) {
+            element.scrollIntoView({ behavior: 'auto' });
+          }
+          unsubscribe$.next(); // Unsubscribe after the first navigation
+          unsubscribe$.complete();
+        }, 0);
+      });
+  
+    this.router.navigate([page]);
+  
   }
+  */
+
+
 
   toggleNav(): void {
     this.showNav = !this.showNav;
@@ -119,10 +157,20 @@ export class AppComponent {
     return index >= 0;
   }
 
+  visitedAttestation(){
+    if(this.attestationService.checkVisited()){
+      return true
+    }
+    return false;
+  }
+
+  showNavTree(){
+    return(this.attestationService.getdata(0).submitable());
+  }
+
   toggleComponents(){
     this.showComponents = !this.showComponents;
     if (!this.showComponents) {
-      //this.hideChildRollable();
     }
   }
 }

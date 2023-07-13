@@ -23,6 +23,8 @@
  */
 import { Component, Input, ViewChildren, QueryList} from '@angular/core';
 import { ChecklistItemComponent } from '../control/control.component'
+import { GroupInfo } from '../oscalModel';
+import { AttestationDataService } from '../attestation-data.service';
 
 @Component({
   selector: 'app-group',
@@ -37,15 +39,20 @@ export class GroupComponent {
   @Input() catalogUUID: any;
   @ViewChildren(ChecklistItemComponent) childComponents!: QueryList<ChecklistItemComponent>;
   showComponents = true;
+  info!: GroupInfo;
   UID: any;  //Unique ID for this control for the program
 
+  constructor(private attestationDataService: AttestationDataService){}
 
   ngOnInit(){
     this.UID = this.catalogUUID + '-' + this.id
+    this.info = this.attestationDataService.setUpGroup(this.UID)!;
+    this.showComponents = this.info.showRollable
   }
 
   toggleComponents() {
     this.showComponents = !this.showComponents;
+    this.attestationDataService.toggleGroupRollable(this.UID);
     if (!this.showComponents) {
       this.hideChildRollable();
     }
@@ -94,11 +101,13 @@ export class GroupComponent {
     if(this.deselectAll(selection)){
       this.childComponents.forEach((child) => {
         child.selection = selection;
+        this.attestationDataService.updateControlSelection( child.UID,selection);
       })
     }
     else{
       this.childComponents.forEach((child) => {
         child.selection = "no-selection";
+        this.attestationDataService.updateControlSelection( child.UID,"no-selection");
       })
     }
   }

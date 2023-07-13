@@ -21,7 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input, Output, EventEmitter, Directive, AfterViewInit} from '@angular/core';
+
+import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { AttestationDataService } from '../attestation-data.service';
+import { ControlInfo } from '../oscalModel';
+import { timeInterval } from 'rxjs';
+
 
 @Component({
   selector: 'app-control',
@@ -39,24 +44,34 @@ export class ChecklistItemComponent {
   @Input() links: any;
   @Input() props: any;
   @Input() controls: any;
+  @Input() catalogUUID: any;
   @Output() update = new EventEmitter();
   selection: String = "no-selection";
   showRollable = false;
-  @Input() uuid: any;
+  info!: ControlInfo; 
   UID: any; //Unique ID for this control for the program
-  comment: string = "";
+  comment: String = "";
   popup: Boolean = false;
   finalized: Boolean = false;
   onPopup: Boolean = false;
   primed: Boolean = false;
   focused: Boolean = false;
 
+  constructor(private attestationDataService: AttestationDataService){  }
+
+
   ngOnInit(){
-    this.UID = this.uuid + '-' + this.id
+    this.UID = this.catalogUUID + '-' + this.id
+    this.info = this.attestationDataService.setUpControl(this.UID)!;
+    this.selection= this.info.selection;
+    this.comment = this.info.comment;
+    this.finalized = this.info.finalized;
+    this.showRollable = this.info.showRollable;
   }
 
   toggleRollable() {
     this.showRollable = !this.showRollable;
+    this.attestationDataService.toggleControlRollable(this.UID);
   }
 
   getDescription() {
@@ -87,6 +102,7 @@ export class ChecklistItemComponent {
   }
 
   select(option: string) {
+    this.attestationDataService.updateControlSelection(this.UID, option);
     if (this.selection === "no-selection") {
       this.deploy();
     }
@@ -102,6 +118,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
+      this.attestationDataService.saveControlComment(this.UID,this.comment);
     this.cancel();
   }
 
@@ -110,6 +127,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
+      this.attestationDataService.finalizeControlComment(this.UID,this.comment);
     this.cancel();
   }
 
@@ -123,6 +141,7 @@ export class ChecklistItemComponent {
     this.comment = "";
     this.finalized = false;
     this.cancel();
+    this.attestationDataService.deleteControlComment(this.UID);
   }
 
   deploy() {
