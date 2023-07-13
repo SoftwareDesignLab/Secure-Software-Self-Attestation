@@ -9,7 +9,7 @@
     <img alt="Comment Button" 
         [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
         (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!isChecked()" tabindex=0>
-    <label class="checkbox-label" (click)="toggleRollable()" (keydown.enter)="toggleRollable()">
+    <label class="checkbox-label" (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
       {{ id }}: {{ title }}
     </label>
   </div>
@@ -21,7 +21,7 @@
   ></app-rollable>
 </div>
 
-<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()" (mouseenter)="commentFocus()">
+<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()" (mouseenter)="commentFocus()" (keydown.escape)="cancel()">
   <div class="pane popup" (mouseenter)="enter(true)" (mouseleave)="enter(false)">
     <br>
     <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>

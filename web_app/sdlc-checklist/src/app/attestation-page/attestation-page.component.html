@@ -39,7 +39,7 @@
            [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
       </div><br>
       <p class="button-caption">Remove Catalog</p>
-      <div (click)="removeCatalog(catalog.uuid)" keydown.enter="removeCatalog(uuid)" tabindex=0 class="circle-button red"></div>
+      <div (click)="removeCatalog(catalog.uuid)" (keydown.enter)="removeCatalog(catalog.uuid)" tabindex=0 class="circle-button red"></div>
     </div>
     <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">
       <div id="group-container" class="group-container">
@@ -60,7 +60,6 @@
       </div>
     </div>
   </div>
-  <button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
     <div class="generate-report-div">
