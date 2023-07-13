@@ -164,3 +164,21 @@ nav {
 a {
   cursor: pointer;
 }
+
+.delete{
+  background-color: red;
+  border: none;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.right{
+  justify-content: right;
+  margin-left:57%;
+}

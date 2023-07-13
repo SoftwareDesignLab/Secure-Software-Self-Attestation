@@ -72,6 +72,7 @@ export class AppComponent {
 
  get getForms(){
   return this.attestationService.getRawData
+
 }
 
   changePage(page: string){
@@ -83,6 +84,17 @@ export class AppComponent {
     this.attestationService.addform();
     console.log(this.attestationService.getRawData.length);
     this.changePage("attestation-form");
+  }
+  deleteForm(position: number){
+    let firsthalf = this.attestationService.forms.slice(0,position-1);
+    let secondhalf = this.attestationService.forms.slice(position);
+    this.attestationService.forms = firsthalf.concat(secondhalf);
+
+    let newPos = 1;
+    this.attestationService.forms.forEach(child => {
+    child.setPosition(newPos);
+    newPos = newPos+1;
+    });
   }
 
 

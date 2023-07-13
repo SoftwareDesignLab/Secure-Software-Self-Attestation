@@ -31,7 +31,7 @@ import { ControlInfo, GroupInfo } from './oscalModel';
 export class AttestationDataService {
 
 
-  private forms: Array<AttestationComponent> = new Array<AttestationComponent>
+  public forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
   private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
   private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
