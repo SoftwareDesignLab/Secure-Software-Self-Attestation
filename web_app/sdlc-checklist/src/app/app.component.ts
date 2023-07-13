@@ -71,7 +71,7 @@ export class AppComponent {
  }
 
   changePage(page: string){
-    this.showNav = !this.showNav;
+    this.toggleNav();
     this.router.navigate([page]);
   }
 
@@ -82,7 +82,7 @@ export class AppComponent {
   /*
   gotoLocation(page: string, location: string) {
 
-    this.showNav = !this.showNav;
+    this.toggleNav();
   
     const unsubscribe$ = new Subject<void>();
     this.router.events
