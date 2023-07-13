@@ -31,7 +31,6 @@ const routes: Routes = [
   {path: '', redirectTo: 'contact-info', pathMatch: 'full'},
   {path: 'contact-info', component: ContactInfoComponent},
   {path: 'attestation-form', component: AttestationPageComponent},
-  {path: 'attestation/id', component: AttestationComponent}
 ];
 
 @NgModule({

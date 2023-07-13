@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -43,6 +43,7 @@ import { AttestationPageComponent } from './attestation-page/attestation-page.co
 import { ContactService } from './contact.service';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AttestationDataService } from './attestation-data.service';
+import { StartUpService, startUpFactory } from './start-up.service';
 
 
 @NgModule({
@@ -72,7 +73,14 @@ import { AttestationDataService } from './attestation-data.service';
     attestationComment,
     ContactService,
     AttestationDataService,
-    notifyService
+    notifyService,
+    StartUpService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: startUpFactory,
+      deps: [StartUpService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

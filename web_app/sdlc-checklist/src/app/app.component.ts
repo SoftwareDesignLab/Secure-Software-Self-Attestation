@@ -66,8 +66,8 @@ export class AppComponent {
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
  ngOnInit(){
-  this.catalogData = this.attestationService.getdata(0).getCatalogs;
-
+  //this.catalogData = this.attestationService.getdata(0).getCatalogs;
+  this.router.navigate(['/contact-info']);
  }
 
  get getForms(){
@@ -81,8 +81,6 @@ export class AppComponent {
   }
 
   changeAttestion(position: number){
-    //this.attestationService.forms[position] = this.attestationService.dynamicInfo$.sub;
-    //his.attestationService.updateDynamicInfo(this.attestationService.getCurrentForm);
     this.attestationService.setView(position);
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.changePage('contact-info');
@@ -90,10 +88,10 @@ export class AppComponent {
     this.toggleNav();
     }
   
-
   newForm(){
     this.attestationService.addform();
-    console.log(this.attestationService.getRawData.length);
+    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getIndex;
+    this.changeAttestion(newPage)
     this.changePage("attestation-form");
   }
 
