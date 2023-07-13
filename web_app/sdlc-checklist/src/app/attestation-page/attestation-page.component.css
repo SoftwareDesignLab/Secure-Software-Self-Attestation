@@ -224,3 +224,6 @@ tr:last-child td {
 .underline {
   border-bottom: 1px solid black;
 }
+.test{
+  color: black;
+}

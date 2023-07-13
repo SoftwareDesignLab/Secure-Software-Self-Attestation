@@ -31,6 +31,7 @@ import { attestationComment } from '../attestationForm';
 import { CatalogData, Catalog} from '../oscalModel';
 
 
+
 @Component({
   selector: 'app-attestation-page',
   templateUrl: './attestation-page.component.html',
@@ -44,26 +45,30 @@ export class AttestationPageComponent {
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   control: string = "Ungrouped Controls";
   showNav = false;
-  completed = false
+  completed = false;
+  viewPosition = 0;
+  position;
+
 
   selectedValue: string;
   info: any;
 
   constructor(public attestationService: AttestationDataService){
-      this.selectedValue = attestationService.getdata(0).getSelectedValue;
-      this.info = attestationService.getdata(0).getInfo;
-      this.catalogData = this.attestationService.getdata(0).getCatalogs;
-      this.hiddenCatalogs = this.attestationService.getdata(0).getHiddenCatalogs();
+      this.selectedValue = attestationService.getCurrentForm.getSelectedValue;
+      this.info = attestationService.getCurrentForm.getInfo;
+      this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
+      this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
+      this.position = this.attestationService.getCurrentForm.getPosition;
   }
 
 
   ngOnInit(): void {
     this.attestationService.setVisited();
-    this.catalogData = this.attestationService.getdata(0).getCatalogs;
+    this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
   }
 
   AttestationCompleted(){
-    if(this.attestationService.getdata(0).submitable()){
+    if(this.attestationService.getCurrentForm.submitable()){
       this.completed=true;
     }
     return this.completed;
@@ -71,7 +76,7 @@ export class AttestationPageComponent {
 
 
   updateSelect(){
-    this.attestationService.getdata(0).setSelectedValue(this.selectedValue);
+    this.attestationService.getCurrentForm.setSelectedValue(this.selectedValue);
     if (this.selectedValue !== 'multiple') {
       if (this.info.length > 1) {
         this.info.splice(1);
@@ -101,7 +106,7 @@ export class AttestationPageComponent {
 
 
   onFileSelected(jsonData: any): void {
-    this.attestationService.getdata(0).onFileSelected(jsonData);
+    this.attestationService.getCurrentForm.onFileSelected(jsonData);
   }
 
   setAllGroupExpansion(toSet: boolean, uuid: String): void {
@@ -114,7 +119,7 @@ export class AttestationPageComponent {
 
 
   toggleExpansion(uuid: String): void {
-    this.attestationService.getdata(0).toggleExpansion(uuid);
+    this.attestationService.getCurrentForm.toggleExpansion(uuid);
   }
 
   isShown(uuid: String): boolean {
@@ -122,11 +127,11 @@ export class AttestationPageComponent {
   }
 
   removeCatalog(uuid: String): void {
-    this.attestationService.getdata(0).removeCatalog(uuid);
+    this.attestationService.getCurrentForm.removeCatalog(uuid);
   }
 
   restoreDefaultCatalog(): void {
-    this.attestationService.getdata(0).restoreDefaultCatalog();
+    this.attestationService.getCurrentForm.restoreDefaultCatalog();
   }
   
   isDefaultPresent(): boolean {

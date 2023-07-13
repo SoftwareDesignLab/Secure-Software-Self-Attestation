@@ -17,7 +17,7 @@
       <li *ngFor="let form of getForms">
         <div>
           <div class="tree-root">
-              <a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form {{form.getPosition}}</a>
+              <a routerlink="attestation-form" (click)="changeAttestion(form.getIndex)">Attestation Form {{form.getPosition}}</a>
           <div class="right">
             <!-- Nav Tree Code, Disabled for now, Check Issue for more info  -->
             <!-- h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4> -->

@@ -36,12 +36,22 @@ export class AttestationDataService {
   private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
   private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
   private count: number = 1;
+  private viewPosition: number = 0;
+
 
   constructor() {}
 
 
   getdata(index: number){
     return this.forms[index];
+  }
+
+  get getCurrentForm(){
+    return this.forms[this.viewPosition];
+  }
+
+  setView(position: number){
+    this.viewPosition = position;
   }
   get getRawData(){
     return this.forms;

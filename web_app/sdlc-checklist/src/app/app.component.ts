@@ -80,11 +80,20 @@ export class AppComponent {
     this.router.navigate([page]);
   }
 
+  changeAttestion(position: number){
+    this.attestationService.setView(position);
+    this.changePage('contact-info');
+    this.changePage('attestation-form');
+    this.toggleNav();
+    }
+  
+
   newForm(){
     this.attestationService.addform();
     console.log(this.attestationService.getRawData.length);
     this.changePage("attestation-form");
   }
+
   deleteForm(position: number){
     let firsthalf = this.attestationService.forms.slice(0,position);
     let secondhalf = this.attestationService.forms.slice(position+1);
