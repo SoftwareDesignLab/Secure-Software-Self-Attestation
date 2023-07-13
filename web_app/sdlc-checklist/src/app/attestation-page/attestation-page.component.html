@@ -35,11 +35,11 @@
     <div class="button-panel">
       <p *ngIf="isShown(catalog.uuid)" class="button-caption">Collapse Catalog</p>
       <p *ngIf="!isShown(catalog.uuid)" class="button-caption">Expand Catalog</p>
-      <div (click)="toggleExpansion(catalog.uuid)" 
+      <div (click)="toggleExpansion(catalog.uuid)" (keydown.enter)="toggleExpansion(catalog.uuid)" tabindex=0
            [className]="isShown(catalog.uuid) ? 'circle-button orange' : 'circle-button green'">     
       </div><br>
       <p class="button-caption">Remove Catalog</p>
-      <div (click)="removeCatalog(catalog.uuid)" class="circle-button red"></div>
+      <div (click)="removeCatalog(catalog.uuid)" (keydown.enter)="removeCatalog(catalog.uuid)" tabindex=0 class="circle-button red"></div>
     </div>
     <div id="grid-container" [className]="isShown(catalog.uuid) ? 'grid-container' : 'grid-container hidden'" *ngIf="catalog">
       <div id="group-container" class="group-container">
@@ -60,7 +60,12 @@
       </div>
     </div>
   </div>
-  <button *ngIf="!isDefaultPresent()" (click)="restoreDefaultCatalog()">Restore Default</button>
+  <div class="restore-container" [hidden]="isDefaultPresent()">
+    <p class="pane restore">
+      It looks like you deleted the default catalog &nbsp;&nbsp;
+      <span class="blue-text" (click)="restoreDefaultCatalog()" tabindex=0 (keydown.enter)="restoreDefaultCatalog()">Restore it?</span>
+    </p>
+  </div>
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
     <div class="generate-report-div">
