@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { AttestationDataService } from '../attestation-data.service';
 import { ControlInfo } from '../oscalModel';
 import { timeInterval } from 'rxjs';
+
 
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
+
 
 export class ChecklistItemComponent {
   @Input() id: any;
@@ -52,6 +55,7 @@ export class ChecklistItemComponent {
   finalized: Boolean = false;
   onPopup: Boolean = false;
   primed: Boolean = false;
+  focused: Boolean = false;
 
   constructor(private attestationDataService: AttestationDataService){  }
 
@@ -100,7 +104,7 @@ export class ChecklistItemComponent {
   select(option: string) {
     this.attestationDataService.updateControlSelection(this.UID, option);
     if (this.selection === "no-selection") {
-      this.popup = true;
+      this.deploy();
     }
     if (this.selection === option) {
       this.selection = "no-selection";
@@ -130,6 +134,7 @@ export class ChecklistItemComponent {
   cancel() {
     this.popup = false;
     this.primed = false;
+    this.focused = false;
   }
 
   del() {
@@ -140,6 +145,10 @@ export class ChecklistItemComponent {
   }
 
   deploy() {
+    let active = document.activeElement;
+    if (active instanceof HTMLElement) {
+      active.blur;
+    }
     this.popup = true;
   }
 
@@ -161,5 +170,15 @@ export class ChecklistItemComponent {
       }
     }
   }
-  
+
+  commentFocus() {
+    if (this.focused) 
+      return
+    let comment = document.getElementById("comment");
+    if (comment instanceof HTMLElement) {
+      comment.focus();
+      this.focused = true;
+    }
+  }
 }
+

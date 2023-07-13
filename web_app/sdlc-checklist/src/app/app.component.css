@@ -23,8 +23,6 @@
  */
 
 
-
-
 /* Nav Rules */
 nav {
   position: fixed;
@@ -85,6 +83,7 @@ nav {
   background-color: white;
   border-left: 2px solid black;
   box-shadow: -4px 0 4px 0 rgba(0, 0, 0, .4);
+  text-align: center;
 }
 
 .expanded-nav ul {
@@ -129,6 +128,23 @@ nav {
   background-color: #EFF2F4;
 }
 
+.bottom {
+  position: absolute;
+  bottom: 0;
+  padding: 20px 10px 25px;
+  margin: 0;
+  background-color: #005EA2;
+  color: white;
+  width: 20vw;
+  text-indent: -20px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.bottom:hover {
+  background-color: #003a63;
+}
+
 @keyframes navOpening {
   from {right: -20vw;}
   to {right: 0vw;}
@@ -149,5 +165,3 @@ nav {
 .tree-root {
   display:flex
 }
-
-

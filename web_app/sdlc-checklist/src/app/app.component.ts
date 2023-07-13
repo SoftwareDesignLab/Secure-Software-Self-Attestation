@@ -173,5 +173,9 @@ export class AppComponent {
     if (!this.showComponents) {
     }
   }
+
+  alert(message: string) {
+    alert(message);
+  }
 }
 

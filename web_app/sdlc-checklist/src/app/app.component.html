@@ -5,7 +5,7 @@
 </header>
 
 <nav id="nav">
-  <div class="nav-icon" (click)="toggleNav()">
+  <div class="nav-icon" (click)="toggleNav()" (keydown.enter)="toggleNav()" tabindex=0>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
@@ -13,20 +13,19 @@
   <div class="expanded-nav">
     <h2>SDLC</h2>
     <ul>
-      <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
+      <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
       <li *ngIf="visitedAttestation()">
         <div>
           <div class="tree-root">
-          <a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form 1</a>
-          <div>
-            <!-- Nav Tree Code, Disabled for now, Check Issue for more info  -->
-            <!-- h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4> -->
+            <a routerlink="attestation-form" (click)="changePage('attestation-form')" (keydown.enter)="changePage('attestation-form')" [tabindex]="showNav ? 0 : -1">Attestation Form 1</a>
+            <div>
+              <!-- Nav Tree Code, Disabled for now, Check Issue for more info  -->
+              <!-- h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4> -->
+            </div>
           </div>
         </div>
-      </div>
       </li>
-
-      <li class="add" *ngIf="!visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">+ New Attestation</a></li>
+      <li class="add" *ngIf="!visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')" (keydown.enter)="changePage('attestation-form')" [tabindex]="showNav ? 0 : -1">+ New Attestation</a></li>
       
       <!--  Nav Tree Code, Disabled for now, Check Issue for more info
 
@@ -44,6 +43,7 @@
       -->
        
     </ul>
+    <p class="bottom" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
   </div>
 </nav>
 
