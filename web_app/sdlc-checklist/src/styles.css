@@ -36,6 +36,10 @@ main {
     padding-bottom: 5rem;
 }
 
+.long-bottom {
+    padding-bottom: 15rem;
+}
+
 footer {
     position: absolute;
     bottom: 0;
@@ -68,4 +72,22 @@ body {
 
 .hidden {
     display: none;
+}
+
+@media screen and (max-width: 1500px) {
+    .long-bottom {
+        padding-bottom: 20rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .long-bottom {
+        padding-bottom: 25rem;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .long-bottom {
+        padding-bottom: 30rem;
+    }
 }

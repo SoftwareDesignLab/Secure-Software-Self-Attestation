@@ -61,7 +61,6 @@ label {
 /* Attestation Button */
 
 .bot-right {
-  display: fix;
   position: fixed;
   bottom: 2.5rem;
   right: 0;
