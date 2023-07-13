@@ -60,6 +60,12 @@
       </div>
     </div>
   </div>
+  <div class="restore-container" [hidden]="isDefaultPresent()">
+    <p class="pane restore">
+      It looks like you deleted the default catalog &nbsp;&nbsp;
+      <span class="blue-text" (click)="restoreDefaultCatalog()" tabindex=0 (keydown.enter)="restoreDefaultCatalog()">Restore it?</span>
+    </p>
+  </div>
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
     <div class="generate-report-div">
