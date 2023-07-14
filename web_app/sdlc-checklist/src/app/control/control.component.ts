@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import { AttestationDataService } from '../attestation-data.service';
 import { ControlInfo } from '../oscalModel';
 import { timeInterval } from 'rxjs';
@@ -53,7 +53,7 @@ export class ChecklistItemComponent {
   onPopup: Boolean = false;
   primed: Boolean = false;
 
-  constructor(private attestationDataService: AttestationDataService){  }
+  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){  }
 
 
   ngOnInit(){
@@ -64,6 +64,21 @@ export class ChecklistItemComponent {
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
     this.showRollable = this.info.showRollable;
+  }
+
+
+  refresh() {
+    // Perform any necessary data updates here
+
+    // Trigger change detection to update the view
+    this.UID = this.attestationDataService.getCurrentForm.getPosition +
+     '-' + this.catalogUUID + '-' + this.id
+    this.info = this.attestationDataService.setUpControl(this.UID)!;
+    this.selection= this.info.selection;
+    this.comment = this.info.comment;
+    this.finalized = this.info.finalized;
+    this.showRollable = this.info.showRollable;
+    this.changeDetectorRef.detectChanges();
   }
 
   toggleRollable() {

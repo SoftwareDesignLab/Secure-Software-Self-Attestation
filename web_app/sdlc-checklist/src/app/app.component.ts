@@ -32,7 +32,7 @@ import { CatalogProcessingComponent } from './catalog-processing/catalog-process
 import { ViewportScroller } from '@angular/common';
 import { filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
-
+import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
 
 
@@ -83,10 +83,12 @@ export class AppComponent {
   changeAttestion(position: number){
     this.attestationService.setView(position);
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
-    this.changePage('contact-info');
+    this.attestationService.refresh()
     this.changePage('attestation-form');
     this.toggleNav();
     }
+
+
   
   newForm(){
     this.attestationService.addform();

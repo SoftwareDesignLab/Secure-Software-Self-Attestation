@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input, ViewChildren, QueryList} from '@angular/core';
+import { Component, Input, ViewChildren, QueryList, ChangeDetectorRef} from '@angular/core';
 import { ChecklistItemComponent } from '../control/control.component'
 import { GroupInfo } from '../oscalModel';
 import { AttestationDataService } from '../attestation-data.service';
@@ -42,13 +42,25 @@ export class GroupComponent {
   info!: GroupInfo;
   UID: any;  //Unique ID for this control for the program
 
-  constructor(private attestationDataService: AttestationDataService){}
+  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){}
 
   ngOnInit(){
     this.UID = this.attestationDataService.getCurrentForm.getPosition +
      '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpGroup(this.UID)!;
     this.showComponents = this.info.showRollable
+  }
+
+
+  refresh(){
+    this.UID = this.attestationDataService.getCurrentForm.getPosition +
+    '-' + this.catalogUUID + '-' + this.id
+   this.info = this.attestationDataService.setUpGroup(this.UID)!;
+   this.showComponents = this.info.showRollable
+   this.changeDetectorRef.detectChanges();
+   this.childComponents.forEach((child) => {
+    child.refresh() 
+  });
   }
 
   toggleComponents() {

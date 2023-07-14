@@ -25,13 +25,17 @@ import { Injectable } from '@angular/core';
 import { AttestationComponent } from './attestation/attestation.component';
 import { ControlInfo, GroupInfo } from './oscalModel';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttestationDataService {
 
+
+  private ComponentRefreshSource = new Subject<void>();
+  ComponentRefresh$ = this.ComponentRefreshSource.asObservable();
 
   public forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
@@ -45,7 +49,10 @@ export class AttestationDataService {
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
   constructor() {}
-
+  
+  refresh(){
+      this.ComponentRefreshSource.next();
+  }
   updateDynamicForm(form: AttestationComponent) {
     this.dynamicFormSubject.next(form);
   }
@@ -168,3 +175,5 @@ export class AttestationDataService {
     }
   }
 }
+
+

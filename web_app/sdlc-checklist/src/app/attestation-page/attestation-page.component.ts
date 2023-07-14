@@ -64,8 +64,13 @@ export class AttestationPageComponent {
 
 
   ngOnInit(): void {
+
     this.attestationService.setVisited();
     this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
+
+    this.attestationService.ComponentRefresh$.subscribe(() => {
+      this.refresh();
+    });
 
 
      this.attestationService.dynamicForm$.subscribe(form => {
@@ -78,6 +83,12 @@ export class AttestationPageComponent {
     });
   }
 
+  refresh(){ 
+    this.childComponents.forEach((child) => {
+    child.refresh() 
+  });
+}
+  
   AttestationCompleted(){
     if(this.observedForm.submitable()){
       return true;
