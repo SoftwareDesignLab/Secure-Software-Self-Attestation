@@ -61,6 +61,7 @@ export class AppComponent {
   control: string = "Ungrouped Controls";
   showNav = false;
   showComponents = false;
+  showFullFooter = false;
 
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
@@ -170,8 +171,10 @@ export class AppComponent {
 
   toggleComponents(){
     this.showComponents = !this.showComponents;
-    if (!this.showComponents) {
-    }
+  }
+
+  toggleFooter() {
+    this.showFullFooter = !this.showFullFooter;
   }
 
   alert(message: string) {
