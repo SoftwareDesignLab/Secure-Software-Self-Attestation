@@ -88,7 +88,7 @@ nav {
 
 .expanded-nav ul {
   list-style: none;
-  padding: 20px;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
 }
@@ -98,12 +98,13 @@ nav {
   margin: 0;
   padding: 0;
   border-bottom: 1px solid black;
+  text-align: left;
 }
 
 .expanded-nav li:nth-child(1) {
   border-top: 1px solid black;
-  padding-left: 40px;
 }
+
 .expanded-nav ul.tree-branch {
   border-top: 1px solid black;
   padding-left: 40px;
@@ -113,9 +114,10 @@ nav {
 .expanded-nav a {
   padding: 15px 10px;
   margin: 0;
-  position: relative;
   display: inline-block;
   text-indent: 20px;
+  position: relative;
+  top: 5px;
 }
 
 .expanded-nav h2 {
@@ -155,13 +157,20 @@ nav {
   to {right: -20vw;}
 }
 
-.prependUpArrow::before {
+.prepend-up-arrow::before {
   content: "▲ "
 }
-.prependDownArrow::before {
+.prepend-down-arrow::before {
   content: "▼ "
 }
 
 .tree-root {
   display:flex
+}
+
+li p {
+  font-size: larger;
+  margin-left: 5px;
+  margin-right: -25px;
+  z-index: 7;
 }

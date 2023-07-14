@@ -54,59 +54,24 @@ interface CatalogData {
 })
 export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
-  showComponentsArray: any;
-  hiddenCatalogs = new Set<String>();
-  @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
-  control: string = "Ungrouped Controls";
   showNav = false;
-  showComponents = false;
-
+  expandedTree = false;
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
- ngOnInit(){
-  this.catalogData = this.attestationService.getdata(0).getCatalogs
-
- }
-
-  changePage(page: string){
-    this.toggleNav();
-    this.router.navigate([page]);
+  ngOnInit(){
+    this.catalogData = this.attestationService.getdata(0).getCatalogs
   }
 
-
-  // Experimental Navtree change page method, Does not work as intended
-
-
-  /*
-  gotoLocation(page: string, location: string) {
-
+  changePage(page: string, fragment?: string){
     this.toggleNav();
-  
-    const unsubscribe$ = new Subject<void>();
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        takeUntil(unsubscribe$)
-      )
-      .subscribe(() => {
-        setTimeout(() => {
-          const element = document.getElementById(location);
-          if (element) {
-            element.scrollIntoView({ behavior: 'auto' });
-          }
-          unsubscribe$.next(); // Unsubscribe after the first navigation
-          unsubscribe$.complete();
-        }, 0);
-      });
-  
-    this.router.navigate([page]);
-  
+    if (fragment) {
+      this.router.navigate([page], {fragment: fragment});
+    } else {
+      this.router.navigate([page])
+    }
   }
-  */
-
-
 
   toggleNav(): void {
     this.showNav = !this.showNav;
@@ -118,11 +83,16 @@ export class AppComponent {
       } else {
         nav.classList.add('nav-closing');
         nav.classList.remove('nav-opening');
+        this.expandedTree = false;
       }
     }
   }
 
-  getLinkName(catalog: Catalog): String {
+  toggleNavTree(): void {
+    this.expandedTree = !this.expandedTree;
+  }
+
+  getLinkName(catalog: Catalog): string {
     let metadata: any = catalog.metadata;
     if (metadata.title) {
       return metadata.title;
@@ -130,52 +100,17 @@ export class AppComponent {
     return catalog.uuid;
   }
 
-  toggleExpansion(uuid: String): void {
-    if (this.hiddenCatalogs.has(uuid)) {
-      this.hiddenCatalogs.delete(uuid);
-    } else {
-      this.hiddenCatalogs.add(uuid);
-    }
-  }
-
-  isShown(uuid: String): boolean {
-    return !this.hiddenCatalogs.has(uuid);
-  }
-
-  removeCatalog(uuid: String): void {
-    let catalogs = this.catalogData.catalogs;
-    console.log("Removing " + uuid);
-    catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1);
-  }
-
-  restoreDefaultCatalog(): void {
-    this.catalogData.catalogs.unshift(catalog as Catalog);   
-  }
-  
-  isDefaultPresent(): boolean {
-    let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid});
-    return index >= 0;
-  }
-
-  visitedAttestation(){
-    if(this.attestationService.checkVisited()){
-      return true
-    }
-    return false;
-  }
-
-  showNavTree(){
-    return(this.attestationService.getdata(0).submitable());
-  }
-
-  toggleComponents(){
-    this.showComponents = !this.showComponents;
-    if (!this.showComponents) {
-    }
-  }
-
   alert(message: string) {
     alert(message);
+  }
+
+  getSubLinks(): Set<{name: string, fragment: string}> {
+    let listOLinks: Set<{name: string, fragment: string}> = new Set();
+    this.catalogData.catalogs.forEach((catalog) => {
+      listOLinks.add({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid});
+    });
+    listOLinks.add({name: "Upload new catalog / Generate Report", fragment: "upload"});
+    return listOLinks;
   }
 }
 
