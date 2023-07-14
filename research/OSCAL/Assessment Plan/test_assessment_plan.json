@@ -1,0 +1,146 @@
+{
+    "assessment-plan": {
+        "uuid": "",
+        "metadata": {
+            "title": "",
+            "version": "",
+            "last-modified": "",
+            "oscal-version": "",
+            "parties": [
+                {
+                    "uuid": "",
+                    "type": "organization",
+                    "name": "<company name>",
+                    "addresses": [
+                        {
+                            "addr-lines": [
+                                ""
+                            ],
+                            "city": "",
+                            "state": "",
+                            "postal-code": "",
+                            "country": ""
+                        }
+                    ],
+                    "props": [
+                        {
+                            "name": "website",
+                            "value": "<website>",
+                            "class": "Producer Info"
+                        }
+                    ],
+                    "remarks": "Software Producer Information"
+                },
+                {
+                    "uuid": "",
+                    "type": "person",
+                    "name": "Joseph Vita",
+                    "email-addresses": [""],
+                    "telephone-numbers": [""],
+                    "addresses": [
+                        {
+                            "addr-lines": [
+                                ""
+                            ],
+                            "city": "",
+                            "state": "",
+                            "postal-code": "",
+                            "country": ""
+                        }
+                    ],
+                    "props": [
+                        {
+                            "name": "title",
+                            "value": "<title>",
+                            "class": "Contact Info"
+                        }
+                    ],
+                    "remarks": "Primary Contact"
+                }
+            ]
+        },
+        "import-ssp": {
+            "href": ""
+        },
+        "reviewed-controls": {
+            "links": [
+                {
+                    "href": ""
+                }
+            ],
+            "description": "",
+            "control-selections": [
+                {
+                    "props": [
+                        {
+                            "name": "Catalog Name",
+                            "value": "<catalog name>",
+                            "class": "Catalog"
+                        },
+                        {
+                            "name": "<control-id>",
+                            "value": "(checked|unchecked|n/a)",
+                            "class": "Compliance Claim"
+                        },
+                        {
+                            "name": "<control-id>",
+                            "value": "Textual claim ...",
+                            "class": "Attestation Claim"
+                        }
+                    ],
+                    "include-controls": [
+                        {
+                            "control-id": "<control-id>"
+                        }
+                    ],
+                    "exclude-controls": [
+
+                    ]
+                }
+            ]
+        },
+        "assessment-subjects": [
+            {
+                "type": "<party>",
+                "include-all": {
+                    "<<information>>": "if this object exists, the attestation is for the entire organization"
+                },
+                "include-subjects": [
+                    {
+                        "subject-uuid": "",
+                        "type": "<component|resource>",
+                        "props": [
+                            {
+                                "name": "Product (line) Name",
+                                "value": "<Product name>",
+                                "class": "Product Info"
+                            },
+                            {
+                                "name": "Version Number",
+                                "value": "",
+                                "class": "Product Info"
+                            },
+                            {
+                                "name": "Release/Publish Date",
+                                "value": "Textual claim ...",
+                                "class": "Product Info"
+                            }
+                        ]
+                    }
+                ],
+                "props": [
+                    {
+                        "name": "type",
+                        "value": "<company-wide|product line|...>",
+                        "class": "Attestation Type"
+                    }
+                ]
+            }
+        ],
+        "terms-and-conditions": {
+            "parts": [
+
+            ]
+        }
+    }
+}

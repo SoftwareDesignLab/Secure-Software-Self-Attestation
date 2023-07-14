@@ -106,7 +106,7 @@ export class AttestationDataService {
 
   updateControlSelection(UID: String, selection: String){
     let temp = this.controlMap.get(UID);
-    if(temp!=undefined){
+    if(temp!==undefined){
       temp.selection=selection;
     }
     else{
@@ -116,7 +116,7 @@ export class AttestationDataService {
 
   saveControlComment(UID: String, comment: String){
     let temp = this.controlMap.get(UID);
-    if(temp!=undefined){
+    if(temp!==undefined){
       temp.finalized=false;
       temp.comment=comment;
     }
@@ -128,7 +128,7 @@ export class AttestationDataService {
   }
   finalizeControlComment(UID: String, comment: String){
     let temp = this.controlMap.get(UID);
-    if(temp!=undefined){
+    if(temp!==undefined){
       temp.finalized=true;
       temp.comment=comment;
     }
@@ -140,7 +140,7 @@ export class AttestationDataService {
   }
   deleteControlComment(UID: String){
     let temp = this.controlMap.get(UID);
-    if(temp!=undefined){
+    if(temp!==undefined){
       temp.comment = "";
       temp.finalized = false;
     }
@@ -149,7 +149,7 @@ export class AttestationDataService {
 
   toggleControlRollable(UID: String){
     let temp = this.controlMap.get(UID);
-    if(temp!=undefined){
+    if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
     }
   }
@@ -170,7 +170,7 @@ export class AttestationDataService {
 
   toggleGroupRollable(UID: String){
     let temp = this.groupMap.get(UID);
-    if(temp!=undefined){
+    if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
     }
   }

@@ -30,22 +30,22 @@ export class ContactService {
   // Checks if contact form has acceptable amount of info 
   isFilled(){
     return(
-      this.companyName != "" &&
-      this.companyAddress != "" &&
-      this.city != "" &&
-      this.state != "" &&
-      this.postalCode != "" &&
-      this.country != "" &&
-      this.website != "" &&
-      this.firstName != "" &&
-      this.lastName != "" &&
-      this.title != "" &&
-      this.personalAddress != "" &&
-      this.personalCity != "" &&
-      this.personalState != "" &&
-      this.personalCountry != "" &&
-      this.phone != "" &&
-      this.email != ""
+      this.companyName !== "" &&
+      this.companyAddress !== "" &&
+      this.city !== "" &&
+      this.state !== "" &&
+      this.postalCode !== "" &&
+      this.country !== "" &&
+      this.website !== "" &&
+      this.firstName !== "" &&
+      this.lastName !== "" &&
+      this.title !== "" &&
+      this.personalAddress !== "" &&
+      this.personalCity !== "" &&
+      this.personalState !== "" &&
+      this.personalCountry !== "" &&
+      this.phone !== "" &&
+      this.email !== ""
     )
   }
 

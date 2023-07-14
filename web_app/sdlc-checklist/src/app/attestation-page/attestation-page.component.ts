@@ -163,4 +163,7 @@ export class AttestationPageComponent {
     return index >= 0;
   }
 
+  alert(message: string) {
+    alert(message);
+  }
 }

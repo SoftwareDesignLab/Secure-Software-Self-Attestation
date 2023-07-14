@@ -32,8 +32,21 @@
 }
 
 main {
-    margin: 30px;
+    margin: 30px 30px 0;
+    padding-bottom: 5rem;
 }
+
+.long-bottom {
+    padding-bottom: 15rem;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    background-color: lightgray;
+    min-height: 2.5rem;
+    width: 100%;
+  }
 
 h1 {
     font-size: xx-large;
@@ -53,8 +66,28 @@ body {
     margin: 0;
     background-color: #EFF2F4;
     font-family: Roboto, "Helvetica Neue", sans-serif; 
+    min-height: 100vh;
+    position: relative;
 }
 
 .hidden {
     display: none;
+}
+
+@media screen and (max-width: 1500px) {
+    .long-bottom {
+        padding-bottom: 20rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .long-bottom {
+        padding-bottom: 25rem;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .long-bottom {
+        padding-bottom: 30rem;
+    }
 }
