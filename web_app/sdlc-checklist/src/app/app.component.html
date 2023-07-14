@@ -16,19 +16,19 @@
       <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
       <li *ngFor="let form of getForms">
         <div>
-          <div class="tree-root">
-              <a routerlink="attestation-form" (click)="changeAttestion(form.getIndex)">Attestation Form {{form.getPosition}}</a>
-          <div class="right">
-            <!-- Nav Tree Code, Disabled for now, Check Issue for more info  -->
-            <!-- h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4> -->
-            
-            <button class="delete" (click)="deleteForm(form.getIndex)"> Delete </button>
+          <div class="tree-root"(click)="changeAttestion(form.getIndex)">
+            <p>Attestation Form {{form.getPosition}}</p>
+            <div class="right">
+              <!-- Nav Tree Code, Disabled for now, Check Issue for more info  -->
+              <!-- h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4> -->
+              <button class="delete" (click)="deleteForm(form.getIndex)"> Delete </button>
+            </div>
           </div>
         </div>
-      </div>
 
       </li>
-      <li class="add"><a routerlink="attestation-form" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</a></li>
+      <p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p>
+      <!--<li class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1"> <p class="new">+ New Attestation</p></li>-->
 
 
       

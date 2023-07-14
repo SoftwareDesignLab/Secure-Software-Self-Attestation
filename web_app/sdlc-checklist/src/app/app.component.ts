@@ -66,10 +66,6 @@ export class AppComponent {
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
- ngOnInit(){
-  //this.catalogData = this.attestationService.getdata(0).getCatalogs;
-  this.router.navigate(['/contact-info']);
- }
 
  get getForms(){
   return this.attestationService.getRawData;
@@ -86,7 +82,6 @@ export class AppComponent {
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.attestationService.refresh()
     this.changePage('attestation-form');
-    this.toggleNav();
     }
 
 
@@ -95,7 +90,6 @@ export class AppComponent {
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getIndex;
     this.changeAttestion(newPage)
-    this.changePage("attestation-form");
   }
 
   deleteForm(position: number){
