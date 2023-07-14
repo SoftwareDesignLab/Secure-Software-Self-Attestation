@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
 */
-import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, ViewChildren, QueryList, ViewChild, NgModule } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
-import { Router, NavigationEnd  } from '@angular/router';
+import { Router, NavigationEnd, RouterModule  } from '@angular/router';
 import { AttestationDataService } from './attestation-data.service';
 import { notifyService } from './notify.service';
 import { ChecklistItemComponent } from './control/control.component';
