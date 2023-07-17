@@ -32,8 +32,13 @@ import { AssessmentResults } from './resultsModel';
 })
 export class AppComponent {
   assessmentResults: AssessmentResults | undefined;
+  showFullFooter: boolean = false;
 
   onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
     this.assessmentResults = jsonData["assessment-results"];
+  }
+
+  toggleFooter() {
+    this.showFullFooter = !this.showFullFooter;
   }
 }
