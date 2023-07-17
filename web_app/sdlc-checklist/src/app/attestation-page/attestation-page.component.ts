@@ -28,7 +28,7 @@ import { GroupComponent } from '../group/group.component';
 import catalog from '../defaultCatalog';
 import { AttestationDataService } from '../attestation-data.service';
 import { attestationComment } from '../attestationForm';
-import { CatalogData, Catalog} from '../oscalModel';
+import { CatalogData} from '../oscalModel';
 import { AttestationComponent } from '../attestation/attestation.component';
 
 
@@ -65,7 +65,6 @@ export class AttestationPageComponent {
 
   ngOnInit(): void {
 
-    this.attestationService.setVisited();
     this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
 
     this.attestationService.ComponentRefresh$.subscribe(() => {

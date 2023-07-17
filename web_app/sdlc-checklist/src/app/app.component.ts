@@ -32,7 +32,6 @@ import { CatalogProcessingComponent } from './catalog-processing/catalog-process
 import { ViewportScroller } from '@angular/common';
 import { filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
-import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
 
 
@@ -183,12 +182,6 @@ export class AppComponent {
     return !this.hiddenCatalogs.has(uuid);
   }
 
-  visitedAttestation(){
-    if(this.attestationService.checkVisited()){
-      return true
-    }
-    return false;
-  }
 
   showNavTree(){
     return(this.attestationService.getdata(0).submitable());

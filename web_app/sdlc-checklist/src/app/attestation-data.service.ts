@@ -41,7 +41,7 @@ export class AttestationDataService {
   private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
   private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
   private tag: number = 1;
-  private viewPosition: number = 0;
+  private viewPosition: number = -1;
   private deletionPosition: number = 0;
 
 
@@ -76,12 +76,7 @@ export class AttestationDataService {
     return this.forms;
   }
 
-  checkVisited(){
-    return this.beenVisited;
-  }
-  setVisited(){
-    this.beenVisited = true;
-  }
+  
 
   get getView(){
     return this.viewPosition;

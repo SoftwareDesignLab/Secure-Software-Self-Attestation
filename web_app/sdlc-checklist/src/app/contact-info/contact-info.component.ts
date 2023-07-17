@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ContactService } from '../contact.service';
 import { Router } from '@angular/router';
 import { AttestationDataService } from '../attestation-data.service';
-import { AttestationPageComponent } from '../attestation-page/attestation-page.component';
 
 @Component({
   selector: 'app-contact-info',
@@ -101,7 +100,7 @@ constructor( public contactService: ContactService, private router: Router,priva
   }
 
   checkAttestations(){
-    if(this.attestationService.checkVisited()&&this.attestationService.getView>=0){
+    if(this.attestationService.getView>=0){
       return true
     }
     return false;
