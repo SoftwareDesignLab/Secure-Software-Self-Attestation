@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ContactService } from '../contact.service';
 import { Router } from '@angular/router';
 import { AttestationDataService } from '../attestation-data.service';
+import { AttestationPageComponent } from '../attestation-page/attestation-page.component';
 
 @Component({
   selector: 'app-contact-info',
@@ -79,12 +80,28 @@ constructor( public contactService: ContactService, private router: Router,priva
     this.router.navigate([page]);
   }
 
+
+  changeAttestion(position: number){
+    this.attestationService.setView(position);
+    this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
+    this.attestationService.refresh();
+    this.router.navigate(['attestation-form']);
+    }
+
+
+  
+  newForm(){
+    this.attestationService.addform();
+    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
+    this.changeAttestion(newPage)
+  }
+
   isFilled(){
     return !this.contactService.isFilled()
   }
 
-  visitedAttestation(){
-    if(this.attestationService.checkVisited()){
+  checkAttestations(){
+    if(this.attestationService.checkVisited()&&this.attestationService.getView>=0){
       return true
     }
     return false;

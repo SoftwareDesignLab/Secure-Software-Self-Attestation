@@ -83,6 +83,14 @@ export class AttestationDataService {
     this.beenVisited = true;
   }
 
+  get getView(){
+    return this.viewPosition;
+  }
+
+  get getDeletionPosition(){
+    return this.deletionPosition;
+  }
+
   addform(){
     this.forms.push(new AttestationComponent(this));
     let position = this.forms.length-1;
@@ -140,13 +148,7 @@ export class AttestationDataService {
       console.log("Something went wrong")
     }
   }
-  get getView(){
-    return this.viewPosition;
-  }
 
-  get getDeletionPosition(){
-    return this.deletionPosition;
-  }
 
   deleteControlComment(UID: String){
     let temp = this.controlMap.get(UID);

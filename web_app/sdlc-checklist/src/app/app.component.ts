@@ -102,11 +102,18 @@ export class AppComponent {
     }
     this.attestationService.forms = firsthalf.concat(secondhalf);
     
-    let newPos = 0;
-    this.attestationService.forms.forEach(child => {
-    child.setFormPosition(newPos);
-    newPos = newPos+1;
-    });
+    if(this.attestationService.getRawData.length>0){
+      this.attestationService.setView(0);
+      let newPos = 0;
+      this.attestationService.forms.forEach(child => {
+        child.setFormPosition(newPos);
+        newPos = newPos+1;
+      });
+    }
+    else{
+      this.attestationService.setView(-1);
+    }
+    
   }
 
 
