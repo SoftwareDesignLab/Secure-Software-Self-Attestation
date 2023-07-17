@@ -57,6 +57,9 @@ export class AppComponent {
   showNav = false;
   expandedTree = false;
   initialFormCompleted = false;
+  showComponents = false;
+  showFullFooter = false;
+
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
@@ -98,6 +101,10 @@ export class AppComponent {
       return metadata.title;
     }
     return catalog.uuid;
+  }
+
+  toggleFooter() {
+    this.showFullFooter = !this.showFullFooter;
   }
 
   alert(message: string) {
