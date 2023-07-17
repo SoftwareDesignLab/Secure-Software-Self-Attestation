@@ -26,7 +26,6 @@ import { AttestationComponent } from './attestation/attestation.component';
 import { ControlInfo, GroupInfo } from './oscalModel';
 
 import { BehaviorSubject, Subject } from 'rxjs';
-import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
 @Injectable({
   providedIn: 'root'
@@ -43,9 +42,10 @@ export class AttestationDataService {
   private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
   private count: number = 1;
   private viewPosition: number = 0;
+  private deletionPosition: number = 0;
 
 
-  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent);
+  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
   constructor() {}
@@ -55,6 +55,10 @@ export class AttestationDataService {
   }
   updateDynamicForm(form: AttestationComponent) {
     this.dynamicFormSubject.next(form);
+  }
+
+  setDeletionPosition(position: number){
+    this.deletionPosition = position;
   }
 
   getdata(index: number){
@@ -80,7 +84,7 @@ export class AttestationDataService {
   }
 
   addform(){
-    this.forms.push(new AttestationComponent);
+    this.forms.push(new AttestationComponent(this));
     let index = this.forms.length-1;
     this.forms[index].setPosition(this.count);
     this.forms[index].setIndex(index);
@@ -138,6 +142,11 @@ export class AttestationDataService {
 
 
   }
+  
+  get getDeletionPosition(){
+    return this.deletionPosition;
+  }
+
   deleteControlComment(UID: String){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
@@ -152,6 +161,11 @@ export class AttestationDataService {
     if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
     }
+  }
+
+  removeControl(UID: String){
+    let temp = this.deletionPosition + "-" + UID;
+    this.controlMap.delete(temp);
   }
 
 
@@ -173,6 +187,11 @@ export class AttestationDataService {
     if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
     }
+  }
+
+  removeGroup(UID: String){
+    let temp = this.deletionPosition + "-" + UID;
+    this.groupMap.delete(temp);
   }
 }
 

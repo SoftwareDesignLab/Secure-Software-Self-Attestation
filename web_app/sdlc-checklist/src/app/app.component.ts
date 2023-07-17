@@ -80,7 +80,7 @@ export class AppComponent {
   changeAttestion(position: number){
     this.attestationService.setView(position);
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
-    this.attestationService.refresh()
+    this.attestationService.refresh();
     this.changePage('attestation-form');
     }
 
@@ -93,10 +93,12 @@ export class AppComponent {
   }
 
   deleteForm(position: number){
+    this.attestationService.setDeletionPosition(position+1)
     let firsthalf = this.attestationService.forms.slice(0,position);
-    let secondhalf = this.attestationService.forms.slice(position+1);
+    let secondhalf = this.attestationService.forms.slice(position+1)
+    this.attestationService.forms[position].deleteAll();
     this.attestationService.forms = firsthalf.concat(secondhalf);
-
+    
     let newPos = 0;
     this.attestationService.forms.forEach(child => {
     child.setIndex(newPos);
@@ -169,21 +171,6 @@ export class AppComponent {
 
   isShown(uuid: String): boolean {
     return !this.hiddenCatalogs.has(uuid);
-  }
-
-  removeCatalog(uuid: String): void {
-    let catalogs = this.catalogData.catalogs;
-    console.log("Removing " + uuid);
-    catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1);
-  }
-
-  restoreDefaultCatalog(): void {
-    this.catalogData.catalogs.unshift(catalog as Catalog);   
-  }
-  
-  isDefaultPresent(): boolean {
-    let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid});
-    return index >= 0;
   }
 
   visitedAttestation(){
