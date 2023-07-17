@@ -88,20 +88,23 @@ export class AppComponent {
   
   newForm(){
     this.attestationService.addform();
-    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getIndex;
+    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
     this.changeAttestion(newPage)
   }
 
   deleteForm(position: number){
-    this.attestationService.setDeletionPosition(position+1)
+    this.attestationService.setDeletionPosition(position)
     let firsthalf = this.attestationService.forms.slice(0,position);
     let secondhalf = this.attestationService.forms.slice(position+1)
     this.attestationService.forms[position].deleteAll();
+    if((position)===this.attestationService.getView){
+      this.router.navigate(['contact-info']);
+    }
     this.attestationService.forms = firsthalf.concat(secondhalf);
     
     let newPos = 0;
     this.attestationService.forms.forEach(child => {
-    child.setIndex(newPos);
+    child.setFormPosition(newPos);
     newPos = newPos+1;
     });
   }

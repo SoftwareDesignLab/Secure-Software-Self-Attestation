@@ -59,7 +59,7 @@ export class AttestationPageComponent {
       this.info = attestationService.getCurrentForm.getInfo;
       this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
       this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
-      this.position = this.attestationService.getCurrentForm.getPosition;
+      this.position = this.attestationService.getCurrentForm.getPositionTag;
   }
 
 
@@ -77,7 +77,7 @@ export class AttestationPageComponent {
       this.observedForm = form;
       this.selectedValue = form.getSelectedValue;
       this.info = form.getInfo
-      this.position = form.getPosition
+      this.position = form.getPositionTag
       this.catalogData = form.getCatalogs;
       this.hiddenCatalogs = form.getHiddenCatalogs();
     });

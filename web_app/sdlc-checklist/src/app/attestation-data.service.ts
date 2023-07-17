@@ -40,7 +40,7 @@ export class AttestationDataService {
   private beenVisited: boolean = false;
   private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
   private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
-  private count: number = 1;
+  private tag: number = 1;
   private viewPosition: number = 0;
   private deletionPosition: number = 0;
 
@@ -58,11 +58,11 @@ export class AttestationDataService {
   }
 
   setDeletionPosition(position: number){
-    this.deletionPosition = position;
+    this.deletionPosition= position;
   }
 
-  getdata(index: number){
-    return this.forms[index];
+  getdata(position: number){
+    return this.forms[position];
   }
 
   get getCurrentForm(){
@@ -85,10 +85,10 @@ export class AttestationDataService {
 
   addform(){
     this.forms.push(new AttestationComponent(this));
-    let index = this.forms.length-1;
-    this.forms[index].setPosition(this.count);
-    this.forms[index].setIndex(index);
-    this.count = this.count + 1;
+    let position = this.forms.length-1;
+    this.forms[position].setPositionTag(this.tag);
+    this.forms[position].setFormPosition(position);
+    this.tag = this.tag + 1;
 
 
   }
@@ -139,10 +139,11 @@ export class AttestationDataService {
     else{
       console.log("Something went wrong")
     }
-
-
   }
-  
+  get getView(){
+    return this.viewPosition;
+  }
+
   get getDeletionPosition(){
     return this.deletionPosition;
   }
@@ -164,7 +165,8 @@ export class AttestationDataService {
   }
 
   removeControl(UID: String){
-    let temp = this.deletionPosition + "-" + UID;
+    let position = this.getdata(this.deletionPosition).getPositionTag;
+    let temp = position + "-" + UID;
     this.controlMap.delete(temp);
   }
 
@@ -190,7 +192,8 @@ export class AttestationDataService {
   }
 
   removeGroup(UID: String){
-    let temp = this.deletionPosition + "-" + UID;
+    let position = this.getdata(this.deletionPosition).getPositionTag;
+    let temp = position + "-" + UID;
     this.groupMap.delete(temp);
   }
 }

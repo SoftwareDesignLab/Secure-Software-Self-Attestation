@@ -42,8 +42,8 @@ export class AttestationComponent {
   private hiddenCatalogs = new Set<String>();
   private selectedValue: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
-  private index: any;
-  private position: any;
+  private FormPosition: any;
+  private positionTag: any;
 
   constructor (private attestationService: AttestationDataService){
     this.info.push(new attestationComment);
@@ -51,18 +51,18 @@ export class AttestationComponent {
   }
 
 
-  setPosition(pos: number){
-    this.position = pos;
+  setPositionTag(pos: number){
+    this.positionTag = pos;
    }
-   setIndex(ind: number){
-    this.index = ind; 
+   setFormPosition(pos: number){
+    this.FormPosition = pos; 
    }
 
-   get getPosition(){
-    return this.position;
+   get getPositionTag(){
+    return this.positionTag;
    }
-  get getIndex(){
-    return this.index;
+  get getFormPosition(){
+    return this.FormPosition;
   }
 
   // Attestation Comments Methods 
@@ -113,12 +113,13 @@ export class AttestationComponent {
   removeCatalog(uuid: String): void {
     let catalogs = this.catalogData.catalogs;
     let removed = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1) as Catalog[];
-    this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getPosition);
+    this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);
     this.deleteCache(removed[0]);
   }
 
   deleteCache(catalog: Catalog){
-    console.log("Removing " + catalog.uuid + " from Attestation: " + this.attestationService.getDeletionPosition);
+    let deletePosition = this.attestationService.getDeletionPosition;
+    console.log("Removing " + catalog.uuid + " from Attestation: " + this.attestationService.getdata(deletePosition).positionTag);
     if(catalog.groups !== undefined){
       catalog.groups.forEach(group => {
         let GUID = catalog.uuid + "-" + group.id;

@@ -45,7 +45,7 @@ export class GroupComponent {
   constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){}
 
   ngOnInit(){
-    this.UID = this.attestationDataService.getCurrentForm.getPosition +
+    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
      '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpGroup(this.UID)!;
     this.showComponents = this.info.showRollable
@@ -53,7 +53,7 @@ export class GroupComponent {
 
 
   refresh(){
-    this.UID = this.attestationDataService.getCurrentForm.getPosition +
+    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
     '-' + this.catalogUUID + '-' + this.id
    this.info = this.attestationDataService.setUpGroup(this.UID)!;
    this.showComponents = this.info.showRollable

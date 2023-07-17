@@ -60,7 +60,7 @@ export class ChecklistItemComponent {
 
 
   ngOnInit(){
-    this.UID = this.attestationDataService.getCurrentForm.getPosition +
+    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
      '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpControl(this.UID)!;
     this.selection= this.info.selection;
@@ -74,7 +74,7 @@ export class ChecklistItemComponent {
     // Perform any necessary data updates here
 
     // Trigger change detection to update the view
-    this.UID = this.attestationDataService.getCurrentForm.getPosition +
+    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
      '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpControl(this.UID)!;
     this.selection= this.info.selection;
