@@ -46,7 +46,7 @@
 
 </div>
 <div class="bot-right">
-  <button  class="blue" *ngIf="checkAttestations()"  (click)="changePage('attestation-form')">Proceed to Attestation Form</button>
+  <button  class="blue" *ngIf="checkAttestations()"  (click)="lastAttestation()">Proceed to Attestation Form</button>
   <button class="green" *ngIf="!checkAttestations()"  (click)="newForm()">+ New Attestation</button>
 </div>
 

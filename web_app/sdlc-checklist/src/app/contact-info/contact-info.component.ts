@@ -75,9 +75,12 @@ constructor( public contactService: ContactService, private router: Router,priva
     this.contactService.email = event.target.value;
   }
 
-  changePage(page: string){
-    this.router.navigate([page]);
-  }
+
+  lastAttestation(){
+    this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
+    this.attestationService.refresh();
+    this.router.navigate(['attestation-form']);
+    }
 
 
   changeAttestion(position: number){
