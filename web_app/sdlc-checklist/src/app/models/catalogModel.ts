@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {GroupComponent} from './group/group.component'
-import { ChecklistItemComponent } from './control/control.component';
+import { GroupComponent } from '../group/group.component'
+import { ChecklistItemComponent } from '../control/control.component';
 
 
-    export interface Oscal {
+    export interface OscalFileFormat {
         catalog: Catalog;
     }
 

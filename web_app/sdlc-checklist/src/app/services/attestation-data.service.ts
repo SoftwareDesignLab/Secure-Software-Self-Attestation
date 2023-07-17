@@ -23,7 +23,7 @@
  */
 import { Injectable } from '@angular/core';
 import { AttestationComponent } from '../attestation/attestation.component';
-import { ControlInfo, GroupInfo } from '../oscalModel';
+import { ControlInfo, GroupInfo } from '../models/catalogModel';
 
 @Injectable({
   providedIn: 'root'

@@ -37,7 +37,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AttestationComponent } from './attestation/attestation.component';
 import { FormsModule } from '@angular/forms'
 import { MatGridListModule } from '@angular/material/grid-list';
-import { attestationComment } from './attestationForm';
+import { attestationComment } from './services/attestationForm';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { ContactService } from './services/contact.service';

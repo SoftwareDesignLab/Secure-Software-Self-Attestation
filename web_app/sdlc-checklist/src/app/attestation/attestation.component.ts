@@ -23,9 +23,9 @@
  */
 
 import { Component, QueryList, ViewChildren } from '@angular/core';
-import { attestationComment } from '../attestationForm';
+import { attestationComment } from '../services/attestationForm';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { Catalog, CatalogData } from '../oscalModel';
+import { Catalog, CatalogData } from '../models/catalogModel';
 import catalog from '../defaultCatalog';
 
 

@@ -23,7 +23,7 @@
  */
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { ControlInfo } from '../oscalModel';
+import { ControlInfo } from '../models/catalogModel';
 import { timeInterval } from 'rxjs';
 
 @Component({

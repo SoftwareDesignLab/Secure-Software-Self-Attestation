@@ -23,7 +23,7 @@
  */
 import { Component, Input, ViewChildren, QueryList} from '@angular/core';
 import { ChecklistItemComponent } from '../control/control.component'
-import { GroupInfo } from '../oscalModel';
+import { GroupInfo } from '../models/catalogModel';
 import { AttestationDataService } from '../services/attestation-data.service';
 
 @Component({
