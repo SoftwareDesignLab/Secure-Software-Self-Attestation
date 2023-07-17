@@ -32,8 +32,7 @@ import { CatalogProcessingComponent } from './catalog-processing/catalog-process
 import { ViewportScroller } from '@angular/common';
 import { filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
-
-
+import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
 
 interface Catalog {
@@ -57,6 +56,7 @@ export class AppComponent {
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   showNav = false;
   expandedTree = false;
+  initialFormCompleted = false;
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
@@ -111,6 +111,14 @@ export class AppComponent {
     });
     listOLinks.add({name: "Upload new catalog / Generate Report", fragment: "upload"});
     return listOLinks;
+  }
+
+  updateFormCompleted(): boolean {
+    if (!this.initialFormCompleted) {
+      if (this.attestationService.getdata(0).submitable())
+        this.initialFormCompleted = true
+    }
+    return this.initialFormCompleted;
   }
 }
 

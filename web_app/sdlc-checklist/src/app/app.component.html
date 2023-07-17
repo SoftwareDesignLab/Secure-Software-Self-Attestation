@@ -14,11 +14,11 @@
     <h2>SDLC</h2>
     <ul>
       <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
-      <li class="list-grid">
-        <p [className]="expandedTree ? 'prepend-down-arrow' : 'prepend-up-arrow'" (click)="toggleNavTree()" (keydown.enter)="toggleNavTree()" [tabindex]="showNav ? 0 : -1"></p>
+      <li [className]="updateFormCompleted() ? 'list-grid' : ''">
+        <p [className]="expandedTree ? 'prepend-down-arrow' : 'prepend-up-arrow'" (click)="toggleNavTree()" (keydown.enter)="toggleNavTree()" [tabindex]="showNav ? 0 : -1" *ngIf="initialFormCompleted"></p>
         <a routerlink="attestation-form" (click)="changePage('attestation-form')" (keydown.enter)="changePage('attestation-form')" [tabindex]="showNav ? 0 : -1">Attestation Form 1</a>
-        <ul *ngIf="expandedTree">
-          <li *ngFor="let subLink of getSubLinks()"><a routerLink="attestation-form" (click)="changePage('attestation-form', subLink.fragment)" (keydown.enter)="changePage('attestation-form')" [tabindex] = "expandedTree ? 0 : -1">{{subLink.name}}</a></li>
+        <ul *ngIf="expandedTree && initialFormCompleted">
+          <li *ngFor="let subLink of getSubLinks()"><a routerLink="attestation-form" (click)="changePage('attestation-form', subLink.fragment)" (keydown.enter)="changePage('attestation-form', subLink.fragment)" [tabindex] = "expandedTree ? 0 : -1">{{subLink.name}}</a></li>
         </ul>
       </li>
     </ul>

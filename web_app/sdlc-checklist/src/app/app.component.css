@@ -122,8 +122,8 @@ nav {
 }
 
 .list-grid p {
-  font-size: x-large;
-  padding: 10px 10px 10px 7px;
+  font-size: larger;
+  padding: 10px 10px 10px 9px;
   margin: 0;
   display: inline;
   grid-area: 1/1/2/2;
