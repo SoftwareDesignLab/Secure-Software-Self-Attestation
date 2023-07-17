@@ -34,7 +34,6 @@ import { filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 
-
 interface Catalog {
   uuid: string;
   metadata: object;
@@ -55,7 +54,7 @@ export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   showNav = false;
-  expandedTree = false;
+  openTag = 0;
   initialFormCompleted = false;
   showComponents = false;
   showFullFooter = false;
@@ -76,6 +75,47 @@ export class AppComponent {
     }
   }
 
+  get getForms(){
+    return this.attestationService.getRawData;
+  }
+
+  changeAttestion(position: number){
+    this.attestationService.setView(position);
+    this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
+    this.attestationService.refresh();
+    this.changePage('attestation-form');
+  }
+  
+  newForm(){
+    this.attestationService.addform();
+    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
+    this.changeAttestion(newPage)
+  }
+
+  deleteForm(position: number){
+    this.attestationService.setDeletionPosition(position)
+    let firsthalf = this.attestationService.forms.slice(0,position);
+    let secondhalf = this.attestationService.forms.slice(position+1)
+    this.attestationService.forms[position].deleteAll();
+    if((position)===this.attestationService.getView){
+      this.router.navigate(['contact-info']);
+    }
+    this.attestationService.forms = firsthalf.concat(secondhalf);
+    
+    if(this.attestationService.getRawData.length>0){
+      this.attestationService.setView(0);
+      let newPos = 0;
+      this.attestationService.forms.forEach(child => {
+        child.setFormPosition(newPos);
+        newPos = newPos+1;
+      });
+    }
+    else{
+      this.attestationService.setView(-1);
+    }
+    
+  }
+
   toggleNav(): void {
     this.showNav = !this.showNav;
     let nav = document.getElementById('nav');
@@ -86,13 +126,17 @@ export class AppComponent {
       } else {
         nav.classList.add('nav-closing');
         nav.classList.remove('nav-opening');
-        this.expandedTree = false;
+        this.openTag = 0;
       }
     }
   }
 
-  toggleNavTree(): void {
-    this.expandedTree = !this.expandedTree;
+  toggleNavTree(formTag: number): void {
+    if (this.openTag === formTag) {
+      this.openTag = 0;
+    } else {
+      this.openTag = formTag;
+    }
   }
 
   getLinkName(catalog: Catalog): string {
@@ -111,7 +155,7 @@ export class AppComponent {
     alert(message);
   }
 
-  getSubLinks(): Set<{name: string, fragment: string}> {
+  getSubLinks(formTag: number): Set<{name: string, fragment: string}> {
     let listOLinks: Set<{name: string, fragment: string}> = new Set();
     this.catalogData.catalogs.forEach((catalog) => {
       listOLinks.add({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid});

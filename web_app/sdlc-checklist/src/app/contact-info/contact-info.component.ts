@@ -75,16 +75,35 @@ constructor( public contactService: ContactService, private router: Router,priva
     this.contactService.email = event.target.value;
   }
 
-  changePage(page: string){
-    this.router.navigate([page]);
+
+  lastAttestation(){
+    this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
+    this.attestationService.refresh();
+    this.router.navigate(['attestation-form']);
+    }
+
+
+  changeAttestion(position: number){
+    this.attestationService.setView(position);
+    this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
+    this.attestationService.refresh();
+    this.router.navigate(['attestation-form']);
+    }
+
+
+  
+  newForm(){
+    this.attestationService.addform();
+    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
+    this.changeAttestion(newPage)
   }
 
   isFilled(){
     return !this.contactService.isFilled()
   }
 
-  visitedAttestation(){
-    if(this.attestationService.checkVisited()){
+  checkAttestations(){
+    if(this.attestationService.getView>=0){
       return true
     }
     return false;

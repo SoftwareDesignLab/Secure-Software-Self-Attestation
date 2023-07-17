@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component} from '@angular/core';
 import { attestationComment } from '../attestationForm';
 import { AttestationDataService } from '../attestation-data.service';
-import { Catalog, CatalogData } from '../oscalModel';
+import { Catalog, CatalogData} from '../oscalModel';
 import catalog from '../defaultCatalog';
+import { ChecklistItemComponent } from '../control/control.component';
 
 
 
@@ -41,27 +42,33 @@ export class AttestationComponent {
   private hiddenCatalogs = new Set<String>();
   private selectedValue: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
-  private position: any;
+  private FormPosition: any;
+  private positionTag: any;
 
-  constructor (){
+  constructor (private attestationService: AttestationDataService){
     this.info.push(new attestationComment);
     this.catalogData.catalogs.push(catalog as Catalog);    
   }
 
 
-  setPosition(pos: number){
-    this.position = pos;
+  setPositionTag(pos: number){
+    this.positionTag = pos;
+   }
+   setFormPosition(pos: number){
+    this.FormPosition = pos; 
    }
 
-   get getPosition(){
-    return this.position;
+   get getPositionTag(){
+    return this.positionTag;
    }
-  
+  get getFormPosition(){
+    return this.FormPosition;
+  }
 
   // Attestation Comments Methods 
 
   addRow(){
-    this.info.push(new attestationComment)
+    this.info.push(new attestationComment);
   }
 
   removeRow(){
@@ -105,8 +112,36 @@ export class AttestationComponent {
 
   removeCatalog(uuid: String): void {
     let catalogs = this.catalogData.catalogs;
-    console.log("Removing " + uuid);
-    catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1);
+    let removed = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1) as Catalog[];
+    this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);
+    this.deleteCache(removed[0]);
+  }
+
+  deleteCache(catalog: Catalog){
+    let deletePosition = this.attestationService.getDeletionPosition;
+    console.log("Removing " + catalog.uuid + " from Attestation: " + this.attestationService.getdata(deletePosition).positionTag);
+    if(catalog.groups !== undefined){
+      catalog.groups.forEach(group => {
+        let GUID = catalog.uuid + "-" + group.id;
+        this.attestationService.removeGroup(GUID);
+        group.controls.forEach((control: ChecklistItemComponent) => {
+          let CUID = catalog.uuid + "-" + control.id;
+          this.attestationService.removeControl(CUID);
+        });
+      });
+    } 
+    if(catalog.controls !== undefined){
+      catalog.controls.forEach((control: ChecklistItemComponent) => {
+        let CUID = catalog.uuid + "-" + control.id;
+        this.attestationService.removeControl(CUID);
+     });
+   }
+  }
+
+  deleteAll(){
+    this.catalogData.catalogs.forEach(catalog =>{
+      this.deleteCache(catalog);
+    });
   }
 
   restoreDefaultCatalog(): void {
@@ -124,5 +159,7 @@ export class AttestationComponent {
       this.hiddenCatalogs.add(uuid);
     }
   }
+
+
 }
 

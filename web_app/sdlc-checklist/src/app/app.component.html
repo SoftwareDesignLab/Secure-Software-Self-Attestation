@@ -14,13 +14,16 @@
     <h2>SDLC</h2>
     <ul>
       <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
-      <li [className]="updateFormCompleted() ? 'list-grid' : ''">
-        <p [className]="expandedTree ? 'prepend-down-arrow' : 'prepend-up-arrow'" (click)="toggleNavTree()" (keydown.enter)="toggleNavTree()" [tabindex]="showNav ? 0 : -1" *ngIf="initialFormCompleted"></p>
-        <a routerlink="attestation-form" (click)="changePage('attestation-form')" (keydown.enter)="changePage('attestation-form')" [tabindex]="showNav ? 0 : -1">Attestation Form 1</a>
-        <ul *ngIf="expandedTree && initialFormCompleted">
-          <li *ngFor="let subLink of getSubLinks()"><a routerLink="attestation-form" (click)="changePage('attestation-form', subLink.fragment)" (keydown.enter)="changePage('attestation-form', subLink.fragment)" [tabindex] = "expandedTree ? 0 : -1">{{subLink.name}}</a></li>
+      <li [className]="updateFormCompleted() ? 'list-grid' : ''" *ngFor="let form of getForms">
+        <p [className]="openTag === form.getPositionTag ? 'prepend-down-arrow' : 'prepend-up-arrow'" (click)="toggleNavTree(form.getPositionTag)" (keydown.enter)="toggleNavTree(form.getPositionTag)" [tabindex]="showNav ? 0 : -1" *ngIf="true"></p>
+        <a routerlink="attestation-form" (click)="changePage('attestation-form')" (keydown.enter)="changePage('attestation-form')" [tabindex]="showNav ? 0 : -1">Attestation Form {{ form.getPositionTag }}</a>
+        <ul *ngIf="openTag === form.getPositionTag">
+          <li *ngFor="let subLink of getSubLinks(form.getPositionTag)">
+            <a routerLink="attestation-form" (click)="changePage('attestation-form', subLink.fragment)" (keydown.enter)="changePage('attestation-form', subLink.fragment)" [tabindex] = "openTag === form.getPositionTag ? 0 : -1">{{subLink.name}}</a>
+          </li>
         </ul>
       </li>
+      <li><p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
     </ul>
     <p class="bottom" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
   </div>
