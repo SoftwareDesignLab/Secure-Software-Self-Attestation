@@ -182,8 +182,8 @@ export class AppComponent {
     this.renaming = form.getPositionTag;
     await dela(50);
     let input = document.getElementById("renaming-input");
-    if (input instanceof HTMLElement) {
-      input.focus();
+    if (input instanceof HTMLInputElement) {
+      input.select();
     }
   }
 
