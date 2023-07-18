@@ -44,6 +44,7 @@ export class AttestationComponent {
   private info: Array<attestationComment> = new Array<attestationComment>;
   private FormPosition: any;
   private positionTag: any;
+  displayName: string = "";
 
   constructor (private attestationService: AttestationDataService){
     this.info.push(new attestationComment);
@@ -57,12 +58,20 @@ export class AttestationComponent {
   setFormPosition(pos: number){
     this.FormPosition = pos; 
   }
+  setName(name: string) {
+    this.displayName = name;
+  }
 
   get getPositionTag(){
     return this.positionTag;
   }
   get getFormPosition(){
     return this.FormPosition;
+  }
+  getName() {
+    if (this.displayName)
+      return this.displayName;
+    return "Attestation Form " + this.positionTag;
   }
 
   // Attestation Comments Methods 

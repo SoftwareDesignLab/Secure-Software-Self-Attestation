@@ -30,7 +30,7 @@ import { notifyService } from './notify.service';
 import { ChecklistItemComponent } from './control/control.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { ViewportScroller } from '@angular/common';
-import { filter, takeUntil  } from 'rxjs/operators';
+import { delay, filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { AttestationComponent } from './attestation/attestation.component';
@@ -46,6 +46,8 @@ interface CatalogData {
   catalogs: Catalog[];
 }
 
+const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -56,10 +58,12 @@ export class AppComponent {
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   showNav = false;
   openTag = 0;
+  renaming = 0;
   initialFormCompleted = new Set<number>();
   showComponents = false;
   showFullFooter = false;
   pageName = "Contact Info";
+
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
@@ -75,15 +79,17 @@ export class AppComponent {
     } else {
       this.router.navigate([page])
     }
+    if (page === "contact-info")
+      this.pageName = "Contact Info";
   }
 
   get getForms(){
     return this.attestationService.getRawData;
   }
 
-  changeAttestation(position: number, attestationTag: number, fragment?: string){
-    this.pageName = "Attestation Form " + attestationTag;
-    this.attestationService.setView(position);
+  changeAttestation(form: AttestationComponent, fragment?: string){
+    this.pageName = form.getName();
+    this.attestationService.setView(form.getFormPosition);
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.attestationService.refresh();
     this.changePage('attestation-form', fragment);
@@ -92,7 +98,7 @@ export class AppComponent {
   newForm(){
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1);
-    this.changeAttestation(newPage.getFormPosition, newPage.getPositionTag);
+    this.changeAttestation(newPage);
   }
 
   deleteForm(position: number){
@@ -179,6 +185,26 @@ export class AppComponent {
         this.initialFormCompleted.add(form.getPositionTag);
     }
     return this.initialFormCompleted.has(form.getPositionTag);
+  }
+
+  async renameForm(form: AttestationComponent) {
+    this.renaming = form.getPositionTag;
+    await dela(50);
+    let input = document.getElementById("renaming-input");
+    if (input instanceof HTMLElement) {
+      input.focus();
+    }
+  }
+
+  confirmName(form: AttestationComponent) {
+    let input = document.getElementById("renaming-input");
+    if (input instanceof HTMLInputElement) {
+      form.setName(input.value);
+      this.renaming = 0;
+      if (form === this.attestationService.getCurrentForm) {
+        this.pageName = form.getName();
+      }
+    }
   }
 }
 
