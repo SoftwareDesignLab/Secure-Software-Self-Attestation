@@ -59,7 +59,6 @@ export class AppComponent {
   showNav = false;
   openTag = 0;
   renaming = 0;
-  initialFormCompleted = new Set<number>();
   showComponents = false;
   showFullFooter = false;
 
@@ -171,19 +170,12 @@ export class AppComponent {
 
   getSubLinks(form: AttestationComponent): Set<{name: string, fragment: string}> {
     let listOLinks: Set<{name: string, fragment: string}> = new Set();
+    listOLinks.add({name: "Secure Software Development Attestation Form", fragment: "attestation"})
     form.getCatalogs.catalogs.forEach((catalog) => {
       listOLinks.add({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid});
     });
     listOLinks.add({name: "Upload new catalog / Generate Report", fragment: "upload"});
     return listOLinks;
-  }
-
-  checkFormCompletion(form: AttestationComponent): boolean {
-    if (!this.initialFormCompleted.has(form.getPositionTag)) {
-      if (form.submitable())
-        this.initialFormCompleted.add(form.getPositionTag);
-    }
-    return this.initialFormCompleted.has(form.getPositionTag);
   }
 
   async renameForm(form: AttestationComponent) {

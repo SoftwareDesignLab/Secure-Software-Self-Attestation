@@ -149,14 +149,7 @@ nav {
 
 .list-grid {
   display: grid;
-}
-
-.wide4 {
   grid-template-columns: 40px 200px 80px 80px;
-}
-
-.wide3 {
-  grid-template-columns: 240px 80px 80px;
 }
 
 .bottom {
