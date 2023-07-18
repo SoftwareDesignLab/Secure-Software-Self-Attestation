@@ -59,7 +59,7 @@ export class AppComponent {
   initialFormCompleted = new Set<number>();
   showComponents = false;
   showFullFooter = false;
-
+  pageName = "Contact Info";
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
@@ -81,7 +81,8 @@ export class AppComponent {
     return this.attestationService.getRawData;
   }
 
-  changeAttestation(position: number, fragment?: string){
+  changeAttestation(position: number, attestationTag: number, fragment?: string){
+    this.pageName = "Attestation Form " + attestationTag;
     this.attestationService.setView(position);
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.attestationService.refresh();
@@ -90,8 +91,8 @@ export class AppComponent {
   
   newForm(){
     this.attestationService.addform();
-    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
-    this.changeAttestation(newPage)
+    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1);
+    this.changeAttestation(newPage.getFormPosition, newPage.getPositionTag);
   }
 
   deleteForm(position: number){
@@ -100,7 +101,9 @@ export class AppComponent {
     let secondhalf = this.attestationService.forms.slice(position+1)
     this.attestationService.forms[position].deleteAll();
     if((position)===this.attestationService.getView){
-      this.router.navigate(['contact-info']);
+      this.setNav(true);
+      this.pageName = "Contact Info";
+      this.changePage('contact-info');
     }
     this.attestationService.forms = firsthalf.concat(secondhalf);
     
@@ -119,7 +122,11 @@ export class AppComponent {
   }
 
   toggleNav(): void {
-    this.showNav = !this.showNav;
+    this.setNav(!this.showNav);
+  }
+
+  setNav(state: boolean): void {
+    this.showNav = state;
     let nav = document.getElementById('nav');
     if (nav instanceof HTMLElement) {
       if (this.showNav) {
@@ -170,7 +177,6 @@ export class AppComponent {
     if (!this.initialFormCompleted.has(form.getPositionTag)) {
       if (form.submitable())
         this.initialFormCompleted.add(form.getPositionTag);
-        console.log('Arrow Time');
     }
     return this.initialFormCompleted.has(form.getPositionTag);
   }

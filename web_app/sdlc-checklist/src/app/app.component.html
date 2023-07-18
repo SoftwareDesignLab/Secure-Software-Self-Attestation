@@ -2,6 +2,7 @@
 
 <header>
   <h1>SDLC Checklist</h1>
+  <h2 id="page-title">{{ pageName }}</h2>
 </header>
 
 <nav id="nav">
@@ -16,11 +17,11 @@
       <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
       <li [className]="checkFormCompletion(form) ? 'list-grid wide3' : 'list-grid wide2'" *ngFor="let form of getForms">
         <p [className]="openTag === form.getPositionTag ? 'prepend-down-arrow arrow' : 'prepend-up-arrow arrow'" (click)="toggleNavTree(form.getPositionTag)" (keydown.enter)="toggleNavTree(form.getPositionTag)" [tabindex]="showNav ? 0 : -1" *ngIf="checkFormCompletion(form)"></p>
-        <a routerlink="attestation-form" (click)="changeAttestation(form.getFormPosition)" (keydown.enter)="changeAttestation(form.getFormPosition)" [tabindex]="showNav ? 0 : -1">Attestation Form {{ form.getPositionTag }}</a>
+        <a routerlink="attestation-form" (click)="changeAttestation(form.getFormPosition, form.getPositionTag)" (keydown.enter)="changeAttestation(form.getFormPosition, form.getPositionTag)" [tabindex]="showNav ? 0 : -1">Attestation Form {{ form.getPositionTag }}</a>
         <button class="delete" (click)="deleteForm(form.getFormPosition)" (keydown.enter)="deleteForm(form.getFormPosition)" [tabindex]="showNav ? 0 : -1"> Delete </button>
         <ul *ngIf="openTag === form.getPositionTag">
           <li *ngFor="let subLink of getSubLinks(form)">
-            <a routerLink="attestation-form" (click)="changeAttestation(form.getFormPosition, subLink.fragment)" (keydown.enter)="changeAttestation(form.getFormPosition, subLink.fragment)" [tabindex] = "openTag === form.getPositionTag ? 0 : -1">{{subLink.name}}</a>
+            <a routerLink="attestation-form" (click)="changeAttestation(form.getFormPosition, form.getPositionTag, subLink.fragment)" (keydown.enter)="changeAttestation(form.getFormPosition, form.getPositionTag)" [tabindex] = "openTag === form.getPositionTag ? 0 : -1">{{subLink.name}}</a>
           </li>
         </ul>
       </li>

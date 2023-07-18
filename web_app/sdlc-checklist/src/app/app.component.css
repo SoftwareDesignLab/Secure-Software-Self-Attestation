@@ -30,7 +30,7 @@ nav {
   display: grid;
   grid-template-columns: auto auto;
   z-index: 3;
-  right: -300px;
+  right: -400px;
 }
 
 .nav-opening {
@@ -42,7 +42,7 @@ nav {
 .nav-closing {
   animation-name: navClosing;
   animation-duration: .5s;
-  right: -300px;
+  right: -400px;
 }
 
 .nav-icon {
@@ -78,7 +78,7 @@ nav {
 }
 
 .expanded-nav {
-  width: 300px;
+  width: 400px;
   height: 100vh;
   background-color: white;
   border-left: 2px solid black;
@@ -166,7 +166,7 @@ nav {
   margin: 0;
   background-color: #005EA2;
   color: white;
-  width: 300px;
+  width: 400px;
   text-indent: -20px;
   user-select: none;
   cursor: pointer;
@@ -177,13 +177,13 @@ nav {
 }
 
 @keyframes navOpening {
-  from {right: -300px;}
+  from {right: -400px;}
   to {right: 0vw;}
 }
 
 @keyframes navClosing {
   from {right: 0vw;}
-  to {right: -300px;}
+  to {right: -400px;}
 }
 
 .prepend-up-arrow::before {

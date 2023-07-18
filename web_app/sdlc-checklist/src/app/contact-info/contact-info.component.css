@@ -3,7 +3,8 @@
 form {
   display: grid;
   grid-template-columns: 50% 1px 50%;
-  margin: 0px 20vw;
+  margin: 0px auto;
+  width: clamp(300px, 60vw, 800px);
 }
 
 .form-column {
@@ -60,9 +61,6 @@ label {
 @media screen and (max-width: 1000px) {
   .form-column {
     display: block;
-  }
-  form {
-    margin: 0 10vw;
   }
 }
 
