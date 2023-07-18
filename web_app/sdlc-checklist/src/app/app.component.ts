@@ -142,6 +142,7 @@ export class AppComponent {
         nav.classList.add('nav-closing');
         nav.classList.remove('nav-opening');
         this.openTag = 0;
+        this.renaming = 0;
       }
     }
   }
