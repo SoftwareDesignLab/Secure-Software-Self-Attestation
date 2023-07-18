@@ -18,8 +18,12 @@ constructor( public contactService: ContactService, private router: Router,priva
     this.contactService.companyName = event.target.value;
   }
 
-  updateCompanyAddress(event: any){
-    this.contactService.companyAddress = event.target.value;
+  updateCompanyAddress1(event: any){
+    this.contactService.companyAddress1 = event.target.value;
+  }
+
+  updateCompanyAddress2(event: any){
+    this.contactService.companyAddress2 = event.target.value;
   }
 
   updateCity(event: any){
@@ -49,10 +53,12 @@ constructor( public contactService: ContactService, private router: Router,priva
   updateTitle(event: any){
     this.contactService.title = event.target.value;
   }
-  updatePersonalAddress(event: any){
-    this.contactService.personalAddress = event.target.value;
+  updatePersonalAddress1(event: any){
+    this.contactService.personalAddress1 = event.target.value;
   }
-
+  updatePersonalAddress2(event: any){
+    this.contactService.personalAddress2 = event.target.value;
+  }
   updatePersonalCity(event: any){
     this.contactService.personalCity = event.target.value;
   }
