@@ -86,6 +86,7 @@ constructor( public contactService: ContactService, private router: Router,priva
   changeAttestion(position: number){
     this.attestationService.setView(position);
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
+    this.attestationService.pageName = this.attestationService.getCurrentForm.getName();
     this.attestationService.refresh();
     this.router.navigate(['attestation-form']);
     }

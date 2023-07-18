@@ -43,6 +43,7 @@ export class AttestationDataService {
   private tag: number = 1;
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
+  public pageName: string = "Contact Info";
 
 
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this));

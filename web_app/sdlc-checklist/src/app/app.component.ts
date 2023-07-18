@@ -62,8 +62,6 @@ export class AppComponent {
   initialFormCompleted = new Set<number>();
   showComponents = false;
   showFullFooter = false;
-  pageName = "Contact Info";
-
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
@@ -80,7 +78,7 @@ export class AppComponent {
       this.router.navigate([page])
     }
     if (page === "contact-info")
-      this.pageName = "Contact Info";
+      this.attestationService.pageName = "Contact Info";
   }
 
   get getForms(){
@@ -88,7 +86,7 @@ export class AppComponent {
   }
 
   changeAttestation(form: AttestationComponent, fragment?: string){
-    this.pageName = form.getName();
+    this.attestationService.pageName = form.getName();
     this.attestationService.setView(form.getFormPosition);
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.attestationService.refresh();
@@ -108,7 +106,7 @@ export class AppComponent {
     this.attestationService.forms[position].deleteAll();
     if((position)===this.attestationService.getView){
       this.setNav(true);
-      this.pageName = "Contact Info";
+      this.attestationService.pageName = "Contact Info";
       this.changePage('contact-info');
     }
     this.attestationService.forms = firsthalf.concat(secondhalf);
@@ -203,9 +201,13 @@ export class AppComponent {
       form.setName(input.value);
       this.renaming = 0;
       if (form === this.attestationService.getCurrentForm) {
-        this.pageName = form.getName();
+        this.attestationService.pageName = form.getName();
       }
     }
+  }
+
+  getPageName(): string {
+    return this.attestationService.pageName;
   }
 }
 

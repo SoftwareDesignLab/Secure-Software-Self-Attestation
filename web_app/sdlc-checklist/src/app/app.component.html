@@ -2,7 +2,7 @@
 
 <header>
   <h1>SDLC Checklist</h1>
-  <h2 id="page-title">{{ pageName }}</h2>
+  <h2 id="page-title">{{ getPageName() }}</h2>
 </header>
 
 <nav id="nav">
@@ -17,7 +17,7 @@
       <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
       <li [className]="checkFormCompletion(form) ? 'list-grid wide4' : 'list-grid wide3'" *ngFor="let form of getForms">
         <p [className]="openTag === form.getPositionTag ? 'prepend-down-arrow arrow' : 'prepend-up-arrow arrow'" (click)="toggleNavTree(form.getPositionTag)" (keydown.enter)="toggleNavTree(form.getPositionTag)" [tabindex]="showNav ? 0 : -1" *ngIf="checkFormCompletion(form)"></p>
-        <input [tabindex]="showNav ? 0 : -1" *ngIf="renaming === form.getPositionTag" [value]="form.getName()" id="renaming-input">
+        <input [tabindex]="showNav ? 0 : -1" *ngIf="renaming === form.getPositionTag" (keydown.enter)="confirmName(form)" [value]="form.getName()" id="renaming-input">
         <a routerlink="attestation-form" (click)="changeAttestation(form)" (keydown.enter)="changeAttestation(form)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming !== form.getPositionTag">{{ form.getName() }}</a>
         <button class="nav-button rename" (click)="renameForm(form)" (keydown.enter)="renameForm(form)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming !== form.getPositionTag"> Rename </button>
         <button class="nav-button confirm" (click)="confirmName(form)" (keydown.enter)="confirmName(form)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming === form.getPositionTag"> Confirm </button>
