@@ -51,15 +51,13 @@ footer {
 h1 {
     font-size: xx-large;
     color: white;
-    padding: 10px;
+    padding: 10px 0;
     margin: 0;
     font-family: Georgia, Arial, Helvetica, sans-serif;
-}
-
-header {
     background-color: black;
     margin: 0;
-    width: 100%
+    width: 100%;
+    text-align: left;
 }
 
 body {
@@ -68,6 +66,10 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif; 
     min-height: 100vh;
     position: relative;
+}
+
+header {
+    text-align: center;
 }
 
 .hidden {

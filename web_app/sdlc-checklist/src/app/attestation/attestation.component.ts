@@ -53,14 +53,14 @@ export class AttestationComponent {
 
   setPositionTag(pos: number){
     this.positionTag = pos;
-   }
-   setFormPosition(pos: number){
+  }
+  setFormPosition(pos: number){
     this.FormPosition = pos; 
-   }
+  }
 
-   get getPositionTag(){
+  get getPositionTag(){
     return this.positionTag;
-   }
+  }
   get getFormPosition(){
     return this.FormPosition;
   }

@@ -126,7 +126,6 @@ nav {
   padding: 10px 10px 10px 9px;
   margin: 0;
   display: inline;
-  grid-area: 1/1/2/2;
 }
 
 .list-grid p:hover {
@@ -137,11 +136,10 @@ nav {
   margin: 0 0 18px 18px;
   padding: 0;
   border-left: 1px solid gray;
-  grid-area: 2/1/3/3;
+  grid-column: 1/3;
 }
 
 .list-grid>a {
-  grid-area: 1/2/2/3;
   text-indent: 15px;
 }
 
@@ -151,8 +149,14 @@ nav {
 
 .list-grid {
   display: grid;
-  grid-template-columns: 40px auto;
-  grid-template-rows: auto auto;
+}
+
+.wide3 {
+  grid-template-columns: 40px 3fr 1fr;
+}
+
+.wide2 {
+  grid-template-columns: 3fr 1fr;
 }
 
 .bottom {
@@ -195,15 +199,12 @@ nav {
   cursor:pointer;
 }
 
-
 .add{
-  bottom: 0;
-  padding: 20px 10px 25px;
+  padding: 20px 0;
+  text-align: center;
   margin: 0;
   background-color: rgb(4,170, 109);
   color: white;
-  width: 20vw;
-  text-indent: -20px;
   user-select: none;
   cursor: pointer;
 }
@@ -237,20 +238,20 @@ a {
 }
 
 .delete{
-  background-color: darkred;
+  background-color: rgb(161, 41, 41);
   border: none;
-  padding: 20px;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 12px;
-  float: right;
+  color: white;
+  box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, .4);
 }
 
 .delete:hover{
-  background-color:rgb(100, 1, 1);
+  background-color:rgb(97, 20, 20);
 }
 
 .right{
@@ -258,4 +259,14 @@ a {
   width: 10vw;
   float: right;
   min-width:6vw;
+}
+
+#page-title {
+  margin: 0 auto;
+  padding: 5px 50px;
+  background-color: lightgray;
+  border-radius: 0 0 5px 5px;
+  display: inline-block;
+  font-weight: 400;
+  font-size: larger;
 }

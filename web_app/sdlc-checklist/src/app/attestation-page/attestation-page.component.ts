@@ -72,7 +72,7 @@ export class AttestationPageComponent {
     });
 
 
-     this.attestationService.dynamicForm$.subscribe(form => {
+      this.attestationService.dynamicForm$.subscribe(form => {
       this.observedForm = form;
       this.selectedValue = form.getSelectedValue;
       this.info = form.getInfo
@@ -84,9 +84,9 @@ export class AttestationPageComponent {
 
   refresh(){ 
     this.childComponents.forEach((child) => {
-    child.refresh() 
-  });
-}
+      child.refresh() 
+    });
+  }
   
   AttestationCompleted(){
     if(this.observedForm.submitable()){

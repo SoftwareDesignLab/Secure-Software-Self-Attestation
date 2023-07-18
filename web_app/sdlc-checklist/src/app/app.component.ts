@@ -33,6 +33,7 @@ import { ViewportScroller } from '@angular/common';
 import { filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
+import { AttestationComponent } from './attestation/attestation.component';
 
 interface Catalog {
   uuid: string;
@@ -55,7 +56,7 @@ export class AppComponent {
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   showNav = false;
   openTag = 0;
-  initialFormCompleted = false;
+  initialFormCompleted = new Set<number>();
   showComponents = false;
   showFullFooter = false;
 
@@ -63,7 +64,8 @@ export class AppComponent {
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
   ngOnInit(){
-    this.catalogData = this.attestationService.getdata(0).getCatalogs
+    if (this.attestationService.getdata(0))
+      this.catalogData = this.attestationService.getdata(0).getCatalogs
   }
 
   changePage(page: string, fragment?: string){
@@ -79,17 +81,17 @@ export class AppComponent {
     return this.attestationService.getRawData;
   }
 
-  changeAttestion(position: number){
+  changeAttestation(position: number, fragment?: string){
     this.attestationService.setView(position);
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.attestationService.refresh();
-    this.changePage('attestation-form');
+    this.changePage('attestation-form', fragment);
   }
   
   newForm(){
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
-    this.changeAttestion(newPage)
+    this.changeAttestation(newPage)
   }
 
   deleteForm(position: number){
@@ -155,21 +157,22 @@ export class AppComponent {
     alert(message);
   }
 
-  getSubLinks(formTag: number): Set<{name: string, fragment: string}> {
+  getSubLinks(form: AttestationComponent): Set<{name: string, fragment: string}> {
     let listOLinks: Set<{name: string, fragment: string}> = new Set();
-    this.catalogData.catalogs.forEach((catalog) => {
+    form.getCatalogs.catalogs.forEach((catalog) => {
       listOLinks.add({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid});
     });
     listOLinks.add({name: "Upload new catalog / Generate Report", fragment: "upload"});
     return listOLinks;
   }
 
-  updateFormCompleted(): boolean {
-    if (!this.initialFormCompleted) {
-      if (this.attestationService.getdata(0).submitable())
-        this.initialFormCompleted = true
+  checkFormCompletion(form: AttestationComponent): boolean {
+    if (!this.initialFormCompleted.has(form.getPositionTag)) {
+      if (form.submitable())
+        this.initialFormCompleted.add(form.getPositionTag);
+        console.log('Arrow Time');
     }
-    return this.initialFormCompleted;
+    return this.initialFormCompleted.has(form.getPositionTag);
   }
 }
 
