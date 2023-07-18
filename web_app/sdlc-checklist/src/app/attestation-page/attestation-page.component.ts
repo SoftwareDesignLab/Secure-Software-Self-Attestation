@@ -29,6 +29,7 @@ import catalog from '../defaultCatalog';
 import { AttestationDataService } from '../attestation-data.service';
 import { attestationComment } from '../attestationForm';
 import { CatalogData, Catalog} from '../oscalModel';
+import { ContactService } from '../contact.service';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class AttestationPageComponent {
   selectedValue: string;
   info: any;
 
-  constructor(public attestationService: AttestationDataService){
+  constructor(public attestationService: AttestationDataService, private contactService: ContactService){
       this.selectedValue = attestationService.getdata(0).getSelectedValue;
       this.info = attestationService.getdata(0).getInfo;
       this.catalogData = this.attestationService.getdata(0).getCatalogs;
@@ -67,6 +68,10 @@ export class AttestationPageComponent {
       this.completed=true;
     }
     return this.completed;
+  }
+
+  contactCompleted(){
+    return !this.contactService.isFilled();
   }
 
 
