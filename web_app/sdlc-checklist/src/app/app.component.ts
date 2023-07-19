@@ -70,15 +70,42 @@ export class AppComponent {
       this.catalogData = this.attestationService.getdata(0).getCatalogs
   }
 
-  changePage(page: string, fragment?: string){
+  async changePage(page: string, fragment?: string){
     this.toggleNav();
     if (fragment) {
       this.router.navigate([page], {fragment: fragment});
+      await dela(50);
+      let parent = document.getElementById(fragment);
+      if (parent instanceof HTMLElement) {
+        let newFocus = this.findFirstLandingChildr(parent);
+        if (newFocus instanceof HTMLElement) {
+          console.log("Refocus");
+          newFocus.focus();
+        }
+      }
     } else {
       this.router.navigate([page])
     }
     if (page === "contact-info")
       this.attestationService.pageName = "Contact Info";
+  }
+
+  findFirstLandingChildr(parent: HTMLElement): HTMLElement | null {
+    let children = parent.children;
+    for (let i = 0, max = children.length; i < max; i++) {
+      let child = children[i];
+      if (child instanceof HTMLElement) {
+        if (child.classList.contains('landing'))
+          return child;
+      }
+      if (child instanceof HTMLElement) {
+        let recurse = this.findFirstLandingChildr(child);
+        if (recurse instanceof HTMLElement) {
+          return recurse;
+        }
+      }
+    }
+    return null;
   }
 
   get getForms(){

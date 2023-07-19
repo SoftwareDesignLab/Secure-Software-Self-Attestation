@@ -77,6 +77,11 @@ header {
     display: none;
 }
 
+*:focus {
+    outline: 2px solid #005EA2;
+    box-shadow: 0 0 5px 0 solid #005EA2;
+}
+
 @media screen and (max-width: 1500px) {
     .long-bottom {
         padding-bottom: 20rem;
