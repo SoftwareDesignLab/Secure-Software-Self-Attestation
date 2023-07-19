@@ -19,17 +19,17 @@ class AssessmentPart {
 class TermsAndConditions {
   parts: AssessmentPart[] = [];
 
-  addPart(name: String, title: String, uuid: String, ns: String, class_: String, props: Prop[], prose: String, parts: AssessmentPart[], links: Link[]) {
+  addPart(name: String, title?: String, uuid?: String, ns?: String, class_?: String, props?: Prop[], prose?: String, parts?: AssessmentPart[], links?: Link[]) {
     let newPart = new AssessmentPart();
     newPart.name = name;
-    newPart.title = title;
-    newPart.uuid = uuid;
-    newPart.ns = ns;
-    newPart.class = class_;
-    newPart.props = props;
-    newPart.prose = prose;
-    newPart.parts = parts;
-    newPart.links = links;
+    if (title !== undefined ) newPart.title = title;
+    if (uuid !== undefined ) newPart.uuid = uuid;
+    if (ns !== undefined ) newPart.ns = ns;
+    if (class_ !== undefined ) newPart.class = class_;
+    if (props !== undefined ) newPart.props = props;
+    if (prose !== undefined ) newPart.prose = prose;
+    if (parts !== undefined ) newPart.parts = parts;
+    if (links !== undefined ) newPart.links = links;
     this.parts.push(newPart);
   }
 }
@@ -44,7 +44,7 @@ class ControlID {
   "statement-ids"?: String[];
 }
 
-class ControlSelection {
+export class ControlSelection {
   description?: String;
   props?: Prop[];
   links?: Link[];
@@ -52,6 +52,76 @@ class ControlSelection {
   "include-controls"?: ControlID[];
   "exclude-controls"?: ControlID[];
   remarks?: String;
+
+  constructor(description?: String, props?: Prop[], links?: Link[], includeAll?: Boolean, includeControls?: ControlID[], excludeControls?: ControlID[], remarks?: String) {
+    this.description = description;
+    this.props = props;
+    this.links = links;
+    this["include-all"] = includeAll;
+    this["include-controls"] = includeControls;
+    this["exclude-controls"] = excludeControls;
+    this.remarks = remarks;
+  }
+
+  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+    if (this.props === undefined) this.props = [];
+    let newProp = new Prop();
+    newProp.name = name;
+    newProp.value = value;
+    if (class_ !== undefined) newProp.class = class_;
+    if (uuid !== undefined) newProp.uuid = uuid;
+    if (ns !== undefined) newProp.ns = ns;
+    if (remarks !== undefined) newProp.remarks = remarks;
+    this.props.push(newProp);
+  }
+
+  addLink(href: String, rel?: String) {
+    let link = new Link();
+    link.href = href;
+    if (rel !== undefined) link.rel = rel;
+    if (this.links === undefined) this.links = [];
+    this.links.push(link);
+  }
+
+  addIncludeControl(controlID: String, statementIDs?: String[]) {
+    let newControlID = new ControlID();
+    newControlID["control-id"] = controlID;
+    if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
+    if (this["include-controls"] === undefined) this["include-controls"] = [];
+    this["include-controls"].push(newControlID);
+  }
+
+  removeIncludeControl(controlID: String) {
+    if (this["include-controls"] === undefined) return;
+    let index = this["include-controls"].findIndex(control => control["control-id"] === controlID);
+    if (index > -1) this["include-controls"].splice(index, 1);
+  }
+
+  addExcludeControl(controlID: String, statementIDs?: String[]) {
+    let newControlID = new ControlID();
+    newControlID["control-id"] = controlID;
+    if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
+    if (this["exclude-controls"] === undefined) this["exclude-controls"] = [];
+    this["exclude-controls"].push(newControlID);
+  }
+
+  removeExcludeControl(controlID: String) {
+    if (this["exclude-controls"] === undefined) return;
+    let index = this["exclude-controls"].findIndex(control => control["control-id"] === controlID);
+    if (index > -1) this["exclude-controls"].splice(index, 1);
+  }
+
+  setIncludeAll(includeAll: Boolean) {
+    this["include-all"] = includeAll;
+    this['include-controls'] = undefined;
+    this['exclude-controls'] = undefined;
+  }
+
+  removeProp(name: String, class_: string) {
+    if (this.props === undefined) return;
+    let index = this.props.findIndex(prop => prop.name === name && prop.class === class_);
+    if (index > -1) this.props.splice(index, 1);
+  }
 }
 
 class Link {
@@ -65,6 +135,27 @@ class ReviewedControls {
   links?: Link[];
   description?: String;
   remarks?: String;
+
+  constructor() {
+    this.addControlSelection();
+  }
+
+  addControlSelection(description: String = "", props: Prop[] = [], links: Link[] = [], includeAll: Boolean = false, includeControls: ControlID[] = [], excludeControls: ControlID[] = [], remarks: String = "") {
+    let newControlSelection = new ControlSelection(description, props, links, includeAll, includeControls, excludeControls, remarks);
+    this["control-selections"].push(newControlSelection);
+  }
+
+  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+    if (this.props === undefined) this.props = [];
+    let newProp = new Prop();
+    newProp.name = name;
+    newProp.value = value;
+    newProp.class = class_;
+    newProp.uuid = uuid;
+    newProp.ns = ns;
+    newProp.remarks = remarks;
+    this.props.push(newProp);
+  }
 } 
 
 class Prop {
@@ -91,8 +182,9 @@ class Party {
   addresses?: Address[];
   props?: Prop[];
   remarks?: String;
-  private _first_name?: String;
-  private _last_name?: String;
+  "email-addresses"?: String[];
+  "telephone-numbers"?: String[];
+  links?: Link[];
 
   addAddress(addrlines: String[], city: String, state: String, postal: String, country: String) {
     let newAddress = new Address();
@@ -134,6 +226,36 @@ class Party {
     }
     this.addresses[0].country = country;
   }
+
+  addLink(href: String, rel?: String) {
+    if (this.links === undefined) this.links = [];
+    let newLink = new Link();
+    newLink.href = href;
+    newLink.rel = rel;
+    this.links.push(newLink);
+  }
+
+  addEmailAddress(email: String) {
+    if (this["email-addresses"] === undefined) this["email-addresses"] = [];
+    this["email-addresses"].push(email);
+  }
+
+  addTelephoneNumber(number: String) {
+    if (this["telephone-numbers"] === undefined) this["telephone-numbers"] = [];
+    this["telephone-numbers"].push(number);
+  }
+
+  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+    if (this.props === undefined) this.props = [];
+    let newProp = new Prop();
+    newProp.name = name;
+    newProp.value = value;
+    newProp.class = class_;
+    newProp.uuid = uuid;
+    newProp.ns = ns;
+    newProp.remarks = remarks;
+    this.props.push(newProp);
+  }
 }
 
 class SubjectID {
@@ -166,6 +288,11 @@ class APMetadata {
   addParty(party: Party) {
     this.parties.push(party);
     this.modify();
+  }
+
+  addBlankParty() {
+    let newParty = new Party();
+    this.parties.push(newParty);
   }
 
   modify() {
