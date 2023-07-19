@@ -23,7 +23,7 @@
  */
 import { Injectable } from '@angular/core';
 import { AttestationComponent } from '../attestation/attestation.component';
-import { ControlInfo, GroupInfo } from '../models/catalogModel';
+import { ControlAttestation, GroupInfo } from '../models/catalogModel';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +33,8 @@ export class AttestationDataService {
 
   private forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
-  private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
-  private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
+  private controlMap: Map<String, ControlAttestation> = new Map<String, ControlAttestation>
+  private groupMap: Map<String, GroupInfo> = new Map<String, ControlAttestation>
 
   constructor() {
     this.forms.push(new AttestationComponent)
@@ -65,12 +65,12 @@ export class AttestationDataService {
 
   // Control Methods 
 
-  setUpControl(UID: String): ControlInfo | undefined{
+  setUpControl(UID: String): ControlAttestation | undefined{
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
     }
     else{
-     let info = new ControlInfo();
+     let info = new ControlAttestation();
      this.controlMap.set(UID, info);
      return info;
     }

@@ -23,7 +23,7 @@
  */
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { ControlInfo } from '../models/catalogModel';
+import { ControlAttestation } from '../models/catalogModel';
 import { timeInterval } from 'rxjs';
 
 @Component({
@@ -45,7 +45,7 @@ export class ChecklistItemComponent {
   @Output() update = new EventEmitter();
   selection: String = "no-selection";
   showRollable = false;
-  info!: ControlInfo; 
+  info!: ControlAttestation; 
   UID: any; //Unique ID for this control for the program
   comment: String = "";
   popup: Boolean = false;

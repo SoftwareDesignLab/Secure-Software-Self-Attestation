@@ -107,7 +107,7 @@ import { ChecklistItemComponent } from '../control/control.component';
     }
 
 
-    export class ControlInfo {
+    export class ControlAttestation {
         comment: String;
         selection: String;
         finalized: Boolean = false;
