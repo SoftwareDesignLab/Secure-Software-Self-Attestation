@@ -26,7 +26,7 @@
   </div>
 </div>
 
-<div class="catalogs" *ngIf="AttestationCompleted()">
+<div class="catalogs">
   <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
     <app-catalog-info [uuid]="catalog.uuid" [metadata]="catalog.metadata" *ngIf="catalog" [id]="'catalog-flag-' + catalog.uuid"></app-catalog-info>
     <div class="button-panel">
