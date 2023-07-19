@@ -137,6 +137,7 @@ nav {
   padding: 0;
   border-left: 1px solid gray;
   grid-column: 1/5;
+
 }
 
 .list-grid>a {
@@ -145,6 +146,12 @@ nav {
 
 .list-grid ul a {
   padding-left: 20px;
+  color: rgb(25, 10, 77);
+  text-decoration: none;
+  position: relative;
+  animation: treeItemFadeIn 300ms;
+  animation-delay: calc(var(--order) * 70ms);
+  animation-fill-mode: backwards;
 }
 
 .list-grid {
@@ -185,6 +192,11 @@ nav input {
 @keyframes navClosing {
   from {right: 0vw;}
   to {right: -400px;}
+}
+
+@keyframes treeItemFadeIn {
+  from {top: -20px; opacity: 0}
+  to {top: 0; opacity: 1}
 }
 
 .prepend-up-arrow::before {

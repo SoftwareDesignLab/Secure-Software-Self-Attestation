@@ -34,6 +34,7 @@ import { delay, filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { AttestationComponent } from './attestation/attestation.component';
+import { TemplateLiteral } from '@angular/compiler';
 
 interface Catalog {
   uuid: string;
@@ -168,13 +169,14 @@ export class AppComponent {
     alert(message);
   }
 
-  getSubLinks(form: AttestationComponent): Set<{name: string, fragment: string}> {
-    let listOLinks: Set<{name: string, fragment: string}> = new Set();
-    listOLinks.add({name: "Secure Software Development Attestation Form", fragment: "attestation"})
+  getSubLinks(form: AttestationComponent): Array<{name: string, fragment: string, position: number}> {
+    let listOLinks: Array<{name: string, fragment: string, position: number}> = [];
+    let i = 0;
+    listOLinks.push({name: "Secure Software Development Attestation Form", fragment: "attestation", position: i++})
     form.getCatalogs.catalogs.forEach((catalog) => {
-      listOLinks.add({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid});
+      listOLinks.push({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid, position: i++});
     });
-    listOLinks.add({name: "Upload new catalog / Generate Report", fragment: "upload"});
+    listOLinks.push({name: "Upload new catalog / Generate Report", fragment: "upload", position: i++});
     return listOLinks;
   }
 
@@ -200,6 +202,11 @@ export class AppComponent {
 
   getPageName(): string {
     return this.attestationService.pageName;
+  }
+
+
+  range(num: number): Array<number> {
+    return Array.from(Array(num).keys())
   }
 }
 

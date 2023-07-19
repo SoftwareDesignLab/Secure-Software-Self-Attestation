@@ -24,7 +24,7 @@
         <button class="nav-button delete" (click)="deleteForm(form.getFormPosition)" (keydown.enter)="deleteForm(form.getFormPosition)" [tabindex]="showNav ? 0 : -1"> Delete </button>
         <ul *ngIf="openTag === form.getPositionTag">
           <li *ngFor="let subLink of getSubLinks(form)">
-            <a routerLink="attestation-form" (click)="changeAttestation(form, subLink.fragment)" (keydown.enter)="changeAttestation(form, subLink.fragment)" [tabindex] = "openTag === form.getPositionTag ? 0 : -1">{{subLink.name}}</a>
+            <a routerLink="attestation-form" [style]="'--order: ' + subLink.position" (click)="changeAttestation(form, subLink.fragment)" (keydown.enter)="changeAttestation(form, subLink.fragment)" [tabindex] = "openTag === form.getPositionTag ? 0 : -1">{{subLink.name}}</a>
           </li>
         </ul>
       </li>
