@@ -100,6 +100,7 @@ export class AppComponent {
   }
 
   deleteForm(position: number){
+    this.openTag = 0;
     this.attestationService.setDeletionPosition(position)
     let firsthalf = this.attestationService.forms.slice(0,position);
     let secondhalf = this.attestationService.forms.slice(position+1)
@@ -182,6 +183,7 @@ export class AppComponent {
 
   async renameForm(form: AttestationComponent) {
     this.renaming = form.getPositionTag;
+    this.openTag = 0;
     await dela(50);
     let input = document.getElementById("renaming-input");
     if (input instanceof HTMLInputElement) {
