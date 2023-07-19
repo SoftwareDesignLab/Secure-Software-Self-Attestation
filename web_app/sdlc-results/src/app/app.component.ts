@@ -34,6 +34,7 @@ export class AppComponent {
   assessmentResults: AssessmentResults | undefined;
   showFullFooter: boolean = false;
   showNav = false;
+  poamMode = false;
 
   onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
     this.assessmentResults = jsonData["assessment-results"];
@@ -55,5 +56,10 @@ export class AppComponent {
         nav.classList.remove('nav-opening');
       }
     }
+  }
+
+  poam(state: boolean): void {
+    this.toggleNav();
+    this.poamMode = state;
   }
 }

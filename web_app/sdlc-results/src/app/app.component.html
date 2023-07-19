@@ -11,18 +11,26 @@
   <div class="expanded-nav">
     <h2>SDLC</h2>
     <ul>
+      <li><a (click)="poam(false)">Attestation Results</a></li>
+      <li><a (click)="poam(true)">POA&amp;M</a></li>
     </ul>
   </div>
 </nav>
 
-<div *ngIf="assessmentResults !== undefined">
-  <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
-  <div *ngFor="let result of assessmentResults.results">
-    <app-result [result]="result"></app-result>
+<div *ngIf="!poamMode">
+  <div *ngIf="assessmentResults !== undefined">
+    <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
+    <div *ngFor="let result of assessmentResults.results">
+      <app-result [result]="result"></app-result>
+    </div>
   </div>
+
+  <app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
 </div>
 
-<app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
+<div *ngIf="poamMode">
+  <p class="pane" style="text-align: center;">I have no clue what the hell is supposed to go here</p>
+</div>
 
 <footer>
   <p [hidden]="showFullFooter">
