@@ -25,7 +25,7 @@ import { GroupComponent } from '../group/group.component'
 import { ChecklistItemComponent } from '../control/control.component';
 
 
-    export interface OscalFileFormat {
+    export interface CatalogFileFormat {
         catalog: Catalog;
     }
 

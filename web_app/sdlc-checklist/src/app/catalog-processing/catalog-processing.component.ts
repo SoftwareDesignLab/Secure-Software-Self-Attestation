@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { OscalFileFormat, metaData, Catalog } from '../models/catalogModel';
+import { CatalogFileFormat, metaData, Catalog } from '../models/catalogModel';
 import { notifyService } from '../services/notify.service';
 
 
@@ -84,7 +84,7 @@ export class CatalogProcessingComponent {
   }
 
   private isNested(data: object): boolean{
-    let oscalObj = data as OscalFileFormat;
+    let oscalObj = data as CatalogFileFormat;
     if(oscalObj.catalog != undefined){
         return true;
     }
