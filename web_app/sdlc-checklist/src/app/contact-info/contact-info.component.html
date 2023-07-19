@@ -18,7 +18,6 @@
         <input id="zip" type="text" (keyup)="updatePostal($event)" value="{{contactService.postalCode}}" autocomplete="postal-code" >
         <label for="website">Website: </label>
         <input id="website" type="url" (keyup)="updateWebsite($event)" value="{{contactService.website}}" autocomplete="url">
-        
       </div>
       <div class="center-line"></div>
       <div class="form-column">
@@ -50,7 +49,7 @@
 
 </div>
 <div class="bot-right">
-  <button  class="blue" *ngIf="visitedAttestation()"  (click)="changePage('attestation-form')">Procceed to Attestation Form</button>
-  <button class="green" *ngIf="!visitedAttestation()"  (click)="changePage('attestation-form')">+ New Attestation</button>
+  <button  class="blue" *ngIf="checkAttestations()"  (click)="lastAttestation()">Proceed to Attestation Form</button>
+  <button class="green" *ngIf="!checkAttestations()"  (click)="newForm()">+ New Attestation</button>
 </div>
 

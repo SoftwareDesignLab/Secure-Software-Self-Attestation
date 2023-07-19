@@ -33,6 +33,8 @@
 .catalog-container {
   display: grid;
   grid-template-columns: auto 225px;
+  width: clamp(450px, 80vw, 1100px);
+  margin: 30px auto;
 }
 
 .hidden {
@@ -94,6 +96,8 @@
 .attestation {
   padding: 20px;
   padding-top: 10px;
+  width: clamp(500px, 80vw, 1200px);
+  margin: 30px auto;
 }
 
 .table-section {
@@ -194,6 +198,8 @@ tr:last-child td {
   display: grid;
   grid-template-columns: 50% 50%;
   position: relative;
+  width: clamp(550px, 95vw, 1400px);
+  margin: 30px auto;
 }
 
 .restore-container {

@@ -30,7 +30,7 @@ nav {
   display: grid;
   grid-template-columns: auto auto;
   z-index: 3;
-  right: -20vw;
+  right: -400px;
 }
 
 .nav-opening {
@@ -42,7 +42,7 @@ nav {
 .nav-closing {
   animation-name: navClosing;
   animation-duration: .5s;
-  right: -20vw;
+  right: -400px;
 }
 
 .nav-icon {
@@ -78,7 +78,7 @@ nav {
 }
 
 .expanded-nav {
-  width: 20vw;
+  width: 400px;
   height: 100vh;
   background-color: white;
   border-left: 2px solid black;
@@ -88,33 +88,26 @@ nav {
 
 .expanded-nav ul {
   list-style: none;
-  padding: 20px;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
 }
 
-.expanded-nav li {
-  display: flex;
+.expanded-nav>ul>li {
   margin: 0;
   padding: 0;
   border-bottom: 1px solid black;
+  text-align: left;
 }
 
-.expanded-nav li:nth-child(1) {
+.expanded-nav>ul>li:first-child {
   border-top: 1px solid black;
-  padding-left: 40px;
-}
-.expanded-nav ul.tree-branch {
-  border-top: 1px solid black;
-  padding-left: 40px;
-  background-color: #FFFFFF;
 }
 
 .expanded-nav a {
   padding: 15px 10px;
   margin: 0;
-  position: relative;
-  display: inline-block;
+  display: block;
   text-indent: 20px;
 }
 
@@ -124,8 +117,46 @@ nav {
   margin: 25px 0;
 }
 
-.expanded-nav li:hover {
+.expanded-nav a:hover {
   background-color: #EFF2F4;
+}
+
+.list-grid p {
+  font-size: larger;
+  padding: 10px 10px 10px 9px;
+  margin: 0;
+  display: inline;
+}
+
+.list-grid p:hover {
+  background-color: #EFF2F4;
+}
+
+.list-grid ul {
+  margin: 0 0 18px 18px;
+  padding: 0;
+  border-left: 1px solid gray;
+  grid-column: 1/5;
+
+}
+
+.list-grid>a {
+  text-indent: 15px;
+}
+
+.list-grid ul a {
+  padding-left: 20px;
+  color: rgb(25, 10, 77);
+  text-decoration: none;
+  position: relative;
+  animation: treeItemFadeIn 300ms;
+  animation-delay: calc(var(--order) * 70ms);
+  animation-fill-mode: backwards;
+}
+
+.list-grid {
+  display: grid;
+  grid-template-columns: 40px 200px 80px 80px;
 }
 
 .bottom {
@@ -135,7 +166,7 @@ nav {
   margin: 0;
   background-color: #005EA2;
   color: white;
-  width: 20vw;
+  width: 400px;
   text-indent: -20px;
   user-select: none;
   cursor: pointer;
@@ -145,25 +176,63 @@ nav {
   background-color: #003a63;
 }
 
+nav input {
+  padding: 15px 10px 15px 25px;
+  outline: none;
+  border: 0;
+  font-size: 12pt;
+  font-family: roboto, "Helvetica Neue", sans-serif;
+}
+
 @keyframes navOpening {
-  from {right: -20vw;}
+  from {right: -400px;}
   to {right: 0vw;}
 }
 
 @keyframes navClosing {
   from {right: 0vw;}
-  to {right: -20vw;}
+  to {right: -400px;}
 }
 
-.prependUpArrow::before {
+@keyframes treeItemFadeIn {
+  from {top: -20px; opacity: 0}
+  to {top: 0; opacity: 1}
+}
+
+.prepend-up-arrow::before {
   content: "▲ "
 }
-.prependDownArrow::before {
+
+.prepend-down-arrow::before {
   content: "▼ "
 }
 
 .tree-root {
-  display:flex
+  display:flex;
+  cursor:pointer;
+}
+
+.add{
+  padding: 20px 0;
+  text-align: center;
+  margin: 0;
+  background-color: rgb(4,170, 109);
+  color: white;
+  user-select: none;
+  cursor: pointer;
+}
+
+.add:hover{
+  background-color: rgb(0,150, 89);
+}
+
+.tree-root p{
+  padding: 15px 10px;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  text-indent: 20px;
+  max-width: 12vw;
 }
 
 footer span {
@@ -177,3 +246,63 @@ footer p {
   margin: 10px 30px;
 }
 
+a {
+  cursor: pointer;
+}
+
+.nav-button {
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, .4);
+}
+
+.nav-button:hover {
+  box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .6);
+}
+
+.delete{
+  background-color: rgb(161, 41, 41);
+}
+
+.delete:hover{
+  background-color:rgb(97, 20, 20);
+}
+
+.rename{
+  background-color: #005EA2;
+}
+
+.rename:hover{
+  background-color: #003a63;
+}
+
+.confirm{
+  background-color: rgb(4,170, 109);
+}
+
+.confirm:hover {
+  background-color: rgb(0,150, 89);
+}
+
+.right{
+  justify-content: right;
+  width: 10vw;
+  float: right;
+  min-width:6vw;
+}
+
+#page-title {
+  margin: 0 auto;
+  padding: 5px 50px;
+  background-color: lightgray;
+  border-radius: 0 0 5px 5px;
+  display: inline-block;
+  font-weight: 400;
+  font-size: larger;
+}
