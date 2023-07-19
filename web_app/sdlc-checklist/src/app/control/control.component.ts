@@ -40,7 +40,7 @@ export class ChecklistItemComponent {
   @Input() parts: any;
   @Input() links: any;
   @Input() props: any;
-  @Input() controls: any;
+  @Input() controls?: ChecklistItemComponent[];
   @Input() catalogUUID: any;
   @Output() update = new EventEmitter();
   selection: String = "no-selection";

@@ -35,7 +35,7 @@ export class GroupComponent {
   @Input() id: any;
   @Input() title: any;
   @Input() description: any;
-  @Input() controls: any;
+  @Input() controls?: ChecklistItemComponent[];
   @Input() catalogUUID: any;
   @ViewChildren(ChecklistItemComponent) childComponents!: QueryList<ChecklistItemComponent>;
   showComponents = true;
