@@ -1,7 +1,7 @@
 <simple-notifications></simple-notifications>
 
 <header>
-  <h1>SDLC Checklist</h1>
+  <h1>Secure Software Development Attestation Form</h1>
   <h2 id="page-title">{{ getPageName() }}</h2>
 </header>
 
@@ -12,7 +12,7 @@
     <div class="hamburger-line"></div>
   </div>
   <div class="expanded-nav">
-    <h2>SDLC</h2>
+    <h2>Attestations</h2>
     <ul>
       <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
       <li class="list-grid" *ngFor="let form of getForms">
