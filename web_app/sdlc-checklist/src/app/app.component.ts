@@ -21,20 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
 */
-import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, ViewChildren, QueryList, ViewChild, NgModule } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
-import { Router, NavigationEnd  } from '@angular/router';
+import { Router, NavigationEnd, RouterModule  } from '@angular/router';
 import { AttestationDataService } from './attestation-data.service';
 import { notifyService } from './notify.service';
 import { ChecklistItemComponent } from './control/control.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { ViewportScroller } from '@angular/common';
-import { filter, takeUntil  } from 'rxjs/operators';
+import { delay, filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
-
-
-
+import { AttestationPageComponent } from './attestation-page/attestation-page.component';
+import { AttestationComponent } from './attestation/attestation.component';
+import { TemplateLiteral } from '@angular/compiler';
 
 interface Catalog {
   uuid: string;
@@ -47,6 +47,8 @@ interface CatalogData {
   catalogs: Catalog[];
 }
 
+const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -54,63 +56,109 @@ interface CatalogData {
 })
 export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
-  showComponentsArray: any;
-  hiddenCatalogs = new Set<String>();
-  @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
-  control: string = "Ungrouped Controls";
   showNav = false;
+  openTag = 0;
+  renaming = 0;
   showComponents = false;
   showFullFooter = false;
 
-
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
- ngOnInit(){
-  this.catalogData = this.attestationService.getdata(0).getCatalogs
-
- }
-
-  changePage(page: string){
-    this.toggleNav();
-    this.router.navigate([page]);
+  ngOnInit(){
+    if (this.attestationService.getdata(0))
+      this.catalogData = this.attestationService.getdata(0).getCatalogs
   }
 
-
-  // Experimental Navtree change page method, Does not work as intended
-
-
-  /*
-  gotoLocation(page: string, location: string) {
-
+  async changePage(page: string, fragment?: string){
     this.toggleNav();
+    if (fragment) {
+      this.router.navigate([page], {fragment: fragment});
+      await dela(50);
+      let parent = document.getElementById(fragment);
+      if (parent instanceof HTMLElement) {
+        let newFocus = this.findFirstLandingChildr(parent);
+        if (newFocus instanceof HTMLElement) {
+          console.log("Refocus");
+          newFocus.focus();
+        }
+      }
+    } else {
+      this.router.navigate([page])
+    }
+    if (page === "contact-info")
+      this.attestationService.pageName = "Contact Info";
+  }
+
+  findFirstLandingChildr(parent: HTMLElement): HTMLElement | null {
+    let children = parent.children;
+    for (let i = 0, max = children.length; i < max; i++) {
+      let child = children[i];
+      if (child instanceof HTMLElement) {
+        if (child.classList.contains('landing'))
+          return child;
+      }
+      if (child instanceof HTMLElement) {
+        let recurse = this.findFirstLandingChildr(child);
+        if (recurse instanceof HTMLElement) {
+          return recurse;
+        }
+      }
+    }
+    return null;
+  }
+
+  get getForms(){
+    return this.attestationService.getRawData;
+  }
+
+  changeAttestation(form: AttestationComponent, fragment?: string){
+    this.attestationService.pageName = form.getName();
+    this.attestationService.setView(form.getFormPosition);
+    this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
+    this.attestationService.refresh();
+    this.changePage('attestation-form', fragment);
+  }
   
-    const unsubscribe$ = new Subject<void>();
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        takeUntil(unsubscribe$)
-      )
-      .subscribe(() => {
-        setTimeout(() => {
-          const element = document.getElementById(location);
-          if (element) {
-            element.scrollIntoView({ behavior: 'auto' });
-          }
-          unsubscribe$.next(); // Unsubscribe after the first navigation
-          unsubscribe$.complete();
-        }, 0);
+  newForm(){
+    this.attestationService.addform();
+    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1);
+    this.changeAttestation(newPage);
+  }
+
+  deleteForm(position: number){
+    this.openTag = 0;
+    this.attestationService.setDeletionPosition(position)
+    let firsthalf = this.attestationService.forms.slice(0,position);
+    let secondhalf = this.attestationService.forms.slice(position+1)
+    this.attestationService.forms[position].deleteAll();
+    if((position)===this.attestationService.getView){
+      this.setNav(true);
+      this.attestationService.pageName = "Contact Info";
+      this.changePage('contact-info');
+    }
+    this.attestationService.forms = firsthalf.concat(secondhalf);
+    
+    if(this.attestationService.getRawData.length>0){
+      this.attestationService.setView(0);
+      let newPos = 0;
+      this.attestationService.forms.forEach(child => {
+        child.setFormPosition(newPos);
+        newPos = newPos+1;
       });
-  
-    this.router.navigate([page]);
-  
+    }
+    else{
+      this.attestationService.setView(-1);
+    }
+    
   }
-  */
-
-
 
   toggleNav(): void {
-    this.showNav = !this.showNav;
+    this.setNav(!this.showNav);
+  }
+
+  setNav(state: boolean): void {
+    this.showNav = state;
     let nav = document.getElementById('nav');
     if (nav instanceof HTMLElement) {
       if (this.showNav) {
@@ -119,58 +167,26 @@ export class AppComponent {
       } else {
         nav.classList.add('nav-closing');
         nav.classList.remove('nav-opening');
+        this.openTag = 0;
+        this.renaming = 0;
       }
     }
   }
 
-  getLinkName(catalog: Catalog): String {
+  toggleNavTree(formTag: number): void {
+    if (this.openTag === formTag) {
+      this.openTag = 0;
+    } else {
+      this.openTag = formTag;
+    }
+  }
+
+  getLinkName(catalog: Catalog): string {
     let metadata: any = catalog.metadata;
     if (metadata.title) {
       return metadata.title;
     }
     return catalog.uuid;
-  }
-
-  toggleExpansion(uuid: String): void {
-    if (this.hiddenCatalogs.has(uuid)) {
-      this.hiddenCatalogs.delete(uuid);
-    } else {
-      this.hiddenCatalogs.add(uuid);
-    }
-  }
-
-  isShown(uuid: String): boolean {
-    return !this.hiddenCatalogs.has(uuid);
-  }
-
-  removeCatalog(uuid: String): void {
-    let catalogs = this.catalogData.catalogs;
-    console.log("Removing " + uuid);
-    catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1);
-  }
-
-  restoreDefaultCatalog(): void {
-    this.catalogData.catalogs.unshift(catalog as Catalog);   
-  }
-  
-  isDefaultPresent(): boolean {
-    let index = this.catalogData.catalogs.findIndex((value)=>{return value.uuid === catalog.uuid});
-    return index >= 0;
-  }
-
-  visitedAttestation(){
-    if(this.attestationService.checkVisited()){
-      return true
-    }
-    return false;
-  }
-
-  showNavTree(){
-    return(this.attestationService.getdata(0).submitable());
-  }
-
-  toggleComponents(){
-    this.showComponents = !this.showComponents;
   }
 
   toggleFooter() {
@@ -179,6 +195,47 @@ export class AppComponent {
 
   alert(message: string) {
     alert(message);
+  }
+
+  getSubLinks(form: AttestationComponent): Array<{name: string, fragment: string, position: number}> {
+    let listOLinks: Array<{name: string, fragment: string, position: number}> = [];
+    let i = 0;
+    listOLinks.push({name: "Secure Software Development Attestation Form", fragment: "attestation", position: i++})
+    form.getCatalogs.catalogs.forEach((catalog) => {
+      listOLinks.push({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid, position: i++});
+    });
+    listOLinks.push({name: "Upload new catalog / Generate Report", fragment: "upload", position: i++});
+    return listOLinks;
+  }
+
+  async renameForm(form: AttestationComponent) {
+    this.renaming = form.getPositionTag;
+    this.openTag = 0;
+    await dela(50);
+    let input = document.getElementById("renaming-input");
+    if (input instanceof HTMLInputElement) {
+      input.select();
+    }
+  }
+
+  confirmName(form: AttestationComponent) {
+    let input = document.getElementById("renaming-input");
+    if (input instanceof HTMLInputElement) {
+      form.setName(input.value);
+      this.renaming = 0;
+      if (form === this.attestationService.getCurrentForm) {
+        this.attestationService.pageName = form.getName();
+      }
+    }
+  }
+
+  getPageName(): string {
+    return this.attestationService.pageName;
+  }
+
+
+  range(num: number): Array<number> {
+    return Array.from(Array(num).keys())
   }
 }
 
