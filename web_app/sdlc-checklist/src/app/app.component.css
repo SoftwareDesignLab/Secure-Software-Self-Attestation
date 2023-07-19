@@ -104,11 +104,6 @@ nav {
   border-top: 1px solid black;
   padding-left: 40px;
 }
-.expanded-nav ul.tree-branch {
-  border-top: 1px solid black;
-  padding-left: 40px;
-  background-color: #FFFFFF;
-}
 
 .expanded-nav a {
   padding: 15px 10px;

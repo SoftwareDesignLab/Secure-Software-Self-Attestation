@@ -1,13 +1,29 @@
 <header>
   <h1>SDLC Checklist</h1>
 </header>
+
+<nav id="nav">
+  <div class="nav-icon" (click)="toggleNav()" (keydown.enter)="toggleNav()" tabindex=0>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+  </div>
+  <div class="expanded-nav">
+    <h2>SDLC</h2>
+    <ul>
+    </ul>
+  </div>
+</nav>
+
 <div *ngIf="assessmentResults !== undefined">
   <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
   <div *ngFor="let result of assessmentResults.results">
     <app-result [result]="result"></app-result>
   </div>
 </div>
+
 <app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
+
 <footer>
   <p [hidden]="showFullFooter">
     &copy;2023 Rochester Institute of Technology (RIT). Developed with government support under contract 70RSAT19CB0000020 
