@@ -68,9 +68,9 @@
   </div>
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-    <div class="generate-report-div">
+    <div class="generate-report-outer-div">
       <button class="save-progress" (click)="alert('This would save progress, but right now it\'s useless')">Save Attestation</button>
-      <div class="generate-report">
+      <div class="generate-report-inner-div">
         <button class="generate-report-button" *ngIf="catalogData" [disabled]="contactCompleted()"> Generate Report</button>
         <button class="missing-info" *ngIf="contactCompleted()" disabled>
           !
