@@ -28,7 +28,6 @@ import { Router, NavigationEnd, RouterModule  } from '@angular/router';
 import { AttestationDataService } from './attestation-data.service';
 import { notifyService } from './notify.service';
 import { ChecklistItemComponent } from './control/control.component';
-import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { ViewportScroller } from '@angular/common';
 import { delay, filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
@@ -56,7 +55,6 @@ const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 })
 export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
-  @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   showNav = false;
   openTag = 0;
   renaming = 0;

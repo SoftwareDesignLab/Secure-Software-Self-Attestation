@@ -26,6 +26,7 @@ import { AttestationComponent } from './attestation/attestation.component';
 import { ControlInfo, GroupInfo } from './oscalModel';
 
 import { BehaviorSubject, Subject } from 'rxjs';
+import { notifyService } from './notify.service';
 
 @Injectable({
   providedIn: 'root'
@@ -88,7 +89,7 @@ export class AttestationDataService {
   }
 
   addform(){
-    this.forms.push(new AttestationComponent(this));
+    this.forms.push(new AttestationComponent(this, ));
     let position = this.forms.length-1;
     this.forms[position].setPositionTag(this.tag);
     this.forms[position].setFormPosition(position);
