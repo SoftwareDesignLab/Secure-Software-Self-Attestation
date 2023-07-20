@@ -43,7 +43,7 @@ import { AttestationPageComponent } from './attestation-page/attestation-page.co
 import { ContactService } from './services/contact.service';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AttestationDataService } from './services/attestation-data.service';
-import { StartUpService, startUpFactory } from './start-up.service';
+import { StartUpService, startUpFactory } from './services/start-up.service';
 
 
 @NgModule({
