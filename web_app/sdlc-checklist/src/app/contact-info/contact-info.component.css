@@ -3,7 +3,8 @@
 form {
   display: grid;
   grid-template-columns: 50% 1px 50%;
-  margin: 0px 20vw;
+  margin: 0px auto;
+  width: clamp(300px, 60vw, 800px);
 }
 
 .form-column {
@@ -31,7 +32,6 @@ input {
 }
 
 input:hover {
-  background-color: rgb(228, 245, 252);
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, .25);
   border: 1px solid darkgray;
 }
@@ -60,9 +60,6 @@ label {
 @media screen and (max-width: 1000px) {
   .form-column {
     display: block;
-  }
-  form {
-    margin: 0 10vw;
   }
 }
 

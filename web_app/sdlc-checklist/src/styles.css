@@ -51,15 +51,14 @@ footer {
 h1 {
     font-size: xx-large;
     color: white;
-    padding: 10px;
+    padding: 10px 0;
     margin: 0;
     font-family: Georgia, Arial, Helvetica, sans-serif;
-}
-
-header {
     background-color: black;
     margin: 0;
-    width: 100%
+    width: 100%;
+    text-align: left;
+    text-indent: 10px;
 }
 
 body {
@@ -70,8 +69,17 @@ body {
     position: relative;
 }
 
+header {
+    text-align: center;
+}
+
 .hidden {
     display: none;
+}
+
+*:focus {
+    outline: 2px solid #005EA2;
+    box-shadow: 0 0 5px 0 solid #005EA2;
 }
 
 @media screen and (max-width: 1500px) {
