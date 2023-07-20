@@ -273,6 +273,18 @@ nav input {
   font-size: larger;
 }
 
+a {
+  cursor: pointer;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  background-color: lightgray;
+  min-height: 2.5rem;
+  width: 100%;
+}
+
 footer span {
   color: #005EA2;
   text-decoration: underline;
@@ -284,6 +296,24 @@ footer p {
   margin: 10px 30px;
 }
 
-a {
-  cursor: pointer;
+.long-bottom {
+  padding-bottom: 15rem;
+}
+
+@media screen and (max-width: 1500px) {
+  .long-bottom {
+      padding-bottom: 20rem;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .long-bottom {
+      padding-bottom: 25rem;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .long-bottom {
+      padding-bottom: 30rem;
+  }
 }

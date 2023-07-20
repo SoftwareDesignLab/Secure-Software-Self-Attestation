@@ -73,11 +73,6 @@ label {
   z-index: 2;
 }
 
-a {
-  text-align: right;
-  cursor: pointer;
-}
-
 .green{
   background-color: rgb(4,170, 109);
   color: white;
