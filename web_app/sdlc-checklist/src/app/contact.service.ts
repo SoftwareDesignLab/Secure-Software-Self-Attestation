@@ -27,13 +27,15 @@ export class ContactService {
 
 
 
-  // Checks if contact form has acceptable amount of info 
-  isFilled(){
+  /**
+   *  Checks if contact form has acceptable amount of info 
+   * @returns whether the manditory sections are complete
+   */
+  isFilled(): boolean{
     return(
       this.companyName !== "" &&
       this.companyAddress !== "" &&
       this.city !== "" &&
-      this.state !== "" &&
       this.postalCode !== "" &&
       this.country !== "" &&
       this.website !== "" &&
@@ -42,7 +44,6 @@ export class ContactService {
       this.title !== "" &&
       this.personalAddress !== "" &&
       this.personalCity !== "" &&
-      this.personalState !== "" &&
       this.personalCountry !== "" &&
       this.phone !== "" &&
       this.email !== ""
