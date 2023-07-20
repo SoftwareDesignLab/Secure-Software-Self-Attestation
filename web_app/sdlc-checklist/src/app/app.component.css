@@ -306,3 +306,7 @@ a {
   font-weight: 400;
   font-size: larger;
 }
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, .4);
+}

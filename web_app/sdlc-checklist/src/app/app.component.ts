@@ -68,6 +68,10 @@ export class AppComponent {
   ngOnInit(){
     if (this.attestationService.getdata(0))
       this.catalogData = this.attestationService.getdata(0).getCatalogs
+    let dialog = document.getElementById("terms-and-conditions");
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.showModal();
+    }
   }
 
   async changePage(page: string, fragment?: string){
