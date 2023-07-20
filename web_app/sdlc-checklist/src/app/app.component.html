@@ -1,56 +1,77 @@
 <simple-notifications></simple-notifications>
 
 <header>
-  <h1>SDLC Checklist</h1>
+  <h1>Secure Software Development Attestation Form</h1>
+  <h2 id="page-title">{{ getPageName() }}</h2>
 </header>
 
 <nav id="nav">
-  <div class="nav-icon" (click)="toggleNav()">
+  <div class="nav-icon" (click)="toggleNav()" (keydown.enter)="toggleNav()" tabindex=0>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
   </div>
   <div class="expanded-nav">
-    <h2>SDLC</h2>
+    <h2>Attestations</h2>
     <ul>
-      <li><a routerlink="contact-info" (click)="changePage('contact-info')">Software Producer Information / Primary Contact Form</a></li>
-      <li *ngIf="visitedAttestation()">
-        <div>
-          <div class="tree-root">
-          <a routerlink="attestation-form" (click)="changePage('attestation-form')">Attestation Form 1</a>
-          <div>
-            <!-- Nav Tree Code, Disabled for now, Check Issue for more info  -->
-            <!-- h4  *ngIf="showNavTree()" (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'"></h4> -->
-          </div>
-        </div>
-      </div>
-      </li>
-
-      <li class="add" *ngIf="!visitedAttestation()"><a routerlink="attestation-form" (click)="changePage('attestation-form')">+ New Attestation</a></li>
-      
-      <!--  Nav Tree Code, Disabled for now, Check Issue for more info
-
-      <li>
-      <div>
-      <br>
-        <ul class="tree-branch" *ngIf="showComponents" >        
-          <li  *ngFor="let catalog of catalogData.catalogs">
-            <a [routerLink]="['/attestation-form']" fragment="upload" (click)="gotoLocation('attestation-form', catalog.uuid)">{{getLinkName(catalog)}}</a>
+      <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
+      <li class="list-grid" *ngFor="let form of getForms">
+        <p [className]="openTag === form.getPositionTag ? 'prepend-down-arrow arrow' : 'prepend-up-arrow arrow'" (click)="toggleNavTree(form.getPositionTag)" (keydown.enter)="toggleNavTree(form.getPositionTag)" [tabindex]="showNav ? 0 : -1"></p>
+        <input [tabindex]="showNav ? 0 : -1" *ngIf="renaming === form.getPositionTag" (keydown.enter)="confirmName(form)" [value]="form.getName()" id="renaming-input">
+        <a routerlink="attestation-form" (click)="changeAttestation(form)" (keydown.enter)="changeAttestation(form)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming !== form.getPositionTag">{{ form.getName() }}</a>
+        <button class="nav-button rename" (click)="renameForm(form)" (keydown.enter)="renameForm(form)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming !== form.getPositionTag"> Rename </button>
+        <button class="nav-button confirm" (click)="confirmName(form)" (keydown.enter)="confirmName(form)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming === form.getPositionTag"> Confirm </button>
+        <button class="nav-button delete" (click)="deleteForm(form.getFormPosition)" (keydown.enter)="deleteForm(form.getFormPosition)" [tabindex]="showNav ? 0 : -1"> Delete </button>
+        <ul *ngIf="openTag === form.getPositionTag">
+          <li *ngFor="let subLink of getSubLinks(form)">
+            <a routerLink="attestation-form" [style]="'--order: ' + subLink.position" (click)="changeAttestation(form, subLink.fragment)" (keydown.enter)="changeAttestation(form, subLink.fragment)" [tabindex] = "openTag === form.getPositionTag ? 0 : -1">{{subLink.name}}</a>
           </li>
-          <li><a [routerLink]="['/attestation-form']" fragment="upload" (click)="gotoLocation('attestation-form',  'upload')">Upload or Generate Report</a></li>
         </ul>
-      </div>
       </li>
-      -->
-       
+      <li><p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
     </ul>
     <p class="bottom" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
   </div>
 </nav>
 
-<main>
+<main [className]="showFullFooter ? 'long-bottom' : ''">
   <router-outlet></router-outlet>
 </main>
 
-
+<footer>
+  <p [hidden]="showFullFooter">
+  &copy;2023 Rochester Institute of Technology (RIT). Developed with government support under contract 70RSAT19CB0000020 
+  awarded by the United States Department of Homeland Security. 
+  Click <span (click)="toggleFooter()" tabindex=0 (keydown.enter)="toggleFooter()">here</span> to see more.
+  </p>
+  <p [hidden]="!showFullFooter">
+    Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+    government support under contract 70RSAT19CB0000020 awarded by the United
+    States Department of Homeland Security.
+  </p>
+  <p [hidden]="!showFullFooter">
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+  </p>
+  <p [hidden]="!showFullFooter">
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+  </p>
+  <p [hidden]="!showFullFooter">
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+  </p>
+  <p [hidden]="!showFullFooter">
+    Click <span (click)="toggleFooter()" (keydown.enter)="toggleFooter()" tabindex=0>here</span> to see less.
+  </p>
+</footer>
 

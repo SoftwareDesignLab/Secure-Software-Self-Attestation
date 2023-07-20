@@ -21,16 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import { AttestationDataService } from '../services/attestation-data.service';
 import { ControlAttestation } from '../models/catalogModel';
 import { timeInterval } from 'rxjs';
+
 
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
+
 
 export class ChecklistItemComponent {
   @Input() id: any;
@@ -52,17 +54,34 @@ export class ChecklistItemComponent {
   finalized: Boolean = false;
   onPopup: Boolean = false;
   primed: Boolean = false;
+  focused: Boolean = false;
 
-  constructor(private attestationDataService: AttestationDataService){  }
+  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){  }
 
 
   ngOnInit(){
-    this.UID = this.catalogUUID + '-' + this.id
+    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
+     '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpControl(this.UID)!;
     this.selection= this.info.selection;
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
     this.showRollable = this.info.showRollable;
+  }
+
+
+  refresh() {
+    // Perform any necessary data updates here
+
+    // Trigger change detection to update the view
+    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
+     '-' + this.catalogUUID + '-' + this.id
+    this.info = this.attestationDataService.setUpControl(this.UID)!;
+    this.selection= this.info.selection;
+    this.comment = this.info.comment;
+    this.finalized = this.info.finalized;
+    this.showRollable = this.info.showRollable;
+    this.changeDetectorRef.detectChanges();
   }
 
   toggleRollable() {
@@ -100,7 +119,7 @@ export class ChecklistItemComponent {
   select(option: string) {
     this.attestationDataService.updateControlSelection(this.UID, option);
     if (this.selection === "no-selection") {
-      this.popup = true;
+      this.deploy();
     }
     if (this.selection === option) {
       this.selection = "no-selection";
@@ -130,6 +149,7 @@ export class ChecklistItemComponent {
   cancel() {
     this.popup = false;
     this.primed = false;
+    this.focused = false;
   }
 
   del() {
@@ -140,6 +160,10 @@ export class ChecklistItemComponent {
   }
 
   deploy() {
+    let active = document.activeElement;
+    if (active instanceof HTMLElement) {
+      active.blur;
+    }
     this.popup = true;
   }
 
@@ -161,5 +185,15 @@ export class ChecklistItemComponent {
       }
     }
   }
-  
+
+  commentFocus() {
+    if (this.focused) 
+      return
+    let comment = document.getElementById("comment");
+    if (comment instanceof HTMLElement) {
+      comment.focus();
+      this.focused = true;
+    }
+  }
 }
+

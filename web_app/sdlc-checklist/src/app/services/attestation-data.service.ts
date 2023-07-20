@@ -25,40 +25,76 @@ import { Injectable } from '@angular/core';
 import { AttestationComponent } from '../attestation/attestation.component';
 import { ControlAttestation, GroupInfo } from '../models/catalogModel';
 
+import { BehaviorSubject, Subject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AttestationDataService {
 
 
-  private forms: Array<AttestationComponent> = new Array<AttestationComponent>
+  private ComponentRefreshSource = new Subject<void>();
+  ComponentRefresh$ = this.ComponentRefreshSource.asObservable();
+
+  public forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
   private controlMap: Map<String, ControlAttestation> = new Map<String, ControlAttestation>
   private groupMap: Map<String, GroupInfo> = new Map<String, ControlAttestation>
+  private tag: number = 1;
+  private viewPosition: number = -1;
+  private deletionPosition: number = 0;
+  public pageName: string = "Contact Info";
 
-  constructor() {
-    this.forms.push(new AttestationComponent)
-   }
 
+  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this));
+  public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
-  getdata(index: number){
-    return this.forms[index];
+  constructor() {}
+  
+  refresh(){
+      this.ComponentRefreshSource.next();
+  }
+  updateDynamicForm(form: AttestationComponent) {
+    this.dynamicFormSubject.next(form);
+  }
+
+  setDeletionPosition(position: number){
+    this.deletionPosition= position;
+  }
+
+  getdata(position: number){
+    return this.forms[position];
+  }
+
+  get getCurrentForm(){
+    return this.forms[this.viewPosition];
+  }
+
+  setView(position: number){
+    this.viewPosition = position;
   }
   get getRawData(){
     return this.forms;
   }
 
-  checkVisited(){
-    return this.beenVisited;
+  
+
+  get getView(){
+    return this.viewPosition;
   }
-  setVisited(){
-    this.beenVisited = true;
+
+  get getDeletionPosition(){
+    return this.deletionPosition;
   }
 
   addform(){
-    this.forms.push(new AttestationComponent);
-    let pos = this.forms.length;
-    this.forms[pos-1].setPosition(pos);
+    this.forms.push(new AttestationComponent(this));
+    let position = this.forms.length-1;
+    this.forms[position].setPositionTag(this.tag);
+    this.forms[position].setFormPosition(position);
+    this.tag = this.tag + 1;
+
+
   }
 
 
@@ -107,9 +143,9 @@ export class AttestationDataService {
     else{
       console.log("Something went wrong")
     }
-
-
   }
+
+
   deleteControlComment(UID: String){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
@@ -124,6 +160,12 @@ export class AttestationDataService {
     if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
     }
+  }
+
+  removeControl(UID: String){
+    let position = this.getdata(this.deletionPosition).getPositionTag;
+    let temp = position + "-" + UID;
+    this.controlMap.delete(temp);
   }
 
 
@@ -146,4 +188,12 @@ export class AttestationDataService {
       temp.showRollable = !temp.showRollable;
     }
   }
+
+  removeGroup(UID: String){
+    let position = this.getdata(this.deletionPosition).getPositionTag;
+    let temp = position + "-" + UID;
+    this.groupMap.delete(temp);
+  }
 }
+
+

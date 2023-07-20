@@ -3,13 +3,13 @@
     <div class="button-set">
       <div class="individual-button" *ngFor="let i of ['check', 'x', 'na']">
         <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" (click)="select(i)" [(ngModel)]="selection">
-        <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i"></label>
+        <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i" (keydown.enter)="select(i)" tabindex=0></label>
       </div>
     </div>
     <img alt="Comment Button" 
         [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
-        (click)="deploy()" class="pencil" [hidden]="!isChecked()">
-    <label class="checkbox-label" (click)="toggleRollable()">
+        (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!isChecked()" tabindex=0>
+    <label class="checkbox-label" (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
       {{ id }}: {{ title }}
     </label>
   </div>
@@ -21,25 +21,25 @@
   ></app-rollable>
 </div>
 
-<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()">
+<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()" (mouseenter)="commentFocus()" (keydown.escape)="cancel()">
   <div class="pane popup" (mouseenter)="enter(true)" (mouseleave)="enter(false)">
     <br>
     <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
     <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4"></textarea>
     <div class="bottom-buttons">
-      <div (click)="done()">
+      <div (click)="done()" (keydown.enter)="done()" tabindex=0>
         <div id="done"></div>
         <p>Done</p>
       </div>
-      <div (click)="save()">
+      <div (click)="save()" (keydown.enter)="save()" tabindex=0>
         <div id="save"></div>
         <p>Save</p>
       </div>
-      <div (click)="cancel()">
+      <div (click)="cancel()" (keydown.enter)="cancel()" tabindex=0>
         <div id="cancel"></div>
         <p>Cancel</p>
       </div>
-      <div (click)="del()">
+      <div (click)="del()" (keydown.enter)="del()" tabindex=0>
         <div id="delete"></div>
         <p>Delete</p>
       </div>
