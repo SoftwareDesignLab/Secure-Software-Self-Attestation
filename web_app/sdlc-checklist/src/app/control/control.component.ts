@@ -50,11 +50,7 @@ export class ChecklistItemComponent {
   info!: ControlInfo; 
   UID: any; //Unique ID for this control for the program
   comment: String = "";
-  popup: Boolean = false;
   finalized: Boolean = false;
-  onPopup: Boolean = false;
-  primed: Boolean = false;
-  focused: Boolean = false;
 
   constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){  }
 
@@ -116,10 +112,29 @@ export class ChecklistItemComponent {
     return this.selection !== "no-selection";
   }
 
+  openPopup() {
+    let popup = document.getElementById("explanation-popup");
+    if (popup instanceof HTMLDialogElement)
+      popup.showModal();
+  }
+
+  closePopup() {
+    let popup = document.getElementById("explanation-popup");
+    if (popup instanceof HTMLDialogElement) 
+      popup.close();
+  }
+
+  getComment(): String {
+    let comment = document.getElementById("comment");
+    if (comment instanceof HTMLTextAreaElement)
+      return comment.value;
+    return "";
+  }
+
   select(option: string) {
     this.attestationDataService.updateControlSelection(this.UID, option);
     if (this.selection === "no-selection") {
-      this.deploy();
+      this.openPopup();
     }
     if (this.selection === option) {
       this.selection = "no-selection";
@@ -128,72 +143,25 @@ export class ChecklistItemComponent {
     }
   }
 
-  save() {
-    this.finalized = false;
-    let text = document.getElementById("comment")
-    if (text instanceof HTMLTextAreaElement)
-      this.comment = text.value;
-      this.attestationDataService.saveControlComment(this.UID,this.comment);
-    this.cancel();
-  }
-
   done() {
     this.finalized = true;
-    let text = document.getElementById("comment")
-    if (text instanceof HTMLTextAreaElement)
-      this.comment = text.value;
-      this.attestationDataService.finalizeControlComment(this.UID,this.comment);
-    this.cancel();
+    this.comment = this.getComment();
+    this.closePopup();
+  }
+
+  save() {
+    this.finalized = false;
+    this.comment = this.getComment();
+    this.closePopup();
   }
 
   cancel() {
-    this.popup = false;
-    this.primed = false;
-    this.focused = false;
+    this.closePopup();
   }
 
   del() {
-    this.comment = "";
     this.finalized = false;
-    this.cancel();
-    this.attestationDataService.deleteControlComment(this.UID);
-  }
-
-  deploy() {
-    let active = document.activeElement;
-    if (active instanceof HTMLElement) {
-      active.blur;
-    }
-    this.popup = true;
-  }
-
-  enter(loc: boolean) {
-    this.onPopup = loc;
-  }
-
-  down() {
-    if (!this.onPopup)
-      this.primed = true;
-  }
-
-  up() {
-    if (this.primed) {
-      if (!this.onPopup) {
-        this.cancel();
-      } else {
-        this.primed = false;
-      }
-    }
-  }
-
-  commentFocus() {
-    if (this.focused) 
-      return
-    let comment = document.getElementById("comment");
-    if (comment instanceof HTMLElement) {
-      comment.focus();
-      this.focused = true;
-    }
+    this.comment = "";
+    this.closePopup();
   }
 }
-

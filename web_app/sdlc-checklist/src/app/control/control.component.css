@@ -89,40 +89,21 @@ img:hover {
   border-radius: 0 4px 4px 0;
 }
 
-/* Popup Styles */
-
-.full-screen-fixed {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(24, 24, 24, 0.6);
-  z-index: 5;
-}
-
-.popup {
-  width: 30vw;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 35vw;
-  z-index: 6;
-}
-
 .pencil {
   border: 0;
   border-radius: 4px;
 }
 
+/* Popup Styles */
+
 .explanation-label {
-  margin: 10px 30px;
+  margin: 30px;
 }
 
 textarea {
-  margin: 10px 40px;
-  max-width: calc(30vw - 90px);
-  width: calc(30vw - 90px);
+  margin: 30px 40px 10px;
+  max-width: clamp(310px, calc(40vw - 90px), 510px);
+  width: clamp(310px, calc(40vw - 90px), 510px);
   position: relative;
   top: -10px;
 }
@@ -188,4 +169,13 @@ textarea {
 
 .bottom-buttons>div {
   cursor: pointer;
+}
+
+#explanation-popup {
+  margin: auto;
+  width: clamp(400px, 40vw, 600px);
+}
+
+#explanation-popup::backdrop {
+  background-color: rgba(24, 24, 24, 0.6)
 }
