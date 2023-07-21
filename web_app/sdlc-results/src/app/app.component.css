@@ -97,7 +97,7 @@ nav {
 
 .expanded-nav ul {
   list-style: none;
-  padding: 20px;
+  padding: 20px 0px;
   display: flex;
   flex-direction: column;
 }
@@ -145,7 +145,7 @@ nav {
 
 dialog {
   margin: auto;
-  width: clamp(300px, 50vw, 700px);
+  width: clamp(300px, 70vw, 700px);
   text-align: center;
 }
 
