@@ -71,6 +71,9 @@ export class AppComponent {
     let dialog = document.getElementById("terms-and-conditions");
     if (dialog instanceof HTMLDialogElement) {
       dialog.showModal();
+      dialog.addEventListener('cancel', (event) => {
+        event.preventDefault();
+      });
     }
   }
 
@@ -125,6 +128,15 @@ export class AppComponent {
   }
   
   newForm(){
+    if (!this.attestationService.areTermsAccepted()) {
+      let dialog = document.getElementById("terms-and-conditions");
+      if (dialog instanceof HTMLDialogElement) {
+        dialog.showModal();
+      } else {
+        alert("It appears you haven't accepted the terms and conditions. Please refresh the page and try again.")
+      }
+      return
+    }
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1);
     this.changeAttestation(newPage);
@@ -197,7 +209,7 @@ export class AppComponent {
     this.showFullFooter = !this.showFullFooter;
   }
 
-  alert(message: string) {
+  alert(message: any) {
     alert(message);
   }
 
@@ -240,6 +252,13 @@ export class AppComponent {
 
   range(num: number): Array<number> {
     return Array.from(Array(num).keys())
+  }
+
+  /**
+   * Accepts the terms and conditions
+   */
+  accept(): void {
+    this.attestationService.acceptTermsAndConditions();
   }
 }
 

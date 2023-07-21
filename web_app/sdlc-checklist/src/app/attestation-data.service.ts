@@ -44,6 +44,7 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
+  private termsAccepted = false;
 
 
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this));
@@ -193,6 +194,14 @@ export class AttestationDataService {
     let position = this.getdata(this.deletionPosition).getPositionTag;
     let temp = position + "-" + UID;
     this.groupMap.delete(temp);
+  }
+
+  acceptTermsAndConditions() {
+    this.termsAccepted = true;
+  }
+
+  areTermsAccepted(): boolean {
+    return this.termsAccepted;
   }
 }
 
