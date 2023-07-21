@@ -62,6 +62,7 @@ export class AppComponent {
   renaming = 0;
   showComponents = false;
   showFullFooter = false;
+  termsScrolled = false;
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
@@ -259,6 +260,19 @@ export class AppComponent {
    */
   accept(): void {
     this.attestationService.acceptTermsAndConditions();
+  }
+
+  async scrolledDown() {
+    if (this.termsScrolled)
+      return
+    await dela(100);
+    let terms = document.getElementById("terms-and-conditions-scroll-box");
+    if (terms instanceof HTMLDivElement) {
+      let fullHeight = terms.scrollHeight;
+      let appearanceHeight = terms.clientHeight;
+      let scrolledLength = terms.scrollTop;
+      this.termsScrolled =  fullHeight - 10 < appearanceHeight + scrolledLength;
+    }
   }
 }
 
