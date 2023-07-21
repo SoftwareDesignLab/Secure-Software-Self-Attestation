@@ -142,3 +142,53 @@ nav {
   from {right: 0vw;}
   to {right: -400px;}
 }
+
+dialog {
+  margin: auto;
+  width: clamp(300px, 50vw, 700px);
+  text-align: center;
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, .4);
+}
+
+.scroll-box {
+  margin: 25px;
+  border: 1px solid gray;
+  padding: 15px;
+  overflow: scroll;
+  text-indent: 3em;
+  height: 50vh;
+  text-align: left;
+}
+
+dialog form {
+  text-align: center;
+  text-indent: 0;
+}
+
+dialog button {
+  border: none;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 4px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, .4);
+  padding: 5px 10px;
+}
+
+.grayed {
+  background-color: darkgray;
+}
+
+.green {
+  background-color: rgb(4,170, 109);
+  cursor: pointer;
+}
+
+.green:hover {
+  background-color: rgb(0,150, 89);
+  box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .6);
+}

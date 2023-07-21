@@ -35,6 +35,10 @@ export class ResultsUploadComponent {
 
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
+    let input = document.getElementById("file");
+    if (input instanceof HTMLInputElement) {
+      input.value = "";
+    }
     if (file && this.isJsonFile(file)) {
       // Process the JSON file
       //TODO verify that the file is an OSCAL Assessment Results

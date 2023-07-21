@@ -24,6 +24,7 @@
 import { Component } from '@angular/core';
 import { AssessmentResults } from './resultsModel';
 
+const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 
 @Component({
   selector: 'app-root',
@@ -35,9 +36,31 @@ export class AppComponent {
   showFullFooter: boolean = false;
   showNav = false;
   poamMode = false;
+  termsScrolled = false;
+  termsAccepted = false;
+
+  ngOnInit() {
+    let dialog = document.getElementById("terms-and-conditions");
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.showModal();
+      dialog.addEventListener('cancel', (event) => {
+        event.preventDefault();
+      });
+    } 
+  }
 
   onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
+    if (!this.termsAccepted) {
+      let dialog = document.getElementById("terms-and-conditions");
+      if (dialog instanceof HTMLDialogElement) {
+        dialog.showModal();
+      } else {
+        alert("Please refresh the page and click the accept button on terms and conditions")
+      }
+      return
+    }
     this.assessmentResults = jsonData["assessment-results"];
+
   }
 
   toggleFooter() {
@@ -61,5 +84,26 @@ export class AppComponent {
   poam(state: boolean): void {
     this.toggleNav();
     this.poamMode = state;
+  }
+
+  async scrolledDown() {
+    await dela(100);
+    if (this.termsScrolled)
+      return
+    let scrollBox = document.getElementById("terms-and-conditions-scroll-box");
+    if (scrollBox instanceof HTMLDivElement) {
+      let full = scrollBox.scrollHeight;
+      let above = scrollBox.scrollTop;
+      let bellow = scrollBox.clientHeight;
+      this.termsScrolled = full - 10 < above + bellow;
+    }
+  }
+
+  alert(message: any): void {
+    alert(message);
+  }
+
+  accept(): void {
+    this.termsAccepted = true;
   }
 }
