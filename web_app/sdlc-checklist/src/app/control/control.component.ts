@@ -54,7 +54,6 @@ export class ChecklistItemComponent {
 
   constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){  }
 
-
   ngOnInit(){
     this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
      '-' + this.catalogUUID + '-' + this.id
@@ -63,8 +62,16 @@ export class ChecklistItemComponent {
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
     this.showRollable = this.info.showRollable;
+    let dialog = document.getElementById("explanation-popup");
+    if (dialog instanceof HTMLDialogElement)
+      dialog.addEventListener('mousedown', (event: MouseEvent) => {
+        if (dialog instanceof HTMLDialogElement) {
+          let bounding = dialog.getBoundingClientRect();
+          if (bounding.top > event.clientY || bounding.bottom < event.clientY || bounding.left > event.clientX || bounding.right < event.clientX)
+            this.cancel();
+        }
+      });
   }
-
 
   refresh() {
     // Perform any necessary data updates here
