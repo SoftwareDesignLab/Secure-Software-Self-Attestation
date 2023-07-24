@@ -94,6 +94,15 @@ constructor( public contactService: ContactService, private router: Router,priva
 
   
   newForm(){
+    if (!this.attestationService.areTermsAccepted()) {
+      let dialog = document.getElementById("terms-and-conditions");
+      if (dialog instanceof HTMLDialogElement) {
+        dialog.showModal();
+      } else {
+        alert("It appears you haven't accepted the terms and conditions. Please refresh the page and try again.")
+      }
+      return
+    }
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
     this.changeAttestion(newPage)

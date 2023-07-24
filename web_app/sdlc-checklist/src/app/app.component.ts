@@ -62,12 +62,20 @@ export class AppComponent {
   renaming = 0;
   showComponents = false;
   showFullFooter = false;
+  termsScrolled = false;
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
       this.catalogData = this.attestationService.getdata(0).getCatalogs
+    let dialog = document.getElementById("terms-and-conditions");
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.showModal();
+      dialog.addEventListener('cancel', (event) => {
+        event.preventDefault();
+      });
+    }
   }
 
   async changePage(page: string, fragment?: string){
@@ -121,6 +129,15 @@ export class AppComponent {
   }
   
   newForm(){
+    if (!this.attestationService.areTermsAccepted()) {
+      let dialog = document.getElementById("terms-and-conditions");
+      if (dialog instanceof HTMLDialogElement) {
+        dialog.showModal();
+      } else {
+        alert("It appears you haven't accepted the terms and conditions. Please refresh the page and try again.")
+      }
+      return
+    }
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1);
     this.changeAttestation(newPage);
@@ -200,7 +217,7 @@ export class AppComponent {
     }
   }
 
-  alert(message: string) {
+  alert(message: any) {
     alert(message);
   }
 
@@ -243,6 +260,26 @@ export class AppComponent {
 
   range(num: number): Array<number> {
     return Array.from(Array(num).keys())
+  }
+
+  /**
+   * Accepts the terms and conditions
+   */
+  accept(): void {
+    this.attestationService.acceptTermsAndConditions();
+  }
+
+  async scrolledDown() {
+    if (this.termsScrolled)
+      return
+    await dela(100);
+    let terms = document.getElementById("terms-and-conditions-scroll-box");
+    if (terms instanceof HTMLDivElement) {
+      let fullHeight = terms.scrollHeight;
+      let appearanceHeight = terms.clientHeight;
+      let scrolledLength = terms.scrollTop;
+      this.termsScrolled =  fullHeight - 10 < appearanceHeight + scrolledLength;
+    }
   }
 }
 
