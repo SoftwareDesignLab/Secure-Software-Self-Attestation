@@ -71,19 +71,7 @@ export class AppComponent {
     let dialog = document.getElementById("terms-and-conditions");
     if (dialog instanceof HTMLDialogElement) {
       dialog.showModal();
-      dialog.addEventListener('cancel', (event) => {
-        event.preventDefault();
-      });
     }
-    let footer = document.getElementById("footer-dialog");
-    if (footer instanceof HTMLDialogElement)
-      footer.addEventListener('mousedown', (event: MouseEvent) => {
-        if (footer instanceof HTMLDialogElement) {
-          let bounding = footer.getBoundingClientRect();
-          if (bounding.top > event.clientY || bounding.bottom < event.clientY || bounding.left > event.clientX || bounding.right < event.clientX)
-            footer.close();
-        }
-      });
   }
 
   async changePage(page: string, fragment?: string){
@@ -287,6 +275,15 @@ export class AppComponent {
       let appearanceHeight = terms.clientHeight;
       let scrolledLength = terms.scrollTop;
       this.termsScrolled =  fullHeight - 10 < appearanceHeight + scrolledLength;
+    }
+  }
+
+  withinModal(event: MouseEvent) {
+    let footer = document.getElementById("footer-dialog");
+    if (footer instanceof HTMLDialogElement) {
+      let bounding = footer.getBoundingClientRect();
+      if (bounding.top > event.clientY || bounding.bottom < event.clientY || bounding.left > event.clientX || bounding.right < event.clientX)
+        footer.close();
     }
   }
 }

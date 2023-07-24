@@ -34,9 +34,9 @@
   </div>
 </nav>
 
-<dialog id="terms-and-conditions" class="pane">
+<dialog id="terms-and-conditions" class="pane" (cancel)="$event.preventDefault()">
   <h2>Terms and Conditions</h2>
-  <div class="scroll-box" id="terms-and-conditions-scroll-box" (mousewheel)="scrolledDown()">
+  <div class="scroll-box" id="terms-and-conditions-scroll-box" (wheel)="scrolledDown()">
     <p>I'm not quite sure what should go here, but something needs to to test styles, so I'll use ipsum</p>
     <p><strong>IF THIS MESSAGE IS STILL HERE, DO NOT MERGE THIS INTO MAIN!!!</strong> (Temporary ipsum text in use)</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. </p>
@@ -69,7 +69,7 @@
   awarded by the United States Department of Homeland Security. 
   Click <span (click)="toggleFooter()" tabindex=0 (keydown.enter)="toggleFooter()">here</span> to see more.
   </p>
-  <dialog id="footer-dialog" class="pane">
+  <dialog id="footer-dialog" class="pane" (click)="withinModal($event)">
     <h3>Copyright Information</h3>
     <div class="scroll-box">
       <p>
