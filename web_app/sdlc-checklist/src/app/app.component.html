@@ -69,7 +69,7 @@
   awarded by the United States Department of Homeland Security. 
   Click <span (click)="toggleFooter()" tabindex=0 (keydown.enter)="toggleFooter()">here</span> to see more.
   </p>
-  <dialog id="footer-dialog">
+  <dialog id="footer-dialog" class="pane">
     <p>
       Copyright 2023 Rochester Institute of Technology (RIT). Developed with
       government support under contract 70RSAT19CB0000020 awarded by the United
@@ -96,6 +96,7 @@
       OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
       SOFTWARE.
     </p>
+    <p><span (click)="toggleFooter()" (keydown.enter)="toggleFooter()" tabindex=0>Close</span></p>
   </dialog>
 </footer>
 
