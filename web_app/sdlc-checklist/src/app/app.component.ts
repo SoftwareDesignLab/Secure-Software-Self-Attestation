@@ -61,7 +61,6 @@ export class AppComponent {
   openTag = 0;
   renaming = 0;
   showComponents = false;
-  showFullFooter = false;
   termsScrolled = false;
 
   constructor(private router: Router, private attestationService: AttestationDataService ){}
@@ -76,6 +75,15 @@ export class AppComponent {
         event.preventDefault();
       });
     }
+    let footer = document.getElementById("footer-dialog");
+    if (footer instanceof HTMLDialogElement)
+      footer.addEventListener('mousedown', (event: MouseEvent) => {
+        if (footer instanceof HTMLDialogElement) {
+          let bounding = footer.getBoundingClientRect();
+          if (bounding.top > event.clientY || bounding.bottom < event.clientY || bounding.left > event.clientX || bounding.right < event.clientX)
+            footer.close();
+        }
+      });
   }
 
   async changePage(page: string, fragment?: string){
