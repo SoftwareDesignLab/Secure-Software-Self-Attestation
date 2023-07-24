@@ -21,7 +21,7 @@
   ></app-rollable>
 </div>
 
-<dialog id="explanation-popup" class="pane">
+<dialog id="explanation-popup" class="pane" (click)="closeModal($event)">
   <label for="comment" class="explanation-label">Brief Explanation: </label><br>
   <textarea id="comment" [value]="comment" placeholder="Explanation" rows="6"></textarea>
   <div class="bottom-buttons">
