@@ -157,12 +157,13 @@ nav {
 .list-grid {
   display: grid;
   grid-template-columns: 40px 200px 80px 80px;
+  height: 55px;
 }
 
 .bottom {
   position: absolute;
   bottom: 0;
-  padding: 20px 10px 25px;
+  padding: 18px 10px 23px;
   margin: 0;
   background-color: #005EA2;
   color: white;

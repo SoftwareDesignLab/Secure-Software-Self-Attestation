@@ -15,7 +15,7 @@
     <h2>Attestations</h2>
     <ul>
       <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
-      <li class="list-grid" *ngFor="let form of getForms">
+      <li class="list-grid" id="item" *ngFor="let form of getForms">
         <p [className]="openTag === form.getPositionTag ? 'prepend-down-arrow arrow' : 'prepend-up-arrow arrow'" (click)="toggleNavTree(form.getPositionTag)" (keydown.enter)="toggleNavTree(form.getPositionTag)" [tabindex]="showNav ? 0 : -1"></p>
         <input [tabindex]="showNav ? 0 : -1" *ngIf="renaming === form.getPositionTag" (keydown.enter)="confirmName(form)" [value]="form.getName()" id="renaming-input">
         <a routerlink="attestation-form" (click)="changeAttestation(form)" (keydown.enter)="changeAttestation(form)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming !== form.getPositionTag">{{ form.getName() }}</a>
@@ -28,9 +28,9 @@
           </li>
         </ul>
       </li>
-      <li><p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
+      <li><p class="add" id="add-button" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1" [style.display]="showAddButton ? 'block' : 'none'" >+ New Attestation</p></li>
     </ul>
-    <p class="bottom" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
+    <p class="bottom" id="bottom-button" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
   </div>
 </nav>
 

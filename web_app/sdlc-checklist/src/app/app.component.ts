@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
 */
-import { Component, ViewChildren, QueryList, ViewChild, NgModule } from '@angular/core';
+import { Component, ViewChildren, QueryList, ViewChild, NgModule, ElementRef, HostListener, Renderer2   } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
 import { Router, NavigationEnd, RouterModule  } from '@angular/router';
@@ -57,13 +57,18 @@ const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
+  @ViewChild('list', { static: true }) listElement!: ElementRef;
+
+  showAddButton = true;
+  resizeWait: any; 
+
   showNav = false;
   openTag = 0;
   renaming = 0;
   showComponents = false;
   showFullFooter = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService ){}
+  constructor(private router: Router, private attestationService: AttestationDataService, private renderer: Renderer2 ){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
@@ -71,7 +76,7 @@ export class AppComponent {
   }
 
   async changePage(page: string, fragment?: string){
-    this.toggleNav();
+    //this.toggleNav();
     if (fragment) {
       this.router.navigate([page], {fragment: fragment});
       await dela(50);
@@ -124,9 +129,49 @@ export class AppComponent {
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1);
     this.changeAttestation(newPage);
+    this.checkButtonOverlap(false)
+  }
+  /**
+   * Checks to see if the add button is behind the load button, if so it will hide the add button.
+   * @param resize boolean to see if the check is being made by changing windows size
+   * @returns nothing
+   */
+  private checkButtonOverlap(resize: boolean) {
+    const addButton = document.getElementById('add-button');
+    const bottomButton = document.getElementById('bottom-button');
+    const listItem = document.getElementById('item');
+
+    if (!addButton || !bottomButton || !listItem) {
+      return;
+    }
+
+    const addButtonRect = addButton.getBoundingClientRect();
+    const bottomButtonRect = bottomButton.getBoundingClientRect();
+    const itemRect = listItem.getBoundingClientRect();
+
+    let distanceToBottom = document.documentElement.clientHeight - addButtonRect.bottom    
+    if(!resize){
+       distanceToBottom = document.documentElement.clientHeight - addButtonRect.bottom - itemRect.height; 
+    }
+    if (distanceToBottom >  bottomButtonRect.height) {
+      this.renderer.setStyle(addButton, 'display', 'block');
+      this.showAddButton = true;
+    } else {
+      this.renderer.setStyle(addButton, 'display', 'none');
+      this.showAddButton = false;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    clearTimeout(this.resizeWait);
+    this.resizeWait = setTimeout(() => {
+      this.checkButtonOverlap(true);
+    }, 150);
   }
 
   deleteForm(position: number){
+    this.checkButtonOverlap(false)
     this.openTag = 0;
     this.attestationService.setDeletionPosition(position)
     let firsthalf = this.attestationService.forms.slice(0,position);
@@ -150,7 +195,6 @@ export class AppComponent {
     else{
       this.attestationService.setView(-1);
     }
-    
   }
 
   toggleNav(): void {
