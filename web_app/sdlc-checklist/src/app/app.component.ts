@@ -190,7 +190,14 @@ export class AppComponent {
   }
 
   toggleFooter() {
-    this.showFullFooter = !this.showFullFooter;
+    let footer = document.getElementById("footer-dialog")
+    if (footer instanceof HTMLDialogElement) {
+      if (footer.open) {
+        footer.close();
+      } else {
+        footer.showModal();
+      }
+    }
   }
 
   alert(message: string) {
