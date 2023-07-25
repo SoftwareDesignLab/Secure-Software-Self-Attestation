@@ -22,17 +22,10 @@
  * SOFTWARE.
  */
 
-<<<<<<< HEAD
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component } from '@angular/core';
 import { attestationComment } from '../services/attestationForm';
 import { AttestationDataService } from '../services/attestation-data.service';
 import { Catalog, CatalogData } from '../models/catalogModel';
-=======
-import { Component} from '@angular/core';
-import { attestationComment } from '../attestationForm';
-import { AttestationDataService } from '../attestation-data.service';
-import { Catalog, CatalogData} from '../oscalModel';
->>>>>>> main
 import catalog from '../defaultCatalog';
 import { ChecklistItemComponent } from '../control/control.component';
 
@@ -140,10 +133,12 @@ export class AttestationComponent {
       catalog.groups.forEach(group => {
         let GUID = catalog.uuid + "-" + group.id;
         this.attestationService.removeGroup(GUID);
-        group.controls.forEach((control: ChecklistItemComponent) => {
-          let CUID = catalog.uuid + "-" + control.id;
-          this.attestationService.removeControl(CUID);
-        });
+        if (group.controls !== undefined) {
+          group.controls.forEach((control: ChecklistItemComponent) => {
+            let CUID = catalog.uuid + "-" + control.id;
+            this.attestationService.removeControl(CUID);
+          });
+        }
       });
     } 
     if(catalog.controls !== undefined){
