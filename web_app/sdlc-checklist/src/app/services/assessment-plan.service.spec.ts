@@ -152,4 +152,21 @@ describe('data store and retrieval', () => {
       expect(data['assessment-subjects']?.[0]['include-subjects']?.[1].props).toContain(new Prop("Product Name", "updated", "Product Info"));
     });
   });
+
+  it('generates a valid assessment plan', () => {
+    service.updateProducerInfo(producerInfo);
+    service.updateContactInfo(contactInfo);
+    service.addCatalog(defaultCatalog);
+    service.addSubject("name", "version", "date");
+    service.addSubject("name2", "version2", "date2");
+    service.setControlSelection("4e(i)(A)", ControlSelectionType.yes);
+    service.setControlComment("4e(i)(A)", "comment");
+    service.setControlSelection("4e(i)(B)", ControlSelectionType.no);
+    service.setControlComment("4e(i)(B)", "bad");
+    service.setCompanyWide()
+    service.getData().subscribe(data => {
+      console.log(JSON.stringify(data.serialize(), null, 4));
+      expect(data.serialize()).toBeTruthy();
+    });
+  });
 });

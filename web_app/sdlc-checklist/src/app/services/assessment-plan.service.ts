@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { AssessmentPlan, ControlSelection, SubjectID } from '../models/assessmentPlan';
+import { AssessmentPlan, ControlSelection, SubjectID, Prop } from '../models/assessmentPlan';
 import { Catalog } from '../models/catalogModel';
 
 export enum ControlSelectionType {
@@ -219,6 +219,7 @@ export class AssessmentPlanService {
     subject.addProp("Date", date, "Product Info");
 
     plan["assessment-subjects"][0]["include-subjects"].push(subject);
+    plan["assessment-subjects"][0].props = [new Prop("type", "multi product", "Attestation Type")];
 
     this.assessmentPlan.next(plan);
   }
@@ -258,11 +259,12 @@ export class AssessmentPlanService {
     }
 
     plan["assessment-subjects"][0]["include-subjects"].pop();
+    plan["assessment-subjects"][0].props = [new Prop("type", "multi product", "Attestation Type")];
 
     this.assessmentPlan.next(plan);
   }
 
-  setCompanyWide(value: Boolean) {
+  setCompanyWide() {
     let plan = this.assessmentPlan.getValue();
 
     if (plan["assessment-subjects"] === undefined) {
@@ -270,11 +272,30 @@ export class AssessmentPlanService {
       return;
     }
     
-    plan["assessment-subjects"][0].includeAll(value)
+    plan["assessment-subjects"][0].includeAll(true)
+    plan["assessment-subjects"][0].props = [new Prop("type", "company-wide", "Attestation Type")];
 
     this.assessmentPlan.next(plan);
   }
 
+  setSingleProduct() {
+    let plan = this.assessmentPlan.getValue();
+
+    if (plan["assessment-subjects"] === undefined) {
+      console.log("assessment-subjects not found in plan, skipping subject update");
+      return;
+    }
+
+    plan["assessment-subjects"][0].includeAll(false)
+    if (plan["assessment-subjects"][0]["include-subjects"] !== undefined) {
+      while (plan["assessment-subjects"][0]["include-subjects"].length > 1) {
+        plan["assessment-subjects"][0]["include-subjects"].pop();
+      }
+    }
+
+    plan["assessment-subjects"][0].props = [new Prop("type", "single product", "Attestation Type")];
+    this.assessmentPlan.next(plan);
+  }
   //TODO exclude subjects
   //TODO automatically exclude subjects that are unchecked
 }
