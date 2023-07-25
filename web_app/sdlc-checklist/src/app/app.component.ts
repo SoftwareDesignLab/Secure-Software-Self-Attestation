@@ -251,7 +251,7 @@ export class AppComponent {
   getSubLinks(form: AttestationComponent): Array<{name: string, fragment: string, position: number}> {
     let listOLinks: Array<{name: string, fragment: string, position: number}> = [];
     let i = 0;
-    listOLinks.push({name: "Secure Software Development Attestation Form", fragment: "attestation", position: i++})
+    listOLinks.push({name: "Select Attestation Type", fragment: "attestation", position: i++})
     form.getCatalogs.catalogs.forEach((catalog) => {
       listOLinks.push({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid, position: i++});
     });
