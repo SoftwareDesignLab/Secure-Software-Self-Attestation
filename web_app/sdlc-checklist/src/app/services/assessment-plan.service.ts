@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { AssessmentPlan, ControlSelection } from '../models/assessmentPlan';
+import { AssessmentPlan, ControlSelection, SubjectID } from '../models/assessmentPlan';
 import { Catalog } from '../models/catalogModel';
 
 @Injectable({
@@ -9,18 +9,22 @@ import { Catalog } from '../models/catalogModel';
 export class AssessmentPlanService {
   private assessmentPlan = new BehaviorSubject<AssessmentPlan>(new AssessmentPlan());
   currentPlan = this.assessmentPlan.asObservable();
+  private catalogs = new BehaviorSubject<Array<Catalog>>(new Array<Catalog>());
+  currentCatalogs = this.catalogs.asObservable();
+  // A map of control IDs to the index of their catalogs in both the assessment plan control-selections and the catalog list
   private controlMap = new BehaviorSubject<Map<String, number>>(new Map<String, number>());
   currentControlMap = this.controlMap.asObservable();
-  
+
   constructor() {
     let plan = this.assessmentPlan.getValue();
     plan.metadata.addBlankParty();
     plan.metadata.addBlankParty();
+    plan.addAssessmentSubject();
     this.assessmentPlan.next(plan);
   }
 
-  updateData(data: any) {
-    this.assessmentPlan.next(data);
+  getData() {
+    return this.assessmentPlan.asObservable();
   }
 
   updateProducerInfo(data: any) {
@@ -56,9 +60,11 @@ export class AssessmentPlanService {
     this.assessmentPlan.next(plan);
   }
 
-  addCatalog(catalog: Catalog) {
+  addCatalog( catalog: Catalog) {
     let plan = this.assessmentPlan.getValue();
+    let catalogs = this.catalogs.getValue();
     let controlSelection = new ControlSelection();
+
     // TODO add links
     
     // add catalog info
@@ -77,9 +83,39 @@ export class AssessmentPlanService {
         controlMap.set(control.id, plan['reviewed-controls']['control-selections'].length-1);
       });
     });
+
+    catalogs.push(catalog);
+    this.catalogs.next(catalogs);
     this.controlMap.next(controlMap);
     this.assessmentPlan.next(plan);
   }
+
+  removeCatalog(catalog: Catalog) {
+    let plan = this.assessmentPlan.getValue();
+    let catalogs = this.catalogs.getValue();
+    let controlMap = this.controlMap.getValue();
+
+    let index = catalogs.indexOf(catalog);
+    if (index > -1) {
+      catalogs.splice(index, 1);
+      this.catalogs.next(catalogs);
+      // remove catalog info
+      plan['reviewed-controls']['control-selections'].splice(index, 1);
+      // remove cached index of catalog for each control
+      controlMap.forEach( (value, key) => {
+        if (value === index) {
+          controlMap.delete(key);
+        }
+        if (value > index) {
+          controlMap.set(key, value-1);
+        }
+      });
+      this.controlMap.next(controlMap);
+      this.assessmentPlan.next(plan);
+    }
+  }
+
+  // // control selections list is indexed by attestation. it should match up with assessment-subjects list
 
   setControlSelection(controlID: string, selection: string) {
     let plan = this.assessmentPlan.getValue();
@@ -111,8 +147,8 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
-      plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
-      plan['reviewed-controls']['control-selections'][index].addProp(controlID, comment, "Compliance Claim");
+      plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
+      plan['reviewed-controls']['control-selections'][index].addProp(controlID, comment, "Attestation Claim");
       this.assessmentPlan.next(plan);
       return;
     }
@@ -144,13 +180,71 @@ export class AssessmentPlanService {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
     if (index !== undefined) {
-      plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
+      plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
       this.assessmentPlan.next(plan);
       return;
     }
     console.log("Control not found in catalog: " + controlID);
   }
 
-  //TODO add subjects
+  addSubject(productName: String, version: String, date: String) {
+    let plan = this.assessmentPlan.getValue();
+
+    if (plan["assessment-subjects"] === undefined) {
+      console.log("assessment-subjects not found in plan, skipping subject creation");
+      return;
+    }
+
+    if (plan["assessment-subjects"][0]["include-subjects"] === undefined) {
+      plan["assessment-subjects"][0]["include-subjects"] = [];
+    }
+
+    let subject = new SubjectID();
+    subject.addProp("Product Name", productName, "Product Info");
+    subject.addProp("Version", version, "Product Info");
+    subject.addProp("Date", date, "Product Info");
+
+    plan["assessment-subjects"][0]["include-subjects"].push(subject);
+
+    this.assessmentPlan.next(plan);
+  }
+
+  updateSubject(subjectIndex: number, productName: String, version: String, date: String) {
+    let plan = this.assessmentPlan.getValue();
+
+    if (plan["assessment-subjects"] === undefined) {
+      console.log("assessment-subjects not found in plan, skipping subject update");
+      return;
+    }
+
+    if (plan["assessment-subjects"][0]["include-subjects"] === undefined) {
+      plan["assessment-subjects"][0]["include-subjects"] = [];
+    }
+
+    let subject = new SubjectID();
+    subject.addProp("Product Name", productName, "Product Info");
+    subject.addProp("Version", version, "Product Info");
+    subject.addProp("Date", date, "Product Info");
+
+    plan["assessment-subjects"][0]["include-subjects"][subjectIndex] = subject;
+
+    this.assessmentPlan.next(plan);
+  }
+
+  popSubject() {
+    let plan = this.assessmentPlan.getValue();
+
+    if (plan["assessment-subjects"] === undefined) {
+      console.log("assessment-subjects not found in plan, skipping subject deletion");
+      return;
+    }
+
+    if (plan["assessment-subjects"][0]["include-subjects"] === undefined) {
+      plan["assessment-subjects"][0]["include-subjects"] = [];
+    }
+
+    plan["assessment-subjects"][0]["include-subjects"].pop();
+
+    this.assessmentPlan.next(plan);
+  }
 }
-    

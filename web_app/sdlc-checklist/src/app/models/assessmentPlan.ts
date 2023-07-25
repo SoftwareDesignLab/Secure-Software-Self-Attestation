@@ -1,5 +1,22 @@
 import { uuid } from 'uuidv4';
 
+enum AssessmentSubjectType {
+  Component = "component", 
+  InventoryItem = "inventory-item", 
+  Location = "location",
+  Party = "party",
+  User = "user",
+}
+
+enum SubjectIDType {
+  Component = "component", 
+  InventoryItem = "inventory-item", 
+  Location = "location", 
+  Party = "party", 
+  User = "user", 
+  Resource = "resource",
+}
+
 class AssessmentPart {
   name: String = "";
   title?: String;
@@ -258,16 +275,40 @@ class Party {
   }
 }
 
-class SubjectID {
-  type: String = "component"; //can be component, inventory-item, location, party, user or resource
-  "subject-uuid": String = "";
+export class SubjectID {
+  type: SubjectIDType = SubjectIDType.Component; //can be component, inventory-item, location, party, user or resource
+  "subject-uuid": String = uuid();
   props?: Prop[];
   links?: Link[];
   remarks?: String;
+
+  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+    if (this.props === undefined) this.props = [];
+    let newProp = new Prop();
+    newProp.name = name;
+    newProp.value = value;
+    newProp.class = class_;
+    newProp.uuid = uuid;
+    newProp.ns = ns;
+    newProp.remarks = remarks;
+    this.props.push(newProp);
+  }
+
+  addLink(href: String, rel?: String) {
+    if (this.links === undefined) this.links = [];
+    let newLink = new Link();
+    newLink.href = href;
+    newLink.rel = rel;
+    this.links.push(newLink);
+  }
+
+  setType(type: SubjectIDType) {
+    this.type = type;
+  }
 }
 
-class AssessmentSubject {
-  type: String = "party"; //can be component, inventory-item, location, party or user
+export class AssessmentSubject {
+  type: AssessmentSubjectType = AssessmentSubjectType.Party;
   description?: String;
   props?: Prop[];
   links?: Link[];
@@ -275,6 +316,43 @@ class AssessmentSubject {
   "include-all"?: Boolean;
   "include-subjects"?: SubjectID[];
   "exclude-subjects"?: SubjectID[];
+  private subjectMemory: Array<Array<SubjectID> | undefined> = [[], []];
+
+  includeAll(bool: Boolean) {
+    this["include-all"] = bool;
+    if (bool) {
+      this.subjectMemory[0] = this["include-subjects"];
+      this.subjectMemory[1] = this["exclude-subjects"];
+      this["include-subjects"] = undefined;
+      this["exclude-subjects"] = undefined;
+    } else {
+      this["include-subjects"] = this.subjectMemory[0];
+      this["exclude-subjects"] = this.subjectMemory[1];
+    }
+  }
+
+  addSubjectID(type: SubjectIDType) {
+    if (this["include-subjects"] === undefined) this["include-subjects"] = [];
+    let newSubjectID = new SubjectID();
+    newSubjectID.type = type;
+    newSubjectID["subject-uuid"] = uuid();
+
+  }
+
+  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+    if (this.props === undefined) this.props = [];
+    let newProp = new Prop();
+    newProp.name = name;
+    newProp.value = value;
+    newProp.class = class_;
+    newProp.uuid = uuid;
+    newProp.ns = ns;
+    newProp.remarks = remarks;
+    this.props.push(newProp);
+  }
+
+  //TODO during serialization, if include-all is true, convert include-all to an empty object or undefined if it is false
+
 }
 
 class APMetadata {
@@ -309,7 +387,7 @@ class APMetadata {
 
 // }
 
-//TODO assessment assets
+//TODO assessment assets - will be important for 3rd party tests
 // class AssessmentAssets {
 
 // }
@@ -319,7 +397,16 @@ export class AssessmentPlan {
   metadata: APMetadata = new APMetadata();
   "import-ssp": ImportSSP = new ImportSSP();
   "reviewed-controls": ReviewedControls = new ReviewedControls();
-  "assessment-subjects": AssessmentSubject[] = [];
-  "terms-and-conditions": TermsAndConditions = new TermsAndConditions();
+  "assessment-subjects"?: AssessmentSubject[];
+  "terms-and-conditions"?: TermsAndConditions;
+
+  addAssessmentSubject(type: AssessmentSubjectType = AssessmentSubjectType.Party, description?: String) {
+    if (this["assessment-subjects"] === undefined) this["assessment-subjects"] = [];
+    let newAssessmentSubject = new AssessmentSubject();
+    newAssessmentSubject.type = type;
+    newAssessmentSubject.description = description;
+    this["assessment-subjects"].push(newAssessmentSubject);
+  }
+
 }
   
