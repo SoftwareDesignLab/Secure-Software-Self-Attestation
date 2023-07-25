@@ -56,7 +56,7 @@ import { StartUpService, startUpFactory } from './start-up.service';
     CatalogInfoComponent,
     AttestationComponent,
     ContactInfoComponent,
-    AttestationPageComponent
+    AttestationPageComponent,
   ],
   imports: [
     BrowserModule,

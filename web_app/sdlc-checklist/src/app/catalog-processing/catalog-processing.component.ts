@@ -26,17 +26,19 @@ import { Oscal, metaData, Catalog } from '../oscalModel';
 import { notifyService } from '../notify.service';
 
 
+
 @Component({
   selector: 'app-catalog-processing',
   templateUrl: './catalog-processing.component.html',
   styleUrls: ['./catalog-processing.component.css'],
 })
 export class CatalogProcessingComponent {
-  @Input() accept = '.json';
+  @Input() accept = '.json, .xml';
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
+  xsltFormat!: Document;
 
-  constructor(private notifications: notifyService){
+  constructor(private notifications: notifyService ){
   }
 
   onFileSelected(event: Event): void {
@@ -50,8 +52,12 @@ export class CatalogProcessingComponent {
       if (uploadButton instanceof HTMLInputElement) {
         uploadButton.value = "";
       }
+    } else if (file && this.isXmlFile(file)){
+      console.log("XML file detected");
+      this.loadXSLT("catalog");
+      this.handleXML(file);
     } else {
-      this.notifications.error("Please drop an OSCAL Catalog JSON file.");
+      this.notifications.error("Please drop an OSCAL Catalog JSON or XML file.");
     }
   }
 
@@ -81,6 +87,10 @@ export class CatalogProcessingComponent {
 
   private isJsonFile(file: File): boolean {
     return file.type === 'application/json' || file.name.endsWith('.json');
+  }
+
+  private isXmlFile(file: File): boolean {
+    return file.type === 'application/xml' || file.name.endsWith('.xml')
   }
 
   private isNested(data: object): boolean{
@@ -160,4 +170,22 @@ export class CatalogProcessingComponent {
     };
     reader.readAsText(file);
   }
+  private handleXML(file: File): void {
+   //to be implemented
+  }
+
+  loadXSLT(type: string){
+
+    let path = "../xsl-formats." + type;
+    console.log(path);
+    fetch(path)
+      .then((response) => response.text())
+      .then((xsltContent) => {
+        const parser = new DOMParser();
+        this.xsltFormat = parser.parseFromString(xsltContent, 'text/xml');
+      })
+      .catch((error) => {
+        console.error('Error loading XSLT file:', error);
+      });
+    }
 }
