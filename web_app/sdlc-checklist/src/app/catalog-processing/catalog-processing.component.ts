@@ -36,9 +36,17 @@ export class CatalogProcessingComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
 
+  /**
+   * 
+   * @param notifications Prepares the notification service
+   */
   constructor(private notifications: notifyService){
   }
 
+  /**
+   * Runs when a file is uploaded via the button
+   * @param event the file upload event
+   */
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file && this.isJsonFile(file)) {
@@ -51,14 +59,22 @@ export class CatalogProcessingComponent {
         uploadButton.value = "";
       }
     } else {
-      this.notifications.error("Please drop an OSCAL Catalog JSON file.");
+      this.notifications.error("Please select an OSCAL Catalog JSON file.");
     }
   }
 
+  /**
+   * Occurs when a file is hovering over the drop area
+   * @param event The drag over event
+   */
   onDragOver(event: DragEvent): void {
     event.preventDefault();
   }
 
+  /**
+   * Runs when a file us dropped into the dotted box
+   * @param event The drop event
+   */
   onDrop(event: DragEvent): void {
     event.preventDefault();
     const file = event.dataTransfer?.files[0];
@@ -71,22 +87,40 @@ export class CatalogProcessingComponent {
     }
   }
 
+  /**
+   * Displays a green message in the bottom corner
+   * @param message The message to display
+   */
   notifyOfSuccess(message: string) {
     this.notifications.success(message);
   }
 
+  /**
+   * Displays a red message in the bottom corner
+   * @param message The message to display
+   */
   notifyOfFailure(message: string) {
     this.notifications.error(message);
   }
 
+  /**
+   * Checks if the file is a json
+   * @param file The file to check
+   * @returns whether it is a json
+   */
   private isJsonFile(file: File): boolean {
     return file.type === 'application/json' || file.name.endsWith('.json');
   }
 
+  /**
+   * Checks if the data object has a catalog nested inside
+   * @param data The object to check
+   * @returns Whether there is a nested catalog
+   */
   private isNested(data: object): boolean{
     let oscalObj = data as Oscal;
     if(oscalObj.catalog != undefined){
-        return true;
+      return true;
     }
     return false;
   }
@@ -148,6 +182,10 @@ export class CatalogProcessingComponent {
   }
 
 
+  /**
+   * Handles the uploaded file
+   * @param file The uploaded file
+   */
   private handleFile(file: File): void {
     const reader = new FileReader();
     reader.onload = () => {
