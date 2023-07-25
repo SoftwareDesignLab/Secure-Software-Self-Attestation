@@ -21,8 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-.result-container {
-  width: 100%;
-  border: 2px solid black;
-  margin-top: 20px;
+
+ .result-container {
+  width: clamp(400px, 90vw, 1000px);
+  margin: 30px auto;
+  padding: 0 2vw;
+}
+
+h2, h3, h4, h5, p {
+  text-indent: 20px;
+}
+
+h3 {
+  margin-left: 10px;
+}
+
+p {
+  margin-left: 20px;
+}
+
+h4, ul {
+  margin-left: 30px;
+  margin-bottom: 10px;
+}
+
+h5 {
+  margin: 10px 50px;
+  font-weight: normal;
+}
+
+ul {
+  list-style-type: none;
 }

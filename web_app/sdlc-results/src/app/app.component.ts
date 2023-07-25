@@ -32,8 +32,34 @@ import { AssessmentResults } from './resultsModel';
 })
 export class AppComponent {
   assessmentResults: AssessmentResults | undefined;
+  showFullFooter: boolean = false;
+  showNav = false;
+  poamMode = false;
 
   onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
     this.assessmentResults = jsonData["assessment-results"];
+  }
+
+  toggleFooter() {
+    this.showFullFooter = !this.showFullFooter;
+  }
+
+  toggleNav(): void {
+    this.showNav = !this.showNav;
+    let nav = document.getElementById('nav');
+    if (nav instanceof HTMLElement) {
+      if (this.showNav) {
+        nav.classList.add('nav-opening');
+        nav.classList.remove('nav-closing');
+      } else {
+        nav.classList.add('nav-closing');
+        nav.classList.remove('nav-opening');
+      }
+    }
+  }
+
+  poam(state: boolean): void {
+    this.toggleNav();
+    this.poamMode = state;
   }
 }
