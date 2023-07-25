@@ -40,7 +40,7 @@ describe('data store and retrieval', () => {
     APService = TestBed.inject(AssessmentPlanService);
     attestationService = TestBed.inject(AttestationDataService);
 
-    attestationService.setView(0)
+    attestationService.setView(0);
   });
 
   it('should be created', () => {
@@ -60,7 +60,7 @@ describe('data store and retrieval', () => {
     APService.getMetadata().subscribe(metadata => {
       expect(metadata.parties.length).toEqual(2);
       expect(metadata.parties[0].name).toEqual(producerInfo.name);
-      expect(metadata.parties[0].addresses?.length).toEqual(1)
+      expect(metadata.parties[0].addresses?.length).toEqual(1);
       expect(metadata.parties[0].props?.length).toEqual(1);
     });
   });
@@ -119,7 +119,7 @@ describe('data store and retrieval', () => {
   it('sets the comment for a control', () => {
     const controlID = "4e(i)(A)";
     const comment = "This is a comment";
-    APService.addAssessmentPlan("Test Assessment Plan")
+    APService.addAssessmentPlan("Test Assessment Plan");
     APService.addCatalog(defaultCatalog);
     APService.setControlComment(controlID, comment);
     APService.getAssessmentPlans().subscribe(data => {

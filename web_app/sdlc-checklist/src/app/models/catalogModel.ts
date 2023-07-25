@@ -108,8 +108,8 @@ import { ChecklistItemComponent } from '../control/control.component';
 
 
     export class ControlAttestation {
-        comment: String;
-        selection: String;
+        comment: string;
+        selection: string;
         finalized: Boolean = false;
         showRollable: boolean = false;
 

@@ -25,6 +25,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectorRef} from '@angul
 import { AttestationDataService } from '../services/attestation-data.service';
 import { ControlAttestation } from '../models/catalogModel';
 import { timeInterval } from 'rxjs';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 
 @Component({
@@ -45,11 +46,11 @@ export class ChecklistItemComponent {
   @Input() controls?: ChecklistItemComponent[];
   @Input() catalogUUID: any;
   @Output() update = new EventEmitter();
-  selection: String = "no-selection";
+  selection: string = "no-selection";
   showRollable = false;
   info!: ControlAttestation; 
   UID: any; //Unique ID for this control for the program
-  comment: String = "";
+  comment: string = "";
   popup: Boolean = false;
   finalized: Boolean = false;
   onPopup: Boolean = false;
@@ -117,7 +118,6 @@ export class ChecklistItemComponent {
   }
 
   select(option: string) {
-    this.attestationDataService.updateControlSelection(this.UID, option);
     if (this.selection === "no-selection") {
       this.deploy();
     }
@@ -133,7 +133,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
-      this.attestationDataService.saveControlComment(this.UID,this.comment);
+      this.attestationDataService.saveControlComment(this.UID, this.comment);
     this.cancel();
   }
 
@@ -142,7 +142,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
-      this.attestationDataService.finalizeControlComment(this.UID,this.comment);
+      this.attestationDataService.finalizeControlComment(this.UID, this.comment);
     this.cancel();
   }
 

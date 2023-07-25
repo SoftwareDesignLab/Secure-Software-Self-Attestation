@@ -24,6 +24,7 @@
 
 
 import { Component, ViewChildren, QueryList } from '@angular/core';
+import { saveAs } from 'file-saver';
 import { GroupComponent } from '../group/group.component';
 import catalog from '../defaultCatalog';
 
@@ -31,6 +32,7 @@ import { AttestationDataService } from '../services/attestation-data.service';
 import { attestationComment } from '../services/attestationForm';
 import { CatalogData, Catalog} from '../models/catalogModel';
 import { AttestationComponent } from '../attestation/attestation.component';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 
 @Component({
@@ -52,9 +54,9 @@ export class AttestationPageComponent {
   observedForm!: AttestationComponent;
 
   selectedValue!: string;
-  info: any;
+  info: attestationComment[] = [];
 
-  constructor(public attestationService: AttestationDataService){
+  constructor(public attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){
       this.selectedValue = attestationService.getCurrentForm.getSelectedValue;
       this.info = attestationService.getCurrentForm.getInfo;
       this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
@@ -110,11 +112,16 @@ export class AttestationPageComponent {
 
 
   addRow(){
+    //TODO this will need to be moved to update the assessment plan when a subject is changed
+    let previous = this.info[this.info.length-1];
+    this.assessmentPlanService.addSubject(previous.getName(), previous.getVersion(), previous.getDate());
+
     this.info.push(new attestationComment)
   }
 
   removeRow(){
     this.info.pop();
+    this.assessmentPlanService.popSubject();
   }
 
   onKey(event: any, attest: attestationComment, target: string) { 
@@ -132,7 +139,7 @@ export class AttestationPageComponent {
     this.attestationService.getCurrentForm.onFileSelected(jsonData);
   }
 
-  setAllGroupExpansion(toSet: boolean, uuid: String): void {
+  setAllGroupExpansion(toSet: boolean, uuid: string): void {
     this.childComponents.forEach((child) => {
       if (child.catalogUUID === uuid) {
         child.setComponents(toSet);
@@ -141,15 +148,15 @@ export class AttestationPageComponent {
   }
 
 
-  toggleExpansion(uuid: String): void {
+  toggleExpansion(uuid: string): void {
     this.attestationService.getCurrentForm.toggleExpansion(uuid);
   }
 
-  isShown(uuid: String): boolean {
+  isShown(uuid: string): boolean {
     return !this.hiddenCatalogs.has(uuid);
   }
 
-  removeCatalog(uuid: String): void {
+  removeCatalog(uuid: string): void {
     this.attestationService.getCurrentForm.removeCatalog(uuid);
   }
 
@@ -165,4 +172,13 @@ export class AttestationPageComponent {
   alert(message: string) {
     alert(message);
   }
+
+  generateAssessmentPlan() {
+    let object = this.assessmentPlanService.serializeCurrentPlan();
+    const blob = new Blob([JSON.stringify(object, null, 4)], {type: "application/json"});
+    saveAs(blob, 'assessmentPlan.json');
+    //TODO assessment plan works great for the first attestation, bugs out for the second one\
+    //TODO Compliance claims not spawning
+  }
+
 }

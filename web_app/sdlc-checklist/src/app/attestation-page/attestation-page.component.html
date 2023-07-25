@@ -66,7 +66,7 @@
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
     <div class="generate-report-div">
-      <button class="save-progress" (click)="alert('This would save progress, but right now it\'s useless')">Save Attestation</button>
+      <button class="save-progress" (click)="generateAssessmentPlan()">Save Attestation</button>
       <button class="generate-report" *ngIf="catalogData">Generate Report</button>
     </div>
   </div>

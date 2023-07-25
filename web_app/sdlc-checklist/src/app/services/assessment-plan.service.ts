@@ -23,10 +23,13 @@ export class AssessmentPlanService {
   private catalogs = new BehaviorSubject<Array<Catalog>>(new Array<Catalog>());
   currentCatalogs = this.catalogs.asObservable();
   // A map of control IDs to the index of their catalogs in both the assessment plan control-selections and the catalog list
-  private controlMap = new BehaviorSubject<Map<String, number>>(new Map<String, number>());
+  private controlMap = new BehaviorSubject<Map<string, number>>(new Map<string, number>());
   currentControlMap = this.controlMap.asObservable();
 
-  constructor( private attestationService: AttestationDataService) {
+  private attestationFocus = new BehaviorSubject<number>(0);
+  currentViewState = this.attestationFocus.asObservable();
+
+  constructor() {
     let metadata = this.metadata.getValue();
     metadata.addBlankParty();
     metadata.addBlankParty();
@@ -43,9 +46,23 @@ export class AssessmentPlanService {
     return this.assessmentPlans.asObservable();
   }
 
+  setAttestationFocus(index: number) {
+    this.attestationFocus.next(index);
+  }
+
   serializeAll() {
     let plans = this.assessmentPlans.getValue();
     return JSON.stringify(plans.map(plan => plan.serialize()));
+  }
+
+  serializePlan(index: number) {
+    let plans = this.assessmentPlans.getValue();
+    return JSON.stringify(plans[index].serialize());
+  }
+
+  serializeCurrentPlan() {
+    let plans = this.assessmentPlans.getValue();
+    return JSON.stringify(plans[this.attestationFocus.getValue()].serialize());
   }
 
   updateProducerInfo(data: any) {
@@ -66,6 +83,7 @@ export class AssessmentPlanService {
 
     plans.forEach(plan => {
       plan.metadata.parties = metadata.parties;
+      plan.metadata['last-modified'] = new Date().toISOString();
     });
 
     this.assessmentPlans.next(plans);
@@ -91,6 +109,7 @@ export class AssessmentPlanService {
 
     plans.forEach(plan => {
       plan.metadata.parties = metadata.parties;
+      plan.metadata['last-modified'] = new Date().toISOString();
     });
 
     this.assessmentPlans.next(plans);
@@ -122,9 +141,9 @@ export class AssessmentPlanService {
     this.assessmentPlans.next(plans);
   }
 
-  addCatalog( catalog: Catalog) {
+  addCatalog(catalog: Catalog) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
     let catalogs = this.catalogs.getValue();
     let controlSelection = new ControlSelection();
 
@@ -157,9 +176,9 @@ export class AssessmentPlanService {
     this.assessmentPlans.next(plans);
   }
 
-  removeCatalog(catalogUuid: String) {
+  removeCatalog(catalogUuid: string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
     let catalogs = this.catalogs.getValue();
     let controlMap = this.controlMap.getValue();
 
@@ -185,15 +204,24 @@ export class AssessmentPlanService {
 
   // // control selections list is indexed by attestation. it should match up with assessment-subjects list
 
-  setControlSelection(controlID: string, selection: ControlSelectionType) {
+  setControlSelection(controlID: string, selection: ControlSelectionType | string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
-    if (index !== undefined) {
+    if (index !== -1) {
+      if (typeof selection === "string") {
+        switch (selection) {
+          case "check": selection = ControlSelectionType.yes; break;
+          case "x": selection = ControlSelectionType.no; break;
+          case "na": selection = ControlSelectionType.notApplicable; break;
+          default: return console.log("Invalid selection type. Must be one of 'check', 'x', or 'na'");
+        }
+      }
+
       plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
@@ -207,13 +235,13 @@ export class AssessmentPlanService {
 
   setControlComment(controlID: string, comment: string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
-    if (index !== undefined) {
+    if (index !== -1) {
       plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
@@ -227,13 +255,13 @@ export class AssessmentPlanService {
 
   removeControlSelection(controlID: string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
-    if (index !== undefined) {
+    if (index !== -1) {
       plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].addExcludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
@@ -245,13 +273,13 @@ export class AssessmentPlanService {
 
   removeControlComment(controlID: string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
-    if (index !== undefined) {
+    if (index !== -1) {
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
       this.assessmentPlans.next(plans);
       return;
@@ -259,9 +287,9 @@ export class AssessmentPlanService {
     console.log("Control not found in catalog: " + controlID);
   }
 
-  addSubject(productName: String, version: String, date: String) {
+  addSubject(productName: string, version: string, date: string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject creation");
@@ -283,9 +311,9 @@ export class AssessmentPlanService {
     this.assessmentPlans.next(plans);
   }
 
-  updateSubject(subjectIndex: number, productName: String, version: String, date: String) {
+  updateSubject(subjectIndex: number, productName: string, version: string, date: string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject update");
@@ -308,7 +336,7 @@ export class AssessmentPlanService {
 
   popSubject() {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject deletion");
@@ -327,7 +355,7 @@ export class AssessmentPlanService {
 
   setCompanyWide() {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject update");
@@ -342,7 +370,7 @@ export class AssessmentPlanService {
 
   setSingleProduct() {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationService.getView]
+    let plan = plans[this.attestationFocus.getValue()]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject update");

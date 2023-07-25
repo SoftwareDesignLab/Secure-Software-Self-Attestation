@@ -63,7 +63,7 @@ export class AppComponent {
   showComponents = false;
   showFullFooter = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService ){}
+  constructor(private router: Router, private attestationService: AttestationDataService){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))

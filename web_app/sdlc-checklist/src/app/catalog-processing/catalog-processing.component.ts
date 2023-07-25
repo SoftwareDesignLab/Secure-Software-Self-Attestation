@@ -24,6 +24,7 @@
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CatalogFileFormat, metaData, Catalog } from '../models/catalogModel';
 import { notifyService } from '../services/notify.service';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class CatalogProcessingComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
 
-  constructor(private notifications: notifyService){
+  constructor(private notifications: notifyService, private assessmentPlanService: AssessmentPlanService){
   }
 
   onFileSelected(event: Event): void {
@@ -155,6 +156,7 @@ export class CatalogProcessingComponent {
       const catalog = this.isNested(json) ? json.catalog : json;
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
+        this.assessmentPlanService.addCatalog(catalog as Catalog);
         this.fileSelected.emit(catalog);
       }
     };

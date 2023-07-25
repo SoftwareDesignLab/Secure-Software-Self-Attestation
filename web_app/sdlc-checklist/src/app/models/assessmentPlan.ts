@@ -18,13 +18,13 @@ enum SubjectIDType {
 }
 
 class AssessmentPart {
-  name: String = "";
-  title?: String;
-  uuid?: String;
-  ns?: String;
-  class?: String;
+  name: string = "";
+  title?: string;
+  uuid?: string;
+  ns?: string;
+  class?: string;
   props?: Prop[];
-  prose?: String;
+  prose?: string;
   parts?: AssessmentPart[];
   links?: Link[];
 
@@ -51,7 +51,7 @@ class AssessmentPart {
 class TermsAndConditions {
   parts: AssessmentPart[] = [];
 
-  addPart(name: String, title?: String, uuid?: String, ns?: String, class_?: String, props?: Prop[], prose?: String, parts?: AssessmentPart[], links?: Link[]) {
+  addPart(name: string, title?: string, uuid?: string, ns?: string, class_?: string, props?: Prop[], prose?: string, parts?: AssessmentPart[], links?: Link[]) {
     let newPart = new AssessmentPart();
     newPart.name = name;
     if (title !== undefined ) newPart.title = title;
@@ -75,8 +75,8 @@ class TermsAndConditions {
 }
 
 class ImportSSP {
-  href: String = "";
-  remarks?: String;
+  href: string = "";
+  remarks?: string;
 
   serialize(): object {
     let serialized = {
@@ -88,8 +88,8 @@ class ImportSSP {
 }
 
 class ControlID {
-  "control-id": String = "";
-  "statement-ids"?: String[];
+  "control-id": string = "";
+  "statement-ids"?: string[];
 
   serialize(): object {
     let serialized = {
@@ -101,15 +101,15 @@ class ControlID {
 }
 
 export class ControlSelection {
-  description?: String;
+  description?: string;
   props?: Prop[];
   links?: Link[];
   "include-all"?: Boolean | object;
   "include-controls"?: ControlID[];
   "exclude-controls"?: ControlID[];
-  remarks?: String;
+  remarks?: string;
 
-  constructor(description?: String, props?: Prop[], links?: Link[], includeAll?: Boolean, includeControls?: ControlID[], excludeControls?: ControlID[], remarks?: String) {
+  constructor(description?: string, props?: Prop[], links?: Link[], includeAll?: Boolean, includeControls?: ControlID[], excludeControls?: ControlID[], remarks?: string) {
     this.description = description;
     this.props = props;
     this.links = links;
@@ -119,7 +119,7 @@ export class ControlSelection {
     this.remarks = remarks;
   }
 
-  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
     if (this.props === undefined) this.props = [];
     let newProp = new Prop(name, value);
     if (class_ !== undefined) newProp.class = class_;
@@ -129,7 +129,7 @@ export class ControlSelection {
     this.props.push(newProp);
   }
 
-  addLink(href: String, rel?: String) {
+  addLink(href: string, rel?: string) {
     let link = new Link();
     link.href = href;
     if (rel !== undefined) link.rel = rel;
@@ -137,7 +137,7 @@ export class ControlSelection {
     this.links.push(link);
   }
 
-  addIncludeControl(controlID: String, statementIDs?: String[]) {
+  addIncludeControl(controlID: string, statementIDs?: string[]) {
     let newControlID = new ControlID();
     newControlID["control-id"] = controlID;
     if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
@@ -145,13 +145,13 @@ export class ControlSelection {
     this["include-controls"].push(newControlID);
   }
 
-  removeIncludeControl(controlID: String) {
+  removeIncludeControl(controlID: string) {
     if (this["include-controls"] === undefined) return;
     let index = this["include-controls"].findIndex(control => control["control-id"] === controlID);
     if (index > -1) this["include-controls"].splice(index, 1);
   }
 
-  addExcludeControl(controlID: String, statementIDs?: String[]) {
+  addExcludeControl(controlID: string, statementIDs?: string[]) {
     let newControlID = new ControlID();
     newControlID["control-id"] = controlID;
     if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
@@ -159,7 +159,7 @@ export class ControlSelection {
     this["exclude-controls"].push(newControlID);
   }
 
-  removeExcludeControl(controlID: String) {
+  removeExcludeControl(controlID: string) {
     if (this["exclude-controls"] === undefined) return;
     let index = this["exclude-controls"].findIndex(control => control["control-id"] === controlID);
     if (index > -1) this["exclude-controls"].splice(index, 1);
@@ -171,7 +171,7 @@ export class ControlSelection {
     this['exclude-controls'] = undefined;
   }
 
-  removeProp(name: String, class_: string) {
+  removeProp(name: string, class_: string) {
     if (this.props === undefined) return;
     let index = this.props.findIndex(prop => prop.name === name && prop.class === class_);
     if (index > -1) this.props.splice(index, 1);
@@ -197,8 +197,8 @@ export class ControlSelection {
 }
 
 class Link {
-  href: String = "";
-  rel?: String;
+  href: string = "";
+  rel?: string;
 
   serialize(): object {
     let serialized = {
@@ -213,18 +213,18 @@ class ReviewedControls {
   "control-selections": ControlSelection[] = [];
   props?: Prop[];
   links?: Link[];
-  description?: String;
-  remarks?: String;
+  description?: string;
+  remarks?: string;
 
   constructor() {
   }
 
-  addControlSelection(description: String = "", props: Prop[] = [], links: Link[] = [], includeAll: Boolean = false, includeControls: ControlID[] = [], excludeControls: ControlID[] = [], remarks: String = "") {
+  addControlSelection(description: string = "", props: Prop[] = [], links: Link[] = [], includeAll: Boolean = false, includeControls: ControlID[] = [], excludeControls: ControlID[] = [], remarks: string = "") {
     let newControlSelection = new ControlSelection(description, props, links, includeAll, includeControls, excludeControls, remarks);
     this["control-selections"].push(newControlSelection);
   }
 
-  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
     if (this.props === undefined) this.props = [];
     let newProp = new Prop(name, value);
     newProp.class = class_;
@@ -252,14 +252,14 @@ class ReviewedControls {
 } 
 
 export class Prop {
-  name: String;
-  value: String;
-  class?: String;
-  uuid?: String;
-  ns?: String;
-  remarks?: String;
+  name: string;
+  value: string;
+  class?: string;
+  uuid?: string;
+  ns?: string;
+  remarks?: string;
 
-  constructor(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+  constructor(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
     this.name = name;
     this.value = value;
     this.class = class_;
@@ -282,11 +282,11 @@ export class Prop {
 }
 
 class Address {
-  "addr-lines": String[] = [""];
-  city: String = "";
-  state: String = "";
-  "postal-code": String = "";
-  country: String = "";
+  "addr-lines": string[] = [""];
+  city: string = "";
+  state: string = "";
+  "postal-code": string = "";
+  country: string = "";
 
   serialize(): object {
     let serialized = {
@@ -301,17 +301,17 @@ class Address {
 }
 
 class Party {
-  uuid: String = uuid();
-  type: String = "";
-  name?: String;
+  uuid: string = uuid();
+  type: string = "";
+  name?: string;
   addresses?: Address[];
   props?: Prop[];
-  remarks?: String;
-  "email-addresses"?: String[];
-  "telephone-numbers"?: String[];
+  remarks?: string;
+  "email-addresses"?: string[];
+  "telephone-numbers"?: string[];
   links?: Link[];
 
-  addAddress(addrlines: String[], city: String, state: String, postal: String, country: String) {
+  addAddress(addrlines: string[], city: string, state: string, postal: string, country: string) {
     let newAddress = new Address();
     newAddress["addr-lines"] = addrlines;
     newAddress.city = city;
@@ -321,38 +321,38 @@ class Party {
     this.addresses = [newAddress];
   }
 
-  setPrimaryAddressLines(lines: String[]) {
+  setPrimaryAddressLines(lines: string[]) {
     if (this.addresses === undefined) {
       this.addresses = [new Address()];
     }
     this.addresses[0]["addr-lines"] = lines;
   }
-  setPrimaryCity(city: String) {
+  setPrimaryCity(city: string) {
     if (this.addresses === undefined) {
       this.addresses = [new Address()];
     }
     this.addresses[0].city = city;
   }
-  setPrimaryState(state: String) {
+  setPrimaryState(state: string) {
     if (this.addresses === undefined) {
       this.addresses = [new Address()];
     }
     this.addresses[0].state = state;
   }
-  setPrimaryPostalCode(postal: String) {
+  setPrimaryPostalCode(postal: string) {
     if (this.addresses === undefined) {
       this.addresses = [new Address()];
     }
     this.addresses[0]["postal-code"] = postal;
   }
-  setPrimaryCountry(country: String) {
+  setPrimaryCountry(country: string) {
     if (this.addresses === undefined) {
       this.addresses = [new Address()];
     }
     this.addresses[0].country = country;
   }
 
-  addLink(href: String, rel?: String) {
+  addLink(href: string, rel?: string) {
     if (this.links === undefined) this.links = [];
     let newLink = new Link();
     newLink.href = href;
@@ -360,17 +360,17 @@ class Party {
     this.links.push(newLink);
   }
 
-  addEmailAddress(email: String) {
+  addEmailAddress(email: string) {
     if (this["email-addresses"] === undefined) this["email-addresses"] = [];
     this["email-addresses"].push(email);
   }
 
-  addTelephoneNumber(number: String) {
+  addTelephoneNumber(number: string) {
     if (this["telephone-numbers"] === undefined) this["telephone-numbers"] = [];
     this["telephone-numbers"].push(number);
   }
 
-  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
     if (this.props === undefined) this.props = [];
     let newProp = new Prop(name, value);
     newProp.class = class_;
@@ -398,12 +398,12 @@ class Party {
 
 export class SubjectID {
   type: SubjectIDType = SubjectIDType.Component; //can be component, inventory-item, location, party, user or resource
-  "subject-uuid": String = uuid();
+  "subject-uuid": string = uuid();
   props?: Prop[];
   links?: Link[];
-  remarks?: String;
+  remarks?: string;
 
-  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
     if (this.props === undefined) this.props = [];
     let newProp = new Prop(name, value);
     newProp.class = class_;
@@ -413,7 +413,7 @@ export class SubjectID {
     this.props.push(newProp);
   }
 
-  addLink(href: String, rel?: String) {
+  addLink(href: string, rel?: string) {
     if (this.links === undefined) this.links = [];
     let newLink = new Link();
     newLink.href = href;
@@ -439,10 +439,10 @@ export class SubjectID {
 
 export class AssessmentSubject {
   type: AssessmentSubjectType = AssessmentSubjectType.Party;
-  description?: String;
+  description?: string;
   props?: Prop[];
   links?: Link[];
-  remarks?: String;
+  remarks?: string;
   "include-all"?: Boolean | object;
   "include-subjects"?: SubjectID[];
   "exclude-subjects"?: SubjectID[];
@@ -481,7 +481,7 @@ export class AssessmentSubject {
 
   //TODO move subject from exclude -> include or back
 
-  addProp(name: String, value: String, class_?: String, uuid?: String, ns?: String, remarks?: String) {
+  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
     if (this.props === undefined) this.props = [];
     let newProp = new Prop(name, value);
     newProp.class = class_;
@@ -513,11 +513,11 @@ export class AssessmentSubject {
 }
 
 export class APMetadata {
-  title: String = "Assessment Plan";
-  "last-modified": String = new Date().toISOString();
-  version: String = "1.0.0";
-  "oscal-version": String = "1.0.4";
-  published: String = new Date().toISOString();
+  title: string = "Assessment Plan";
+  "last-modified": string = new Date().toISOString();
+  version: string = "1.0.0";
+  "oscal-version": string = "1.0.4";
+  published: string = new Date().toISOString();
   parties: Party[] = [];
 
   addParty(party: Party) {
@@ -562,14 +562,14 @@ export class APMetadata {
 // }
 
 export class AssessmentPlan {
-  uuid: String = uuid();
+  uuid: string = uuid();
   metadata: APMetadata = new APMetadata();
   "import-ssp": ImportSSP = new ImportSSP();
   "reviewed-controls": ReviewedControls = new ReviewedControls();
   "assessment-subjects"?: AssessmentSubject[];
   "terms-and-conditions"?: TermsAndConditions;
 
-  addAssessmentSubject(type: AssessmentSubjectType = AssessmentSubjectType.Party, description?: String) {
+  addAssessmentSubject(type: AssessmentSubjectType = AssessmentSubjectType.Party, description?: string) {
     if (this["assessment-subjects"] === undefined) this["assessment-subjects"] = [];
     let newAssessmentSubject = new AssessmentSubject();
     newAssessmentSubject.type = type;

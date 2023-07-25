@@ -28,6 +28,7 @@ import { AttestationDataService } from '../services/attestation-data.service';
 import { Catalog, CatalogData } from '../models/catalogModel';
 import catalog from '../defaultCatalog';
 import { ChecklistItemComponent } from '../control/control.component';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 
 
@@ -39,16 +40,18 @@ import { ChecklistItemComponent } from '../control/control.component';
 export class AttestationComponent {
 
   private catalogData: CatalogData = {catalogs: []};
-  private hiddenCatalogs = new Set<String>();
+  private hiddenCatalogs = new Set<string>();
   private selectedValue: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
   private FormPosition: any;
   private positionTag: any;
   displayName: string = "";
 
-  constructor (private attestationService: AttestationDataService){
+  constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){
     this.info.push(new attestationComment);
-    this.catalogData.catalogs.push(catalog as Catalog);    
+    this.catalogData.catalogs.push(catalog as Catalog);
+    this.assessmentPlanService.addAssessmentPlan("Assessment Plan 1")
+    this.assessmentPlanService.addCatalog(catalog as Catalog);
   }
 
 
@@ -119,7 +122,8 @@ export class AttestationComponent {
     this.catalogData.catalogs.push(jsonData);
   }
 
-  removeCatalog(uuid: String): void {
+  removeCatalog(uuid: string): void {
+    this.assessmentPlanService.removeCatalog(uuid);
     let catalogs = this.catalogData.catalogs;
     let removed = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1) as Catalog[];
     this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);
@@ -163,7 +167,7 @@ export class AttestationComponent {
     return this.hiddenCatalogs;
   }
 
-  toggleExpansion(uuid: String): void {
+  toggleExpansion(uuid: string): void {
     if (this.hiddenCatalogs.has(uuid)) {
       this.hiddenCatalogs.delete(uuid);
     } else {

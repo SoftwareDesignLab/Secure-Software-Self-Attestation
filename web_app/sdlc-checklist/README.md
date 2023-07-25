@@ -4,7 +4,10 @@ Make sure you are in `sdlc-checklist` dir
 
 run `npm install` 
 
+run `npm i --save-dev @types/file-saver --legacy-peer-deps`
+
 run `ng add @angular/material` and type `y` to begin installion. 
+
 
 During installing Choose `Indigo/Pink` for  theme, `n` for global typography and `Include and enable animations` for including angular animations.
 

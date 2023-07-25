@@ -26,6 +26,7 @@ import { AttestationComponent } from '../attestation/attestation.component';
 import { ControlAttestation, GroupInfo } from '../models/catalogModel';
 
 import { BehaviorSubject, Subject } from 'rxjs';
+import { AssessmentPlanService } from './assessment-plan.service';
 
 @Injectable({
   providedIn: 'root'
@@ -38,18 +39,18 @@ export class AttestationDataService {
 
   public forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
-  private controlMap: Map<String, ControlAttestation> = new Map<String, ControlAttestation>
-  private groupMap: Map<String, GroupInfo> = new Map<String, ControlAttestation>
+  private controlMap: Map<string, ControlAttestation> = new Map<string, ControlAttestation>
+  private groupMap: Map<string, GroupInfo> = new Map<string, ControlAttestation>
   private tag: number = 1;
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
 
 
-  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this));
+  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
-  constructor() {}
+  constructor(private assessmentPlanService: AssessmentPlanService) {}
   
   refresh(){
       this.ComponentRefreshSource.next();
@@ -60,6 +61,8 @@ export class AttestationDataService {
 
   setDeletionPosition(position: number){
     this.deletionPosition= position;
+    // remove assessment plan in the assessment plan service
+    this.assessmentPlanService.removeAssessmentPlan(position);
   }
 
   getdata(position: number){
@@ -71,6 +74,7 @@ export class AttestationDataService {
   }
 
   setView(position: number){
+    this.assessmentPlanService.setAttestationFocus(position);
     this.viewPosition = position;
   }
   get getRawData(){
@@ -88,7 +92,9 @@ export class AttestationDataService {
   }
 
   addform(){
-    this.forms.push(new AttestationComponent(this));
+    // initialize assessment plan in the assessment plan service
+    this.assessmentPlanService.addAssessmentPlan("Attestation Form "+(this.getRawData.length));
+    this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
     let position = this.forms.length-1;
     this.forms[position].setPositionTag(this.tag);
     this.forms[position].setFormPosition(position);
@@ -101,7 +107,7 @@ export class AttestationDataService {
 
   // Control Methods 
 
-  setUpControl(UID: String): ControlAttestation | undefined{
+  setUpControl(UID: string): ControlAttestation | undefined{
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
     }
@@ -112,17 +118,20 @@ export class AttestationDataService {
     }
   }
 
-  updateControlSelection(UID: String, selection: String){
+  updateControlSelection(UID: string, selection: string){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
-      temp.selection=selection;
+      temp.selection=selection
+      // A little hacky
+      const controlUID = UID.split("-").at(-1) || "";
+      this.assessmentPlanService.setControlSelection(controlUID, selection);
     }
     else{
       console.log("Something went wrong")
     }
   }
 
-  saveControlComment(UID: String, comment: String){
+  saveControlComment(UID: string, comment: string){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.finalized=false;
@@ -134,11 +143,13 @@ export class AttestationDataService {
 
 
   }
-  finalizeControlComment(UID: String, comment: String){
+  finalizeControlComment(UID: string, comment: string){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.finalized=true;
       temp.comment=comment;
+      const controlUID = UID.split("-").at(-1) || ""; // kind of hacky
+      this.assessmentPlanService.setControlComment(controlUID, comment)
     }
     else{
       console.log("Something went wrong")
@@ -146,23 +157,24 @@ export class AttestationDataService {
   }
 
 
-  deleteControlComment(UID: String){
+  deleteControlComment(UID: string){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.comment = "";
       temp.finalized = false;
+      this.assessmentPlanService.removeControlComment(UID);
     }
 
   }
 
-  toggleControlRollable(UID: String){
+  toggleControlRollable(UID: string){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
     }
   }
 
-  removeControl(UID: String){
+  removeControl(UID: string){
     let position = this.getdata(this.deletionPosition).getPositionTag;
     let temp = position + "-" + UID;
     this.controlMap.delete(temp);
@@ -171,7 +183,7 @@ export class AttestationDataService {
 
   // Group methods
   
-  setUpGroup(UID: String): GroupInfo | undefined{
+  setUpGroup(UID: string): GroupInfo | undefined{
     if(this.groupMap.has(UID)){
       return(this.groupMap.get(UID));
     }
@@ -182,14 +194,14 @@ export class AttestationDataService {
     }
   }
 
-  toggleGroupRollable(UID: String){
+  toggleGroupRollable(UID: string){
     let temp = this.groupMap.get(UID);
     if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
     }
   }
 
-  removeGroup(UID: String){
+  removeGroup(UID: string){
     let position = this.getdata(this.deletionPosition).getPositionTag;
     let temp = position + "-" + UID;
     this.groupMap.delete(temp);
