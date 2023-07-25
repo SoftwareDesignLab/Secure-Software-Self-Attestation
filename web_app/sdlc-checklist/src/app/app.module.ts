@@ -44,7 +44,7 @@ import { ContactService } from './services/contact.service';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AttestationDataService } from './services/attestation-data.service';
 import { StartUpService, startUpFactory } from './services/start-up.service';
-
+import { AssessmentPlanService } from './services/assessment-plan.service';
 
 @NgModule({
   declarations: [
@@ -75,6 +75,7 @@ import { StartUpService, startUpFactory } from './services/start-up.service';
     AttestationDataService,
     notifyService,
     StartUpService,
+    AssessmentPlanService,
     {
       provide: APP_INITIALIZER,
       useFactory: startUpFactory,

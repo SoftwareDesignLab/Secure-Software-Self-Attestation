@@ -512,7 +512,7 @@ export class AssessmentSubject {
   }
 }
 
-class APMetadata {
+export class APMetadata {
   title: String = "Assessment Plan";
   "last-modified": String = new Date().toISOString();
   version: String = "1.0.0";
@@ -544,7 +544,7 @@ class APMetadata {
       "last-modified": this["last-modified"],
       "version": this.version,
       "oscal-version": this["oscal-version"],
-      "published": this.published,
+      "published": new Date().toISOString(),
       "parties": this.parties.map(party => party.serialize()),
     };
     return serialized;

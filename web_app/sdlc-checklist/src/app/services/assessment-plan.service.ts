@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { AssessmentPlan, ControlSelection, SubjectID, Prop } from '../models/assessmentPlan';
+import { v4 as uuid } from 'uuid';
+
+import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop } from '../models/assessmentPlan';
 import { Catalog } from '../models/catalogModel';
+import { AttestationDataService } from './attestation-data.service';
 
 export enum ControlSelectionType {
   yes = "yes",
@@ -13,65 +16,115 @@ export enum ControlSelectionType {
   providedIn: 'root'
 })
 export class AssessmentPlanService {
-  private assessmentPlan = new BehaviorSubject<AssessmentPlan>(new AssessmentPlan());
-  currentPlan = this.assessmentPlan.asObservable();
+  private metadata = new BehaviorSubject<APMetadata>(new APMetadata());
+  currentMetadata = this.metadata.asObservable();
+  private assessmentPlans = new BehaviorSubject<Array<AssessmentPlan>>(new Array<AssessmentPlan>());
+  currentPlans = this.assessmentPlans.asObservable();
   private catalogs = new BehaviorSubject<Array<Catalog>>(new Array<Catalog>());
   currentCatalogs = this.catalogs.asObservable();
   // A map of control IDs to the index of their catalogs in both the assessment plan control-selections and the catalog list
   private controlMap = new BehaviorSubject<Map<String, number>>(new Map<String, number>());
   currentControlMap = this.controlMap.asObservable();
 
-  constructor() {
-    let plan = this.assessmentPlan.getValue();
-    plan.metadata.addBlankParty();
-    plan.metadata.addBlankParty();
-    plan.metadata.parties[0].type = "organization";
-    plan.metadata.parties[1].type = "person";
-    plan.addAssessmentSubject();
-    this.assessmentPlan.next(plan);
+  constructor( private attestationService: AttestationDataService) {
+    let metadata = this.metadata.getValue();
+    metadata.addBlankParty();
+    metadata.addBlankParty();
+    metadata.parties[0].type = "organization";
+    metadata.parties[1].type = "person";
+    this.metadata.next(metadata);
   }
 
-  getData() {
-    return this.assessmentPlan.asObservable();
+  getMetadata() {
+    return this.metadata.asObservable();
+  }
+
+  getAssessmentPlans() {
+    return this.assessmentPlans.asObservable();
+  }
+
+  serializeAll() {
+    let plans = this.assessmentPlans.getValue();
+    return JSON.stringify(plans.map(plan => plan.serialize()));
   }
 
   updateProducerInfo(data: any) {
-    let plan = this.assessmentPlan.getValue();
+    let metadata = this.metadata.getValue();
+    let plans = this.assessmentPlans.getValue();
     
-    if (data.name) plan.metadata.parties[0].name = data.name;
+    if (data.name) metadata.parties[0].name = data.name;
     //TODO update for multiple address lines
-    if (data.address) plan.metadata.parties[0].setPrimaryAddressLines([data.address]);
-    if (data.city) plan.metadata.parties[0].setPrimaryCity(data.city);
-    if (data.state) plan.metadata.parties[0].setPrimaryState(data.state);
-    if (data.country) plan.metadata.parties[0].setPrimaryCountry(data.country);
-    if (data.postal) plan.metadata.parties[0].setPrimaryPostalCode(data.postal);
-    if (data.website) plan.metadata.parties[0].addLink(data.website, "website");
-    if (data.website) plan.metadata.parties[0].addProp("webiste", data.website, "Producer Info");
+    if (data.address) metadata.parties[0].setPrimaryAddressLines([data.address]);
+    if (data.city) metadata.parties[0].setPrimaryCity(data.city);
+    if (data.state) metadata.parties[0].setPrimaryState(data.state);
+    if (data.country) metadata.parties[0].setPrimaryCountry(data.country);
+    if (data.postal) metadata.parties[0].setPrimaryPostalCode(data.postal);
+    if (data.website) {
+      metadata.parties[0].addLink(data.website, "website");
+      metadata.parties[0].addProp("webiste", data.website, "Producer Info");
+    }
 
-    this.assessmentPlan.next(plan);
+    plans.forEach(plan => {
+      plan.metadata.parties = metadata.parties;
+    });
+
+    this.assessmentPlans.next(plans);
+    this.metadata.next(metadata);
   }
   
   updateContactInfo(data: any) {
-    let plan = this.assessmentPlan.getValue();
-    let name = plan.metadata.parties[1].name || " ";
+    let metadata = this.metadata.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let name = metadata.parties[1].name || " ";
 
     if (data.fname) data.name = data.fname + " " + name.split(" ")[1];
     if (data.lname) data.name = name.split(" ")[0] + " " + data.lname;
-    if (data.title) plan.metadata.parties[1].addProp("title", data.title, "Contact Info");
+    if (data.title) metadata.parties[1].addProp("title", data.title, "Contact Info");
     //TODO update for multiple address lines
-    if (data.address) plan.metadata.parties[1].setPrimaryAddressLines([data.address]);
-    if (data.city) plan.metadata.parties[1].setPrimaryCity(data.city);
-    if (data.state) plan.metadata.parties[1].setPrimaryState(data.state);
-    if (data.country) plan.metadata.parties[1].setPrimaryCountry(data.country);
-    if (data.postal) plan.metadata.parties[1].setPrimaryPostalCode(data.postal);
-    if (data.phone) plan.metadata.parties[1]["telephone-numbers"] = [data.phone];
-    if (data.email) plan.metadata.parties[1]["email-addresses"] = [data.email];
+    if (data.address) metadata.parties[1].setPrimaryAddressLines([data.address]);
+    if (data.city) metadata.parties[1].setPrimaryCity(data.city);
+    if (data.state) metadata.parties[1].setPrimaryState(data.state);
+    if (data.country) metadata.parties[1].setPrimaryCountry(data.country);
+    if (data.postal) metadata.parties[1].setPrimaryPostalCode(data.postal);
+    if (data.phone) metadata.parties[1]["telephone-numbers"] = [data.phone];
+    if (data.email) metadata.parties[1]["email-addresses"] = [data.email];
 
-    this.assessmentPlan.next(plan);
+    plans.forEach(plan => {
+      plan.metadata.parties = metadata.parties;
+    });
+
+    this.assessmentPlans.next(plans);
+    this.metadata.next(metadata);
+  }
+
+  addAssessmentPlan(title: string) {
+    let plans = this.assessmentPlans.getValue();
+    let plan = new AssessmentPlan();
+    let metadata = this.metadata.getValue();
+    
+    metadata.title = title;
+    plan.metadata = metadata;
+    plan.uuid = uuid();
+    plan.addAssessmentSubject();
+
+    plans.push(plan);
+    this.assessmentPlans.next(plans);
+  }
+
+  removeAssessmentPlan(index: number) {
+    let plans = this.assessmentPlans.getValue();
+    
+    if (index >= plans.length) return;
+    if (index < 0) return;
+
+    plans.splice(index, 1);
+    
+    this.assessmentPlans.next(plans);
   }
 
   addCatalog( catalog: Catalog) {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
     let catalogs = this.catalogs.getValue();
     let controlSelection = new ControlSelection();
 
@@ -101,11 +154,12 @@ export class AssessmentPlanService {
     catalogs.push(catalog);
     this.catalogs.next(catalogs);
     this.controlMap.next(controlMap);
-    this.assessmentPlan.next(plan);
+    this.assessmentPlans.next(plans);
   }
 
   removeCatalog(catalogUuid: String) {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
     let catalogs = this.catalogs.getValue();
     let controlMap = this.controlMap.getValue();
 
@@ -125,14 +179,15 @@ export class AssessmentPlanService {
         }
       });
       this.controlMap.next(controlMap);
-      this.assessmentPlan.next(plan);
+      this.assessmentPlans.next(plans);
     }
   }
 
   // // control selections list is indexed by attestation. it should match up with assessment-subjects list
 
   setControlSelection(controlID: string, selection: ControlSelectionType) {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
     if (index === undefined) {
@@ -144,14 +199,15 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, selection, "Compliance Claim");
-      this.assessmentPlan.next(plan);
+      this.assessmentPlans.next(plans);
       return;
     }
     console.log("Control not found in catalog: " + controlID);
   }
 
   setControlComment(controlID: string, comment: string) {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
     if (index === undefined) {
@@ -163,14 +219,15 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, comment, "Attestation Claim");
-      this.assessmentPlan.next(plan);
+      this.assessmentPlans.next(plans);
       return;
     }
     console.log("Control not found in catalog: " + controlID);
   }
 
   removeControlSelection(controlID: string) {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
     if (index === undefined) {
@@ -180,14 +237,15 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].addExcludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
-      this.assessmentPlan.next(plan);
+      this.assessmentPlans.next(plans);
       return;
     }
     console.log("Control not found in catalog: " + controlID);
   }
 
   removeControlComment(controlID: string) {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
     if (index === undefined) {
@@ -195,14 +253,15 @@ export class AssessmentPlanService {
     }
     if (index !== undefined) {
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
-      this.assessmentPlan.next(plan);
+      this.assessmentPlans.next(plans);
       return;
     }
     console.log("Control not found in catalog: " + controlID);
   }
 
   addSubject(productName: String, version: String, date: String) {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject creation");
@@ -221,11 +280,12 @@ export class AssessmentPlanService {
     plan["assessment-subjects"][0]["include-subjects"].push(subject);
     plan["assessment-subjects"][0].props = [new Prop("type", "multi product", "Attestation Type")];
 
-    this.assessmentPlan.next(plan);
+    this.assessmentPlans.next(plans);
   }
 
   updateSubject(subjectIndex: number, productName: String, version: String, date: String) {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject update");
@@ -243,11 +303,12 @@ export class AssessmentPlanService {
 
     plan["assessment-subjects"][0]["include-subjects"][subjectIndex] = subject;
 
-    this.assessmentPlan.next(plan);
+    this.assessmentPlans.next(plans);
   }
 
   popSubject() {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject deletion");
@@ -261,11 +322,12 @@ export class AssessmentPlanService {
     plan["assessment-subjects"][0]["include-subjects"].pop();
     plan["assessment-subjects"][0].props = [new Prop("type", "multi product", "Attestation Type")];
 
-    this.assessmentPlan.next(plan);
+    this.assessmentPlans.next(plans);
   }
 
   setCompanyWide() {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject update");
@@ -275,11 +337,12 @@ export class AssessmentPlanService {
     plan["assessment-subjects"][0].includeAll(true)
     plan["assessment-subjects"][0].props = [new Prop("type", "company-wide", "Attestation Type")];
 
-    this.assessmentPlan.next(plan);
+    this.assessmentPlans.next(plans);
   }
 
   setSingleProduct() {
-    let plan = this.assessmentPlan.getValue();
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationService.getView]
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject update");
@@ -294,8 +357,10 @@ export class AssessmentPlanService {
     }
 
     plan["assessment-subjects"][0].props = [new Prop("type", "single product", "Attestation Type")];
-    this.assessmentPlan.next(plan);
+    this.assessmentPlans.next(plans);
   }
+  //TODO set attestation type on radio button change
+
   //TODO exclude subjects
   //TODO automatically exclude subjects that are unchecked
 }
