@@ -20,6 +20,7 @@
     - props
       - *props for catalog name and ID*
       - *Each control gets two props - one for the checkbox status and one for the textual claim*
+      - *checkbox status can be one of three options - "checked", "unchecked" or "n/a"*
     - include-controls
       - *list of control ids used (check, x or n/a)*
     - exclude-controls

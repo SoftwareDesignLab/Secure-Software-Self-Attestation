@@ -3,6 +3,12 @@ import { BehaviorSubject } from 'rxjs';
 import { AssessmentPlan, ControlSelection, SubjectID } from '../models/assessmentPlan';
 import { Catalog } from '../models/catalogModel';
 
+export enum ControlSelectionType {
+  yes = "yes",
+  no = "no",
+  notApplicable = "n/a",
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,6 +25,8 @@ export class AssessmentPlanService {
     let plan = this.assessmentPlan.getValue();
     plan.metadata.addBlankParty();
     plan.metadata.addBlankParty();
+    plan.metadata.parties[0].type = "organization";
+    plan.metadata.parties[1].type = "person";
     plan.addAssessmentSubject();
     this.assessmentPlan.next(plan);
   }
@@ -38,6 +46,7 @@ export class AssessmentPlanService {
     if (data.country) plan.metadata.parties[0].setPrimaryCountry(data.country);
     if (data.postal) plan.metadata.parties[0].setPrimaryPostalCode(data.postal);
     if (data.website) plan.metadata.parties[0].addLink(data.website, "website");
+    if (data.website) plan.metadata.parties[0].addProp("webiste", data.website, "Producer Info");
 
     this.assessmentPlan.next(plan);
   }
@@ -48,6 +57,7 @@ export class AssessmentPlanService {
 
     if (data.fname) data.name = data.fname + " " + name.split(" ")[1];
     if (data.lname) data.name = name.split(" ")[0] + " " + data.lname;
+    if (data.title) plan.metadata.parties[1].addProp("title", data.title, "Contact Info");
     //TODO update for multiple address lines
     if (data.address) plan.metadata.parties[1].setPrimaryAddressLines([data.address]);
     if (data.city) plan.metadata.parties[1].setPrimaryCity(data.city);
@@ -74,15 +84,19 @@ export class AssessmentPlanService {
     
     //cache index of catalog for each control
     let controlMap = this.controlMap.getValue();
-    catalog.controls.forEach( control => {
-      controlMap.set(control.id, plan['reviewed-controls']['control-selections'].length-1);
-    });
-    catalog.groups.forEach( group => {
-      if (group.controls === undefined) group.controls = [];
-      group.controls.forEach( control => {
+    if (catalog.controls !== undefined){
+      catalog.controls.forEach( control => {
         controlMap.set(control.id, plan['reviewed-controls']['control-selections'].length-1);
       });
-    });
+    }
+    if (catalog.groups !== undefined){
+      catalog.groups.forEach( group => {
+        if (group.controls === undefined) group.controls = [];
+        group.controls.forEach( control => {
+          controlMap.set(control.id, plan['reviewed-controls']['control-selections'].length-1);
+        });
+      });
+    }
 
     catalogs.push(catalog);
     this.catalogs.next(catalogs);
@@ -90,12 +104,12 @@ export class AssessmentPlanService {
     this.assessmentPlan.next(plan);
   }
 
-  removeCatalog(catalog: Catalog) {
+  removeCatalog(catalogUuid: String) {
     let plan = this.assessmentPlan.getValue();
     let catalogs = this.catalogs.getValue();
     let controlMap = this.controlMap.getValue();
 
-    let index = catalogs.indexOf(catalog);
+    let index = catalogs.findIndex( catalog => catalog.uuid === catalogUuid);
     if (index > -1) {
       catalogs.splice(index, 1);
       this.catalogs.next(catalogs);
@@ -117,7 +131,7 @@ export class AssessmentPlanService {
 
   // // control selections list is indexed by attestation. it should match up with assessment-subjects list
 
-  setControlSelection(controlID: string, selection: string) {
+  setControlSelection(controlID: string, selection: ControlSelectionType) {
     let plan = this.assessmentPlan.getValue();
     let controlMap = this.controlMap.getValue();
     let index = controlMap.get(controlID);
@@ -247,4 +261,20 @@ export class AssessmentPlanService {
 
     this.assessmentPlan.next(plan);
   }
+
+  setCompanyWide(value: Boolean) {
+    let plan = this.assessmentPlan.getValue();
+
+    if (plan["assessment-subjects"] === undefined) {
+      console.log("assessment-subjects not found in plan, skipping subject update");
+      return;
+    }
+    
+    plan["assessment-subjects"][0].includeAll(value)
+
+    this.assessmentPlan.next(plan);
+  }
+
+  //TODO exclude subjects
+  //TODO automatically exclude subjects that are unchecked
 }
