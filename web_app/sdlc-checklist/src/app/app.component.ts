@@ -237,5 +237,33 @@ export class AppComponent {
   range(num: number): Array<number> {
     return Array.from(Array(num).keys())
   }
+
+  loadAttestation(event ?: Event) {
+    let fileInput: HTMLInputElement
+    if (event?.currentTarget instanceof HTMLInputElement) {
+      fileInput = event.currentTarget;
+    } else {
+      let unchecked = document.getElementById("load")
+      if (unchecked instanceof HTMLInputElement) {
+        fileInput = unchecked;
+      } else {
+        return;
+      }
+    }
+    let file = fileInput.files?.[0];
+    fileInput.value = "";
+    if (file instanceof File) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let json = JSON.parse(reader.result as string);
+        this.loadJSON(json)
+      }
+      reader.readAsText(file);
+    }
+  }
+
+  loadJSON(json: JSON) {
+
+  }
 }
 

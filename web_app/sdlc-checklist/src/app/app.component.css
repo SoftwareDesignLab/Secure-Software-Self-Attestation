@@ -170,6 +170,7 @@ nav {
   text-indent: -20px;
   user-select: none;
   cursor: pointer;
+  display: block;
 }
 
 .bottom:hover {

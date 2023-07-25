@@ -30,7 +30,8 @@
       </li>
       <li><p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
     </ul>
-    <p class="bottom" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
+    <label class="bottom" for="load">Load Attestation</label>
+    <input type="file" id="load" hidden accept=".json" (change)="loadAttestation($event)">
   </div>
 </nav>
 
