@@ -1,53 +1,53 @@
 <div class="center">
   <form class="pane" id="contact-form">
-      <div class="form-column">
-        <h3>Software Producer Information</h3>
-        <label for="company-name">Company Name: </label>
-        <input id="company-name" type="text" (keyup)="updateCompanyName($event)" value="{{contactService.companyName}}" autocomplete="organization" >
-        <label for="address1">Address Line 1: </label>
-        <input id="address1" type="text"(keyup)="updateCompanyAddress1($event)" value="{{contactService.companyAddress1}}" autocomplete="address-line1">
-        <label for="address2">Address Line 2: </label>
-        <input id="address2" type="text"(keyup)="updateCompanyAddress2($event)" value="{{contactService.companyAddress2}}" autocomplete="address-line2">
-        <label for="city">City: </label>
-        <input id="city" type="text" (keyup)="updateCity($event)" value="{{contactService.city}}" autocomplete="address-level2">
-        <label for="state">State or Province: </label>
-        <input id="state" type="text" (keyup)="updateState($event)" value="{{contactService.state}}" autocomplete="address-level1">
-        <label for="country">Country: </label>
-        <input id="country" type="text" (keyup)="updateCountry($event)" value="{{contactService.country}}" autocomplete="country-name">
-        <label for="zip">Postal Code: </label>
-        <input id="zip" type="text" (keyup)="updatePostal($event)" value="{{contactService.postalCode}}" autocomplete="postal-code" >
-        <label for="website">Website: </label>
-        <input id="website" type="url" (keyup)="updateWebsite($event)" value="{{contactService.website}}" autocomplete="url">
-      </div>
-      <div class="center-line"></div>
-      <div class="form-column">
-        <h3>Primary Contact for this Document</h3>
-        <label for="first-name">First Name: </label>
-        <input id="first-name" type="text" (keyup)="updateFirstName($event)" value="{{contactService.firstName}}" autocomplete="given-name">
-        <label for="last-name">Last Name: </label>
-        <input id="last-name" type="text" (keyup)="updateLastName($event)" value="{{contactService.lastName}}" autocomplete="family-name">
-        <label for="title">Job Title: </label>
-        <input id="title" type="text" (keyup)="updateTitle($event)" value="{{contactService.title}}" autocomplete="organization-title">
-        <label for="contact-address-1">Address Line 1: </label>
-        <input id="contact-address-1" type="text" (keyup)="updatePersonalAddress1($event)" value="{{contactService.personalAddress1}} " autocomplete="address-line1">
-        <label for="contact-address-2">Address Line 2: </label>
-        <input id="contact-address-2" type="text" (keyup)="updatePersonalAddress2($event)" value="{{contactService.personalAddress2}} " autocomplete="address-line2">
-        <label for="contact-city">City: </label>
-        <input id="contact-city" type="text" (keyup)="updatePersonalCity($event)"  value="{{contactService.personalCity}}" autocomplete="address-level2">
-        <label for="contact-state">State: </label>
-        <input id="contact-state" type="text" (keyup)="updatePersonalState($event)" value="{{contactService.personalState}}" autocomplete="address-level1">
-        <label for="contact-country">Country: </label>
-        <input id="contact-country" type="text" (keyup)="updatePersonalCountry($event)" value="{{contactService.personalCountry}}" autocomplete="country-name">
-        <label for="contact-zip">Postal Code: </label>
-        <input id="contact-zip" type="text" (keyup)="updatePersonalPostal($event)"  value="{{contactService.personalPostal}}"autocomplete="postal-code">
-        <label for="phone">Phone: </label>
-        <input id="phone" type="tel" (keyup)="updatePhone($event)" value="{{contactService.phone}}" autocomplete="tel">
-        <label for="email">Email: </label>
-        <input id="email" type="email" (keyup)="updateEmail($event)" value="{{contactService.email}}" autocomplete="email">
-      </div>
-    </form>
-
+    <div class="form-column">
+      <h3>Software Producer Information</h3>
+      <label for="company-name">Company Name: </label>
+      <input id="company-name" type="text" (keyup)="updateCompanyName($event)" value="{{contactService.companyName}}" autocomplete="organization" >
+      <label for="address1">Address Line 1: </label>
+      <input id="address1" type="text"(keyup)="updateCompanyAddress1($event)" value="{{contactService.companyAddress1}}" autocomplete="address-line1">
+      <label for="address2">Address Line 2: </label>
+      <input id="address2" type="text"(keyup)="updateCompanyAddress2($event)" value="{{contactService.companyAddress2}}" autocomplete="address-line2">
+      <label for="city">City: </label>
+      <input id="city" type="text" (keyup)="updateCity($event)" value="{{contactService.city}}" autocomplete="address-level2">
+      <label for="state">State or Province: </label>
+      <input id="state" type="text" (keyup)="updateState($event)" value="{{contactService.state}}" autocomplete="address-level1">
+      <label for="country">Country: </label>
+      <input id="country" type="text" (keyup)="updateCountry($event)" value="{{contactService.country}}" autocomplete="country-name">
+      <label for="zip">Postal Code: </label>
+      <input id="zip" type="text" (keyup)="updatePostal($event)" value="{{contactService.postalCode}}" autocomplete="postal-code" >
+      <label for="website">Website: </label>
+      <input id="website" type="url" (keyup)="updateWebsite($event)" value="{{contactService.website}}" autocomplete="url">
+    </div>
+    <div class="center-line"></div>
+    <div class="form-column">
+      <h3>Primary Contact for this Document</h3>
+      <label for="first-name">First Name: </label>
+      <input id="first-name" type="text" (keyup)="updateFirstName($event)" value="{{contactService.firstName}}" autocomplete="given-name">
+      <label for="last-name">Last Name: </label>
+      <input id="last-name" type="text" (keyup)="updateLastName($event)" value="{{contactService.lastName}}" autocomplete="family-name">
+      <label for="title">Job Title: </label>
+      <input id="title" type="text" (keyup)="updateTitle($event)" value="{{contactService.title}}" autocomplete="organization-title">
+      <label for="contact-address-1">Address Line 1: </label>
+      <input id="contact-address-1" type="text" (keyup)="updatePersonalAddress1($event)" value="{{contactService.personalAddress1}} " autocomplete="address-line1">
+      <label for="contact-address-2">Address Line 2: </label>
+      <input id="contact-address-2" type="text" (keyup)="updatePersonalAddress2($event)" value="{{contactService.personalAddress2}} " autocomplete="address-line2">
+      <label for="contact-city">City: </label>
+      <input id="contact-city" type="text" (keyup)="updatePersonalCity($event)"  value="{{contactService.personalCity}}" autocomplete="address-level2">
+      <label for="contact-state">State: </label>
+      <input id="contact-state" type="text" (keyup)="updatePersonalState($event)" value="{{contactService.personalState}}" autocomplete="address-level1">
+      <label for="contact-country">Country: </label>
+      <input id="contact-country" type="text" (keyup)="updatePersonalCountry($event)" value="{{contactService.personalCountry}}" autocomplete="country-name">
+      <label for="contact-zip">Postal Code: </label>
+      <input id="contact-zip" type="text" (keyup)="updatePersonalPostal($event)"  value="{{contactService.personalPostal}}"autocomplete="postal-code">
+      <label for="phone">Phone: </label>
+      <input id="phone" type="tel" (keyup)="updatePhone($event)" value="{{contactService.phone}}" autocomplete="tel">
+      <label for="email">Email: </label>
+      <input id="email" type="email" (keyup)="updateEmail($event)" value="{{contactService.email}}" autocomplete="email">
+    </div>
+  </form>
 </div>
+
 <div class="bot-right">
   <button  class="blue" *ngIf="checkAttestations()"  (click)="lastAttestation()">Proceed to Attestation Form</button>
   <button class="green" *ngIf="!checkAttestations()"  (click)="newForm()">+ New Attestation</button>

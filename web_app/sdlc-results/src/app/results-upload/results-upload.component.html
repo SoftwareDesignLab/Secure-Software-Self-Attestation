@@ -1,20 +1,16 @@
-<div class="file-upload">
-    <input
-      type="file"
-      id="file"
-      (change)="onFileSelected($event)"
-      [attr.accept]="accept"
-      #fileInput
-      hidden
-    />
+<div class="file-upload" id="upload">
+  <input
+    type="file"
+    id="file"
+    (change)="onFileSelected($event)"
+    [attr.accept]="accept"
+    #fileInput
+    hidden
+  >
+  <div class="drag-drop-area" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
     <button (click)="fileInput.click()" class="upload-button">
       Upload Results File
     </button>
-    <div
-      class="drag-drop-area"
-      (dragover)="onDragOver($event)"
-      (drop)="onDrop($event)"
-    >
-      <p>Must be JSON formatted as an OSCAL Assessment Results Model</p>
-    </div>
+    <p>-- or --<br><br>Drag and Drop Here<br>Must be JSON formatted as an OSCAL Assessment Results Model</p>
   </div>
+</div>

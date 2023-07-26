@@ -80,14 +80,12 @@ constructor( public contactService: ContactService, private router: Router,priva
   updateEmail(event: any){
     this.contactService.email = event.target.value;
   }
-
-
+  
   lastAttestation(){
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.attestationService.refresh();
     this.router.navigate(['attestation-form']);
-    }
-
+  }
 
   changeAttestion(position: number){
     this.attestationService.setView(position);
@@ -95,10 +93,8 @@ constructor( public contactService: ContactService, private router: Router,priva
     this.attestationService.pageName = this.attestationService.getCurrentForm.getName();
     this.attestationService.refresh();
     this.router.navigate(['attestation-form']);
-    }
+  }
 
-
-  
   newForm(){
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
@@ -115,8 +111,5 @@ constructor( public contactService: ContactService, private router: Router,priva
     }
     return false;
   }
-
-
-
 }
 
