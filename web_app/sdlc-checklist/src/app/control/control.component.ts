@@ -126,6 +126,7 @@ export class ChecklistItemComponent {
     } else {
       this.selection = option;
     }
+    this.attestationDataService.updateControlSelection(this.UID, this.selection);
   }
 
   save() {

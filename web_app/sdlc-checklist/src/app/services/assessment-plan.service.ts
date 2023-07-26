@@ -218,6 +218,7 @@ export class AssessmentPlanService {
           case "check": selection = ControlSelectionType.yes; break;
           case "x": selection = ControlSelectionType.no; break;
           case "na": selection = ControlSelectionType.notApplicable; break;
+          case "no-selection": this.removeControlSelection(controlID); return;
           default: return console.log("Invalid selection type. Must be one of 'check', 'x', or 'na'");
         }
       }
