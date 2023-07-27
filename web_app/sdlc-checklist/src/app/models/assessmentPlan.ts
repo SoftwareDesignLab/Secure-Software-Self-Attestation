@@ -104,12 +104,16 @@ export class ControlSelection {
   description?: string;
   props?: Prop[];
   links?: Link[];
+  remarks?: string;
   "include-all"?: Boolean | object = false;
+
+  //Controls used for serialization
   "include-controls"?: ControlID[];
   "exclude-controls"?: ControlID[];
+
+  //Controls used for remembering
   private "include-controls-memory"?: ControlID[];
   private "exclude-controls-memory"?: ControlID[];
-  remarks?: string;
 
 
 
@@ -187,13 +191,12 @@ export class ControlSelection {
       this["exclude-controls-memory"].splice(index,1);
     }
     if (this["exclude-controls"].length === 0){
-      //delete this["exclude-controls"];
       this.setIncludeAll(true);
     }
   }
 
+  //If include-all is true, then hides all exclude controls/include controls
   setIncludeAll(includeAll: Boolean) {
-    
     if(includeAll){
       this["include-all"] = includeAll;
       this['include-controls'] = undefined;
