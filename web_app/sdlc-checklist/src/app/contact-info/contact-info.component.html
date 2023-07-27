@@ -4,8 +4,10 @@
       <h3>Software Producer Information</h3>
       <label for="company-name">Company Name: </label>
       <input id="company-name" type="text" (keyup)="updateCompanyName($event)" value="{{contactService.companyName}}" autocomplete="organization" >
-      <label for="address">Address: </label>
-      <input id="address" type="text"(keyup)="updateCompanyAddress($event)" value="{{contactService.companyAddress}}" autocomplete="address-line1">
+      <label for="address1">Address Line 1: </label>
+      <input id="address1" type="text"(keyup)="updateCompanyAddress1($event)" value="{{contactService.companyAddress1}}" autocomplete="address-line1">
+      <label for="address2">Address Line 2: </label>
+      <input id="address2" type="text"(keyup)="updateCompanyAddress2($event)" value="{{contactService.companyAddress2}}" autocomplete="address-line2">
       <label for="city">City: </label>
       <input id="city" type="text" (keyup)="updateCity($event)" value="{{contactService.city}}" autocomplete="address-level2">
       <label for="state">State or Province: </label>
@@ -24,10 +26,12 @@
       <input id="first-name" type="text" (keyup)="updateFirstName($event)" value="{{contactService.firstName}}" autocomplete="given-name">
       <label for="last-name">Last Name: </label>
       <input id="last-name" type="text" (keyup)="updateLastName($event)" value="{{contactService.lastName}}" autocomplete="family-name">
-      <label for="title">Title: </label>
+      <label for="title">Job Title: </label>
       <input id="title" type="text" (keyup)="updateTitle($event)" value="{{contactService.title}}" autocomplete="organization-title">
-      <label for="contact-address">Address: </label>
-      <input id="contact-address" type="text" (keyup)="updatePersonalAddress($event)" value="{{contactService.personalAddress}} " autocomplete="address-line1">
+      <label for="contact-address-1">Address Line 1: </label>
+      <input id="contact-address-1" type="text" (keyup)="updatePersonalAddress1($event)" value="{{contactService.personalAddress1}} " autocomplete="address-line1">
+      <label for="contact-address-2">Address Line 2: </label>
+      <input id="contact-address-2" type="text" (keyup)="updatePersonalAddress2($event)" value="{{contactService.personalAddress2}} " autocomplete="address-line2">
       <label for="contact-city">City: </label>
       <input id="contact-city" type="text" (keyup)="updatePersonalCity($event)"  value="{{contactService.personalCity}}" autocomplete="address-level2">
       <label for="contact-state">State: </label>

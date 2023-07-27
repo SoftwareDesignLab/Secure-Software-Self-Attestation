@@ -7,7 +7,8 @@ export class ContactService {
 
   constructor() { }
   public companyName: string = "";
-  public companyAddress: string = "";
+  public companyAddress1: string = "";
+  public companyAddress2: string = "";
   public city: string = "";
   public state: string = "";
   public postalCode: string = "";
@@ -17,7 +18,8 @@ export class ContactService {
   public firstName: string = "";
   public lastName: string = "";
   public title: string = "";
-  public personalAddress: string = "";
+  public personalAddress1: string = "";
+  public personalAddress2: string = "";
   public personalCity: string = "";
   public personalState: string = "";
   public personalCountry: string = "";
@@ -34,7 +36,7 @@ export class ContactService {
   isFilled(): boolean{
     return(
       this.companyName !== "" &&
-      this.companyAddress !== "" &&
+      this.companyAddress1 !== "" &&
       this.city !== "" &&
       this.postalCode !== "" &&
       this.country !== "" &&
@@ -42,7 +44,7 @@ export class ContactService {
       this.firstName !== "" &&
       this.lastName !== "" &&
       this.title !== "" &&
-      this.personalAddress !== "" &&
+      this.personalAddress1 !== "" &&
       this.personalCity !== "" &&
       this.personalCountry !== "" &&
       this.phone !== "" &&

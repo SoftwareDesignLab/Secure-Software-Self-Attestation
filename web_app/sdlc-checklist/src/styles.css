@@ -65,9 +65,8 @@ header {
     display: none;
 }
 
-*:focus {
-    outline: 2px solid #005EA2;
-    box-shadow: 0 0 5px 0 solid #005EA2;
+button.landing:focus, div.landing:focus {
+    outline: 2px solid black;
 }
 
 
