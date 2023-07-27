@@ -6,8 +6,6 @@ import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop, Assessme
 import { Catalog } from '../models/catalogModel';
 import { GroupComponent } from '../group/group.component';
 import { ChecklistItemComponent } from '../control/control.component';
-import { AttestationDataService } from './attestation-data.service';
-import { group } from '@angular/animations';
 
 export enum ControlSelectionType {
   yes = "yes",
