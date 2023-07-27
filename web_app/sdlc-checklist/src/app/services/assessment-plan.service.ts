@@ -296,9 +296,6 @@ export class AssessmentPlanService {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
     if (index !== -1) {
-      //plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
-      //plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
-      //plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, comment, "Attestation Claim");
 
