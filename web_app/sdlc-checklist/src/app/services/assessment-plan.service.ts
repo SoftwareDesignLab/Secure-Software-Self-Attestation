@@ -218,8 +218,10 @@ export class AssessmentPlanService {
 
       if (selection == ControlSelectionType.noSelection) {
         plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
+        
         plan['reviewed-controls']['control-selections'][index].addExcludeControl(controlID);
         plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
+        plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
         plan.metadata['last-modified'] = new Date().toISOString();
         this.assessmentPlans.next(plans);
         return;

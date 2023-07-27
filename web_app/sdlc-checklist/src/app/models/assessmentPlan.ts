@@ -149,6 +149,9 @@ export class ControlSelection {
     if (this["include-controls"] === undefined) return;
     let index = this["include-controls"].findIndex(control => control["control-id"] === controlID);
     if (index > -1) this["include-controls"].splice(index, 1);
+    if (this["include-controls"].length === 0){
+      delete this["include-controls"];
+    }
   }
 
   addExcludeControl(controlID: string, statementIDs?: string[]) {
@@ -163,6 +166,9 @@ export class ControlSelection {
     if (this["exclude-controls"] === undefined) return;
     let index = this["exclude-controls"].findIndex(control => control["control-id"] === controlID);
     if (index > -1) this["exclude-controls"].splice(index, 1);
+    if (this["exclude-controls"].length === 0){
+      delete this["exclude-controls"];
+    }
   }
 
   setIncludeAll(includeAll: Boolean) {
