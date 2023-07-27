@@ -22,15 +22,20 @@
  * SOFTWARE.
  */
 
-export class resultModelService {
-  
+import { Injectable } from "@angular/core";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ResultModelService {
+  public assessmentResult: AssessmentResult | null = null;
 }
 
-export interface AssessmentResults {
+export interface AssessmentResult {
   uuid: string;
   metadata: Metadata;
   "import-ssp": object;
-  "reviewed-controls": Result[];
+  "reviewed-controls": ReviewedControls[];
   "assessment-subjects": Subject[];
 }
 
@@ -106,20 +111,13 @@ export interface Subject {
 
 
 
-
-
-
+/*
 export interface Part {
     name: string;
     class: string;
     title: string;
     prose: string;
     props: Prop[];
-}
-
-export interface Attestation {
-    "responsible-parties": object[]; //TODO define this type
-    parts: Part[];
 }
 
 export interface Result {
@@ -131,6 +129,13 @@ export interface Result {
   attestations: Attestation[];
 }
 
+export interface Attestation {
+  "responsible-parties": object[]; //TODO define this type
+  parts: Part[];
+}
+
+
+
 export function getControlCatalogFromReviewedControls(reviewedControls: ReviewedControls): string {
   // find the prop with the name "Catalog Name" and return its value
   const catalogNameProp = reviewedControls.props.find((prop) => prop.name === "Catalog Name");
@@ -138,4 +143,4 @@ export function getControlCatalogFromReviewedControls(reviewedControls: Reviewed
     return catalogNameProp.value;
   }
   return "";
-}
+}*/

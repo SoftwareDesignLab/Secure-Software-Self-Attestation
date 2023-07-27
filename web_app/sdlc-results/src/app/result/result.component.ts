@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
-import { Result, getControlCatalogFromReviewedControls } from '../resultsModel';
 
 interface ExtraData {
   [key: string]: any;
@@ -45,10 +44,9 @@ interface ControlDict {
   styleUrls: ['./result.component.css']
 })
 export class ResultComponent {
+  /*
   @Input() result: Result = {} as Result;
   catalogName: string = "Not associated with a catalog";
-  links: string[] = [];
-  controls: ControlDict = {};
 
   // TODO inefficient to call this every time anything changes
   ngOnChanges(): void {
@@ -80,5 +78,5 @@ export class ResultComponent {
         }
       }
     }
-  }
+  }*/
 }

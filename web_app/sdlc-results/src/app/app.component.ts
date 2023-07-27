@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component } from '@angular/core';
-import { AssessmentResults } from './resultsModel';
+import { AssessmentResult, ResultModelService } from './resultsModel';
 
 
 @Component({
@@ -31,10 +31,12 @@ import { AssessmentResults } from './resultsModel';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  assessmentResults: AssessmentResults | undefined;
+  assessmentResults: AssessmentResult | undefined;
   showFullFooter: boolean = false;
   showNav = false;
   poamMode = false;
+
+  constructor( resultModelService: ResultModelService) {}
 
   onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
     this.assessmentResults = jsonData["assessment-results"];

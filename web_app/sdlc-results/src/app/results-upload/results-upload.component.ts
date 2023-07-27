@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { ResultModelService } from '../resultsModel';
 
 @Component({
   selector: 'app-results-upload',
@@ -32,6 +33,8 @@ export class ResultsUploadComponent {
   @Input() accept = '.json';
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
+
+  constructor( resultModelService: ResultModelService ) {}
 
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -69,7 +72,7 @@ export class ResultsUploadComponent {
     const reader = new FileReader();
     reader.onload = () => {
       const json = JSON.parse(reader.result as string);
-      this.fileSelected.emit(json);
+      this.resultModelService.
     };
     reader.readAsText(file);
   }
