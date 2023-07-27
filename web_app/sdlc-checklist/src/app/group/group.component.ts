@@ -36,6 +36,7 @@ export class GroupComponent {
   @Input() title: any;
   @Input() description: any;
   @Input() controls?: ChecklistItemComponent[];
+  @Input() groups?: GroupComponent[];
   @Input() catalogUUID: any;
   @ViewChildren(ChecklistItemComponent) childComponents!: QueryList<ChecklistItemComponent>;
   showComponents = true;
@@ -111,17 +112,10 @@ export class GroupComponent {
   }
 
   setAllChildrenSelection(selection: string): void {
-    if(this.deselectAll(selection)){
-      this.childComponents.forEach((child) => {
-        child.selection = selection;
-        this.attestationDataService.updateControlSelection( child.UID,selection);
-      })
-    }
-    else{
-      this.childComponents.forEach((child) => {
-        child.selection = "no-selection";
-        this.attestationDataService.updateControlSelection( child.UID,"no-selection");
-      })
-    }
+    this.childComponents.forEach((child) => {
+      if (child instanceof ChecklistItemComponent) {
+        child.overrideSelection(selection);
+      }
+    });
   }
 }

@@ -108,7 +108,7 @@ describe('data store and retrieval', () => {
     APService.setControlComment(controlID, "commmmmmmmmmmment");
     APService.setControlComment(controlID, "commmmmmmmmmmment");
     APService.setControlComment(controlID, "commmmmmmmmmmment");
-    APService.removeControlSelection(controlID);
+    APService.setControlSelection(controlID, ControlSelectionType.noSelection);
     APService.getAssessmentPlans().subscribe(data => {
       let plan = data[0];
       expect(plan['reviewed-controls']['control-selections'][0].props?.length).toEqual(3);

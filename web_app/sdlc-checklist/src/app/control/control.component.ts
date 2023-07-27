@@ -126,6 +126,12 @@ export class ChecklistItemComponent {
     } else {
       this.selection = option;
     }
+    this.attestationDataService.updateControlSelection(this.UID, this.selection);
+  }
+
+  overrideSelection(option: string) {
+    this.selection = option;
+    this.attestationDataService.updateControlSelection(this.UID, this.selection);
   }
 
   save() {

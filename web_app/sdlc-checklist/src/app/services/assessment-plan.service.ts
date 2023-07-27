@@ -2,14 +2,18 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
-import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop } from '../models/assessmentPlan';
+import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop, AssessmentSubject } from '../models/assessmentPlan';
 import { Catalog } from '../models/catalogModel';
+import { GroupComponent } from '../group/group.component';
+import { ChecklistItemComponent } from '../control/control.component';
 import { AttestationDataService } from './attestation-data.service';
+import { group } from '@angular/animations';
 
 export enum ControlSelectionType {
   yes = "yes",
   no = "no",
   notApplicable = "n/a",
+  noSelection = "no-selection"
 }
 
 @Injectable({
@@ -20,11 +24,8 @@ export class AssessmentPlanService {
   currentMetadata = this.metadata.asObservable();
   private assessmentPlans = new BehaviorSubject<Array<AssessmentPlan>>(new Array<AssessmentPlan>());
   currentPlans = this.assessmentPlans.asObservable();
-  private catalogs = new BehaviorSubject<Array<Catalog>>(new Array<Catalog>());
+  private catalogs = new BehaviorSubject<Array<Array<Catalog>>>(new Array<Array<Catalog>>([]));
   currentCatalogs = this.catalogs.asObservable();
-  // A map of control IDs to the index of their catalogs in both the assessment plan control-selections and the catalog list
-  private controlMap = new BehaviorSubject<Map<string, number>>(new Map<string, number>());
-  currentControlMap = this.controlMap.asObservable();
 
   private attestationFocus = new BehaviorSubject<number>(0);
   currentViewState = this.attestationFocus.asObservable();
@@ -47,6 +48,7 @@ export class AssessmentPlanService {
   }
 
   setAttestationFocus(index: number) {
+    console.log(index);
     this.attestationFocus.next(index);
   }
 
@@ -120,24 +122,39 @@ export class AssessmentPlanService {
     let plans = this.assessmentPlans.getValue();
     let plan = new AssessmentPlan();
     let metadata = this.metadata.getValue();
-    
+    let catalogs = this.catalogs.getValue();
+
     metadata.title = title;
     plan.metadata = metadata;
     plan.uuid = uuid();
     plan.addAssessmentSubject();
 
+    console.log("Adding plan: " + title)
+
     plans.push(plan);
+    catalogs.push([]);
     this.assessmentPlans.next(plans);
   }
 
   removeAssessmentPlan(index: number) {
     let plans = this.assessmentPlans.getValue();
-    
+
     if (index >= plans.length) return;
     if (index < 0) return;
 
     plans.splice(index, 1);
-    
+
+    this.assessmentPlans.next(plans);
+  }
+
+  updateAssessmentPlanName(name: string) {
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationFocus.getValue()];
+
+    plan.metadata.title = name;
+    plan.metadata['last-modified'] = new Date().toISOString();
+
+    plans[this.attestationFocus.getValue()] = plan;
     this.assessmentPlans.next(plans);
   }
 
@@ -147,32 +164,18 @@ export class AssessmentPlanService {
     let catalogs = this.catalogs.getValue();
     let controlSelection = new ControlSelection();
 
+    catalogs[this.attestationFocus.getValue()].push(catalog);
+    this.catalogs.next(catalogs);
+
     // TODO add links
     
     // add catalog info
     controlSelection.addProp("Catalog ID", catalog.uuid, "catalog");
     controlSelection.addProp("Catalog Name", catalog.metadata.title, "catalog");
     plan['reviewed-controls']['control-selections'].push(controlSelection);
-    
-    //cache index of catalog for each control
-    let controlMap = this.controlMap.getValue();
-    if (catalog.controls !== undefined){
-      catalog.controls.forEach( control => {
-        controlMap.set(control.id, plan['reviewed-controls']['control-selections'].length-1);
-      });
-    }
-    if (catalog.groups !== undefined){
-      catalog.groups.forEach( group => {
-        if (group.controls === undefined) group.controls = [];
-        group.controls.forEach( control => {
-          controlMap.set(control.id, plan['reviewed-controls']['control-selections'].length-1);
-        });
-      });
-    }
 
-    catalogs.push(catalog);
-    this.catalogs.next(catalogs);
-    this.controlMap.next(controlMap);
+    plan.metadata['last-modified'] = new Date().toISOString();
+    
     this.assessmentPlans.next(plans);
   }
 
@@ -180,24 +183,16 @@ export class AssessmentPlanService {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
     let catalogs = this.catalogs.getValue();
-    let controlMap = this.controlMap.getValue();
 
-    let index = catalogs.findIndex( catalog => catalog.uuid === catalogUuid);
+    let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => catalog.uuid === catalogUuid);
     if (index > -1) {
       catalogs.splice(index, 1);
-      this.catalogs.next(catalogs);
       // remove catalog info
       plan['reviewed-controls']['control-selections'].splice(index, 1);
-      // remove cached index of catalog for each control
-      controlMap.forEach( (value, key) => {
-        if (value === index) {
-          controlMap.delete(key);
-        }
-        if (value > index) {
-          controlMap.set(key, value-1);
-        }
-      });
-      this.controlMap.next(controlMap);
+      
+      plan.metadata['last-modified'] = new Date().toISOString();
+      
+      this.catalogs.next(catalogs);
       this.assessmentPlans.next(plans);
     }
   }
@@ -207,19 +202,29 @@ export class AssessmentPlanService {
   setControlSelection(controlID: string, selection: ControlSelectionType | string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
-    let controlMap = this.controlMap.getValue();
-    let index = controlMap.get(controlID);
-    if (index === undefined) {
-      index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
-    }
-    if (index !== -1) {
+    let catalogs = this.catalogs.getValue();
+
+    let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
+    if (index !== undefined) {
       if (typeof selection === "string") {
         switch (selection) {
           case "check": selection = ControlSelectionType.yes; break;
           case "x": selection = ControlSelectionType.no; break;
           case "na": selection = ControlSelectionType.notApplicable; break;
+          case "no-selection": selection = ControlSelectionType.noSelection; break;
           default: return console.log("Invalid selection type. Must be one of 'check', 'x', or 'na'");
         }
+      }
+
+      console.log("Setting control selection: " + controlID + " to " + selection)
+
+      if (selection == ControlSelectionType.noSelection) {
+        plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
+        plan['reviewed-controls']['control-selections'][index].addExcludeControl(controlID);
+        plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
+        plan.metadata['last-modified'] = new Date().toISOString();
+        this.assessmentPlans.next(plans);
+        return;
       }
 
       plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
@@ -227,17 +232,59 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, selection, "Compliance Claim");
+
+      plan.metadata['last-modified'] = new Date().toISOString();
+
       this.assessmentPlans.next(plans);
       return;
     }
     console.log("Control not found in catalog: " + controlID);
   }
 
+  // controls can contain other controls and groups can contain controls
+  // this function will recursively search to see if a control is a child of a group or control
+  _recursiveContainsControl(controlID: string, controls?: ChecklistItemComponent[], groups?: GroupComponent[]): boolean { // First, check in the list of ChecklistItemComponents
+    for (let item of (controls || [])) {
+      if (item.id === controlID) {
+        return true;
+      }
+      // If the item has nested controls, search within them
+      if (item.controls) {
+        if (this._recursiveContainsControl(controlID, item.controls)) {
+          return true;
+        }
+      }
+    }
+
+    // Then, check in the list of GroupComponents
+    for (let group of groups || []) {
+      // If the group has nested controls, search within them
+      if (group.controls) {
+        if (this._recursiveContainsControl(controlID, group.controls)) {
+          return true;
+        }
+      }
+      // If the group has nested groups, search within them
+      if (group.groups) {
+        if (this._recursiveContainsControl(controlID, [], group.groups)) {
+          return true;
+        }
+      }
+    }
+
+    // If no match is found, return false
+    return false;
+   }
   setControlComment(controlID: string, comment: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
-    let controlMap = this.controlMap.getValue();
-    let index = controlMap.get(controlID);
+
+    let catalogs = this.catalogs.getValue();
+    let index: number | undefined = undefined;
+
+    //TODO definitely optimize this
+    index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
+
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
@@ -247,24 +294,9 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, comment, "Attestation Claim");
-      this.assessmentPlans.next(plans);
-      return;
-    }
-    console.log("Control not found in catalog: " + controlID);
-  }
 
-  removeControlSelection(controlID: string) {
-    let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationFocus.getValue()]
-    let controlMap = this.controlMap.getValue();
-    let index = controlMap.get(controlID);
-    if (index === undefined) {
-      index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
-    }
-    if (index !== -1) {
-      plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
-      plan['reviewed-controls']['control-selections'][index].addExcludeControl(controlID);
-      plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
+      plan.metadata['last-modified'] = new Date().toISOString();
+
       this.assessmentPlans.next(plans);
       return;
     }
@@ -274,13 +306,17 @@ export class AssessmentPlanService {
   removeControlComment(controlID: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
-    let controlMap = this.controlMap.getValue();
-    let index = controlMap.get(controlID);
+    let catalogs = this.catalogs.getValue();
+
+    let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
     if (index !== -1) {
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
+  
+      plan.metadata['last-modified'] = new Date().toISOString();
+
       this.assessmentPlans.next(plans);
       return;
     }
@@ -292,8 +328,7 @@ export class AssessmentPlanService {
     let plan = plans[this.attestationFocus.getValue()]
 
     if (plan["assessment-subjects"] === undefined) {
-      console.log("assessment-subjects not found in plan, skipping subject creation");
-      return;
+      plan["assessment-subjects"] = [new AssessmentSubject()];
     }
 
     if (plan["assessment-subjects"][0]["include-subjects"] === undefined) {
@@ -308,10 +343,12 @@ export class AssessmentPlanService {
     plan["assessment-subjects"][0]["include-subjects"].push(subject);
     plan["assessment-subjects"][0].props = [new Prop("type", "multi product", "Attestation Type")];
 
+    plan.metadata['last-modified'] = new Date().toISOString();
+
     this.assessmentPlans.next(plans);
   }
 
-  updateSubject(subjectIndex: number, productName: string, version: string, date: string) {
+  updateSubject(subjectIndex: number, productName?: string, version?: string, date?: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
 
@@ -323,13 +360,27 @@ export class AssessmentPlanService {
     if (plan["assessment-subjects"][0]["include-subjects"] === undefined) {
       plan["assessment-subjects"][0]["include-subjects"] = [];
     }
+    
+    if (plan["assessment-subjects"][0]["include-subjects"][subjectIndex] === undefined) {
+      plan["assessment-subjects"][0]["include-subjects"].push(new SubjectID());
+    }
 
-    let subject = new SubjectID();
-    subject.addProp("Product Name", productName, "Product Info");
-    subject.addProp("Version", version, "Product Info");
-    subject.addProp("Date", date, "Product Info");
+    let subject = plan["assessment-subjects"][0]["include-subjects"][subjectIndex];
+    if (productName !== undefined) {
+      subject.removeProp("Product Name");
+      subject.addProp("Product Name", productName, "Product Info");
+    }
+    if (version !== undefined) {
+      subject.removeProp("Version");
+      subject.addProp("Version", version, "Product Info");
+    }
+    if (date !== undefined) {
+      subject.removeProp("Date");
+      //TODO convert date to isoformat
+      subject.addProp("Date", date, "Product Info");
+    }
 
-    plan["assessment-subjects"][0]["include-subjects"][subjectIndex] = subject;
+    plan.metadata['last-modified'] = new Date().toISOString();
 
     this.assessmentPlans.next(plans);
   }
@@ -350,6 +401,8 @@ export class AssessmentPlanService {
     plan["assessment-subjects"][0]["include-subjects"].pop();
     plan["assessment-subjects"][0].props = [new Prop("type", "multi product", "Attestation Type")];
 
+    plan.metadata['last-modified'] = new Date().toISOString();
+
     this.assessmentPlans.next(plans);
   }
 
@@ -364,6 +417,8 @@ export class AssessmentPlanService {
     
     plan["assessment-subjects"][0].includeAll(true)
     plan["assessment-subjects"][0].props = [new Prop("type", "company-wide", "Attestation Type")];
+
+    plan.metadata['last-modified'] = new Date().toISOString();
 
     this.assessmentPlans.next(plans);
   }
@@ -385,6 +440,9 @@ export class AssessmentPlanService {
     }
 
     plan["assessment-subjects"][0].props = [new Prop("type", "single product", "Attestation Type")];
+
+    plan.metadata['last-modified'] = new Date().toISOString();
+
     this.assessmentPlans.next(plans);
   }
   //TODO set attestation type on radio button change

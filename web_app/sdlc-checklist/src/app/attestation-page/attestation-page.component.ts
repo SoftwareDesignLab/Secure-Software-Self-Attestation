@@ -107,9 +107,22 @@ export class AttestationPageComponent {
         this.info.splice(1);
       }
     }
-    console.log(this.info.length);
   }
 
+  updateAttestationSubject(index: number, field: string, event: any) {
+    console.log(index, field)
+    switch (field) {
+      case 'name':
+        this.assessmentPlanService.updateSubject(index, event.target.value);
+        break;
+      case 'version':
+        this.assessmentPlanService.updateSubject(index, undefined, event.target.value);
+        break;
+      case 'date':
+        this.assessmentPlanService.updateSubject(index, undefined, undefined, event.target.value);
+        break;
+    }
+  }
 
   addRow(){
     //TODO this will need to be moved to update the assessment plan when a subject is changed
@@ -175,10 +188,11 @@ export class AttestationPageComponent {
 
   generateAssessmentPlan() {
     let object = this.assessmentPlanService.serializeCurrentPlan();
-    const blob = new Blob([JSON.stringify(object, null, 4)], {type: "application/json"});
+    const blob = new Blob([object], {type: "application/json"});
     saveAs(blob, 'assessmentPlan.json');
     //TODO assessment plan works great for the first attestation, bugs out for the second one\
     //TODO Compliance claims not spawning
+    //TODO first catalog duplicates
   }
 
 }

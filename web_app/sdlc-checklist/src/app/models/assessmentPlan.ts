@@ -171,6 +171,11 @@ export class ControlSelection {
     this['exclude-controls'] = undefined;
   }
 
+  propExists(name: string, value: string) {
+    if (this.props === undefined) return false;
+    return this.props.some(prop => prop.name === name && prop.value === value);
+  }
+
   removeProp(name: string, class_: string) {
     if (this.props === undefined) return;
     let index = this.props.findIndex(prop => prop.name === name && prop.class === class_);
@@ -411,6 +416,11 @@ export class SubjectID {
     newProp.ns = ns;
     newProp.remarks = remarks;
     this.props.push(newProp);
+  }
+
+  removeProp(name: string, class_?: string) {
+    if (this.props === undefined) return;
+    this.props = this.props.filter((prop) => prop.name !== name && ( class_ !== undefined ? prop.class !== class_ : true));
   }
 
   addLink(href: string, rel?: string) {

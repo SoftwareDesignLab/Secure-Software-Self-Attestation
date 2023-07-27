@@ -47,11 +47,13 @@ export class AttestationComponent {
   private positionTag: any;
   displayName: string = "";
 
-  constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){
+  constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, isUnused: Boolean = false){
     this.info.push(new attestationComment);
     this.catalogData.catalogs.push(catalog as Catalog);
-    this.assessmentPlanService.addAssessmentPlan("Assessment Plan 1")
-    this.assessmentPlanService.addCatalog(catalog as Catalog);
+    if (!isUnused) { //kind of hacky, but works just fine
+      this.assessmentPlanService.addAssessmentPlan(this.getName());
+      this.assessmentPlanService.addCatalog(catalog as Catalog);
+    }
   }
 
 
@@ -63,6 +65,7 @@ export class AttestationComponent {
   }
   setName(name: string) {
     this.displayName = name;
+    this.assessmentPlanService.updateAssessmentPlanName(this.getName());
   }
 
   get getPositionTag(){
@@ -161,6 +164,7 @@ export class AttestationComponent {
 
   restoreDefaultCatalog(): void {
     this.catalogData.catalogs.unshift(catalog as Catalog);   
+    this.assessmentPlanService.addCatalog(catalog as Catalog);
   }
 
   getHiddenCatalogs(){

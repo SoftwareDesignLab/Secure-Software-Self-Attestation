@@ -47,7 +47,7 @@ export class AttestationDataService {
   public pageName: string = "Contact Info";
 
 
-  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService));
+  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
   constructor(private assessmentPlanService: AssessmentPlanService) {}
@@ -81,8 +81,6 @@ export class AttestationDataService {
     return this.forms;
   }
 
-  
-
   get getView(){
     return this.viewPosition;
   }
@@ -92,18 +90,13 @@ export class AttestationDataService {
   }
 
   addform(){
-    // initialize assessment plan in the assessment plan service
-    this.assessmentPlanService.addAssessmentPlan("Attestation Form "+(this.getRawData.length));
+    this.assessmentPlanService.setAttestationFocus(this.forms.length);
     this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
     let position = this.forms.length-1;
     this.forms[position].setPositionTag(this.tag);
     this.forms[position].setFormPosition(position);
     this.tag = this.tag + 1;
-
-
   }
-
-
 
   // Control Methods 
 
@@ -119,12 +112,11 @@ export class AttestationDataService {
   }
 
   updateControlSelection(UID: string, selection: string){
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    this.assessmentPlanService.setControlSelection(controlID, selection);
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.selection=selection
-      // A little hacky
-      const controlUID = UID.split("-").at(-1) || "";
-      this.assessmentPlanService.setControlSelection(controlUID, selection);
     }
     else{
       console.log("Something went wrong")
@@ -132,6 +124,7 @@ export class AttestationDataService {
   }
 
   saveControlComment(UID: string, comment: string){
+    console.log(UID)
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.finalized=false;
@@ -144,12 +137,13 @@ export class AttestationDataService {
 
   }
   finalizeControlComment(UID: string, comment: string){
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    this.assessmentPlanService.setControlComment(controlID, comment);
+
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.finalized=true;
       temp.comment=comment;
-      const controlUID = UID.split("-").at(-1) || ""; // kind of hacky
-      this.assessmentPlanService.setControlComment(controlUID, comment)
     }
     else{
       console.log("Something went wrong")
@@ -158,6 +152,9 @@ export class AttestationDataService {
 
 
   deleteControlComment(UID: string){
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    this.assessmentPlanService.removeControlComment(controlID);
+
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.comment = "";
@@ -179,7 +176,6 @@ export class AttestationDataService {
     let temp = position + "-" + UID;
     this.controlMap.delete(temp);
   }
-
 
   // Group methods
   
