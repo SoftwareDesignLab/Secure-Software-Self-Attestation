@@ -10,6 +10,7 @@ import { AttestationDataService } from '../attestation-data.service';
 })
 export class ContactInfoComponent {
 
+
 constructor( public contactService: ContactService, private router: Router,private attestationService: AttestationDataService){
 
 }
