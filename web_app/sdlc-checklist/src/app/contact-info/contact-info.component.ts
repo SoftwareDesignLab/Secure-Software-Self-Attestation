@@ -78,6 +78,7 @@ constructor( public contactService: ContactService, private router: Router,priva
   lastAttestation(){
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.attestationService.refresh();
+    this.attestationService.pageName = this.attestationService.getCurrentForm.getName();
     this.router.navigate(['attestation-form']);
   }
 
