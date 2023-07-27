@@ -501,7 +501,6 @@ export class AssessmentSubject {
     this.props.push(newProp);
   }
 
-  //TODO during serialization, if include-all is true, convert include-all to an empty object or undefined if it is false
   serialize(): object {
     let serialized = {
       "type": this.type,

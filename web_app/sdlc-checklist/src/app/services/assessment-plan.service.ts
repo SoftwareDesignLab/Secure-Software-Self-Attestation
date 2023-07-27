@@ -448,8 +448,5 @@ export class AssessmentPlanService {
 
     this.assessmentPlans.next(plans);
   }
-  //TODO set attestation type on radio button change
-
-  //TODO exclude subjects
   //TODO automatically exclude subjects that are unchecked
 }
