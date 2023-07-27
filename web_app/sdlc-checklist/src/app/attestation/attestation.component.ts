@@ -46,7 +46,7 @@ export class AttestationComponent {
   private info: Array<attestationComment> = new Array<attestationComment>;
   private FormPosition: any;
   private positionTag: any;
-  displayName: string = "";
+  private displayName: string = "";
 
   /**
    * Constructor
