@@ -114,7 +114,7 @@ export class GroupComponent {
   setAllChildrenSelection(selection: string): void {
     this.childComponents.forEach((child) => {
       if (child instanceof ChecklistItemComponent) {
-        child.overrideSelection(selection);
+        child.changeSelection(selection);
       }
     });
   }

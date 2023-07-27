@@ -104,18 +104,26 @@ export class ControlSelection {
   description?: string;
   props?: Prop[];
   links?: Link[];
-  "include-all"?: Boolean | object;
+  remarks?: string;
+  "include-all"?: Boolean | object = false;
+
+  //Controls used for serialization
   "include-controls"?: ControlID[];
   "exclude-controls"?: ControlID[];
-  remarks?: string;
+
+  //Controls used for remembering
+  private "include-controls-memory"?: ControlID[];
+  private "exclude-controls-memory"?: ControlID[];
+
+
 
   constructor(description?: string, props?: Prop[], links?: Link[], includeAll?: Boolean, includeControls?: ControlID[], excludeControls?: ControlID[], remarks?: string) {
     this.description = description;
     this.props = props;
     this.links = links;
     this["include-all"] = includeAll;
-    this["include-controls"] = includeControls;
-    this["exclude-controls"] = excludeControls;
+    this["include-controls-memory"] = includeControls;
+    this["exclude-controls-memory"] = excludeControls;
     this.remarks = remarks;
   }
 
@@ -143,12 +151,21 @@ export class ControlSelection {
     if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
     if (this["include-controls"] === undefined) this["include-controls"] = [];
     this["include-controls"].push(newControlID);
+
+    if (this["include-controls-memory"] === undefined) this["include-controls-memory"] = [];
+    this["include-controls-memory"].push(newControlID);
   }
 
   removeIncludeControl(controlID: string) {
-    if (this["include-controls"] === undefined) return;
+    if (this["include-controls"]===undefined||this['include-controls-memory'] === undefined) return;
     let index = this["include-controls"].findIndex(control => control["control-id"] === controlID);
-    if (index > -1) this["include-controls"].splice(index, 1);
+    if (index > -1){
+      this["include-controls"].splice(index, 1);
+      this["include-controls-memory"].splice(index,1);
+    }
+    if (this["include-controls"].length === 0){
+      delete this["include-controls"];
+      }
   }
 
   addExcludeControl(controlID: string, statementIDs?: string[]) {
@@ -157,18 +174,43 @@ export class ControlSelection {
     if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
     if (this["exclude-controls"] === undefined) this["exclude-controls"] = [];
     this["exclude-controls"].push(newControlID);
+
+    if (this["exclude-controls-memory"] === undefined) this["exclude-controls-memory"] = [];
+    this["exclude-controls-memory"].push(newControlID);
+    
+    if(this['include-all']=true){
+      this.setIncludeAll(false);
+    }
   }
 
   removeExcludeControl(controlID: string) {
-    if (this["exclude-controls"] === undefined) return;
+    if (this["exclude-controls"] === undefined||this['exclude-controls-memory'] === undefined) return;
     let index = this["exclude-controls"].findIndex(control => control["control-id"] === controlID);
-    if (index > -1) this["exclude-controls"].splice(index, 1);
+    if (index > -1){
+      this["exclude-controls"].splice(index, 1);
+      this["exclude-controls-memory"].splice(index,1);
+    }
+    if (this["exclude-controls"].length === 0){
+      this.setIncludeAll(true);
+    }
   }
 
+  //If include-all is true, then hides all exclude controls/include controls
   setIncludeAll(includeAll: Boolean) {
-    this["include-all"] = includeAll;
-    this['include-controls'] = undefined;
-    this['exclude-controls'] = undefined;
+    if(includeAll){
+      this["include-all"] = includeAll;
+      this['include-controls'] = undefined;
+      this['exclude-controls'] = undefined;
+    }
+    else{
+      this["include-all"] = undefined;
+      if(this['include-controls-memory'] !== undefined){
+      this["include-controls"] = JSON.parse(JSON.stringify(this['include-controls-memory']));
+      }
+      if(this['exclude-controls-memory']){      
+        this['exclude-controls'] = JSON.parse(JSON.stringify(this['exclude-controls-memory']));
+      }
+    }
   }
 
   propExists(name: string, value: string) {
@@ -188,8 +230,8 @@ export class ControlSelection {
       "props": this.props?.map(prop => prop.serialize()),
       "links": this.links?.map(link => link.serialize()),
       "include-all": this["include-all"],
-      "include-controls": this["include-controls"]?.map(control => control.serialize()),
-      "exclude-controls": this["exclude-controls"]?.map(control => control.serialize()),
+      "include-controls": this["include-controls-memory"]?.map(control => control.serialize()),
+      "exclude-controls": this["exclude-controls-memory"]?.map(control => control.serialize()),
       "remarks": this.remarks,
     };
     if (serialized['include-all']) {

@@ -57,7 +57,8 @@ export class ChecklistItemComponent {
   primed: Boolean = false;
   focused: Boolean = false;
 
-  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){  }
+  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef, 
+    private assessmentPlanService: AssessmentPlanService){  }
 
 
   ngOnInit(){
@@ -68,6 +69,8 @@ export class ChecklistItemComponent {
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
     this.showRollable = this.info.showRollable;
+    this.assessmentPlanService.setControlSelection(this.id,"no-selection")
+    
   }
 
 
@@ -121,16 +124,15 @@ export class ChecklistItemComponent {
     if (this.selection === "no-selection") {
       this.deploy();
     }
+    this.changeSelection(option);
+  }
+
+  changeSelection(option: string) {
     if (this.selection === option) {
       this.selection = "no-selection";
     } else {
       this.selection = option;
     }
-    this.attestationDataService.updateControlSelection(this.UID, this.selection);
-  }
-
-  overrideSelection(option: string) {
-    this.selection = option;
     this.attestationDataService.updateControlSelection(this.UID, this.selection);
   }
 
@@ -200,6 +202,9 @@ export class ChecklistItemComponent {
       comment.focus();
       this.focused = true;
     }
+  }
+  get getID(){
+    return this.id;
   }
 }
 
