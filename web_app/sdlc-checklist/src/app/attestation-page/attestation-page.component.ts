@@ -53,11 +53,11 @@ export class AttestationPageComponent {
 
   observedForm!: AttestationComponent;
 
-  selectedValue!: string;
+  attestationType!: string;
   info: attestationComment[] = [];
 
   constructor(public attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){
-      this.selectedValue = attestationService.getCurrentForm.getSelectedValue;
+      this.attestationType = attestationService.getCurrentForm.getAttestationType;
       this.info = attestationService.getCurrentForm.getInfo;
       this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
       this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
@@ -76,7 +76,7 @@ export class AttestationPageComponent {
 
       this.attestationService.dynamicForm$.subscribe(form => {
       this.observedForm = form;
-      this.selectedValue = form.getSelectedValue;
+      this.attestationType = form.getAttestationType;
       this.info = form.getInfo
       this.position = form.getPositionTag
       this.catalogData = form.getCatalogs;
@@ -100,9 +100,9 @@ export class AttestationPageComponent {
   }
 
 
-  updateSelect(){
-    this.attestationService.getCurrentForm.setSelectedValue(this.selectedValue);
-    if (this.selectedValue !== 'multiple') {
+  updateAtestationType(){
+    this.attestationService.getCurrentForm.setAttestationType(this.attestationType);
+    if (this.attestationType !== 'multiple') {
       if (this.info.length > 1) {
         this.info.splice(1);
       }
@@ -125,7 +125,6 @@ export class AttestationPageComponent {
   }
 
   addRow(){
-    //TODO this will need to be moved to update the assessment plan when a subject is changed
     let previous = this.info[this.info.length-1];
     this.assessmentPlanService.addSubject(previous.getName(), previous.getVersion(), previous.getDate());
 

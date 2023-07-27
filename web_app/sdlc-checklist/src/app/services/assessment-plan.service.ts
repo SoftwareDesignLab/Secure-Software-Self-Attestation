@@ -406,17 +406,20 @@ export class AssessmentPlanService {
     this.assessmentPlans.next(plans);
   }
 
-  setCompanyWide() {
+  setAttestationType(type: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
 
     if (plan["assessment-subjects"] === undefined) {
-      console.log("assessment-subjects not found in plan, skipping subject update");
-      return;
+      plan["assessment-subjects"] = [new AssessmentSubject()];
     }
     
-    plan["assessment-subjects"][0].includeAll(true)
-    plan["assessment-subjects"][0].props = [new Prop("type", "company-wide", "Attestation Type")];
+    if (type === "company") {
+      plan["assessment-subjects"][0].includeAll(true)
+    } else {
+      plan["assessment-subjects"][0].includeAll(false)
+    }
+    plan["assessment-subjects"][0].props = [new Prop("type", type, "Attestation Type")];
 
     plan.metadata['last-modified'] = new Date().toISOString();
 

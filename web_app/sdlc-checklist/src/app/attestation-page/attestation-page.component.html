@@ -1,14 +1,14 @@
 <div class="attestation pane" id="attestation">
   <h2>Select your attestation type:</h2>
-  <input type="radio" id="company-wide" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()"  value="company" class="landing">
+  <input type="radio" id="company-wide" name="attestation" [(ngModel)]="attestationType" (change)="updateAtestationType()"  value="company" class="landing">
   <label for="company-wide">Company-wide</label><br>
-  <input type="radio" id="product-line" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()" value="product">
+  <input type="radio" id="product-line" name="attestation" [(ngModel)]="attestationType" (change)="updateAtestationType()" value="product">
   <label for="product-line">Product line</label><br>
-  <input type="radio" id="individual" name="attestation"  [(ngModel)]="selectedValue"  (change)="updateSelect()" value="individual">
+  <input type="radio" id="individual" name="attestation"  [(ngModel)]="attestationType"  (change)="updateAtestationType()" value="individual">
   <label for="individual">Individual Product</label><br>
-  <input type="radio" id="multiple" name="attestation" [(ngModel)]="selectedValue"  (change)="updateSelect()" value="multiple">
+  <input type="radio" id="multiple" name="attestation" [(ngModel)]="attestationType"  (change)="updateAtestationType()" value="multiple">
   <label for="multiple">Multiple products or Specific Product Version(s)</label>
-  <div *ngIf="selectedValue!=='company' && selectedValue!==''" class="table-section">
+  <div *ngIf="attestationType!=='company' && attestationType!==''" class="table-section">
     <table>
       <tr>
         <th>Product(s) or Product Line Name</th>
@@ -21,7 +21,7 @@
         <td><input type ="date" name="form" (change)="onKey($event, row, 'date')" (blur)="updateAttestationSubject(i, 'date', $event)" value={{row.getDate()}} class="table-field"></td>
       </tr>
     </table>
-    <button class="add" mat-button (click)="addRow()" [hidden]="selectedValue!=='multiple'">+</button>
+    <button class="add" mat-button (click)="addRow()" [hidden]="attestationType!=='multiple'">+</button>
     <button class="add" mat-button (click)="removeRow()" *ngIf="info.length>1">-</button>
   </div>
 </div>

@@ -187,7 +187,7 @@ describe('data store and retrieval', () => {
     APService.setControlComment("4e(i)(A)", "comment");
     APService.setControlSelection("4e(i)(B)", ControlSelectionType.no);
     APService.setControlComment("4e(i)(B)", "bad");
-    APService.setCompanyWide()
+    APService.setAttestationType("Company-wide")
     APService.getAssessmentPlans().subscribe(data => {
       let plan = data[0];
       console.log(JSON.stringify(plan.serialize(), null, 4));

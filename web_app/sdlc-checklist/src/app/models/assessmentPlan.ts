@@ -508,7 +508,7 @@ export class AssessmentSubject {
       "description": this.description,
       "props": this.props?.map(prop => prop.serialize()),
       "remarks": this.remarks,
-      "include-all": this["include-all"],
+      "include-all": this["include-all"] ? {} : undefined,
       "include-subjects": this["include-subjects"]?.map(subject => subject.serialize()),
       "exclude-subjects": this["exclude-subjects"]?.map(subject => subject.serialize()),
       "links": this.links?.map(link => link.serialize()),

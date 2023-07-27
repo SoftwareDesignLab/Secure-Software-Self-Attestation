@@ -41,7 +41,7 @@ export class AttestationComponent {
 
   private catalogData: CatalogData = {catalogs: []};
   private hiddenCatalogs = new Set<string>();
-  private selectedValue: string = ''; 
+  private attestationType: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
   private FormPosition: any;
   private positionTag: any;
@@ -90,12 +90,13 @@ export class AttestationComponent {
     this.info.pop();
   }
 
-  get getSelectedValue(){
-    return this.selectedValue;
+  get getAttestationType(){
+    return this.attestationType;
   }
 
-  setSelectedValue(value: string){
-    this.selectedValue = value;
+  setAttestationType(value: string){
+    this.attestationType = value;
+    this.assessmentPlanService.setAttestationType(value);
   }
 
   get getInfo(){
@@ -104,7 +105,7 @@ export class AttestationComponent {
 
 
   submitable(){
-    if(this.selectedValue=='company'){
+    if(this.attestationType=='company'){
       return true;
     }
     return this.info[0].isFilled();
