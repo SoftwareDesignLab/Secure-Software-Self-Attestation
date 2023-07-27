@@ -224,12 +224,14 @@ export class AssessmentPlanService {
         this.assessmentPlans.next(plans);
         return;
       }
-
       plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
-      plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, selection, "Compliance Claim");
+
+      if(selection == ControlSelectionType.yes){
+        plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
+      }
 
       plan.metadata['last-modified'] = new Date().toISOString();
 
@@ -273,6 +275,7 @@ export class AssessmentPlanService {
     // If no match is found, return false
     return false;
    }
+
   setControlComment(controlID: string, comment: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
@@ -287,9 +290,9 @@ export class AssessmentPlanService {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
     if (index !== -1) {
-      plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
-      plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
-      plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
+      //plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
+      //plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
+      //plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, comment, "Attestation Claim");
 
