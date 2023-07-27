@@ -21,41 +21,105 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+export class resultModelService {
+  
+}
+
+export interface AssessmentResults {
+  uuid: string;
+  metadata: Metadata;
+  "import-ssp": object;
+  "reviewed-controls": Result[];
+  "assessment-subjects": Subject[];
+}
+
+export interface Metadata {
+  title: string;
+  "last-modified": string;
+  version: string;
+  "oscal-version": string;
+  published: string;
+  parties: Party[]
+}
+
+export interface Party {
+  uuid: string;
+  type: string;
+  name: string;
+  addresses: Address[];
+  props: Prop[];
+}
+
+export interface Organization extends Party {
+  links: Link[];
+}
+
+export interface Contact extends Party {
+  "email-addresses": string[];
+  "telephone-numbers": string[];
+}
+
+export interface Address {
+  "addr-lines": string[];
+  city: string;
+  state: string;
+  "postal-code": string;
+  country: string;
+}
+
+export interface Prop {
+  name: string;
+  value: string;
+  class: string
+}
+
+export interface Link {
+  href: string;
+  rel: string;
+}
+
+export interface ReviewedControls {
+  "control-selections": ControlSelection[];
+}
+
+export interface ControlSelection {
+  props: Prop[];
+  "include-controls": Control[];
+  "exclude-controls": Control[];
+}
+
 export interface Control {
   "control-id": string;
 }
 
-export interface ControlSelection {
-  "include-all": object | undefined;
-  "include-controls": Control[];
+export interface Subject {
+  type: string;
+  props: Prop[];
+  "include-all": Object;
 }
 
-export interface Links {
-  href: string;
-}
 
-export interface Props {
-  name: string;
-  value: string;
-}
 
-export interface Parts {
+
+
+
+
+
+
+
+
+export interface Part {
     name: string;
     class: string;
     title: string;
     prose: string;
-    props: Props[];
+    props: Prop[];
 }
 
 export interface Attestation {
     "responsible-parties": object[]; //TODO define this type
-    parts: Parts[];
-}
-
-export interface ReviewedControls {
-  props: Props[];
-  links: Links[];
-  "control-selections": ControlSelection[];
+    parts: Part[];
 }
 
 export interface Result {
@@ -65,20 +129,6 @@ export interface Result {
   start: string;
   "reviewed-controls": ReviewedControls;
   attestations: Attestation[];
-}
-
-export interface Metadata {
-  title: string;
-  "last-modified": string;
-  version: string;
-  "oscal-version": string;
-}
-
-export interface AssessmentResults {
-  uuid: string;
-  metadata: Metadata;
-  "import-ap": object;
-  results: Result[];
 }
 
 export function getControlCatalogFromReviewedControls(reviewedControls: ReviewedControls): string {
