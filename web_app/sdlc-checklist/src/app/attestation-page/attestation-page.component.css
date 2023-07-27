@@ -37,10 +37,6 @@
   margin: 30px auto;
 }
 
-.hidden {
-  display: none;
-}
-
 /* Catalog Buttons */
 
 .orange {
@@ -135,7 +131,7 @@ td {
   height: 1.5em;
 }
 
-tr:nth-child(2n){
+tr:nth-child(even){
   background-color: white;
 }
 

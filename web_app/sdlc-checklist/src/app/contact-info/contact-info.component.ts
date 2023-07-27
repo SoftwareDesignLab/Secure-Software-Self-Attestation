@@ -19,8 +19,12 @@ constructor( public contactService: ContactService, private router: Router,priva
     this.contactService.companyName = event.target.value;
   }
 
-  updateCompanyAddress(event: any){
-    this.contactService.companyAddress = event.target.value;
+  updateCompanyAddress1(event: any){
+    this.contactService.companyAddress1 = event.target.value;
+  }
+
+  updateCompanyAddress2(event: any){
+    this.contactService.companyAddress2 = event.target.value;
   }
 
   updateCity(event: any){
@@ -50,10 +54,12 @@ constructor( public contactService: ContactService, private router: Router,priva
   updateTitle(event: any){
     this.contactService.title = event.target.value;
   }
-  updatePersonalAddress(event: any){
-    this.contactService.personalAddress = event.target.value;
+  updatePersonalAddress1(event: any){
+    this.contactService.personalAddress1 = event.target.value;
   }
-
+  updatePersonalAddress2(event: any){
+    this.contactService.personalAddress2 = event.target.value;
+  }
   updatePersonalCity(event: any){
     this.contactService.personalCity = event.target.value;
   }
@@ -75,14 +81,13 @@ constructor( public contactService: ContactService, private router: Router,priva
   updateEmail(event: any){
     this.contactService.email = event.target.value;
   }
-
-
+  
   lastAttestation(){
     this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
     this.attestationService.refresh();
+    this.attestationService.pageName = this.attestationService.getCurrentForm.getName();
     this.router.navigate(['attestation-form']);
-    }
-
+  }
 
   changeAttestion(position: number){
     this.attestationService.setView(position);
@@ -90,10 +95,8 @@ constructor( public contactService: ContactService, private router: Router,priva
     this.attestationService.pageName = this.attestationService.getCurrentForm.getName();
     this.attestationService.refresh();
     this.router.navigate(['attestation-form']);
-    }
+  }
 
-
-  
   newForm(){
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1).getFormPosition;
@@ -110,8 +113,5 @@ constructor( public contactService: ContactService, private router: Router,priva
     }
     return false;
   }
-
-
-
 }
 

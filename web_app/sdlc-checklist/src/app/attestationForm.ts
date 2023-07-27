@@ -26,29 +26,58 @@ export class attestationComment{
     private version: string = "";
     private date: string = "";
 
-    constructor(){
-
-    }
+    /**
+     * Sets the product name
+     * @param name The new name
+     */
     public addName(name: string){
         this.name = name;
     }
+
+    /**
+     * Sets the product version
+     * @param version The new version
+     */
     public addVersion(version: string){
         this.version = version;
     }
+
+    /**
+     * Sets the date
+     * @param date The product date
+     */
     public addDate(date: string){
         this.date = date;
     }
 
+    /**
+     * Gets the name
+     * @returns The name
+     */
     public getName(){
         return this.name;
     }
+
+    /**
+     * Gets the version
+     * @returns The version
+     */
     public getVersion(){
         return this.version;
     }
+
+    /**
+     * Gets the product date
+     * @returns The product date
+     */
     public getDate(){
         return this.date;
     }
 
+    /**
+     * Checks if the row is complete
+     * @returns whether the comment row is adequately filled
+     */
     public isFilled(){
         return (this.name !== "" && this.date !== "");
     }
