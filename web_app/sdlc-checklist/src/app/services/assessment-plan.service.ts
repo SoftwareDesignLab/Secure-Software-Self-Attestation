@@ -122,18 +122,20 @@ export class AssessmentPlanService {
     this.metadata.next(metadata);
   }
 
-  addAssessmentPlan(title: string) {
+  addAssessmentPlan(title?: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = new AssessmentPlan();
     let metadata = this.metadata.getValue();
     let catalogs = this.catalogs.getValue();
 
-    metadata.title = title;
+    if(title != undefined){
+      metadata.title = title;
+      console.log("Adding plan: " + title);
+    }
+    else {console.log("Adding titleless plan");}
     plan.metadata = metadata;
     plan.uuid = uuid();
     plan.addAssessmentSubject();
-
-    console.log("Adding plan: " + title)
 
     plans.push(plan);
     catalogs.push([]);

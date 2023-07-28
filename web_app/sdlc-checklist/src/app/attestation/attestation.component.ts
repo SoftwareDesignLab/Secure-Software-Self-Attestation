@@ -51,7 +51,7 @@ export class AttestationComponent {
     this.info.push(new attestationComment);
     this.catalogData.catalogs.push(catalog as Catalog);
     if (!isUnused) { //kind of hacky, but works just fine
-      this.assessmentPlanService.addAssessmentPlan(this.getName());
+      this.assessmentPlanService.addAssessmentPlan();
       this.assessmentPlanService.addCatalog(catalog as Catalog);
     }
   }

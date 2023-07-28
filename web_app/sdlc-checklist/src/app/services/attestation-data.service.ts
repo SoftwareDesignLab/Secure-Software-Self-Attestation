@@ -94,6 +94,7 @@ export class AttestationDataService {
     this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
     let position = this.forms.length-1;
     this.forms[position].setPositionTag(this.tag);
+    this.assessmentPlanService.updateAssessmentPlanName("Attestation form " + this.tag);
     this.forms[position].setFormPosition(position);
     this.tag = this.tag + 1;
   }
