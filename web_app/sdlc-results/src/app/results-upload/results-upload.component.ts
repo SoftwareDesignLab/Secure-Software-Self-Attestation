@@ -34,7 +34,7 @@ export class ResultsUploadComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @Output() fileSelected = new EventEmitter<File>();
 
-  constructor( resultModelService: ResultModelService ) {}
+  constructor( private resultModelService: ResultModelService ) {}
 
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -69,10 +69,10 @@ export class ResultsUploadComponent {
   }
 
   private handleFile(file: File): void {
-    const reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = () => {
-      const json = JSON.parse(reader.result as string);
-      this.resultModelService.
+      let json = JSON.parse(reader.result as string);
+      this.resultModelService.assessmentResult = json;
     };
     reader.readAsText(file);
   }

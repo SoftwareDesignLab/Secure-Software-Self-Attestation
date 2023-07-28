@@ -1,7 +1,7 @@
 <section class="results-metadata pane">
-  <h2 >{{ metadata.title }}</h2>
-    <!-- metadata contains last_modified, version, oscal_version and published. show these attributes -->
-  <p *ngIf="metadata['last-modified']">Last Modified: {{ metadata['last-modified'] }}</p>
-  <p *ngIf="metadata.version">Version: {{ metadata.version }}</p>
-  <p *ngIf="metadata['oscal-version']">OSCAL Version: {{ metadata['oscal-version'] }}</p>
+  <h2>{{ getAttribute("title") }}</h2>
+  <p>Version: {{ getAttribute("version") }}</p>
+  <p>Last Modified: {{ getAttribute("last-modified") }}</p>
+  <p>Published: {{ getAttribute("published") }}</p>
+  <p>Oscal Version {{ getAttribute("oscal-version") }}</p>
 </section>

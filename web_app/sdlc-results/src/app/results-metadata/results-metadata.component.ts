@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
+import { ResultModelService, Metadata } from '../resultsModel';
 
 @Component({
   selector: 'app-results-metadata',
@@ -29,5 +30,25 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./results-metadata.component.css']
 })
 export class ResultsMetadataComponent {
-  @Input() metadata: any;
+  public metadata: Metadata | null = null;
+  constructor( public resultModelService: ResultModelService) {
+    let metadata = resultModelService.assessmentResult?.metadata;
+    if (metadata)
+      this.metadata = metadata;
+  }
+
+  getAttribute(attribute: string): String {
+    if (this.metadata !== null) {
+      let value = "";
+      switch (attribute) {
+        case "title": value = this.metadata.title; break;
+        case "version": value = this.metadata.version; break;
+        case "last-modified": value = this.metadata["last-modified"]; break;
+        case "oscal-version": value = this.metadata["oscal-version"]; break;
+        case "published": value = this.metadata.published; break;
+      }
+      return value;
+    }
+    return "";
+  }
 }

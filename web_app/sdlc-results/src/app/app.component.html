@@ -18,14 +18,8 @@
 </nav>
 
 <div *ngIf="!poamMode">
-  <div *ngIf="assessmentResults !== undefined">
-    <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
-    <div *ngFor="let result of assessmentResults.results">
-      <app-result [result]="result"></app-result>
-    </div>
-  </div>
-
-  <app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
+  <app-results-metadata *ngIf="resultModelService.assessmentResult?.metadata"></app-results-metadata>
+  <app-results-upload></app-results-upload>
 </div>
 
 <div *ngIf="poamMode">

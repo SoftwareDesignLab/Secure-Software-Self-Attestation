@@ -31,16 +31,11 @@ import { AssessmentResult, ResultModelService } from './resultsModel';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  assessmentResults: AssessmentResult | undefined;
   showFullFooter: boolean = false;
   showNav = false;
   poamMode = false;
 
-  constructor( resultModelService: ResultModelService) {}
-
-  onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
-    this.assessmentResults = jsonData["assessment-results"];
-  }
+  constructor( public resultModelService: ResultModelService) {}
 
   toggleFooter() {
     this.showFullFooter = !this.showFullFooter;
