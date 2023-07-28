@@ -358,6 +358,11 @@ class Party {
   "telephone-numbers"?: string[];
   links?: Link[];
 
+
+  setName(name: string){
+    this.name = name;
+  }
+
   addAddress(addrlines: string[], city: string, state: string, postal: string, country: string) {
     let newAddress = new Address();
     newAddress["addr-lines"] = addrlines;

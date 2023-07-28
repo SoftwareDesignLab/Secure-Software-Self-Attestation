@@ -94,9 +94,14 @@ export class AssessmentPlanService {
     let metadata = this.metadata.getValue();
     let plans = this.assessmentPlans.getValue();
     let name = metadata.parties[1].name || " ";
-
-    if (data.fname) data.name = data.fname + " " + name.split(" ")[1];
-    if (data.lname) data.name = name.split(" ")[0] + " " + data.lname;
+    if (data.fname) {
+      data.name = data.fname + " " + name.split(" ")[1];
+      metadata.parties[1].setName(data.name);
+    }
+    if (data.lname){
+      data.name = name.split(" ")[0] + " " + data.lname;
+      metadata.parties[1].setName(data.name);
+    }
     if (data.title) metadata.parties[1].addProp("title", data.title, "Contact Info");
     //TODO update for multiple address lines
     if (data.address) metadata.parties[1].setPrimaryAddressLines([data.address]);
@@ -111,6 +116,7 @@ export class AssessmentPlanService {
       plan.metadata.parties = metadata.parties;
       plan.metadata['last-modified'] = new Date().toISOString();
     });
+    
 
     this.assessmentPlans.next(plans);
     this.metadata.next(metadata);
