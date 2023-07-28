@@ -41,7 +41,7 @@ export class AttestationDataService {
   private beenVisited: boolean = false;
   private controlMap: Map<string, ControlAttestation> = new Map<string, ControlAttestation>
   private groupMap: Map<string, GroupInfo> = new Map<string, ControlAttestation>
-  private tag: number = 1;
+  private tag: number;
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
@@ -50,7 +50,9 @@ export class AttestationDataService {
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
-  constructor(private assessmentPlanService: AssessmentPlanService) {}
+  constructor(private assessmentPlanService: AssessmentPlanService) {
+    this.tag = 0;
+  }
   
   refresh(){
       this.ComponentRefreshSource.next();
@@ -89,14 +91,16 @@ export class AttestationDataService {
     return this.deletionPosition;
   }
 
+  setTag(){
+    this.tag +=1;
+    return this.tag;
+  }
+
   addform(){
     this.assessmentPlanService.setAttestationFocus(this.forms.length);
     this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
     let position = this.forms.length-1;
-    this.forms[position].setPositionTag(this.tag);
-    this.assessmentPlanService.updateAssessmentPlanName("Attestation form " + this.tag);
     this.forms[position].setFormPosition(position);
-    this.tag = this.tag + 1;
   }
 
   // Control Methods 
