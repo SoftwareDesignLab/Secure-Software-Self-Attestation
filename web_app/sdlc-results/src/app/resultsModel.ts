@@ -31,77 +31,156 @@ export class ResultModelService {
   public assessmentResult: AssessmentResult | null = null;
 }
 
-export interface AssessmentResult {
-  uuid: string;
-  metadata: Metadata;
-  "import-ssp": object;
-  "reviewed-controls": ReviewedControls[];
-  "assessment-subjects": Subject[];
+export class AssessmentResult {
+  uuid: string = "";
+  metadata: Metadata = new Metadata();
+  "import-ssp": object = {};
+  "reviewed-controls": ReviewedControls[] = [];
+  "assessment-subjects": Subject[] = [];
+
+  constructor(json: JSON) {
+    Object.assign(this, json);
+    this.metadata = new Metadata(this.metadata);
+  }
 }
 
-export interface Metadata {
-  title: string;
-  "last-modified": string;
-  version: string;
-  "oscal-version": string;
-  published: string;
-  parties: Party[]
+export class Metadata {
+  public title: string = "";
+  "last-modified": string = "";
+  version: string = "";
+  "oscal-version": string = "";
+  published: string = "";
+  parties: Party[] = [];
+
+  constructor(json?: any) {
+    Object.assign(this, json);
+    this.parties = this.parties.map((party) => {
+      if (party.type === "organization")
+        return new Organization(party);
+      if (party.type === "person")
+        return new Contact(party);
+      return new Party(party);
+    })
+  }
 }
 
-export interface Party {
-  uuid: string;
-  type: string;
-  name: string;
-  addresses: Address[];
-  props: Prop[];
+export class Party {
+  uuid: string = "";
+  type: string = "";
+  name: string = "";
+  addresses: Address[] = [];
+  props: Prop[] = [];
+
+  constructor(json?: any) {
+    Object.assign(this, json);
+    this.addresses = this.addresses.map((address) => {return new Address(address)})
+    this.props = this.props.map((prop) => {return new Prop(prop)})
+  }
 }
 
-export interface Organization extends Party {
-  links: Link[];
+export class Organization extends Party {
+  links: Link[] = [];
+
+  constructor(json?: any) {
+    super();
+    Object.assign(this, json);
+    this.addresses = this.addresses.map((address) => {return new Address(address)})
+    this.props = this.props.map((prop) => {return new Prop(prop)})
+    this.links = this.links.map((link: any) => {return new Link(link)});
+  }
 }
 
-export interface Contact extends Party {
-  "email-addresses": string[];
-  "telephone-numbers": string[];
+export class Contact extends Party {
+  "email-addresses": string[] = [];
+  "telephone-numbers": string[] = [];
+
+  constructor(json?: any) {
+    super();
+    Object.assign(this, json);
+    this.addresses = this.addresses.map((address) => {return new Address(address)})
+    this.props = this.props.map((prop) => {return new Prop(prop)})
+  }
+
+  getProperName() {
+    let title = "";
+    this.props.forEach((prop) => {if (prop.class === "Contact Info" && prop.name === "title") title = prop.value;});
+    if (title !== "")
+      return capitalize(title + " " + this.name);
+    return capitalize(this.name);
+  }
 }
 
-export interface Address {
-  "addr-lines": string[];
-  city: string;
-  state: string;
-  "postal-code": string;
-  country: string;
+export class Address {
+  "addr-lines": string[] = [];
+  city: string = "";
+  state: string = "Default";
+  "postal-code": string = "";
+  country: string = "";
+
+  constructor(json?: any) {
+    Object.assign(this, json);
+  }
+
+  public getAddressAsString(): String {
+    let addressString = this['addr-lines'].map((addressLine) => {return addressLine}).join(", ") + ", ";
+    addressString += this.city + ", ";
+    if (this.state) 
+      addressString += this.state + ", ";
+    addressString += this.country + ", ";
+    addressString += this['postal-code'];
+    return capitalize(addressString);
+  }
 }
 
-export interface Prop {
-  name: string;
-  value: string;
-  class: string
+export class Prop {
+  name: string = "";
+  value: string = "";
+  class: string = "";
+
+  constructor(json: any) {
+    Object.assign(this, json);
+  }
 }
 
-export interface Link {
-  href: string;
-  rel: string;
+export class Link {
+  href: string = "";
+  rel: string = "";
+
+  constructor(json: any) {
+    Object.assign(this, json);
+  }
+
+  getLinkAsString() {
+    return this.rel.charAt(0).toUpperCase() + this.rel.slice(1) + ": " + this.href;
+  }
+
+  getLinkAsDisplay(): {"label": string, "link": string} {
+    return {"label": capitalize(this.rel), "link":this.href}
+  }
 }
 
-export interface ReviewedControls {
-  "control-selections": ControlSelection[];
+export class ReviewedControls {
+  "control-selections": ControlSelection[] = [];
 }
 
-export interface ControlSelection {
-  props: Prop[];
-  "include-controls": Control[];
-  "exclude-controls": Control[];
+export class ControlSelection {
+  props: Prop[] = [];
+  "include-controls": Control[] = [];
+  "exclude-controls": Control[] = [];
 }
 
-export interface Control {
-  "control-id": string;
+export class Control {
+  "control-id": string = "";
 }
 
-export interface Subject {
-  type: string;
-  props: Prop[];
-  "include-all": Object;
+export class Subject {
+  type: string = "";
+  props: Prop[] = [];
+  "include-all": Object = {};
+}
+
+function capitalize(str: String): string {
+  return str.split(" ").map((word) => {return word.charAt(0).toUpperCase() + word.slice(1)}).join(" ");
 }
 
 

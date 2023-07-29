@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
-import { ResultModelService, Metadata } from '../resultsModel';
+import { ResultModelService, Metadata, Organization, Contact, Address } from '../resultsModel';
 
 @Component({
   selector: 'app-results-metadata',
@@ -30,25 +30,20 @@ import { ResultModelService, Metadata } from '../resultsModel';
   styleUrls: ['./results-metadata.component.css']
 })
 export class ResultsMetadataComponent {
-  public metadata: Metadata | null = null;
-  constructor( public resultModelService: ResultModelService) {
-    let metadata = resultModelService.assessmentResult?.metadata;
-    if (metadata)
-      this.metadata = metadata;
-  }
+  public metadata: Metadata = new Metadata();
+  public org: Organization = new Organization();
+  public contact: Contact = new Contact();
+  constructor( public resultModelService: ResultModelService) {}
 
-  getAttribute(attribute: string): String {
-    if (this.metadata !== null) {
-      let value = "";
-      switch (attribute) {
-        case "title": value = this.metadata.title; break;
-        case "version": value = this.metadata.version; break;
-        case "last-modified": value = this.metadata["last-modified"]; break;
-        case "oscal-version": value = this.metadata["oscal-version"]; break;
-        case "published": value = this.metadata.published; break;
-      }
-      return value;
+  ngOnInit() {
+    if (this.resultModelService.assessmentResult) {
+      this.metadata = this.resultModelService.assessmentResult.metadata;
+      this.metadata.parties.forEach((party) => {
+        if (party instanceof Organization)
+          this.org = party;
+        if (party instanceof Contact) 
+          this.contact = party;
+      });
     }
-    return "";
   }
 }

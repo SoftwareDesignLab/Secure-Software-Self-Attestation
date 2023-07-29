@@ -28,6 +28,7 @@ import { AppComponent } from './app.component';
 import { ResultsUploadComponent } from './results-upload/results-upload.component';
 import { ResultsMetadataComponent } from './results-metadata/results-metadata.component';
 import { ResultComponent } from './result/result.component';
+import { Address } from './resultsModel';
 
 @NgModule({
   declarations: [

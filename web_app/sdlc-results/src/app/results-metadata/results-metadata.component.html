@@ -1,7 +1,20 @@
-<section class="results-metadata pane">
-  <h2>{{ getAttribute("title") }}</h2>
-  <p>Version: {{ getAttribute("version") }}</p>
-  <p>Last Modified: {{ getAttribute("last-modified") }}</p>
-  <p>Published: {{ getAttribute("published") }}</p>
-  <p>Oscal Version {{ getAttribute("oscal-version") }}</p>
+<section class="results-metadata">
+  <h2>{{ metadata.title }}</h2>
+  <p>Version: {{ metadata.version }}</p>
+  <p>Last Modified: {{ metadata['last-modified'] }}</p>
+  <p>Published: {{ metadata.published }}</p>
+  <p>Oscal Version {{ metadata['oscal-version'] }}</p>
+</section>
+<section class="results-contact">
+  <div>
+    <h3>Company: {{ org.name }}</h3>
+    <p *ngFor="let address of org.addresses">Address: {{ address.getAddressAsString() }}</p>
+    <a *ngFor="let link of org.links" [href]="link.getLinkAsDisplay().link">{{ link.getLinkAsDisplay().label }}</a>
+  </div>
+  <div>
+    <h3>Contact: {{ contact.getProperName() }}</h3>
+    <p *ngFor="let address of contact.addresses">Address: {{ address.getAddressAsString() }}</p>
+    <a *ngFor="let email of contact['email-addresses']" [href]="'mailto:' + email">{{ email }}</a><br>
+    <a *ngFor="let phone of contact['telephone-numbers']" [href]="'tel:' + phone">{{ phone }}</a>
+  </div>
 </section>

@@ -18,7 +18,10 @@
 </nav>
 
 <div *ngIf="!poamMode">
-  <app-results-metadata *ngIf="resultModelService.assessmentResult?.metadata"></app-results-metadata>
+  <div class="pane" *ngIf="resultModelService.assessmentResult">
+    <app-results-metadata *ngIf="resultModelService.assessmentResult?.metadata"></app-results-metadata>
+    <app-result></app-result>
+  </div>
   <app-results-upload></app-results-upload>
 </div>
 
