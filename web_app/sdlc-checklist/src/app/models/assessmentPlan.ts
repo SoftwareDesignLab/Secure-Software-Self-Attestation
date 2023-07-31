@@ -374,6 +374,18 @@ class Party {
     }
     this.addresses[0]["addr-lines"] = lines;
   }
+  setPrimaryAddressLine1(line: string) {
+    if (this.addresses === undefined) {
+      this.addresses = [new Address()];
+    }
+    this.addresses[0]["addr-lines"][0] = line;
+  }
+  setPrimaryAddressLine2(line: string) {
+    if (this.addresses === undefined) {
+      this.addresses = [new Address()];
+    }
+    this.addresses[0]["addr-lines"][1] = line;
+  }
   setPrimaryCity(city: string) {
     if (this.addresses === undefined) {
       this.addresses = [new Address()];

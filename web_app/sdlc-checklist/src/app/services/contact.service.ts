@@ -7,7 +7,8 @@ export class ContactService {
 
   constructor() { }
   public companyName: string = "";
-  public companyAddress: string = "";
+  public companyAddress1: string = "";
+  public companyAddress2: string = "";
   public city: string = "";
   public state: string = "";
   public postalCode: string = "";
@@ -17,7 +18,8 @@ export class ContactService {
   public firstName: string = "";
   public lastName: string = "";
   public title: string = "";
-  public personalAddress: string = "";
+  public personalAddress1: string = "";
+  public personalAddress2: string = "";
   public personalCity: string = "";
   public personalState: string = "";
   public personalCountry: string = "";
@@ -27,22 +29,23 @@ export class ContactService {
 
 
 
-  // Checks if contact form has acceptable amount of info 
-  isFilled(){
+  /**
+   *  Checks if contact form has acceptable amount of info 
+   * @returns whether the manditory sections are complete
+   */
+  isFilled(): boolean{
     return(
       this.companyName !== "" &&
-      this.companyAddress !== "" &&
+      this.companyAddress1 !== "" &&
       this.city !== "" &&
-      this.state !== "" &&
       this.postalCode !== "" &&
       this.country !== "" &&
       this.website !== "" &&
       this.firstName !== "" &&
       this.lastName !== "" &&
       this.title !== "" &&
-      this.personalAddress !== "" &&
+      this.personalAddress1 !== "" &&
       this.personalCity !== "" &&
-      this.personalState !== "" &&
       this.personalCountry !== "" &&
       this.phone !== "" &&
       this.email !== ""

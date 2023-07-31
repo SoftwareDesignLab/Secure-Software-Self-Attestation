@@ -1,6 +1,70 @@
-<app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
-<div *ngIf="assessmentResults !== undefined">
-  <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
-  <div *ngFor="let result of assessmentResults.results">
-    <app-result [result]="result"></app-result>
+<header>
+  <h1>SDLC Checklist</h1>
+</header>
+
+<nav id="nav">
+  <div class="nav-icon" (click)="toggleNav()" (keydown.enter)="toggleNav()" tabindex=0>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+  </div>
+  <div class="expanded-nav">
+    <h2>SDLC</h2>
+    <ul>
+      <li><a (click)="poam(false)">Attestation Results</a></li>
+      <li><a (click)="poam(true)">POA&amp;M</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div *ngIf="!poamMode">
+  <div *ngIf="assessmentResults !== undefined">
+    <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
+    <div *ngFor="let result of assessmentResults.results">
+      <app-result [result]="result"></app-result>
+    </div>
+  </div>
+
+  <app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
 </div>
+
+<div *ngIf="poamMode">
+  <p class="pane" style="text-align: center;">I have no clue what is supposed to go here</p>
+</div>
+
+<footer>
+  <p [hidden]="showFullFooter">
+    &copy;2023 Rochester Institute of Technology (RIT). Developed with government support under contract 70RSAT19CB0000020 
+    awarded by the United States Department of Homeland Security. 
+    Click <span (click)="toggleFooter()" tabindex=0 (keydown.enter)="toggleFooter()">here</span> to see more.
+  </p>
+  <p [hidden]="!showFullFooter">
+    Copyright 2023 Rochester Institute of Technology (RIT). Developed with
+    government support under contract 70RSAT19CB0000020 awarded by the United
+    States Department of Homeland Security.
+  </p>
+  <p [hidden]="!showFullFooter">
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+  </p>
+  <p [hidden]="!showFullFooter">
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+  </p>
+  <p [hidden]="!showFullFooter">
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+  </p>
+  <p [hidden]="!showFullFooter">
+    Click <span (click)="toggleFooter()" (keydown.enter)="toggleFooter()" tabindex=0>here</span> to see less.
+  </p>
+</footer>
