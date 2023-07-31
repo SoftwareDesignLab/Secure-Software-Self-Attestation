@@ -79,7 +79,7 @@
                         },
                         {
                             "name": "<control-id>",
-                            "value": "(checked|unchecked|n/a)",
+                            "value": "(yes|no|n/a)",
                             "class": "Compliance Claim"
                         },
                         {

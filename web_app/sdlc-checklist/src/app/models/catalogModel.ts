@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {GroupComponent} from './group/group.component'
-import { ChecklistItemComponent } from './control/control.component';
+import { GroupComponent } from '../group/group.component'
+import { ChecklistItemComponent } from '../control/control.component';
 
 
-    export interface Oscal {
+    export interface CatalogFileFormat {
         catalog: Catalog;
     }
 
@@ -107,9 +107,9 @@ import { ChecklistItemComponent } from './control/control.component';
     }
 
 
-    export class ControlInfo {
-        comment: String;
-        selection: String;
+    export class ControlAttestation {
+        comment: string;
+        selection: string;
         finalized: Boolean = false;
         showRollable: boolean = false;
 

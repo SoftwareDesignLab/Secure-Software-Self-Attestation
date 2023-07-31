@@ -22,15 +22,13 @@
  * SOFTWARE.
  */
 
-import { Component} from '@angular/core';
-import { attestationComment } from '../attestationForm';
-import { AttestationDataService } from '../attestation-data.service';
-import { Catalog, CatalogData} from '../oscalModel';
+import { Component } from '@angular/core';
+import { attestationComment } from '../models/attestationForm';
+import { AttestationDataService } from '../services/attestation-data.service';
+import { Catalog, CatalogData } from '../models/catalogModel';
 import catalog from '../defaultCatalog';
 import { ChecklistItemComponent } from '../control/control.component';
-import { notifyService } from '../notify.service';
-import { NotificationsService } from 'angular2-notifications';
-
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 
 @Component({
@@ -41,20 +39,24 @@ import { NotificationsService } from 'angular2-notifications';
 export class AttestationComponent {
 
   private catalogData: CatalogData = {catalogs: []};
-  private hiddenCatalogs = new Set<String>();
-  private selectedValue: string = ''; 
+  private hiddenCatalogs = new Set<string>();
+  private attestationType: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
   private FormPosition: any;
   private positionTag: any;
   private displayName: string = "";
 
-  /**
+   /**
    * Constructor
    * @param attestationService Links to the global attestation data service
    */
-  constructor (private attestationService: AttestationDataService){
+  constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, isUnused: Boolean = false){
     this.info.push(new attestationComment);
-    this.catalogData.catalogs.push(catalog as Catalog);  
+    this.catalogData.catalogs.push(catalog as Catalog);
+    if (!isUnused) { //kind of hacky, but works just fine
+      this.assessmentPlanService.addAssessmentPlan(this.getName());
+      this.assessmentPlanService.addCatalog(catalog as Catalog);
+    }
   }
 
   /**
@@ -79,6 +81,7 @@ export class AttestationComponent {
    */
   setName(name: string) {
     this.displayName = name;
+    this.assessmentPlanService.updateAssessmentPlanName(this.getName());
   }
 
   /**
@@ -121,19 +124,13 @@ export class AttestationComponent {
     this.info.pop();
   }
 
-  /**
-   * Returns the currently selected value
-   */
-  get getSelectedValue(){
-    return this.selectedValue;
+  get getAttestationType(){
+    return this.attestationType;
   }
 
-  /**
-   * 
-   * @param value Sets the currently selected value
-   */
-  setSelectedValue(value: string){
-    this.selectedValue = value;
+  setAttestationType(value: string){
+    this.attestationType = value;
+    this.assessmentPlanService.setAttestationType(value);
   }
 
   /**
@@ -148,7 +145,7 @@ export class AttestationComponent {
    * @returns whether or not the form at the top of the page is satisfactory
    */
   submitable(){
-    if(this.selectedValue=='company'){
+    if(this.attestationType=='company'){
       return true;
     }
     return this.info[0].isFilled();
@@ -179,7 +176,8 @@ export class AttestationComponent {
    * Removes a specified catalog
    * @param uuid The uuid of the catalog to be removed
    */
-  removeCatalog(uuid: String): void {
+  removeCatalog(uuid: string): void {
+    this.assessmentPlanService.removeCatalog(uuid);
     let catalogs = this.catalogData.catalogs;
     let removed = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1) as Catalog[];
     this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);
@@ -197,10 +195,12 @@ export class AttestationComponent {
       catalog.groups.forEach(group => {
         let GUID = catalog.uuid + "-" + group.id;
         this.attestationService.removeGroup(GUID);
-        group.controls.forEach((control: ChecklistItemComponent) => {
-          let CUID = catalog.uuid + "-" + control.id;
-          this.attestationService.removeControl(CUID);
-        });
+        if (group.controls !== undefined) {
+          group.controls.forEach((control: ChecklistItemComponent) => {
+            let CUID = catalog.uuid + "-" + control.id;
+            this.attestationService.removeControl(CUID);
+          });
+        }
       });
     } 
     if(catalog.controls !== undefined){
@@ -225,6 +225,7 @@ export class AttestationComponent {
    */
   restoreDefaultCatalog(): void {
     this.catalogData.catalogs.unshift(catalog as Catalog);   
+    this.assessmentPlanService.addCatalog(catalog as Catalog);
   }
 
   /**
@@ -239,7 +240,7 @@ export class AttestationComponent {
    * Hides or shows a specific catalog
    * @param uuid The catalog to be hidden
    */
-  toggleExpansion(uuid: String): void {
+  toggleExpansion(uuid: string): void {
     if (this.hiddenCatalogs.has(uuid)) {
       this.hiddenCatalogs.delete(uuid);
     } else {

@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Oscal, metaData, Catalog } from '../oscalModel';
-import { notifyService } from '../notify.service';
+import { CatalogFileFormat, metaData, Catalog } from '../models/catalogModel';
+import { notifyService } from '../services/notify.service';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class CatalogProcessingComponent {
    * 
    * @param notifications Prepares the notification service
    */
-  constructor(private notifications: notifyService){
+  constructor(private notifications: notifyService, private assessmentPlanService: AssessmentPlanService){
   }
 
   /**
@@ -118,7 +119,7 @@ export class CatalogProcessingComponent {
    * @returns Whether there is a nested catalog
    */
   private isNested(data: object): boolean{
-    let oscalObj = data as Oscal;
+    let oscalObj = data as CatalogFileFormat;
     if(oscalObj.catalog != undefined){
       return true;
     }
@@ -193,6 +194,7 @@ export class CatalogProcessingComponent {
       const catalog = this.isNested(json) ? json.catalog : json;
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
+        this.assessmentPlanService.addCatalog(catalog as Catalog);
         this.fileSelected.emit(catalog);
       }
     };

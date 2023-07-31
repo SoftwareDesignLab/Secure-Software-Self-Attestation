@@ -24,9 +24,9 @@
 import { Component, ViewChildren, QueryList, ViewChild, NgModule } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
+import { AttestationDataService } from './services/attestation-data.service';
+import { notifyService } from './services/notify.service';
 import { Router, NavigationEnd, RouterModule  } from '@angular/router';
-import { AttestationDataService } from './attestation-data.service';
-import { notifyService } from './notify.service';
 import { ChecklistItemComponent } from './control/control.component';
 import { ViewportScroller } from '@angular/common';
 import { delay, filter, takeUntil  } from 'rxjs/operators';
@@ -61,7 +61,7 @@ export class AppComponent {
   showComponents = false;
   showFullFooter = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService ){}
+  constructor(private router: Router, private attestationService: AttestationDataService){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
