@@ -66,9 +66,10 @@ export class AttestationDataService {
     this.dynamicFormSubject.next(form);
   }
 
+  // Sets the index of what page is being viewed to delete contents/page, 
+  // does not delete anything itself
   setDeletionPosition(position: number){
     this.deletionPosition= position;
-    // remove assessment plan in the assessment plan service
   }
 
   getdata(position: number){
@@ -121,6 +122,8 @@ export class AttestationDataService {
     else{
       const controlID = UID.split("-").at(-1) || ""; // kind of hacky
       let displayID = controlID;
+           
+      // looks if a controlID has already been used
       if(this.displayIDMap.has(controlID)){
         let amount = this.displayIDMap.get(controlID);
         if(amount!=undefined){
@@ -138,6 +141,11 @@ export class AttestationDataService {
     }
   }
 
+  /**
+   * Takes in an UID and reverses it back to its catalog uuid,
+   * @param UID Unique identifier of the object being given
+   * @returns catalogs uuid (string)
+   */
   uidToUuid(UID: string){
     let temp = UID.split("-") || ""; // kind of hacky
     let catalogUUID = "";
@@ -156,7 +164,7 @@ export class AttestationDataService {
       temp.selection=selection
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while updating Selection");
     }
   }
 
@@ -168,14 +176,12 @@ export class AttestationDataService {
       temp.comment=comment;
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while saving control comment");
     }
 
 
   }
   finalizeControlComment(UID: string, comment: string){
-    //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    //this.assessmentPlanService.setControlComment(controlID, comment);
     const catalogUUID = this.uidToUuid(UID);
     let index = this.catalogPosition.get(catalogUUID);
 
@@ -186,18 +192,14 @@ export class AttestationDataService {
       temp.comment=comment;
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while finalizing control comment");
     }
   }
 
 
   deleteControlComment(UID: string){
-    //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    //this.assessmentPlanService.removeControlComment(controlID);
-
     const catalogUUID = this.uidToUuid(UID);
     let index = this.catalogPosition.get(catalogUUID);
-
     let temp = this.controlMap.get(UID);
     if(temp!==undefined && index !== undefined){
       this.assessmentPlanService.removeControlComment(temp.displayID, index);

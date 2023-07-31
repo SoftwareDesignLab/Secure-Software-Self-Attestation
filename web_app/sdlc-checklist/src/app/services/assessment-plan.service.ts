@@ -205,12 +205,9 @@ export class AssessmentPlanService {
 
   // // control selections list is indexed by attestation. it should match up with assessment-subjects list
 
-  setControlSelection(controlID: string, selection: ControlSelectionType | string, newIndex: number) {
+  setControlSelection(controlID: string, selection: ControlSelectionType | string, index: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
-    let catalogs = this.catalogs.getValue();
-    //let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
-    let index = newIndex;
     if (index !== undefined) {
       if (typeof selection === "string") {
         switch (selection) {
@@ -252,55 +249,13 @@ export class AssessmentPlanService {
     console.log("Control not found in catalog: " + controlID);
   }
 
-  // controls can contain other controls and groups can contain controls
-  // this function will recursively search to see if a control is a child of a group or control
-  _recursiveContainsControl(controlID: string, controls?: ChecklistItemComponent[], groups?: GroupComponent[]): boolean { // First, check in the list of ChecklistItemComponents
-    for (let item of (controls || [])) {
-      if (item.id === controlID) {
-        return true;
-      }
-      // If the item has nested controls, search within them
-      if (item.controls) {
-        if (this._recursiveContainsControl(controlID, item.controls)) {
-          return true;
-        }
-      }
-    }
-
-    // Then, check in the list of GroupComponents
-    for (let group of groups || []) {
-      // If the group has nested controls, search within them
-      if (group.controls) {
-        if (this._recursiveContainsControl(controlID, group.controls)) {
-          return true;
-        }
-      }
-      // If the group has nested groups, search within them
-      if (group.groups) {
-        if (this._recursiveContainsControl(controlID, [], group.groups)) {
-          return true;
-        }
-      }
-    }
-
-    // If no match is found, return false
-    return false;
-   }
-
 
   
 
-  setControlComment(controlID: string, comment: string, newIndex: number) {
+  setControlComment(controlID: string, comment: string, index: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
 
-    let catalogs = this.catalogs.getValue();
-    //let index: number | undefined = undefined;
-
-    //TODO definitely optimize this
-    //index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
-
-    let index = newIndex;
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
@@ -316,13 +271,10 @@ export class AssessmentPlanService {
     console.log("Control not found in catalog: " + controlID);
   }
 
-  removeControlComment(controlID: string, newIndex: number) {
+  removeControlComment(controlID: string, index: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
-    let catalogs = this.catalogs.getValue();
 
-    //let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
-    let index = newIndex;
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
