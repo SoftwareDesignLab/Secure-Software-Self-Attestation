@@ -69,7 +69,6 @@ export class AttestationDataService {
   setDeletionPosition(position: number){
     this.deletionPosition= position;
     // remove assessment plan in the assessment plan service
-    this.assessmentPlanService.removeAssessmentPlan(position);
   }
 
   getdata(position: number){
@@ -125,7 +124,7 @@ export class AttestationDataService {
       if(this.displayIDMap.has(controlID)){
         let amount = this.displayIDMap.get(controlID);
         if(amount!=undefined){
-          displayID = displayID + "(" +  this.displayIDMap.get(controlID) + ")";
+          displayID = displayID + " (" +  this.displayIDMap.get(controlID) + ")";
           this.displayIDMap.set(controlID, amount+1);
         } else {
           console.warn("undefined UID?");
@@ -139,8 +138,17 @@ export class AttestationDataService {
     }
   }
 
+  uidToUuid(UID: string){
+    let temp = UID.split("-") || ""; // kind of hacky
+    let catalogUUID = "";
+    for (let i = 1; i < temp.length-1; i++) {
+      catalogUUID = catalogUUID + "-" +temp[i]
+    }
+    return catalogUUID.substring(1);
+  }
+
   updateControlSelection(UID: string, selection: string){
-    const catalogUUID = UID.split("-").at(1) || ""; // kind of hacky
+    const catalogUUID = this.uidToUuid(UID);
     let index = this.catalogPosition.get(catalogUUID);
     let temp = this.controlMap.get(UID);
     if(temp!==undefined && index !== undefined){

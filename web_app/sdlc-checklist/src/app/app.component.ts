@@ -35,6 +35,7 @@ import { Subject } from 'rxjs'
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { AttestationComponent } from './attestation/attestation.component';
 import { TemplateLiteral } from '@angular/compiler';
+import { AssessmentPlanService } from './services/assessment-plan.service';
 
 interface Catalog {
   uuid: string;
@@ -63,7 +64,7 @@ export class AppComponent {
   showComponents = false;
   showFullFooter = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService){}
+  constructor(private router: Router, private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
@@ -132,6 +133,7 @@ export class AppComponent {
     let firsthalf = this.attestationService.forms.slice(0,position);
     let secondhalf = this.attestationService.forms.slice(position+1)
     this.attestationService.forms[position].deleteAll();
+    this.assessmentPlanService.removeAssessmentPlan(position);
     if((position)===this.attestationService.getView){
       this.setNav(true);
       this.attestationService.pageName = "Contact Info";

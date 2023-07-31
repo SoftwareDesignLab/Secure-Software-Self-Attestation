@@ -201,6 +201,7 @@ export class AssessmentPlanService {
       this.catalogs.next(catalogs);
       this.assessmentPlans.next(plans);
     }
+    console.log("test");
   }
 
   // // control selections list is indexed by attestation. it should match up with assessment-subjects list
