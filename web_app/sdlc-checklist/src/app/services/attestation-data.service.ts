@@ -73,8 +73,6 @@ export class AttestationDataService {
    */
   setDeletionPosition(position: number){
     this.deletionPosition= position;
-    // remove assessment plan in the assessment plan service
-    this.assessmentPlanService.removeAssessmentPlan(position);
   }
 
   /**

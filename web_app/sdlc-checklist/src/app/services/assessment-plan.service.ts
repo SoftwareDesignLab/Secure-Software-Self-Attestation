@@ -166,6 +166,7 @@ export class AssessmentPlanService {
     catalogs[this.attestationFocus.getValue()].push(catalog);
     this.catalogs.next(catalogs);
 
+
     // TODO add links
     
     // add catalog info
@@ -216,8 +217,7 @@ export class AssessmentPlanService {
       }
 
       console.log("Setting control selection: " + controlID + " to " + selection)
-
-      if (selection == ControlSelectionType.noSelection) {
+      if (selection === ControlSelectionType.noSelection) {
         plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
         
         plan['reviewed-controls']['control-selections'][index].addExcludeControl(controlID);
@@ -452,6 +452,11 @@ export class AssessmentPlanService {
     plan.metadata['last-modified'] = new Date().toISOString();
 
     this.assessmentPlans.next(plans);
+  }
+
+  checkOnPlans() {
+    let plans = this.assessmentPlans.getValue();
+    console.log("Hi")
   }
   //TODO automatically exclude subjects that are unchecked
 }
