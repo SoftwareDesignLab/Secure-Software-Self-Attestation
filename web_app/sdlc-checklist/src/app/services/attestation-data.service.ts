@@ -45,6 +45,11 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
+  private displayIDMap: Map<String, number> = new Map<string, number>
+  private catalogPosition: Map<String, number> = new Map<string, number>
+
+
+
 
 
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
@@ -72,7 +77,12 @@ export class AttestationDataService {
   }
 
   get getCurrentForm(){
+    this.catalogPosition = this.forms[this.viewPosition].getCatalogPositions
     return this.forms[this.viewPosition];
+  }
+
+  getCatalogIndex(catalogUUID: string){
+    return this.catalogPosition.get(catalogUUID);
   }
 
   setView(position: number){
@@ -110,17 +120,31 @@ export class AttestationDataService {
       return(this.controlMap.get(UID));
     }
     else{
-     let info = new ControlAttestation();
+      const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+      let displayID = controlID;
+      if(this.displayIDMap.has(controlID)){
+        let amount = this.displayIDMap.get(controlID);
+        if(amount!=undefined){
+          displayID = displayID + "(" +  this.displayIDMap.get(controlID) + ")";
+          this.displayIDMap.set(controlID, amount+1);
+        } else {
+          console.warn("undefined UID?");
+        }
+      } else {
+        this.displayIDMap.set(controlID, 1);
+      }
+     let info = new ControlAttestation(displayID);
      this.controlMap.set(UID, info);
      return info;
     }
   }
 
   updateControlSelection(UID: string, selection: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.setControlSelection(controlID, selection);
+    const catalogUUID = UID.split("-").at(1) || ""; // kind of hacky
+    let index = this.catalogPosition.get(catalogUUID);
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.setControlSelection(temp.displayID, selection, index);
       temp.selection=selection
     }
     else{
@@ -142,11 +166,12 @@ export class AttestationDataService {
 
   }
   finalizeControlComment(UID: string, comment: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.setControlComment(controlID, comment);
+    //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    //this.assessmentPlanService.setControlComment(controlID, comment);
 
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
+      this.assessmentPlanService.setControlComment(temp.displayID, comment);
       temp.finalized=true;
       temp.comment=comment;
     }
@@ -157,14 +182,14 @@ export class AttestationDataService {
 
 
   deleteControlComment(UID: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.removeControlComment(controlID);
+    //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    //this.assessmentPlanService.removeControlComment(controlID);
 
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
+      this.assessmentPlanService.removeControlComment(temp.displayID);
       temp.comment = "";
       temp.finalized = false;
-      this.assessmentPlanService.removeControlComment(UID);
     }
 
   }

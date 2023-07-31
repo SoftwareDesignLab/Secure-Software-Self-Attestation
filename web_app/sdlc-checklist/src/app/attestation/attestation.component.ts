@@ -46,10 +46,13 @@ export class AttestationComponent {
   private FormPosition: any;
   private positionTag: any;
   displayName: string = "";
+  catalogPositions: Map<string, number> = new Map<string,number>
+  catalogCount = 1;
 
   constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, isUnused: Boolean = false){
     this.info.push(new attestationComment);
     this.catalogData.catalogs.push(catalog as Catalog);
+    this.catalogPositions.set(catalog.uuid,0);
     this.positionTag = this.attestationService.setTag();
     if (!isUnused) { //kind of hacky, but works just fine
       this.assessmentPlanService.addAssessmentPlan(this.getName());
@@ -123,6 +126,8 @@ export class AttestationComponent {
     if (this.catalogData.catalogs.findIndex((value) => {return value.uuid === jsonData.uuid;}) !== -1) // Prevents uploading the same file twice
       return;
     this.catalogData.catalogs.push(jsonData);
+    this.catalogPositions.set(jsonData.uuid,this.catalogCount);
+    this.catalogCount++;
   }
 
   removeCatalog(uuid: string): void {
@@ -131,6 +136,24 @@ export class AttestationComponent {
     let removed = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1) as Catalog[];
     this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);
     this.deleteCache(removed[0]);
+    this.reIndexCatalogPositions(uuid);
+  }
+
+  reIndexCatalogPositions(uuid: string){
+    this.catalogPositions.delete(uuid)
+    this.catalogCount = this.catalogCount-1;
+    let count = 0;
+    this.catalogData.catalogs.forEach(element => {
+      this.catalogPositions.set(element.uuid,count);
+      count++;
+    });
+  }
+
+  getCatalogPositon(catalogUUID: string){
+    return this.catalogPositions.get(catalogUUID);
+  }
+  get getCatalogPositions(){
+    return this.catalogPositions;
   }
 
   deleteCache(catalog: Catalog){

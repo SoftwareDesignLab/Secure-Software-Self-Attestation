@@ -69,7 +69,14 @@ export class ChecklistItemComponent {
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
     this.showRollable = this.info.showRollable;
-    this.assessmentPlanService.setControlSelection(this.id,"no-selection")
+    this.id = this.info.displayID;
+    let index = this.attestationDataService.getCatalogIndex(this.catalogUUID);
+    if (index !== undefined){
+      this.assessmentPlanService.setControlSelection(this.id,"no-selection", index)
+    }
+    else {
+      console.warn("could not set up controlSelection in assessmentPlanService");
+    }
     
   }
 

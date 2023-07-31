@@ -205,12 +205,12 @@ export class AssessmentPlanService {
 
   // // control selections list is indexed by attestation. it should match up with assessment-subjects list
 
-  setControlSelection(controlID: string, selection: ControlSelectionType | string) {
+  setControlSelection(controlID: string, selection: ControlSelectionType | string, newIndex: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
     let catalogs = this.catalogs.getValue();
-
-    let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
+    //let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
+    let index = newIndex;
     if (index !== undefined) {
       if (typeof selection === "string") {
         switch (selection) {
