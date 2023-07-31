@@ -23,16 +23,18 @@
  */
 
 
+import { saveAs } from 'file-saver';
 import { Component, ViewChildren, ViewChild, QueryList } from '@angular/core';
 import { GroupComponent } from '../group/group.component';
 import catalog from '../defaultCatalog';
-import { AttestationDataService } from '../attestation-data.service';
-import { attestationComment } from '../attestationForm';
-import { CatalogData } from '../oscalModel';
-import { ContactService } from '../contact.service';
-import { AttestationComponent } from '../attestation/attestation.component';
 import { CatalogProcessingComponent } from '../catalog-processing/catalog-processing.component';
 
+import { AttestationDataService } from '../services/attestation-data.service';
+import { attestationComment } from '../models/attestationForm';
+import { CatalogData, Catalog} from '../models/catalogModel';
+import { AttestationComponent } from '../attestation/attestation.component';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
+import { ContactService } from '../services/contact.service';
 
 
 @Component({
@@ -52,17 +54,17 @@ export class AttestationPageComponent {
   viewPosition = 0;
   position;
   observedForm!: AttestationComponent;
-  selectedValue!: string;
-  info: any;
+  attestationType!: string;
+  info: attestationComment[] = [];
 
+  
   /**
    * A constructor to grab the data to use from the correct attestation
    * @param attestationService The global attestation data service
    * @param contactService global contact data service
    */
-  constructor(public attestationService: AttestationDataService, private contactService: ContactService){
-      this.selectedValue = attestationService.getCurrentForm.getSelectedValue;
-      this.info = attestationService.getCurrentForm.getInfo;
+  constructor(public attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService){
+      this.attestationType = attestationService.getCurrentForm.getAttestationType;
       this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
       this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
       this.position = this.attestationService.getCurrentForm.getPositionTag;
@@ -78,7 +80,7 @@ export class AttestationPageComponent {
     });
     this.attestationService.dynamicForm$.subscribe(form => {
       this.observedForm = form;
-      this.selectedValue = form.getSelectedValue;
+      this.attestationType = form.getAttestationType;
       this.info = form.getInfo
       this.position = form.getPositionTag
       this.catalogData = form.getCatalogs;
@@ -116,20 +118,37 @@ export class AttestationPageComponent {
   /**
    * Updates when the top attestation form radio input is changed
    */
-  updateSelect(): void {
-    this.attestationService.getCurrentForm.setSelectedValue(this.selectedValue);
-    if (this.selectedValue !== 'multiple') {
+  updateAtestationType(){
+    this.attestationService.getCurrentForm.setAttestationType(this.attestationType);
+    if (this.attestationType !== 'multiple') {
       if (this.info.length > 1) {
         this.info.splice(1);
       }
     }
-    console.log(this.info.length);
+  }
+
+  updateAttestationSubject(index: number, field: string, event: any) {
+    console.log(index, field)
+    switch (field) {
+      case 'name':
+        this.assessmentPlanService.updateSubject(index, event.target.value);
+        break;
+      case 'version':
+        this.assessmentPlanService.updateSubject(index, undefined, event.target.value);
+        break;
+      case 'date':
+        this.assessmentPlanService.updateSubject(index, undefined, undefined, event.target.value);
+        break;
+    }
   }
 
   /**
    * Adds a new attestation comment in multiple product mode
    */
   addRow(){
+    let previous = this.info[this.info.length-1];
+    this.assessmentPlanService.addSubject(previous.getName(), previous.getVersion(), previous.getDate());
+
     this.info.push(new attestationComment)
   }
 
@@ -138,6 +157,7 @@ export class AttestationPageComponent {
    */
   removeRow(){
     this.info.pop();
+    this.assessmentPlanService.popSubject();
   }
 
   /**
@@ -169,12 +189,12 @@ export class AttestationPageComponent {
     }
   }
 
-  /**
+   /**
    * Sets the expansion of all groups, usually when the entire catalog is collapsed
    * @param toSet The state to set them all to
    * @param uuid The uuid of the catalog to change
    */
-  setAllGroupExpansion(toSet: boolean, uuid: String): void {
+  setAllGroupExpansion(toSet: boolean, uuid: string): void {
     this.childComponents.forEach((child) => {
       if (child.catalogUUID === uuid) {
         child.setComponents(toSet);
@@ -186,7 +206,7 @@ export class AttestationPageComponent {
    * Toggles the expansion of the selected catalog
    * @param uuid The uuid of the catalog to toggle
    */
-  toggleExpansion(uuid: String): void {
+  toggleExpansion(uuid: string): void {
     this.attestationService.getCurrentForm.toggleExpansion(uuid);
   }
 
@@ -195,7 +215,7 @@ export class AttestationPageComponent {
    * @param uuid The uuid of the catalog to check
    * @returns whether or not the selected catalog should be visible
    */
-  isShown(uuid: String): boolean {
+  isShown(uuid: string): boolean {
     return !this.hiddenCatalogs.has(uuid);
   }
 
@@ -203,7 +223,7 @@ export class AttestationPageComponent {
    * Removes tge selected catalog
    * @param uuid The uuid of the catalog to delete
    */
-  removeCatalog(uuid: String): void {
+  removeCatalog(uuid: string): void {
     this.attestationService.getCurrentForm.removeCatalog(uuid);
   }
 
@@ -230,4 +250,14 @@ export class AttestationPageComponent {
   alert(message: string) {
     alert(message);
   }
+
+  generateAssessmentPlan() {
+    let object = this.assessmentPlanService.serializeCurrentPlan();
+    const blob = new Blob([object], { type: 'application/json' });
+    saveAs(blob, 'assessmentPlan.json');
+    //TODO assessment plan works great for the first attestation, bugs out for the second one\
+    //TODO Compliance claims not spawning
+    //TODO first catalog duplicates
+  }
+
 }

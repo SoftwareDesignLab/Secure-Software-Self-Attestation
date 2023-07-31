@@ -1,0 +1,45 @@
+# Attestation form as an Assessment Plan
+## Fields
+- UUID
+  - *Randomly Generated UUIDv4*
+- Metadata
+  - title
+    - *attestation title*
+  - version, last-modified, oscal-version
+    - *self explanatory*
+  - Parties
+    - *two parties: one for producer (organization) and one for contact (person)*
+    - *producer props contain website and person props contain title*
+    - *label described in remarks*
+- import-ssp
+  - TODO
+- reviewed-controls
+  - links, description
+    - *self explanatory*
+  - control-selections
+    - props
+      - *props for catalog name and ID*
+      - *Each control gets two props - one for the checkbox status and one for the textual claim*
+      - *checkbox status can be one of three options - "checked", "unchecked" or "n/a"*
+    - include-controls
+      - *list of control ids used (check, x or n/a)*
+    - exclude-controls
+      - *list of control ids not checked at all*
+- assessment-subjects
+  - *first subject will be the company*
+  - type
+    - *will always be party*
+  - props
+    - *contains record for attestation type*
+  - include-all
+    - *Only exists if user selects company-wide*
+  - include-subjects
+    - subject-uuid
+      - *uuid of component or resource*
+    - type
+      - *will be set to component*
+    - props
+      - *contains product name, version number and release date*
+- terms and conditions
+  - parts
+    - *contains information about the terms and conditions of the form*

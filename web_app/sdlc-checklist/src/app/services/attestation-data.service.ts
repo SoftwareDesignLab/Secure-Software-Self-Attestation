@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 import { Injectable } from '@angular/core';
-import { AttestationComponent } from './attestation/attestation.component';
-import { ControlInfo, GroupInfo } from './oscalModel';
+import { AttestationComponent } from '../attestation/attestation.component';
+import { ControlAttestation, GroupInfo } from '../models/catalogModel';
 
 import { BehaviorSubject, Subject } from 'rxjs';
-import { notifyService } from './notify.service';
+import { AssessmentPlanService } from './assessment-plan.service';
 
 @Injectable({
   providedIn: 'root'
@@ -39,17 +39,19 @@ export class AttestationDataService {
 
   public forms: Array<AttestationComponent> = new Array<AttestationComponent>
   private beenVisited: boolean = false;
-  private controlMap: Map<String, ControlInfo> = new Map<String, ControlInfo>
-  private groupMap: Map<String, GroupInfo> = new Map<String, ControlInfo>
+  private controlMap: Map<string, ControlAttestation> = new Map<string, ControlAttestation>
+  private groupMap: Map<string, GroupInfo> = new Map<string, ControlAttestation>
   private tag: number = 1;
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
 
 
-  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this));
+  private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
+  constructor(private assessmentPlanService: AssessmentPlanService) {}
+  
   /**
    * Used in changing page content, should be called after updateDynamicForm
    */  
@@ -71,6 +73,8 @@ export class AttestationDataService {
    */
   setDeletionPosition(position: number){
     this.deletionPosition= position;
+    // remove assessment plan in the assessment plan service
+    this.assessmentPlanService.removeAssessmentPlan(position);
   }
 
   /**
@@ -95,6 +99,7 @@ export class AttestationDataService {
    * @param position The position to set the view position of
    */
   setView(position: number){
+    this.assessmentPlanService.setAttestationFocus(position);
     this.viewPosition = position;
   }
 
@@ -125,7 +130,8 @@ export class AttestationDataService {
    * Adds a new form
    */
   addform(){
-    this.forms.push(new AttestationComponent(this, ));
+    this.assessmentPlanService.setAttestationFocus(this.forms.length);
+    this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
     let position = this.forms.length-1;
     this.forms[position].setPositionTag(this.tag);
     this.forms[position].setFormPosition(position);
@@ -140,12 +146,12 @@ export class AttestationDataService {
    * @param UID The uuid of the control to set up
    * @returns The relevant control info
    */
-  setUpControl(UID: String): ControlInfo | undefined{
+  setUpControl(UID: string): ControlAttestation | undefined{
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
     }
     else{
-     let info = new ControlInfo();
+     let info = new ControlAttestation();
      this.controlMap.set(UID, info);
      return info;
     }
@@ -156,10 +162,12 @@ export class AttestationDataService {
    * @param UID The uid to modify the selection of
    * @param selection The new selection
    */
-  updateControlSelection(UID: String, selection: String){
+  updateControlSelection(UID: string, selection: string){
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    this.assessmentPlanService.setControlSelection(controlID, selection);
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
-      temp.selection=selection;
+      temp.selection=selection
     }
     else{
       console.log("Something went wrong")
@@ -171,7 +179,7 @@ export class AttestationDataService {
    * @param UID The uid of the control info to modify
    * @param comment The new comment
    */
-  saveControlComment(UID: String, comment: String){
+  saveControlComment(UID: string, comment: string){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.finalized=false;
@@ -187,7 +195,10 @@ export class AttestationDataService {
    * @param UID The uid of the control info to modify
    * @param comment The new comment
    */
-  finalizeControlComment(UID: String, comment: String){
+  finalizeControlComment(UID: string, comment: string){
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    this.assessmentPlanService.setControlComment(controlID, comment);
+
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.finalized=true;
@@ -198,15 +209,20 @@ export class AttestationDataService {
     }
   }
 
+
   /**
    * Wipes the control comment for a control info
    * @param UID The control uuid to delete the comment of
    */
-  deleteControlComment(UID: String){
+  deleteControlComment(UID: string){
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    this.assessmentPlanService.removeControlComment(controlID);
+
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.comment = "";
       temp.finalized = false;
+      this.assessmentPlanService.removeControlComment(UID);
     }
   }
 
@@ -214,7 +230,7 @@ export class AttestationDataService {
    * Toggles whether or not the control sub-info is open
    * @param UID The control info uuid
    */
-  toggleControlRollable(UID: String){
+  toggleControlRollable(UID: string){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
@@ -225,20 +241,19 @@ export class AttestationDataService {
    * Removes a given control
    * @param UID The uuid of the control to remove
    */
-  removeControl(UID: String){
+  removeControl(UID: string){
     let position = this.getdata(this.deletionPosition).getPositionTag;
     let temp = position + "-" + UID;
     this.controlMap.delete(temp);
   }
 
   // Group methods
-
   /**
    * Sets up a new group
    * @param UID The group uuid to set up
    * @returns The new groupInfo object
    */
-  setUpGroup(UID: String): GroupInfo | undefined{
+  setUpGroup(UID: string): GroupInfo | undefined{
     if(this.groupMap.has(UID)){
       return(this.groupMap.get(UID));
     }
@@ -253,18 +268,18 @@ export class AttestationDataService {
    * Toggles whether or not a group is visible
    * @param UID the group to toggle
    */
-  toggleGroupRollable(UID: String){
+  toggleGroupRollable(UID: string){
     let temp = this.groupMap.get(UID);
     if(temp!==undefined){
       temp.showRollable = !temp.showRollable;
     }
   }
 
-  /**
+   /**
    * Removes the selected group from the page
    * @param UID The group to remove
    */
-  removeGroup(UID: String){
+  removeGroup(UID: string){
     let position = this.getdata(this.deletionPosition).getPositionTag;
     let temp = position + "-" + UID;
     this.groupMap.delete(temp);

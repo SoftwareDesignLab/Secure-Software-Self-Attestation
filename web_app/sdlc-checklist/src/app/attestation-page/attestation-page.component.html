@@ -1,27 +1,27 @@
 <div class="attestation pane" id="attestation">
-  <h2>Select your Attestation Type:</h2>
-  <input type="radio" id="company-wide" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()"  value="company" class="landing">
+  <h2>Select your attestation type:</h2>
+  <input type="radio" id="company-wide" name="attestation" [(ngModel)]="attestationType" (change)="updateAtestationType()"  value="company" class="landing">
   <label for="company-wide">Company-wide</label><br>
-  <input type="radio" id="product-line" name="attestation" [(ngModel)]="selectedValue" (change)="updateSelect()" value="product">
+  <input type="radio" id="product-line" name="attestation" [(ngModel)]="attestationType" (change)="updateAtestationType()" value="product">
   <label for="product-line">Product line</label><br>
-  <input type="radio" id="individual" name="attestation"  [(ngModel)]="selectedValue"  (change)="updateSelect()" value="individual">
+  <input type="radio" id="individual" name="attestation"  [(ngModel)]="attestationType"  (change)="updateAtestationType()" value="individual">
   <label for="individual">Individual Product</label><br>
-  <input type="radio" id="multiple" name="attestation" [(ngModel)]="selectedValue"  (change)="updateSelect()" value="multiple">
+  <input type="radio" id="multiple" name="attestation" [(ngModel)]="attestationType"  (change)="updateAtestationType()" value="multiple">
   <label for="multiple">Multiple products or Specific Product Version(s)</label>
-  <div *ngIf="selectedValue!=='company' && selectedValue!==''" class="table-section">
+  <div *ngIf="attestationType!=='company' && attestationType!==''" class="table-section">
     <table>
       <tr>
         <th>Product(s) or Product Line Name</th>
         <th>Version Number (if applicable)</th>
         <th>Release/Publish Date</th>
       </tr>
-      <tr *ngFor="let row of info">
-        <td><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" value={{row.getName()}} class="table-field"></td>
-        <td><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" value={{row.getVersion()}} class="table-field"></td>
-        <td><input type ="date" name="form" (change)="onKey($event, row, 'date')" value={{row.getDate()}} class="table-field"></td>
+      <tr *ngFor="let row of info; let i = index">
+        <td><input type ="text" name="form" (keyup)="onKey($event, row, 'name')" (blur)="updateAttestationSubject(i, 'name', $event)" value={{row.getName()}} class="table-field"></td>
+        <td><input type ="text" name="form"(keyup)="onKey($event, row, 'version')" (blur)="updateAttestationSubject(i, 'version', $event)" value={{row.getVersion()}} class="table-field"></td>
+        <td><input type ="date" name="form" (change)="onKey($event, row, 'date')" (blur)="updateAttestationSubject(i, 'date', $event)" value={{row.getDate()}} class="table-field"></td>
       </tr>
     </table>
-    <button class="add" mat-button (click)="addRow()" [hidden]="selectedValue!=='multiple'">+</button>
+    <button class="add" mat-button (click)="addRow()" [hidden]="attestationType!=='multiple'">+</button>
     <button class="add" mat-button (click)="removeRow()" *ngIf="info.length>1">-</button>
   </div>
 </div>
@@ -66,7 +66,7 @@
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
     <div class="generate-report-outer-div">
-      <button class="save-progress" (click)="alert('This would save progress, but right now it\'s useless')">Save Attestation</button>
+      <button class="save-progress" (click)="generateAssessmentPlan()">Save Attestation</button>
       <div class="generate-report-inner-div">
         <button class="generate-report-button" *ngIf="catalogData" [disabled]="contactCompleted()"> Generate Report</button>
         <button class="missing-info" *ngIf="contactCompleted()" disabled>

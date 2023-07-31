@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 import { Component, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
-import { AttestationDataService } from '../attestation-data.service';
-import { ControlInfo } from '../oscalModel';
+import { AttestationDataService } from '../services/attestation-data.service';
+import { ControlAttestation } from '../models/catalogModel';
 import { timeInterval } from 'rxjs';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 
 @Component({
@@ -42,21 +43,22 @@ export class ChecklistItemComponent {
   @Input() parts: any;
   @Input() links: any;
   @Input() props: any;
-  @Input() controls: any;
+  @Input() controls?: ChecklistItemComponent[];
   @Input() catalogUUID: any;
   @Output() update = new EventEmitter();
-  selection: String = "no-selection";
+  selection: string = "no-selection";
   showRollable = false;
-  info!: ControlInfo; 
+  info!: ControlAttestation; 
   UID: any; //Unique ID for this control for the program
-  comment: String = "";
+  comment: string = "";
   popup: Boolean = false;
   finalized: Boolean = false;
   onPopup: Boolean = false;
   primed: Boolean = false;
   focused: Boolean = false;
 
-  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){  }
+  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef, 
+    private assessmentPlanService: AssessmentPlanService){  }
 
 
   ngOnInit(){
@@ -67,6 +69,8 @@ export class ChecklistItemComponent {
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
     this.showRollable = this.info.showRollable;
+    this.assessmentPlanService.setControlSelection(this.id,"no-selection")
+    
   }
 
 
@@ -117,15 +121,19 @@ export class ChecklistItemComponent {
   }
 
   select(option: string) {
-    this.attestationDataService.updateControlSelection(this.UID, option);
     if (this.selection === "no-selection") {
       this.deploy();
     }
+    this.changeSelection(option);
+  }
+
+  changeSelection(option: string) {
     if (this.selection === option) {
       this.selection = "no-selection";
     } else {
       this.selection = option;
     }
+    this.attestationDataService.updateControlSelection(this.UID, this.selection);
   }
 
   save() {
@@ -133,7 +141,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
-      this.attestationDataService.saveControlComment(this.UID,this.comment);
+      this.attestationDataService.saveControlComment(this.UID, this.comment);
     this.cancel();
   }
 
@@ -142,7 +150,7 @@ export class ChecklistItemComponent {
     let text = document.getElementById("comment")
     if (text instanceof HTMLTextAreaElement)
       this.comment = text.value;
-      this.attestationDataService.finalizeControlComment(this.UID,this.comment);
+      this.attestationDataService.finalizeControlComment(this.UID, this.comment);
     this.cancel();
   }
 
@@ -194,6 +202,9 @@ export class ChecklistItemComponent {
       comment.focus();
       this.focused = true;
     }
+  }
+  get getID(){
+    return this.id;
   }
 }
 

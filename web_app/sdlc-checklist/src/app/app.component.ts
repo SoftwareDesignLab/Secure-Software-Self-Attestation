@@ -24,9 +24,9 @@
 import { Component, ViewChildren, QueryList, ViewChild, NgModule } from '@angular/core';
 import { GroupComponent } from './group/group.component';
 import catalog from './defaultCatalog';
+import { AttestationDataService } from './services/attestation-data.service';
+import { notifyService } from './services/notify.service';
 import { Router, NavigationEnd, RouterModule  } from '@angular/router';
-import { AttestationDataService } from './attestation-data.service';
-import { notifyService } from './notify.service';
 import { ChecklistItemComponent } from './control/control.component';
 import { ViewportScroller } from '@angular/common';
 import { delay, filter, takeUntil  } from 'rxjs/operators';
@@ -34,7 +34,7 @@ import { Subject } from 'rxjs'
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { AttestationComponent } from './attestation/attestation.component';
 import { TemplateLiteral } from '@angular/compiler';
-import { ContactService } from './contact.service';
+import { ContactService } from './services/contact.service';
 
 interface Catalog {
   uuid: string;
@@ -63,8 +63,7 @@ export class AppComponent {
   showFullFooter = false;
   bypass = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService,
-   private contactService: ContactService ){}
+  constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService ){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
