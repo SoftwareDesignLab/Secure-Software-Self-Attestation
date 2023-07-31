@@ -34,6 +34,7 @@ import { Subject } from 'rxjs'
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { AttestationComponent } from './attestation/attestation.component';
 import { TemplateLiteral } from '@angular/compiler';
+import { ContactService } from './services/contact.service';
 
 interface Catalog {
   uuid: string;
@@ -60,13 +61,27 @@ export class AppComponent {
   renaming = 0;
   showComponents = false;
   showFullFooter = false;
+  bypass = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService){}
+  constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService ){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
       this.catalogData = this.attestationService.getdata(0).getCatalogs
+    
+      ////// Temp Bypass Code
+      document.addEventListener('keydown', this.onKeyPressed.bind(this));
+      //////
   }
+
+  ////// Temp Bypass code (press f2 to toggle generate report button regardless of contact info)
+  onKeyPressed(event: KeyboardEvent) {
+    if (event.key === "F2") {
+      this.bypass=true
+      this.contactService.bypass = !this.contactService.bypass;
+    }
+  }
+  //////
 
   /**
    * Changes the current page

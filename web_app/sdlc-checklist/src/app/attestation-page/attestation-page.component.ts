@@ -34,6 +34,7 @@ import { attestationComment } from '../models/attestationForm';
 import { CatalogData, Catalog} from '../models/catalogModel';
 import { AttestationComponent } from '../attestation/attestation.component';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
+import { ContactService } from '../services/contact.service';
 
 
 @Component({
@@ -60,10 +61,10 @@ export class AttestationPageComponent {
   /**
    * A constructor to grab the data to use from the correct attestation
    * @param attestationService The global attestation data service
-  */
-  constructor(public attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){
+   * @param contactService global contact data service
+   */
+  constructor(public attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService){
       this.attestationType = attestationService.getCurrentForm.getAttestationType;
-      this.info = attestationService.getCurrentForm.getInfo;
       this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
       this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
       this.position = this.attestationService.getCurrentForm.getPositionTag;
@@ -107,6 +108,10 @@ export class AttestationPageComponent {
     else{
       return false;
     }
+  }
+
+  contactCompleted(){
+    return !this.contactService.isFilled();
   }
 
 

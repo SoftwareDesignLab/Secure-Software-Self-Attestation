@@ -6,6 +6,10 @@ import { Injectable } from '@angular/core';
 export class ContactService {
 
   constructor() { }
+  ///// Temp code for Bypass
+  public bypass = false;
+  /////
+
   public companyName: string = "";
   public companyAddress1: string = "";
   public companyAddress2: string = "";
@@ -35,6 +39,7 @@ export class ContactService {
    */
   isFilled(): boolean{
     return(
+      (
       this.companyName !== "" &&
       this.companyAddress1 !== "" &&
       this.city !== "" &&
@@ -48,7 +53,10 @@ export class ContactService {
       this.personalCity !== "" &&
       this.personalCountry !== "" &&
       this.phone !== "" &&
-      this.email !== ""
+      this.email !== "" ) 
+      ////// Temp code for bypass
+      || this.bypass
+      //////
     )
   }
 

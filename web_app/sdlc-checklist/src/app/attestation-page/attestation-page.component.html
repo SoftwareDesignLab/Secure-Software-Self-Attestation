@@ -65,9 +65,15 @@
   </div>
   <div class="lower-div">
     <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
-    <div class="generate-report-div">
+    <div class="generate-report-outer-div">
       <button class="save-progress" (click)="generateAssessmentPlan()">Save Attestation</button>
-      <button class="generate-report" *ngIf="catalogData">Generate Report</button>
+      <div class="generate-report-inner-div">
+        <button class="generate-report-button" *ngIf="catalogData" [disabled]="contactCompleted()"> Generate Report</button>
+        <button class="missing-info" *ngIf="contactCompleted()" disabled>
+          !
+          <span class="tool-tip">Software Producer/Primary Contact Info is incomplete!</span>
+        </button>
+    </div>
     </div>
   </div>
 </div>
