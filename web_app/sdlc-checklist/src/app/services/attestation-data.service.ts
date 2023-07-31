@@ -176,10 +176,12 @@ export class AttestationDataService {
   finalizeControlComment(UID: string, comment: string){
     //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
     //this.assessmentPlanService.setControlComment(controlID, comment);
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.catalogPosition.get(catalogUUID);
 
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
-      this.assessmentPlanService.setControlComment(temp.displayID, comment);
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.setControlComment(temp.displayID, comment,index);
       temp.finalized=true;
       temp.comment=comment;
     }
@@ -193,9 +195,12 @@ export class AttestationDataService {
     //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
     //this.assessmentPlanService.removeControlComment(controlID);
 
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.catalogPosition.get(catalogUUID);
+
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
-      this.assessmentPlanService.removeControlComment(temp.displayID);
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.removeControlComment(temp.displayID, index);
       temp.comment = "";
       temp.finalized = false;
     }

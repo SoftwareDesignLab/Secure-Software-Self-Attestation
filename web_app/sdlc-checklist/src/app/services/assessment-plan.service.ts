@@ -201,7 +201,6 @@ export class AssessmentPlanService {
       this.catalogs.next(catalogs);
       this.assessmentPlans.next(plans);
     }
-    console.log("test");
   }
 
   // // control selections list is indexed by attestation. it should match up with assessment-subjects list
@@ -239,7 +238,7 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, selection, "Compliance Claim");
 
-      if(selection != ControlSelectionType.notApplicable){
+      if(selection != ControlSelectionType.noSelection){
         plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
         plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       }
@@ -291,16 +290,17 @@ export class AssessmentPlanService {
 
   
 
-  setControlComment(controlID: string, comment: string) {
+  setControlComment(controlID: string, comment: string, newIndex: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
 
     let catalogs = this.catalogs.getValue();
-    let index: number | undefined = undefined;
+    //let index: number | undefined = undefined;
 
     //TODO definitely optimize this
-    index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
+    //index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
 
+    let index = newIndex;
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
@@ -316,12 +316,13 @@ export class AssessmentPlanService {
     console.log("Control not found in catalog: " + controlID);
   }
 
-  removeControlComment(controlID: string) {
+  removeControlComment(controlID: string, newIndex: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
     let catalogs = this.catalogs.getValue();
 
-    let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
+    //let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
+    let index = newIndex;
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
