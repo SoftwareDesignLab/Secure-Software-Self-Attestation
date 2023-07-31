@@ -54,40 +54,77 @@ export class AttestationDataService {
     this.tag = 0;
   }
   
+  /**
+   * Used in changing page content, should be called after updateDynamicForm
+   */  
   refresh(){
       this.ComponentRefreshSource.next();
   }
+
+  /**
+   * Changes the visible form
+   * @param form The form to display
+   */
   updateDynamicForm(form: AttestationComponent) {
     this.dynamicFormSubject.next(form);
   }
 
+  /**
+   * Sets the deletion position
+   * @param position The deletion position
+   */
   setDeletionPosition(position: number){
     this.deletionPosition= position;
     // remove assessment plan in the assessment plan service
     this.assessmentPlanService.removeAssessmentPlan(position);
   }
 
-  getdata(position: number){
+  /**
+   * Gets the data at a given position
+   * @param position The position to get the data of
+   * @returns The attestation Component at that position
+   */
+  getdata(position: number): AttestationComponent{
     return this.forms[position];
   }
 
-  get getCurrentForm(){
+  /**
+   * Gets the currently visible attestation component
+   * @returns The currently visible attestation component
+   */
+  get getCurrentForm(): AttestationComponent{
     return this.forms[this.viewPosition];
   }
 
+  /**
+   * Sets a given component to the view
+   * @param position The position to set the view position of
+   */
   setView(position: number){
     this.assessmentPlanService.setAttestationFocus(position);
     this.viewPosition = position;
   }
+
+  /**
+   * Returns the whole array of components
+   */
   get getRawData(){
     return this.forms;
   }
 
-  get getView(){
+  /**
+   * Gets the currently viewed position
+   * @returns The current component position
+   */
+  get getView(): number{
     return this.viewPosition;
   }
 
-  get getDeletionPosition(){
+  /**
+   * Gets the current deletion position
+   * @returns the position to delete
+   */
+  get getDeletionPosition(): number{
     return this.deletionPosition;
   }
 
@@ -96,6 +133,9 @@ export class AttestationDataService {
     return this.tag;
   }
 
+  /**
+   * Adds a new form
+   */
   addform(){
     this.assessmentPlanService.setAttestationFocus(this.forms.length);
     this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
@@ -103,8 +143,14 @@ export class AttestationDataService {
     this.forms[position].setFormPosition(position);
   }
 
+
   // Control Methods 
 
+  /**
+   * 
+   * @param UID The uuid of the control to set up
+   * @returns The relevant control info
+   */
   setUpControl(UID: string): ControlAttestation | undefined{
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
@@ -116,6 +162,11 @@ export class AttestationDataService {
     }
   }
 
+  /**
+   * Updates the selection of a ControlInfo
+   * @param UID The uid to modify the selection of
+   * @param selection The new selection
+   */
   updateControlSelection(UID: string, selection: string){
     const controlID = UID.split("-").at(-1) || ""; // kind of hacky
     this.assessmentPlanService.setControlSelection(controlID, selection);
@@ -128,8 +179,12 @@ export class AttestationDataService {
     }
   }
 
+  /**
+   * Saves an in-progress comment to the control info 
+   * @param UID The uid of the control info to modify
+   * @param comment The new comment
+   */
   saveControlComment(UID: string, comment: string){
-    console.log(UID)
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
       temp.finalized=false;
@@ -138,9 +193,13 @@ export class AttestationDataService {
     else{
       console.log("Something went wrong")
     }
-
-
   }
+
+  /**
+   * Saves a final comment to the control info
+   * @param UID The uid of the control info to modify
+   * @param comment The new comment
+   */
   finalizeControlComment(UID: string, comment: string){
     const controlID = UID.split("-").at(-1) || ""; // kind of hacky
     this.assessmentPlanService.setControlComment(controlID, comment);
@@ -156,6 +215,10 @@ export class AttestationDataService {
   }
 
 
+  /**
+   * Wipes the control comment for a control info
+   * @param UID The control uuid to delete the comment of
+   */
   deleteControlComment(UID: string){
     const controlID = UID.split("-").at(-1) || ""; // kind of hacky
     this.assessmentPlanService.removeControlComment(controlID);
@@ -166,9 +229,12 @@ export class AttestationDataService {
       temp.finalized = false;
       this.assessmentPlanService.removeControlComment(UID);
     }
-
   }
 
+  /**
+   * Toggles whether or not the control sub-info is open
+   * @param UID The control info uuid
+   */
   toggleControlRollable(UID: string){
     let temp = this.controlMap.get(UID);
     if(temp!==undefined){
@@ -176,6 +242,10 @@ export class AttestationDataService {
     }
   }
 
+  /**
+   * Removes a given control
+   * @param UID The uuid of the control to remove
+   */
   removeControl(UID: string){
     let position = this.getdata(this.deletionPosition).getPositionTag;
     let temp = position + "-" + UID;
@@ -183,7 +253,11 @@ export class AttestationDataService {
   }
 
   // Group methods
-  
+  /**
+   * Sets up a new group
+   * @param UID The group uuid to set up
+   * @returns The new groupInfo object
+   */
   setUpGroup(UID: string): GroupInfo | undefined{
     if(this.groupMap.has(UID)){
       return(this.groupMap.get(UID));
@@ -195,6 +269,10 @@ export class AttestationDataService {
     }
   }
 
+  /**
+   * Toggles whether or not a group is visible
+   * @param UID the group to toggle
+   */
   toggleGroupRollable(UID: string){
     let temp = this.groupMap.get(UID);
     if(temp!==undefined){
@@ -202,6 +280,10 @@ export class AttestationDataService {
     }
   }
 
+   /**
+   * Removes the selected group from the page
+   * @param UID The group to remove
+   */
   removeGroup(UID: string){
     let position = this.getdata(this.deletionPosition).getPositionTag;
     let temp = position + "-" + UID;

@@ -34,18 +34,34 @@ export class RollableComponent {
   @Input() subControls: any;
   @Input() references: any;
 
+  /**
+   * 
+   * @returns Whether there is a description
+   */
   hasDescription(): boolean {
     return this.description !== undefined;
   }
 
+  /**
+   * 
+   * @returns Whether there are examples in the parts
+   */
   hasExamples(): boolean {
     return this.examples !== undefined;
   }
 
+  /**
+   * 
+   * @returns Whether there are sub-controls
+   */
   hasSubControls(): boolean {
     return this.subControls !== undefined;
   }
 
+  /**
+   * 
+   * @returns Whether there are references in the props
+   */
   hasReferences(): boolean {
     return this.references !== undefined && this.references.length > 0;
   }

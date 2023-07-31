@@ -21,3 +21,124 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+footer span {
+  color: #005EA2;
+  text-decoration: underline;
+  user-select: none;
+  cursor: pointer;
+}
+
+footer p {
+  margin: 10px 30px;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  z-index: 3;
+  right: -400px;
+}
+
+.nav-opening {
+  animation-name: navOpening;
+  animation-duration: .5s;
+  right: 0vw;
+}
+
+.nav-closing {
+  animation-name: navClosing;
+  animation-duration: .5s;
+  right: -400px;
+}
+
+.nav-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #005EA2;
+  border-bottom: 3px solid darkgray;
+  border-left: 3px solid darkgray;
+  border-radius: 0 0 0 5px;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  cursor: pointer;
+}
+
+.nav-icon:hover {
+  background-color: #004577;
+}
+
+.hamburger-line {
+  background-color: white;
+  height: 5px;
+  width: 30px;
+  border-radius: 3px;
+  margin: auto;
+}
+
+.hamburger-line:nth-child(1) {
+  margin-top: 18px;
+}
+
+.hamburger-line:nth-child(3) {
+  margin-bottom: 18px;
+}
+
+.expanded-nav {
+  width: 400px;
+  height: 100vh;
+  background-color: white;
+  border-left: 2px solid black;
+  box-shadow: -4px 0 4px 0 rgba(0, 0, 0, .4);
+  text-align: center;
+}
+
+.expanded-nav ul {
+  list-style: none;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.expanded-nav li {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid black;
+}
+
+.expanded-nav li:nth-child(1) {
+  border-top: 1px solid black;
+}
+
+.expanded-nav a {
+  padding: 15px 10px;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  text-indent: 20px;
+  width: 100%;
+  text-align: left;
+}
+
+.expanded-nav h2 {
+  text-align: center;
+  text-decoration: underline;
+  margin: 25px 0;
+}
+
+.expanded-nav li:hover {
+  background-color: #EFF2F4;
+}
+
+@keyframes navOpening {
+  from {right: -400px;}
+  to {right: 0vw;}
+}
+
+@keyframes navClosing {
+  from {right: 0vw;}
+  to {right: -400px;}
+}

@@ -104,7 +104,8 @@ export class AssessmentPlanService {
     }
     if (data.title) metadata.parties[1].addProp("title", data.title, "Contact Info");
     //TODO update for multiple address lines
-    if (data.address) metadata.parties[1].setPrimaryAddressLines([data.address]);
+    if (data.address1) metadata.parties[1].setPrimaryAddressLine1(data.address1);
+    if (data.address2) metadata.parties[1].setPrimaryAddressLine2(data.address2);
     if (data.city) metadata.parties[1].setPrimaryCity(data.city);
     if (data.state) metadata.parties[1].setPrimaryState(data.state);
     if (data.country) metadata.parties[1].setPrimaryCountry(data.country);

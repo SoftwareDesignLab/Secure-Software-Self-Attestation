@@ -28,13 +28,13 @@ import { AttestationDataService } from './services/attestation-data.service';
 import { notifyService } from './services/notify.service';
 import { Router, NavigationEnd, RouterModule  } from '@angular/router';
 import { ChecklistItemComponent } from './control/control.component';
-import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { ViewportScroller } from '@angular/common';
 import { delay, filter, takeUntil  } from 'rxjs/operators';
 import { Subject } from 'rxjs'
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { AttestationComponent } from './attestation/attestation.component';
 import { TemplateLiteral } from '@angular/compiler';
+import { ContactService } from './services/contact.service';
 
 interface Catalog {
   uuid: string;
@@ -56,20 +56,38 @@ const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 })
 export class AppComponent {
   catalogData: CatalogData = {catalogs: []};
-  @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   showNav = false;
   openTag = 0;
   renaming = 0;
   showComponents = false;
   showFullFooter = false;
+  bypass = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService){}
+  constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService ){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
       this.catalogData = this.attestationService.getdata(0).getCatalogs
+    
+      ////// Temp Bypass Code
+      document.addEventListener('keydown', this.onKeyPressed.bind(this));
+      //////
   }
 
+  ////// Temp Bypass code (press f2 to toggle generate report button regardless of contact info)
+  onKeyPressed(event: KeyboardEvent) {
+    if (event.key === "F2") {
+      this.bypass=true
+      this.contactService.bypass = !this.contactService.bypass;
+    }
+  }
+  //////
+
+  /**
+   * Changes the current page
+   * @param page The page name to change to
+   * @param fragment The fragment identifier to scroll to
+   */
   async changePage(page: string, fragment?: string){
     this.toggleNav();
     if (fragment) {
@@ -90,6 +108,11 @@ export class AppComponent {
       this.attestationService.pageName = "Contact Info";
   }
 
+  /**
+   * Recursively identifies the first descendant element to have the class "landing"
+   * @param parent The parent to search from
+   * @returns The element with "landing", null if none exists
+   */
   findFirstLandingChildr(parent: HTMLElement): HTMLElement | null {
     let children = parent.children;
     for (let i = 0, max = children.length; i < max; i++) {
@@ -108,10 +131,18 @@ export class AppComponent {
     return null;
   }
 
+  /**
+   * Gets the array of all attestation components
+   */
   get getForms(){
     return this.attestationService.getRawData;
   }
 
+  /**
+   * Changes the currently visible form
+   * @param form The form to change to
+   * @param fragment The fragment identifier to scroll to
+   */
   changeAttestation(form: AttestationComponent, fragment?: string){
     this.attestationService.pageName = form.getName();
     this.attestationService.setView(form.getFormPosition);
@@ -120,12 +151,19 @@ export class AppComponent {
     this.changePage('attestation-form', fragment);
   }
   
+  /**
+   * Creates a new attestation form
+   */
   newForm(){
     this.attestationService.addform();
     let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1);
     this.changeAttestation(newPage);
   }
 
+  /**
+   * Deletes the provided form
+   * @param position The position of the form to delete
+   */
   deleteForm(position: number){
     this.openTag = 0;
     this.attestationService.setDeletionPosition(position)
@@ -153,10 +191,17 @@ export class AppComponent {
     
   }
 
+  /**
+   * Toggles whether the nav is visible
+   */
   toggleNav(): void {
     this.setNav(!this.showNav);
   }
 
+  /**
+   * Sets the nav to the provided state
+   * @param state The state to set the nav to
+   */
   setNav(state: boolean): void {
     this.showNav = state;
     let nav = document.getElementById('nav');
@@ -173,6 +218,10 @@ export class AppComponent {
     }
   }
 
+  /**
+   * Changes which tree, if any, are open
+   * @param formTag The tag of the form that should have it's tree toggled
+   */
   toggleNavTree(formTag: number): void {
     if (this.openTag === formTag) {
       this.openTag = 0;
@@ -181,6 +230,11 @@ export class AppComponent {
     }
   }
 
+  /**
+   * Gets the user-friendly link name for a given catalog
+   * @param catalog The catalog to make a name for
+   * @returns The name
+   */
   getLinkName(catalog: Catalog): string {
     let metadata: any = catalog.metadata;
     if (metadata.title) {
@@ -189,18 +243,30 @@ export class AppComponent {
     return catalog.uuid;
   }
 
+  /**
+   * Toggles whether the footer should be expanded
+   */
   toggleFooter() {
     this.showFullFooter = !this.showFullFooter;
   }
 
+  /**
+   * Allows the HTML to push alerts
+   * @param message The message to alert
+   */
   alert(message: string) {
     alert(message);
   }
 
+  /**
+   * Gets a list of sublinks to display in the tree
+   * @param form The Attestation that is being expanded
+   * @returns A list of names, fragments, and indexes to allow the sublinks to work
+   */
   getSubLinks(form: AttestationComponent): Array<{name: string, fragment: string, position: number}> {
     let listOLinks: Array<{name: string, fragment: string, position: number}> = [];
     let i = 0;
-    listOLinks.push({name: "Secure Software Development Attestation Form", fragment: "attestation", position: i++})
+    listOLinks.push({name: "Select Attestation Type", fragment: "attestation", position: i++})
     form.getCatalogs.catalogs.forEach((catalog) => {
       listOLinks.push({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid, position: i++});
     });
@@ -208,6 +274,10 @@ export class AppComponent {
     return listOLinks;
   }
 
+  /**
+   * Allows the user to change the name of the form
+   * @param form The attestation to rename
+   */
   async renameForm(form: AttestationComponent) {
     this.renaming = form.getPositionTag;
     this.openTag = 0;
@@ -218,6 +288,10 @@ export class AppComponent {
     }
   }
 
+  /**
+   * Sets the name in the "renaming-input" textbox to the attestation
+   * @param form The attestation to rename
+   */
   confirmName(form: AttestationComponent) {
     let input = document.getElementById("renaming-input");
     if (input instanceof HTMLInputElement) {
@@ -229,11 +303,19 @@ export class AppComponent {
     }
   }
 
+  /**
+   * Gets a user-friendly page name
+   * @returns The name of the current page
+   */
   getPageName(): string {
     return this.attestationService.pageName;
   }
 
-
+  /**
+   * 
+   * @param num The number of numbers to return
+   * @returns Returns a list of numbers 1 to num-1
+   */
   range(num: number): Array<number> {
     return Array.from(Array(num).keys())
   }
