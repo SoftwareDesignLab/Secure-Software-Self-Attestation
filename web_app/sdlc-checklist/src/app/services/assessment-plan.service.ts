@@ -239,7 +239,7 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, selection, "Compliance Claim");
 
-      if(selection != ControlSelectionType.notApplicable){
+      if(selection != ControlSelectionType.noSelection){
         plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
         plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       }
