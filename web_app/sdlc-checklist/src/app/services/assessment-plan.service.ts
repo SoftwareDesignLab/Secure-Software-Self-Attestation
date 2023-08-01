@@ -34,6 +34,7 @@ export class AssessmentPlanService {
     metadata.addBlankParty();
     metadata.parties[0].type = "organization";
     metadata.parties[1].type = "person";
+    metadata["last-modified"] = new Date().toISOString();
     this.metadata.next(metadata);
   }
 
@@ -95,6 +96,8 @@ export class AssessmentPlanService {
       plan.metadata['last-modified'] = new Date().toISOString();
     });
 
+
+    metadata["last-modified"] = new Date().toISOString();
     this.assessmentPlans.next(plans);
     this.metadata.next(metadata);
   }
@@ -127,7 +130,7 @@ export class AssessmentPlanService {
       plan.metadata['last-modified'] = new Date().toISOString();
     });
     
-
+    metadata["last-modified"] = new Date().toISOString();
     this.assessmentPlans.next(plans);
     this.metadata.next(metadata);
   }
@@ -150,26 +153,34 @@ export class AssessmentPlanService {
     plans.push(plan);
     catalogs.push([]);
     this.assessmentPlans.next(plans);
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
   }
 
   removeAssessmentPlan(index: number) {
     let plans = this.assessmentPlans.getValue();
+    let metadata = this.metadata.getValue();
 
     if (index >= plans.length) return;
     if (index < 0) return;
 
     plans.splice(index, 1);
 
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
     this.assessmentPlans.next(plans);
   }
 
   updateAssessmentPlanName(name: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()];
+    let metadata = this.metadata.getValue();
 
     plan.metadata.title = name;
     plan.metadata['last-modified'] = new Date().toISOString();
 
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
     plans[this.attestationFocus.getValue()] = plan;
     this.assessmentPlans.next(plans);
   }
@@ -177,6 +188,7 @@ export class AssessmentPlanService {
   addCatalog(catalog: Catalog) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
+    let metadata = this.metadata.getValue();
     let catalogs = this.catalogs.getValue();
     let controlSelection = new ControlSelection();
 
@@ -192,7 +204,8 @@ export class AssessmentPlanService {
     plan['reviewed-controls']['control-selections'].push(controlSelection);
 
     plan.metadata['last-modified'] = new Date().toISOString();
-    
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
     this.assessmentPlans.next(plans);
   }
 
@@ -200,6 +213,7 @@ export class AssessmentPlanService {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
     let catalogs = this.catalogs.getValue();
+    let metadata = this.metadata.getValue();
 
     let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => catalog.uuid === catalogUuid);
     if (index > -1) {
@@ -209,6 +223,8 @@ export class AssessmentPlanService {
       
       plan.metadata['last-modified'] = new Date().toISOString();
       
+      metadata["last-modified"] = new Date().toISOString();
+      this.metadata.next(metadata);
       this.catalogs.next(catalogs);
       this.assessmentPlans.next(plans);
     }
@@ -220,6 +236,7 @@ export class AssessmentPlanService {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
     let catalogs = this.catalogs.getValue();
+    let metadata = this.metadata.getValue();
 
     let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
     if (index !== undefined) {
@@ -256,6 +273,8 @@ export class AssessmentPlanService {
 
       plan.metadata['last-modified'] = new Date().toISOString();
 
+      metadata["last-modified"] = new Date().toISOString();
+      this.metadata.next(metadata);
       this.assessmentPlans.next(plans);
       return;
     }
@@ -303,6 +322,7 @@ export class AssessmentPlanService {
   setControlComment(controlID: string, comment: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
+    let metadata = this.metadata.getValue();
 
     let catalogs = this.catalogs.getValue();
     let index: number | undefined = undefined;
@@ -319,6 +339,8 @@ export class AssessmentPlanService {
 
       plan.metadata['last-modified'] = new Date().toISOString();
 
+      metadata["last-modified"] = new Date().toISOString();
+      this.metadata.next(metadata);
       this.assessmentPlans.next(plans);
       return;
     }
@@ -328,6 +350,7 @@ export class AssessmentPlanService {
   removeControlComment(controlID: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
+    let metadata = this.metadata.getValue();
     let catalogs = this.catalogs.getValue();
 
     let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
@@ -339,6 +362,8 @@ export class AssessmentPlanService {
   
       plan.metadata['last-modified'] = new Date().toISOString();
 
+      metadata["last-modified"] = new Date().toISOString();
+      this.metadata.next(metadata);
       this.assessmentPlans.next(plans);
       return;
     }
@@ -348,6 +373,7 @@ export class AssessmentPlanService {
   addSubject(productName: string, version: string, date: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
+    let metadata = this.metadata.getValue();
 
     if (plan["assessment-subjects"] === undefined) {
       plan["assessment-subjects"] = [new AssessmentSubject()];
@@ -367,12 +393,15 @@ export class AssessmentPlanService {
 
     plan.metadata['last-modified'] = new Date().toISOString();
 
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
     this.assessmentPlans.next(plans);
   }
 
   updateSubject(subjectIndex: number, productName?: string, version?: string, date?: string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationFocus.getValue()]
+    let plan = plans[this.attestationFocus.getValue()];
+    let metadata = this.metadata.getValue();
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject update");
@@ -404,12 +433,15 @@ export class AssessmentPlanService {
 
     plan.metadata['last-modified'] = new Date().toISOString();
 
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
     this.assessmentPlans.next(plans);
   }
 
   popSubject() {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationFocus.getValue()]
+    let plan = plans[this.attestationFocus.getValue()];
+    let metadata = this.metadata.getValue();
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject deletion");
@@ -424,13 +456,15 @@ export class AssessmentPlanService {
     plan["assessment-subjects"][0].props = [new Prop("type", "multi product", "Attestation Type")];
 
     plan.metadata['last-modified'] = new Date().toISOString();
-
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
     this.assessmentPlans.next(plans);
   }
 
   setAttestationType(type: string) {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationFocus.getValue()]
+    let plan = plans[this.attestationFocus.getValue()];
+    let metadata = this.metadata.getValue();
 
     if (plan["assessment-subjects"] === undefined) {
       plan["assessment-subjects"] = [new AssessmentSubject()];
@@ -444,13 +478,15 @@ export class AssessmentPlanService {
     plan["assessment-subjects"][0].props = [new Prop("type", type, "Attestation Type")];
 
     plan.metadata['last-modified'] = new Date().toISOString();
-
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
     this.assessmentPlans.next(plans);
   }
 
   setSingleProduct() {
     let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationFocus.getValue()]
+    let plan = plans[this.attestationFocus.getValue()];
+    let metadata = this.metadata.getValue();
 
     if (plan["assessment-subjects"] === undefined) {
       console.log("assessment-subjects not found in plan, skipping subject update");
@@ -468,6 +504,8 @@ export class AssessmentPlanService {
 
     plan.metadata['last-modified'] = new Date().toISOString();
 
+    metadata["last-modified"] = new Date().toISOString();
+    this.metadata.next(metadata);
     this.assessmentPlans.next(plans);
   }
 
@@ -476,4 +514,44 @@ export class AssessmentPlanService {
     console.log("Hi")
   }
   //TODO automatically exclude subjects that are unchecked
+
+  _uniqueCatalogs() {
+    let allCatalogs = this.catalogs.getValue();
+    let uniqueCatalogs: Array<Catalog> = [];
+    allCatalogs.forEach(formCatalogs => {
+      formCatalogs.forEach(catalog => {
+        if (uniqueCatalogs.findIndex(uniqueCatalog => uniqueCatalog.uuid === catalog.uuid) === -1) {
+          uniqueCatalogs.push(catalog);
+        }
+      });
+    });
+    return uniqueCatalogs;
+  }
+
+  convertToAssessmentResults() {
+    let plans = this.assessmentPlans.getValue();
+    let metadata = this.metadata.getValue();
+
+    // TODO make it a class for type safety (models/assessmentResults.ts)
+    let assessmentResults: any = {
+      "assessment-results": {
+        uuid: uuid(),
+        metadata: {
+          ...metadata,
+          // Name may be undefined but shouldnt because generate report button will be disabled until contact info is filled
+          title: "Assessment Results for " + metadata.parties[0].name
+        },
+        "import-ap": { href: "" }, //TODO one main assessment plan to describe all attestations ????
+        results: []
+      },
+      catalogs: this._uniqueCatalogs()
+    };
+
+    plans.forEach(plan => {
+      // TODO
+      // results[0] will be contain results for the attestations. attestation forms will go in the attestations[] item
+      //    items with a 'no' attestation will be defined as risks
+      // results[1:] will be the results of user defined tests 
+    });
+  }
 }
