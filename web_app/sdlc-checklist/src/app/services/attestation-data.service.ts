@@ -23,10 +23,13 @@
  */
 import { Injectable } from '@angular/core';
 import { AttestationComponent } from '../attestation/attestation.component';
-import { ControlAttestation, GroupInfo } from '../models/catalogModel';
+import { ControlAttestation, GroupInfo, Catalog } from '../models/catalogModel';
 
 import { BehaviorSubject, Subject } from 'rxjs';
 import { AssessmentPlanService } from './assessment-plan.service';
+import { ChecklistItemComponent } from '../control/control.component';
+
+const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +48,8 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
+  public neededControls: Set<string> = new Set<string>();
+  public stagedJSON: any;
 
 
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
@@ -281,6 +286,45 @@ export class AttestationDataService {
     let position = this.getdata(this.deletionPosition).getPositionTag;
     let temp = position + "-" + UID;
     this.groupMap.delete(temp);
+  }
+
+  async checkNeededControls() {
+    await dela(100)
+    let currentControls = this.assessmentPlanService.getActivePlan();
+    currentControls["reviewed-controls"]["control-selections"].forEach((catalog) => {
+      catalog["exclude-controls"]?.forEach((control) => {
+        if (this.neededControls.delete(control["control-id"])) console.log("Resolved Control " + control["control-id"])
+      })
+    })
+    if (this.neededControls.size === 0) {
+      this.loadAttestationData();
+    }
+  }
+
+  loadAttestationData() {
+    let dialog = document.getElementById("needed-files-upload")
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.close();
+    }
+    let catalogs = this.stagedJSON["reviewed-controls"]["control-selections"]
+    let props: any[] = [];
+    /*let controls: String[] = [];
+    let currentControls = this.assessmentPlanService.getActivePlan();
+    currentControls["reviewed-controls"]["control-selections"].forEach((catalog) => {
+      catalog["exclude-controls"]?.forEach((control) => {
+        if (controls.push(control["control-id"])) console.log("Identified Control " + control["control-id"])
+      })
+    })*/
+    console.log(catalogs);
+    catalogs.forEach((catalog: any) => {
+      props = props.concat(catalog["props"])
+    })
+    console.log(props)
+    props.forEach((prop: any) => {
+      if (prop["class"] === "Compliance Claim") {
+        this.assessmentPlanService.setControlSelection(prop["name"], prop["value"]);
+      }
+    })
   }
 }
 

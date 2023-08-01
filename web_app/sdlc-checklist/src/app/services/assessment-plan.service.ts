@@ -45,6 +45,10 @@ export class AssessmentPlanService {
     return this.assessmentPlans.asObservable();
   }
 
+  getActivePlan() {
+    return this.assessmentPlans.getValue()[this.attestationFocus.getValue()]
+  }
+
   setAttestationFocus(index: number) {
     console.log(index);
     this.attestationFocus.next(index);
@@ -208,9 +212,9 @@ export class AssessmentPlanService {
     if (index !== undefined) {
       if (typeof selection === "string") {
         switch (selection) {
-          case "check": selection = ControlSelectionType.yes; break;
-          case "x": selection = ControlSelectionType.no; break;
-          case "na": selection = ControlSelectionType.notApplicable; break;
+          case "check": case "yes": selection = ControlSelectionType.yes; break;
+          case "x": case "no": selection = ControlSelectionType.no; break;
+          case "na": case "n/a": selection = ControlSelectionType.notApplicable; break;
           case "no-selection": selection = ControlSelectionType.noSelection; break;
           default: return console.log("Invalid selection type. Must be one of 'check', 'x', or 'na'");
         }

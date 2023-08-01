@@ -299,6 +299,10 @@ a {
   margin: auto;
 }
 
+#needed-files-upload li {
+  color: rgb(224, 15, 15);
+}
+
 .scroll-box {
   overflow-y: scroll;
   border: 1px solid gray;

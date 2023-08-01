@@ -64,6 +64,7 @@ export class AppComponent {
   showFullFooter = false;
   bypass = false;
 
+
   constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService ){}
   
   ngOnInit(){
@@ -324,8 +325,17 @@ export class AppComponent {
   /**
    * Cancels the loading of an attestation
    */
-  cancelLoad() {
-
+  cancelLoad(event?: MouseEvent) {
+    let dialog = document.getElementById("needed-files-upload")
+    if (dialog instanceof HTMLDialogElement) {
+      if (event) {
+        if (event.clientX > dialog.offsetLeft && event.clientX < (dialog.offsetLeft + dialog.offsetWidth) && event.clientY > dialog.offsetTop && event.clientY < (dialog.offsetHeight + dialog.offsetTop)) return;
+      }
+      dialog.close();
+    }
+    this.deleteForm(this.attestationService.getCurrentForm.getFormPosition);
+    this.attestationService.neededControls = new Set<string>();
+    this.attestationService.stagedJSON = null;
   }
 
   loadAttestation() {
@@ -355,19 +365,39 @@ export class AppComponent {
   }
 
   private handleFile(file: File): void {
-    const reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = () => {
-      const json = JSON.parse(reader.result as string);
-      //Put what happens to the file here
+      let json = JSON.parse(reader.result as string);
+      this.attestationService.stagedJSON = json;
+      console.log(json)
+      let include = json["reviewed-controls"]["control-selections"]
+      if (include !== undefined) {
+        include.forEach((catalog: any) => {
+          if (catalog["include-controls"]) {
+            catalog["include-controls"].forEach((control: any) => {
+              if (control["control-id"]) this.attestationService.neededControls.add(control["control-id"]);
+            })
+          } else if (catalog["include-all"]) {
+            catalog["props"].forEach((control: any) => {
+              if (control.class === "Compliance Claim") this.attestationService.neededControls.add(control.name);
+            })
+          }
+        })
+      }
+      this.attestationService.checkNeededControls();
     };
     reader.readAsText(file);
   }
 
-  loadCatalogForLoadAttestation() {
+  async loadCatalogForLoadAttestation() {
     let upload = document.getElementById("file")
     if (upload instanceof HTMLElement) {
       upload.click();
     }
+  }
+
+  getNeededControls(): Set<string> {
+    return this.attestationService.neededControls;
   }
 }
 

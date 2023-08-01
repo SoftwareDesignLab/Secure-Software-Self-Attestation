@@ -39,11 +39,11 @@
   <router-outlet></router-outlet>
 </main>
 
-<dialog id="needed-files-upload" class="pane">
+<dialog id="needed-files-upload" class="pane" (keydown.escape)="cancelLoad()" (click)="cancelLoad($event)">
   <p>In order to parse this file, the blank catalogs of the following controls are also needed:</p>
   <div class="scroll-box">
     <ul>
-      <li>Control</li>
+      <li *ngFor="let control of getNeededControls()">{{ control }}</li>
     </ul>
   </div>
   <button (click)="loadCatalogForLoadAttestation()">Upload Catalog</button>
