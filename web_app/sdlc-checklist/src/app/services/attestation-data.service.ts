@@ -120,26 +120,11 @@ export class AttestationDataService {
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
     }
-    else{
-      const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-      let displayID = controlID;
-           
-      // looks if a controlID has already been used
-      if(this.displayIDMap.has(controlID)){
-        let amount = this.displayIDMap.get(controlID);
-        if(amount!=undefined){
-          displayID = displayID + " (" +  this.displayIDMap.get(controlID) + ")";
-          this.displayIDMap.set(controlID, amount+1);
-        } else {
-          console.warn("undefined UID?");
-        }
-      } else {
-        this.displayIDMap.set(controlID, 1);
-      }
-     let info = new ControlAttestation(displayID);
-     this.controlMap.set(UID, info);
-     return info;
-    }
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    let displayID = this.dupIDCheck(controlID);
+    let info = new ControlAttestation(displayID);
+    this.controlMap.set(UID, info);
+    return info;
   }
 
   dupIDCheck(controlID: string): string{
@@ -170,15 +155,14 @@ export class AttestationDataService {
     let newID = this.dupIDCheck(newDisplayID);
     if (temp !== undefined && index !== undefined){
       temp.displayID=newID;
-      temp.displayID=newDisplayID;
-      this.assessmentPlanService.setControlSelection(oldID, "delete", index)
-      this.assessmentPlanService.setControlSelection(newID, temp.selection, index)
-      this.assessmentPlanService.setControlComment(newID, temp.comment, index)
+      this.assessmentPlanService.deleteControl(oldID,index);
+      this.assessmentPlanService.setControlSelection(newID, temp.selection, index);
+      this.assessmentPlanService.setControlComment(newID, temp.comment, index);
+
 
 
     }
     return newID;
-    console.log(newID);
     }
     
 
