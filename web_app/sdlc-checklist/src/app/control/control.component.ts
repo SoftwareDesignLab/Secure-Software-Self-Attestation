@@ -25,6 +25,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectorRef} from '@angul
 import { AttestationDataService } from '../services/attestation-data.service';
 import { ControlAttestation } from '../models/catalogModel';
 import { timeInterval } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 
@@ -57,6 +58,7 @@ export class ChecklistItemComponent {
   primed: Boolean = false;
   focused: Boolean = false;
   displayID: any;
+  oldDisplayID: any;
 
   constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef, 
     private assessmentPlanService: AssessmentPlanService){  }
@@ -71,6 +73,7 @@ export class ChecklistItemComponent {
     this.finalized = this.info.finalized;
     this.showRollable = this.info.showRollable;
     this.displayID = this.info.displayID;
+    this.oldDisplayID = this.info.oldDisplayId;
     let index = this.attestationDataService.getCatalogIndex(this.catalogUUID);
     if (index !== undefined){
       this.assessmentPlanService.setControlSelection(this.displayID,this.selection, index)
@@ -90,6 +93,7 @@ export class ChecklistItemComponent {
      '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpControl(this.UID)!;
     this.displayID= this.info.displayID;
+    this.oldDisplayID = this.info.oldDisplayId;
     this.selection= this.info.selection;
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
@@ -216,15 +220,26 @@ export class ChecklistItemComponent {
     return this.id;
   }
 
-  changeDisplayId(event: any){
+  changeDisplayId2(event: any){
     console.log("click");
-    const oldID = this.id
-    this.displayID = event.target.value;
-    this.attestationDataService.setControlID(this.UID, this.displayID)
-    console.log(oldID + this.id);
+    const oldID = this.displayID
+    if(event.target.value.trim() !== ""){
+      this.displayID = event.target.value;
+      this.attestationDataService.setControlID(this.UID, this.displayID, oldID)
+      console.log(oldID + this.displayID);
+    }
   }
 
-
+  changeDisplayId(){
+    console.log("click");
+    if(this.displayID !== ""){
+      this.displayID = this.attestationDataService.setControlID(this.UID, this.displayID, this.oldDisplayID)
+      this.oldDisplayID = this.displayID;
+    }
+    else{
+      this.displayID = this.oldDisplayID;
+    }
+  }
 
 }
 

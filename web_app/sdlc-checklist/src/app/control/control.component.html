@@ -10,7 +10,7 @@
         [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
         (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!isChecked()" tabindex=0>
     <label class="checkbox-label">
-      <button> <input  (blur)="changeDisplayId($event)" value="{{displayID}}"></button>
+      <input  (blur)="changeDisplayId()"  [(ngModel)]="displayID">
       <label class="checkbox-label" (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
         : {{ title }}
       </label>

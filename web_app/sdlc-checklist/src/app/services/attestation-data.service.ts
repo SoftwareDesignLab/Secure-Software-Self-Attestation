@@ -45,7 +45,7 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
-  private displayIDMap: Map<String, number> = new Map<string, number>
+  private displayIDMap!: Map<String, number>;
   private catalogPosition: Map<String, number> = new Map<string, number>
 
 
@@ -87,6 +87,7 @@ export class AttestationDataService {
 
   setView(position: number){
     this.assessmentPlanService.setAttestationFocus(position);
+    this.displayIDMap=this.forms[position].displayIDMap;
     this.viewPosition = position;
   }
   get getRawData(){
@@ -141,32 +142,43 @@ export class AttestationDataService {
     }
   }
 
+  dupIDCheck(controlID: string): string{
 
-  setControlID(UID: string, id: string){
-    let temp = this.controlMap.get(UID);
-    if (temp !== undefined){
-      temp.displayID=id;
-    }
-
-    /*
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    let displayID = id;
-    if(this.displayIDMap.has(id)){
-      let amount = this.displayIDMap.get(id);
+    //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+      let displayID = controlID;
+           
+      // looks if a controlID has already been used
+      if(this.displayIDMap.has(controlID)){
+        let amount = this.displayIDMap.get(controlID);
         if(amount!=undefined){
           displayID = displayID + " (" +  this.displayIDMap.get(controlID) + ")";
           this.displayIDMap.set(controlID, amount+1);
         } else {
           console.warn("undefined UID?");
+          return controlID;
         }
       } else {
-        this.displayIDMap.set(id, 1);
+        this.displayIDMap.set(controlID, 1);
       }
-      let temp = this.controlMap.get(UID);
-      if (temp !== undefined){
-        temp.displayID=displayID;
-      }
-      */
+      return displayID;
+  }
+
+  setControlID(UID: string, newDisplayID: string, oldID: string): string{
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
+    let temp = this.controlMap.get(UID);
+    let newID = this.dupIDCheck(newDisplayID);
+    if (temp !== undefined && index !== undefined){
+      temp.displayID=newID;
+      temp.displayID=newDisplayID;
+      this.assessmentPlanService.setControlSelection(oldID, "delete", index)
+      this.assessmentPlanService.setControlSelection(newID, temp.selection, index)
+      this.assessmentPlanService.setControlComment(newID, temp.comment, index)
+
+
+    }
+    return newID;
+    console.log(newID);
     }
     
 
@@ -186,7 +198,7 @@ export class AttestationDataService {
 
   updateControlSelection(UID: string, selection: string){
     const catalogUUID = this.uidToUuid(UID);
-    let index = this.getCatalogIndex(UID);
+    let index = this.getCatalogIndex(catalogUUID);
     let temp = this.controlMap.get(UID);
     if(temp!==undefined && index !== undefined){
       this.assessmentPlanService.setControlSelection(temp.displayID, selection, index);
@@ -212,7 +224,7 @@ export class AttestationDataService {
   }
   finalizeControlComment(UID: string, comment: string){
     const catalogUUID = this.uidToUuid(UID);
-    let index = this.getCatalogIndex(UID);
+    let index = this.getCatalogIndex(catalogUUID);
 
 
     let temp = this.controlMap.get(UID);
@@ -229,7 +241,7 @@ export class AttestationDataService {
 
   deleteControlComment(UID: string){
     const catalogUUID = this.uidToUuid(UID);
-    let index = this.getCatalogIndex(UID);
+    let index = this.getCatalogIndex(catalogUUID);
 
     let temp = this.controlMap.get(UID);
     if(temp!==undefined && index !== undefined){

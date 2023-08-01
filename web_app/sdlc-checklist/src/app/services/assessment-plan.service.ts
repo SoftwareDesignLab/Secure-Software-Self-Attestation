@@ -11,7 +11,8 @@ export enum ControlSelectionType {
   yes = "yes",
   no = "no",
   notApplicable = "n/a",
-  noSelection = "no-selection"
+  noSelection = "no-selection",
+  delete = "delete"
 }
 
 @Injectable({
@@ -215,8 +216,18 @@ export class AssessmentPlanService {
           case "x": selection = ControlSelectionType.no; break;
           case "na": selection = ControlSelectionType.notApplicable; break;
           case "no-selection": selection = ControlSelectionType.noSelection; break;
+          case "delete": selection = ControlSelectionType.delete; break;
           default: return console.log("Invalid selection type. Must be one of 'check', 'x', or 'na'");
         }
+      }
+      //Deletes info associated to old ID
+      if(selection == ControlSelectionType.delete){
+        plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
+        plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
+        plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
+        plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
+        console.log("Deleted: " + controlID);
+        return;
       }
 
       console.log("Setting control selection: " + controlID + " to " + selection)

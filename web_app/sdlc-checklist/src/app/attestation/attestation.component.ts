@@ -48,6 +48,8 @@ export class AttestationComponent {
   displayName: string = "";
   catalogPositions: Map<string, number> = new Map<string,number>
   catalogCount = 1;
+  public displayIDMap: Map<String, number> = new Map<string, number>
+
 
   constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, isUnused: Boolean = false){
     this.info.push(new attestationComment);
