@@ -50,19 +50,28 @@ export class AssessmentPlanService {
     this.attestationFocus.next(index);
   }
 
-  serializeAll() {
+  serializeAll(asObject: boolean = false) {
     let plans = this.assessmentPlans.getValue();
-    return JSON.stringify(plans.map(plan => plan.serialize()));
+    const serialized = plans.map(plan => plan.serialize());
+    return asObject ? serialized : JSON.stringify(plans.map(plan => plan.serialize()));
   }
 
-  serializePlan(index: number) {
+  serializePlan(index: number, asObject: boolean = false) {
     let plans = this.assessmentPlans.getValue();
-    return JSON.stringify(plans[index].serialize());
+    const serialized = plans[index].serialize();
+    return asObject ? serialized : JSON.stringify(serialized);
   }
 
-  serializeCurrentPlan() {
+  serializeCurrentPlan(asObject: boolean = false) {
     let plans = this.assessmentPlans.getValue();
-    return JSON.stringify(plans[this.attestationFocus.getValue()].serialize());
+    let serialized = plans[this.attestationFocus.getValue()].serialize();
+    return asObject ? serialized : JSON.stringify(serialized);
+  }
+
+  serializeCurrentCatalogs(asObject: boolean = false) {
+    let catalogs = this.catalogs.getValue();
+    let serialized = catalogs[this.attestationFocus.getValue()].map(catalog => catalog as object);
+    return asObject ? serialized : JSON.stringify(serialized);
   }
 
   updateProducerInfo(data: any) {
