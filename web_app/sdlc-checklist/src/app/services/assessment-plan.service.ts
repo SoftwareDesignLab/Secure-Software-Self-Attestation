@@ -94,9 +94,14 @@ export class AssessmentPlanService {
     let metadata = this.metadata.getValue();
     let plans = this.assessmentPlans.getValue();
     let name = metadata.parties[1].name || " ";
-
-    if (data.fname) data.name = data.fname + " " + name.split(" ")[1];
-    if (data.lname) data.name = name.split(" ")[0] + " " + data.lname;
+    if (data.fname) {
+      data.name = data.fname + " " + name.split(" ")[1];
+      metadata.parties[1].setName(data.name);
+    }
+    if (data.lname){
+      data.name = name.split(" ")[0] + " " + data.lname;
+      metadata.parties[1].setName(data.name);
+    }
     if (data.title) metadata.parties[1].addProp("title", data.title, "Contact Info");
     //TODO update for multiple address lines
     if (data.address1) metadata.parties[1].setPrimaryAddressLine1(data.address1);
@@ -112,23 +117,26 @@ export class AssessmentPlanService {
       plan.metadata.parties = metadata.parties;
       plan.metadata['last-modified'] = new Date().toISOString();
     });
+    
 
     this.assessmentPlans.next(plans);
     this.metadata.next(metadata);
   }
 
-  addAssessmentPlan(title: string) {
+  addAssessmentPlan(title?: string) {
     let plans = this.assessmentPlans.getValue();
     let plan = new AssessmentPlan();
     let metadata = this.metadata.getValue();
     let catalogs = this.catalogs.getValue();
 
-    metadata.title = title;
+    if(title != undefined){
+      metadata.title = title;
+      console.log("Adding plan: " + title);
+    }
+    else {console.log("Adding titleless plan");}
     plan.metadata = metadata;
     plan.uuid = uuid();
     plan.addAssessmentSubject();
-
-    console.log("Adding plan: " + title)
 
     plans.push(plan);
     catalogs.push([]);
@@ -231,7 +239,7 @@ export class AssessmentPlanService {
       plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
       plan['reviewed-controls']['control-selections'][index].addProp(controlID, selection, "Compliance Claim");
 
-      if(selection != ControlSelectionType.notApplicable){
+      if(selection != ControlSelectionType.noSelection){
         plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
         plan['reviewed-controls']['control-selections'][index].addIncludeControl(controlID);
       }
