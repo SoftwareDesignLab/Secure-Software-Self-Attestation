@@ -181,7 +181,7 @@ export class AttestationComponent {
     this.assessmentPlanService.removeCatalog(uuid);
     let catalogs = this.catalogData.catalogs;
     let removed = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1) as Catalog[];
-    this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);
+    this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);  // Contains bug
     this.deleteCache(removed[0]);
   }
 

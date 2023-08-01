@@ -62,7 +62,7 @@ header {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 button.landing:focus, div.landing:focus {

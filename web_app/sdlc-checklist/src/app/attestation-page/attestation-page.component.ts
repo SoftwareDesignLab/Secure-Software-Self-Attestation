@@ -46,7 +46,7 @@ export class AttestationPageComponent {
 
   catalogData: CatalogData = {catalogs: []};
   showComponentsArray: any;
-  hiddenCatalogs: any
+  hiddenCatalogs: any;
   @ViewChildren(GroupComponent) childComponents!: QueryList<GroupComponent>;
   @ViewChild(CatalogProcessingComponent) catalogProcessingComponent!: CatalogProcessingComponent;
   control: string = "Ungrouped Controls";
