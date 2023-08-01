@@ -82,7 +82,7 @@ export class AttestationDataService {
   }
 
   getCatalogIndex(catalogUUID: string){
-    return this.catalogPosition.get(catalogUUID);
+    return this.forms[this.viewPosition].getCatalogPositon(catalogUUID);
   }
 
   setView(position: number){
@@ -157,7 +157,8 @@ export class AttestationDataService {
 
   updateControlSelection(UID: string, selection: string){
     const catalogUUID = this.uidToUuid(UID);
-    let index = this.catalogPosition.get(catalogUUID);
+    //let index = this.catalogPosition.get(catalogUUID);
+    let index = this.getCatalogIndex(UID);
     let temp = this.controlMap.get(UID);
     if(temp!==undefined && index !== undefined){
       this.assessmentPlanService.setControlSelection(temp.displayID, selection, index);
@@ -183,7 +184,9 @@ export class AttestationDataService {
   }
   finalizeControlComment(UID: string, comment: string){
     const catalogUUID = this.uidToUuid(UID);
-    let index = this.catalogPosition.get(catalogUUID);
+    //let index = this.catalogPosition.get(catalogUUID);
+    let index = this.getCatalogIndex(UID);
+
 
     let temp = this.controlMap.get(UID);
     if(temp!==undefined && index !== undefined){
@@ -199,7 +202,9 @@ export class AttestationDataService {
 
   deleteControlComment(UID: string){
     const catalogUUID = this.uidToUuid(UID);
-    let index = this.catalogPosition.get(catalogUUID);
+    //let index = this.catalogPosition.get(catalogUUID);
+    let index = this.getCatalogIndex(UID);
+
     let temp = this.controlMap.get(UID);
     if(temp!==undefined && index !== undefined){
       this.assessmentPlanService.removeControlComment(temp.displayID, index);

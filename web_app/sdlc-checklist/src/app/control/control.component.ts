@@ -72,7 +72,7 @@ export class ChecklistItemComponent {
     this.id = this.info.displayID;
     let index = this.attestationDataService.getCatalogIndex(this.catalogUUID);
     if (index !== undefined){
-      this.assessmentPlanService.setControlSelection(this.id,"no-selection", index)
+      this.assessmentPlanService.setControlSelection(this.id,this.selection, index)
     }
     else {
       console.warn("could not set up controlSelection in assessmentPlanService");
