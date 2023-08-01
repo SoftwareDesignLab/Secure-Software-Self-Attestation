@@ -35,6 +35,7 @@ import { AttestationPageComponent } from './attestation-page/attestation-page.co
 import { AttestationComponent } from './attestation/attestation.component';
 import { TemplateLiteral } from '@angular/compiler';
 import { ContactService } from './services/contact.service';
+import { AssessmentPlanService } from './services/assessment-plan.service';
 
 interface Catalog {
   uuid: string;
@@ -63,7 +64,7 @@ export class AppComponent {
   showFullFooter = false;
   bypass = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService ){}
+  constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService ){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
@@ -318,6 +319,55 @@ export class AppComponent {
    */
   range(num: number): Array<number> {
     return Array.from(Array(num).keys())
+  }
+
+  /**
+   * Cancels the loading of an attestation
+   */
+  cancelLoad() {
+
+  }
+
+  loadAttestation() {
+    let upload = document.getElementById("load-file-input")
+    if (upload instanceof HTMLElement) {
+      upload.click();
+    }
+  }
+
+  processLoadAttestation(input: Event) {
+    const file = (input.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.handleFile(file);
+      console.log('File selected:', file);
+      let uploadButton = document.getElementById('file');
+      if (uploadButton instanceof HTMLInputElement) {
+        uploadButton.value = "";
+      }
+    } else { return }
+    if (input.target instanceof HTMLInputElement) {
+      input.target.value = "";
+    }
+    let dialog = document.getElementById("needed-files-upload")
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.showModal();
+    }
+  }
+
+  private handleFile(file: File): void {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const json = JSON.parse(reader.result as string);
+      //Put what happens to the file here
+    };
+    reader.readAsText(file);
+  }
+
+  loadCatalogForLoadAttestation() {
+    let upload = document.getElementById("file")
+    if (upload instanceof HTMLElement) {
+      upload.click();
+    }
   }
 }
 

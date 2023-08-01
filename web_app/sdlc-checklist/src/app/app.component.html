@@ -30,13 +30,25 @@
       </li>
       <li><p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
     </ul>
-    <p class="bottom" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
+    <input type="file" hidden id="load-file-input" (change)="newForm(); processLoadAttestation($event)" accept=".json">
+    <p class="bottom" (click)="loadAttestation();">Load Attestation</p>
   </div>
 </nav>
 
 <main [className]="showFullFooter ? 'long-bottom' : ''">
   <router-outlet></router-outlet>
 </main>
+
+<dialog id="needed-files-upload" class="pane">
+  <p>In order to parse this file, the blank catalogs of the following controls are also needed:</p>
+  <div class="scroll-box">
+    <ul>
+      <li>Control</li>
+    </ul>
+  </div>
+  <button (click)="loadCatalogForLoadAttestation()">Upload Catalog</button>
+  <button (click)="cancelLoad()">Cancel</button>
+</dialog>
 
 <footer>
   <p [hidden]="showFullFooter">

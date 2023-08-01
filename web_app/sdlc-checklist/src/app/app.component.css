@@ -277,6 +277,36 @@ a {
   cursor: pointer;
 }
 
+#needed-files-upload {
+  justify-content: center;
+  align-content: center;
+  margin: auto;
+  width: clamp(400px, 60vw, 800px);
+  position: relative;
+  top: -25vh;
+}
+
+#needed-files-upload::backdrop {
+  background-color: rgba(0, 0, 0, .95)
+}
+
+#needed-files-upload ul {
+  list-style: none;
+}
+
+#needed-files-upload button {
+  display: block;
+  margin: auto;
+}
+
+.scroll-box {
+  overflow-y: scroll;
+  border: 1px solid gray;
+  min-height: 100px;
+  max-height: clamp(200px, 40vh, 600px);
+  margin: 30px;
+}
+
 footer {
   position: absolute;
   bottom: 0;
