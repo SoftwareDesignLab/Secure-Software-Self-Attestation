@@ -9,8 +9,11 @@
     <img alt="Comment Button" 
         [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
         (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!isChecked()" tabindex=0>
-    <label class="checkbox-label" (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
-      {{ id }}: {{ title }}
+    <label class="checkbox-label">
+      <button> <input  (blur)="changeDisplayId($event)" value="{{displayID}}"></button>
+      <label class="checkbox-label" (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
+        : {{ title }}
+      </label>
     </label>
   </div>
   <app-rollable *ngIf="showRollable"

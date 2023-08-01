@@ -141,6 +141,35 @@ export class AttestationDataService {
     }
   }
 
+
+  setControlID(UID: string, id: string){
+    let temp = this.controlMap.get(UID);
+    if (temp !== undefined){
+      temp.displayID=id;
+    }
+
+    /*
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    let displayID = id;
+    if(this.displayIDMap.has(id)){
+      let amount = this.displayIDMap.get(id);
+        if(amount!=undefined){
+          displayID = displayID + " (" +  this.displayIDMap.get(controlID) + ")";
+          this.displayIDMap.set(controlID, amount+1);
+        } else {
+          console.warn("undefined UID?");
+        }
+      } else {
+        this.displayIDMap.set(id, 1);
+      }
+      let temp = this.controlMap.get(UID);
+      if (temp !== undefined){
+        temp.displayID=displayID;
+      }
+      */
+    }
+    
+
   /**
    * Takes in an UID and reverses it back to its catalog uuid,
    * @param UID Unique identifier of the object being given
@@ -157,7 +186,6 @@ export class AttestationDataService {
 
   updateControlSelection(UID: string, selection: string){
     const catalogUUID = this.uidToUuid(UID);
-    //let index = this.catalogPosition.get(catalogUUID);
     let index = this.getCatalogIndex(UID);
     let temp = this.controlMap.get(UID);
     if(temp!==undefined && index !== undefined){
@@ -184,7 +212,6 @@ export class AttestationDataService {
   }
   finalizeControlComment(UID: string, comment: string){
     const catalogUUID = this.uidToUuid(UID);
-    //let index = this.catalogPosition.get(catalogUUID);
     let index = this.getCatalogIndex(UID);
 
 
@@ -202,7 +229,6 @@ export class AttestationDataService {
 
   deleteControlComment(UID: string){
     const catalogUUID = this.uidToUuid(UID);
-    //let index = this.catalogPosition.get(catalogUUID);
     let index = this.getCatalogIndex(UID);
 
     let temp = this.controlMap.get(UID);

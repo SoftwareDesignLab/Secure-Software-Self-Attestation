@@ -56,6 +56,7 @@ export class ChecklistItemComponent {
   onPopup: Boolean = false;
   primed: Boolean = false;
   focused: Boolean = false;
+  displayID: any;
 
   constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef, 
     private assessmentPlanService: AssessmentPlanService){  }
@@ -69,10 +70,10 @@ export class ChecklistItemComponent {
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
     this.showRollable = this.info.showRollable;
-    this.id = this.info.displayID;
+    this.displayID = this.info.displayID;
     let index = this.attestationDataService.getCatalogIndex(this.catalogUUID);
     if (index !== undefined){
-      this.assessmentPlanService.setControlSelection(this.id,this.selection, index)
+      this.assessmentPlanService.setControlSelection(this.displayID,this.selection, index)
     }
     else {
       console.warn("could not set up controlSelection in assessmentPlanService");
@@ -88,6 +89,7 @@ export class ChecklistItemComponent {
     this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
      '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpControl(this.UID)!;
+    this.displayID= this.info.displayID;
     this.selection= this.info.selection;
     this.comment = this.info.comment;
     this.finalized = this.info.finalized;
@@ -213,5 +215,16 @@ export class ChecklistItemComponent {
   get getID(){
     return this.id;
   }
+
+  changeDisplayId(event: any){
+    console.log("click");
+    const oldID = this.id
+    this.displayID = event.target.value;
+    this.attestationDataService.setControlID(this.UID, this.displayID)
+    console.log(oldID + this.id);
+  }
+
+
+
 }
 
