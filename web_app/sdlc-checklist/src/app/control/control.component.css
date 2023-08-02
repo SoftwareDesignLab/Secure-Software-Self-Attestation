@@ -38,17 +38,39 @@
   cursor: pointer;
   margin-left: 5px;
   margin-right: 10px;
-  user-select: none; /* Prevents text selection when clicking the label */
   display: inline-flex;
   align-items: center;
+  text-decoration: none;
 }
 
-.checkbox-label:hover {
-  text-decoration: underline;
+.checkbox-label:hover .checkbox-description {
+  text-decoration: underline
+}
+
+.checkbox-label:hover .id-box .id-input{
+  text-decoration: none;
+}
+
+.id-input {
+  width: 80px
+}
+
+.id-box {
+  min-width:130px;
+  max-width:160px;
+  display: flex;
+  align-items: center;
+
+}
+
+.checkbox-description {
+  cursor: pointer;
+  margin-left: 5px;
+  margin-right: 10px;
 }
 
 .button-set {
-  min-width: 80px;
+  min-width: 110px;
   margin-left: 10px;
   position: relative;
   top: 3px;
@@ -113,6 +135,7 @@ img:hover {
 .pencil {
   border: 0;
   border-radius: 4px;
+  margin-left: 10px;
 }
 
 .explanation-label {

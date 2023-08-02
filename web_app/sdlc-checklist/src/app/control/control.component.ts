@@ -220,19 +220,10 @@ export class ChecklistItemComponent {
     return this.id;
   }
 
-  changeDisplayId2(event: any){
-    console.log("click");
-    const oldID = this.displayID
-    if(event.target.value.trim() !== ""){
-      this.displayID = event.target.value;
-      this.attestationDataService.setControlID(this.UID, this.displayID, oldID)
-      console.log(oldID + this.displayID);
-    }
-  }
 
   changeDisplayId(){
     console.log("click");
-    if(this.displayID !== ""){
+    if(this.displayID.trim() !== "" &&  this.displayID !== this.oldDisplayID){
       this.displayID = this.attestationDataService.setControlID(this.UID, this.displayID, this.oldDisplayID)
       this.oldDisplayID = this.displayID;
     }
