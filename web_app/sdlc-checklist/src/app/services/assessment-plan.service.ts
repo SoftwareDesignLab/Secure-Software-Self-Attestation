@@ -245,7 +245,7 @@ export class AssessmentPlanService {
       const destinationKey = path[path.length - 1];
       if (current.hasOwnProperty(destinationKey)) {
         current[destinationKey] = newID;
-        console.log("Updated Catalog")
+        console.log("Catalog's control id updated from " + oldID + " to " + newID);
       } else {
         console.log('Path not found in the Catalog');
       }    
@@ -256,7 +256,7 @@ export class AssessmentPlanService {
     this.catalogs.next(catalogs);
   }
 
-
+//Recursive helper method to find the path of an control Id in a catalog
    findControlID(catalog: any, id: any, path: string[] = []): string[] | null {
     for (const key in catalog) {
       if (catalog[key] === id) {
