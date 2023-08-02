@@ -6,6 +6,7 @@ import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop, Assessme
 import { Catalog } from '../models/catalogModel';
 import { GroupComponent } from '../group/group.component';
 import { ChecklistItemComponent } from '../control/control.component';
+import { group } from '@angular/animations';
 
 export enum ControlSelectionType {
   yes = "yes",
@@ -218,12 +219,56 @@ export class AssessmentPlanService {
   deleteControl(controlID: string, index: number){
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()];
-      plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
-      plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
-      plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
-      plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
-      console.log("Deleted: " + controlID);
-  
+    plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
+    plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
+    plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
+    plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
+    console.log("Deleted: " + controlID);
+  }
+
+
+  //Finds old id in saved catalogs and changes it to updated catalog.
+  updateCatalogControl(oldID: string, newID: string, index:number){
+    let catalogs = this.catalogs.getValue();
+    let catalog = catalogs[index][0];
+    let path = this.findControlID(catalog,oldID);   // finds path to nested control with ID associated to oldID
+    if(path!==null){
+      let current: any = catalog;
+      for (let i = 0; i < path.length - 1; i++) {
+        const key = path[i];
+        if (current.hasOwnProperty(key)) {
+          current = current[key];
+        } else {
+          console.log('Path not found in the Catalog');
+        }
+      }
+      const destinationKey = path[path.length - 1];
+      if (current.hasOwnProperty(destinationKey)) {
+        current[destinationKey] = newID;
+        console.log("Updated Catalog")
+      } else {
+        console.log('Path not found in the Catalog');
+      }    
+    }
+    else{
+      console.log('Path is not found in the Catalog');
+    }
+    this.catalogs.next(catalogs);
+  }
+
+
+   findControlID(catalog: any, id: any, path: string[] = []): string[] | null {
+    for (const key in catalog) {
+      if (catalog[key] === id) {
+        return path.concat(key); // find path to id and returns it
+      } else if (Array.isArray(catalog[key]) || typeof catalog[key] === 'object') {
+        const nestedPath = this.findControlID(catalog[key], id, path.concat(key));
+        if (nestedPath) {
+          return nestedPath; 
+        }
+      }
+    }
+    return null; // ID not found 
   }
 
   // // control selections list is indexed by attestation. it should match up with assessment-subjects list

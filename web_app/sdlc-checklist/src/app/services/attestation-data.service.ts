@@ -192,6 +192,7 @@ export class AttestationDataService {
     let newID = this.dupIDCheck(newDisplayID);
     if (temp !== undefined && index !== undefined){
       temp.displayID=newID;
+      this.assessmentPlanService.updateCatalogControl(oldID,newID,index);
       this.assessmentPlanService.deleteControl(oldID,index);
       this.assessmentPlanService.setControlSelection(newID, temp.selection, index);
       this.assessmentPlanService.setControlComment(newID, temp.comment, index);
