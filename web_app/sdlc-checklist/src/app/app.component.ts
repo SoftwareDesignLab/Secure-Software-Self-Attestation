@@ -21,19 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
 */
-import { Component, ViewChildren, QueryList, ViewChild, NgModule } from '@angular/core';
+import { Component } from '@angular/core';
 import { GroupComponent } from './group/group.component';
-import catalog from './defaultCatalog';
 import { AttestationDataService } from './services/attestation-data.service';
-import { notifyService } from './services/notify.service';
-import { Router, NavigationEnd, RouterModule  } from '@angular/router';
+import { Router } from '@angular/router';
 import { ChecklistItemComponent } from './control/control.component';
-import { ViewportScroller } from '@angular/common';
-import { delay, filter, takeUntil  } from 'rxjs/operators';
-import { Subject } from 'rxjs'
-import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { AttestationComponent } from './attestation/attestation.component';
-import { TemplateLiteral } from '@angular/compiler';
 import { ContactService } from './services/contact.service';
 import { AssessmentPlanService } from './services/assessment-plan.service';
 
