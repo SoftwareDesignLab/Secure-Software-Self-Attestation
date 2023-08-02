@@ -294,19 +294,6 @@ export class AttestationDataService {
     this.groupMap.delete(temp);
   }
 
-  async checkNeededControls() {
-    await dela(100)
-    let currentControls = this.assessmentPlanService.getActivePlan();
-    currentControls["reviewed-controls"]["control-selections"].forEach((catalog) => {
-      catalog["exclude-controls"]?.forEach((control) => {
-        if (this.neededControls.delete(control["control-id"])) console.log("Resolved Control " + control["control-id"])
-      })
-    })
-    if (this.neededControls.size === 0) {
-      this.loadAttestationData();
-    }
-  }
-
   convertNaming(str: String) {
     switch (str) {
       case "yes": return "check";
@@ -350,6 +337,7 @@ export class AttestationDataService {
                     temp.finalized=true;
                     temp.comment=prop["value"];
                   }
+                  return;
                 }
               })
             }

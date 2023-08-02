@@ -182,7 +182,6 @@ export class AttestationPageComponent {
    */
   onFileSelected(jsonData: any): void {
     let message = this.attestationService.getCurrentForm.onFileSelected(jsonData);
-    if (this.attestationService.neededControls.size !== 0) this.attestationService.checkNeededControls();
     if (message.success) {
       this.catalogProcessingComponent.notifyOfSuccess(message.message);
     } else {

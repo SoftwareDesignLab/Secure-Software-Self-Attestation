@@ -36,13 +36,7 @@ import { AttestationComponent } from './attestation/attestation.component';
 import { TemplateLiteral } from '@angular/compiler';
 import { ContactService } from './services/contact.service';
 import { AssessmentPlanService } from './services/assessment-plan.service';
-
-interface Catalog {
-  uuid: string;
-  metadata: object;
-  groups: GroupComponent[];
-  controls: ChecklistItemComponent[];
-}
+import { Catalog } from './models/catalogModel';
 
 interface CatalogData {
   catalogs: Catalog[];
@@ -361,15 +355,11 @@ export class AppComponent {
     if (input.target instanceof HTMLInputElement) {
       input.target.value = "";
     }
-    let dialog = document.getElementById("needed-files-upload")
-    if (dialog instanceof HTMLDialogElement) {
-      dialog.showModal();
-    }
   }
 
-  private handleFile(file: File): void {
+  private handleFile(file: File) {
     let reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       let json = JSON.parse(reader.result as string);
       this.attestationService.stagedJSON = json;
       console.log(json)
@@ -387,20 +377,17 @@ export class AppComponent {
           }
         })
       }
-      this.attestationService.checkNeededControls();
+      let catalogs = json["catalogs"];
+      catalogs.forEach((catalog: any) => {
+        console.log(catalog)
+        this.assessmentPlanService.addCatalog(catalog as Catalog);
+        this.attestationService.getCurrentForm.onFileSelected(catalog)
+      })
+      await dela(100);
+      this.attestationService.refresh();
+      this.attestationService.loadAttestationData();
     };
     reader.readAsText(file);
-  }
-
-  async loadCatalogForLoadAttestation() {
-    let upload = document.getElementById("file")
-    if (upload instanceof HTMLElement) {
-      upload.click();
-    }
-  }
-
-  getNeededControls(): Set<string> {
-    return this.attestationService.neededControls;
   }
 }
 
