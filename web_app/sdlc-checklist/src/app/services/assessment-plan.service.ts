@@ -50,19 +50,28 @@ export class AssessmentPlanService {
     this.attestationFocus.next(index);
   }
 
-  serializeAll() {
+  serializeAll(asObject: boolean = false) {
     let plans = this.assessmentPlans.getValue();
-    return JSON.stringify(plans.map(plan => plan.serialize()));
+    const serialized = plans.map(plan => plan.serialize());
+    return asObject ? serialized : JSON.stringify(plans.map(plan => plan.serialize()));
   }
 
-  serializePlan(index: number) {
+  serializePlan(index: number, asObject: boolean = false) {
     let plans = this.assessmentPlans.getValue();
-    return JSON.stringify(plans[index].serialize());
+    const serialized = plans[index].serialize();
+    return asObject ? serialized : JSON.stringify(serialized);
   }
 
-  serializeCurrentPlan() {
+  serializeCurrentPlan(asObject: boolean = false) {
     let plans = this.assessmentPlans.getValue();
-    return JSON.stringify(plans[this.attestationFocus.getValue()].serialize());
+    let serialized = plans[this.attestationFocus.getValue()].serialize();
+    return asObject ? serialized : JSON.stringify(serialized);
+  }
+
+  serializeCurrentCatalogs(asObject: boolean = false) {
+    let catalogs = this.catalogs.getValue();
+    let serialized = catalogs[this.attestationFocus.getValue()].map(catalog => catalog as object);
+    return asObject ? serialized : JSON.stringify(serialized);
   }
 
   updateProducerInfo(data: any) {
@@ -104,7 +113,8 @@ export class AssessmentPlanService {
     }
     if (data.title) metadata.parties[1].addProp("title", data.title, "Contact Info");
     //TODO update for multiple address lines
-    if (data.address) metadata.parties[1].setPrimaryAddressLines([data.address]);
+    if (data.address1) metadata.parties[1].setPrimaryAddressLine1(data.address1);
+    if (data.address2) metadata.parties[1].setPrimaryAddressLine2(data.address2);
     if (data.city) metadata.parties[1].setPrimaryCity(data.city);
     if (data.state) metadata.parties[1].setPrimaryState(data.state);
     if (data.country) metadata.parties[1].setPrimaryCountry(data.country);
@@ -173,6 +183,7 @@ export class AssessmentPlanService {
     catalogs[this.attestationFocus.getValue()].push(catalog);
     this.catalogs.next(catalogs);
 
+
     // TODO add links
     
     // add catalog info
@@ -232,8 +243,7 @@ export class AssessmentPlanService {
       }
 
       console.log("Setting control selection: " + controlID + " to " + selection)
-
-      if (selection == ControlSelectionType.noSelection) {
+      if (selection === ControlSelectionType.noSelection) {
         plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
         
         plan['reviewed-controls']['control-selections'][index].addExcludeControl(controlID);
@@ -425,6 +435,11 @@ export class AssessmentPlanService {
     plan.metadata['last-modified'] = new Date().toISOString();
 
     this.assessmentPlans.next(plans);
+  }
+
+  checkOnPlans() {
+    let plans = this.assessmentPlans.getValue();
+    console.log("Hi")
   }
   //TODO automatically exclude subjects that are unchecked
 }
