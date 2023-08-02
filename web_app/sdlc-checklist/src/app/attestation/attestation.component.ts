@@ -53,6 +53,7 @@ export class AttestationComponent {
   constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, isUnused: Boolean = false){
     this.info.push(new attestationComment);
     this.catalogData.catalogs.push(catalog as Catalog);
+    this.positionTag = this.attestationService.setTag();
     if (!isUnused) { //kind of hacky, but works just fine
       this.assessmentPlanService.addAssessmentPlan(this.getName());
       this.assessmentPlanService.addCatalog(catalog as Catalog);

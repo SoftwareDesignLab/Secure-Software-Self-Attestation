@@ -64,8 +64,8 @@ export class AppComponent {
   showFullFooter = false;
   bypass = false;
 
-
-  constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService ){}
+  constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService,
+    private assessmentPlanService: AssessmentPlanService ){}
   
   ngOnInit(){
     if (this.attestationService.getdata(0))
@@ -172,6 +172,9 @@ export class AppComponent {
     let firsthalf = this.attestationService.forms.slice(0,position);
     let secondhalf = this.attestationService.forms.slice(position+1)
     this.attestationService.forms[position].deleteAll();
+
+    // remove assessment plan in the assessment plan service
+    this.assessmentPlanService.removeAssessmentPlan(position);
     if((position)===this.attestationService.getView){
       this.setNav(true);
       this.attestationService.pageName = "Contact Info";
@@ -370,7 +373,7 @@ export class AppComponent {
       let json = JSON.parse(reader.result as string);
       this.attestationService.stagedJSON = json;
       console.log(json)
-      let include = json["reviewed-controls"]["control-selections"]
+      let include = json["assessment-plan"]["reviewed-controls"]["control-selections"]
       if (include !== undefined) {
         include.forEach((catalog: any) => {
           if (catalog["include-controls"]) {

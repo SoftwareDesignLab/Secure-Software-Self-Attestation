@@ -253,12 +253,9 @@ export class AttestationPageComponent {
   }
 
   generateAssessmentPlan() {
-    let object = this.assessmentPlanService.serializeCurrentPlan();
-    const blob = new Blob([object], { type: 'application/json' });
+    let object: any = { "assessment-plan": this.assessmentPlanService.serializeCurrentPlan(true) };
+    object.catalogs = this.assessmentPlanService.serializeCurrentCatalogs(true);
+    const blob = new Blob([JSON.stringify(object)], { type: 'application/json' });
     saveAs(blob, 'assessmentPlan.json');
-    //TODO assessment plan works great for the first attestation, bugs out for the second one\
-    //TODO Compliance claims not spawning
-    //TODO first catalog duplicates
   }
-
 }

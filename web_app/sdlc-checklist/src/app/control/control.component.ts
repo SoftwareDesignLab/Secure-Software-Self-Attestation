@@ -121,7 +121,7 @@ export class ChecklistItemComponent {
   }
 
   select(option: string) {
-    if (this.selection === "no-selection") {
+    if (this.selection === "no-selection" && !this.attestationDataService.bypassComments) {
       this.deploy();
     }
     this.changeSelection(option);

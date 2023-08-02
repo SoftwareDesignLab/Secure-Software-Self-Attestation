@@ -44,18 +44,21 @@ export class AttestationDataService {
   private beenVisited: boolean = false;
   private controlMap: Map<string, ControlAttestation> = new Map<string, ControlAttestation>
   private groupMap: Map<string, GroupInfo> = new Map<string, ControlAttestation>
-  private tag: number = 1;
+  private tag: number;
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
   public neededControls: Set<string> = new Set<string>();
   public stagedJSON: any;
+  public bypassComments: boolean = false;
 
 
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
-  constructor(private assessmentPlanService: AssessmentPlanService) {}
+  constructor(private assessmentPlanService: AssessmentPlanService) {
+    this.tag = 0;
+  }
   
   /**
    * Used in changing page content, should be called after updateDynamicForm
@@ -129,6 +132,11 @@ export class AttestationDataService {
     return this.deletionPosition;
   }
 
+  setTag(){
+    this.tag +=1;
+    return this.tag;
+  }
+
   /**
    * Adds a new form
    */
@@ -136,9 +144,7 @@ export class AttestationDataService {
     this.assessmentPlanService.setAttestationFocus(this.forms.length);
     this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
     let position = this.forms.length-1;
-    this.forms[position].setPositionTag(this.tag);
     this.forms[position].setFormPosition(position);
-    this.tag = this.tag + 1;
   }
 
 
@@ -301,30 +307,58 @@ export class AttestationDataService {
     }
   }
 
+  convertNaming(str: String) {
+    switch (str) {
+      case "yes": return "check";
+      case "no": return "x";
+      case "n/a": return "na";
+      default: return str;
+    }
+  }
+
   loadAttestationData() {
     let dialog = document.getElementById("needed-files-upload")
     if (dialog instanceof HTMLDialogElement) {
       dialog.close();
     }
-    let catalogs = this.stagedJSON["reviewed-controls"]["control-selections"]
+    let catalogs = this.stagedJSON["assessment-plan"]["reviewed-controls"]["control-selections"]
     let props: any[] = [];
-    /*let controls: String[] = [];
-    let currentControls = this.assessmentPlanService.getActivePlan();
-    currentControls["reviewed-controls"]["control-selections"].forEach((catalog) => {
-      catalog["exclude-controls"]?.forEach((control) => {
-        if (controls.push(control["control-id"])) console.log("Identified Control " + control["control-id"])
-      })
-    })*/
     console.log(catalogs);
     catalogs.forEach((catalog: any) => {
       props = props.concat(catalog["props"])
     })
     console.log(props)
+    this.bypassComments = true;
     props.forEach((prop: any) => {
       if (prop["class"] === "Compliance Claim") {
-        this.assessmentPlanService.setControlSelection(prop["name"], prop["value"]);
+        let controls = document.getElementsByClassName(prop["name"] + "-" + this.convertNaming(prop["value"]));
+        for (let i = 0, len = controls.length; i < len; i++){
+          let control = controls.item(i);
+            if (control instanceof HTMLInputElement) control.click();
+        }
+      } else if (prop["class"] === "Attestation Claim") {
+        console.log("Loading comment")
+        this.getCurrentForm.getCatalogs.catalogs.forEach((catalog) => {
+          catalog.groups.forEach((group) => {
+            if (group.controls) {
+              group.controls.forEach((control) => {
+                if (control.id === prop["name"]) {
+                  let uuid = this.getCurrentForm.getPositionTag + '-' + catalog.uuid + '-' + control.id;
+                  this.assessmentPlanService.setControlComment(control.id, prop["value"]);
+                  let temp = this.controlMap.get(uuid);
+                  if (temp!==undefined){
+                    temp.finalized=true;
+                    temp.comment=prop["value"];
+                  }
+                }
+              })
+            }
+          })
+        })
       }
-    })
+    });
+    this.bypassComments = false;
+    this.refresh();
   }
 }
 
