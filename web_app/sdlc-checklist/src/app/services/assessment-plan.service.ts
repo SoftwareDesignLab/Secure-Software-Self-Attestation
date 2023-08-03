@@ -237,7 +237,7 @@ export class AssessmentPlanService {
    */
   updateCatalogControl(oldID: string, newID: string, index:number){
     let catalogs = this.catalogs.getValue();
-    let catalog = catalogs[0][index];
+    let catalog = catalogs[this.attestationFocus.getValue()][index];
     let path = this.findControlID(catalog,oldID);   // finds path to nested control with ID associated to oldID
     if(path!==null){
       let current: any = catalog;
