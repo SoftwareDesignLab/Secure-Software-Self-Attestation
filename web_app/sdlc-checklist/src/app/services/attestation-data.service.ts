@@ -308,6 +308,7 @@ export class AttestationDataService {
     let companyStuff: JSON | undefined = undefined;
     let contactStuff: JSON | undefined = undefined;
     let differences = false;
+    console.log(parties)
     parties.forEach((party: any) => {
       if (party.type === "organization") companyStuff = party;
       if (party.type === "person") contactStuff = party;
@@ -318,76 +319,90 @@ export class AttestationDataService {
         if (this.contactService.companyName !== "") differences = true;
         if (!soft) this.contactService.companyName = companyStuff["name"];
       }
-      if (this.contactService.companyAddress1 !== companyStuff["addresses"][0]["addr-lines"][0]) {
+      if (companyStuff["addresses"] && this.contactService.companyAddress1 !== companyStuff["addresses"][0]["addr-lines"][0]) {
         if (this.contactService.companyAddress1 !== "") differences = true
         if (!soft) this.contactService.companyAddress1 = companyStuff["addresses"][0]["addr-lines"][0];
       }
-      if (this.contactService.companyAddress2 !== companyStuff["addresses"][0]["addr-lines"][1]) {
+      if (companyStuff["addresses"] && this.contactService.companyAddress2 !== companyStuff["addresses"][0]["addr-lines"][1]) {
         if (this.contactService.companyAddress2 !== "") differences = true
         if (!soft) this.contactService.companyAddress2 = companyStuff["addresses"][0]["addr-lines"][1];
       }
-      if (this.contactService.city !== companyStuff["addresses"][0]["city"]) {
+      if (companyStuff["addresses"] && this.contactService.city !== companyStuff["addresses"][0]["city"]) {
         if (this.contactService.city !== "") differences = true
         if (!soft) this.contactService.city = companyStuff["addresses"][0]["city"];
       }
-      if (this.contactService.state !== companyStuff["addresses"][0]["state"]) {
+      if (companyStuff["addresses"] && this.contactService.state !== companyStuff["addresses"][0]["state"]) {
         if (this.contactService.state !== "") differences = true
         if (!soft) this.contactService.state = companyStuff["addresses"][0]["state"];
       }
-      if (this.contactService.country !== companyStuff["addresses"][0]["country"]) {
+      if (companyStuff["addresses"] && this.contactService.country !== companyStuff["addresses"][0]["country"]) {
         if (this.contactService.country !== "") differences = true
         if (!soft) this.contactService.country = companyStuff["addresses"][0]["country"];
       }
-      if (this.contactService.postalCode !== companyStuff["addresses"][0]["postal-code"]) {
+      if (companyStuff["addresses"] && this.contactService.postalCode !== companyStuff["addresses"][0]["postal-code"]) {
         if (this.contactService.postalCode !== "") differences = true
         if (!soft) this.contactService.postalCode = companyStuff["addresses"][0]["postal-code"];
       }
     }
 
     if (contactStuff) {
-      if (this.contactService.firstName !== (contactStuff["name"] as String).split(" ")[0]) {
+      if (contactStuff["name"] && this.contactService.firstName !== (contactStuff["name"] as String).split(" ")[0]) {
         if (this.contactService.firstName !== "") differences = true;
         if (!soft) this.contactService.firstName = (contactStuff["name"] as String).split(" ")[0];
       }
-      if (this.contactService.lastName !== (contactStuff["name"] as String).split(" ")[1]) {
+      if (contactStuff["name"] && this.contactService.lastName !== (contactStuff["name"] as String).split(" ")[1]) {
         if (this.contactService.lastName !== "") differences = true;
         if (!soft) this.contactService.lastName = (contactStuff["name"] as String).split(" ")[1];
       }
-      if (this.contactService.personalAddress1 !== contactStuff["addresses"][0]["addr-lines"][0]) {
+      if (contactStuff["addresses"] && this.contactService.personalAddress1 !== contactStuff["addresses"][0]["addr-lines"][0]) {
         if (this.contactService.personalAddress1 !== "") differences = true;
         if (!soft) this.contactService.personalAddress1 = contactStuff["addresses"][0]["addr-lines"][0];
       }
-      if (this.contactService.personalAddress2 !== contactStuff["addresses"][0]["addr-lines"][1]) {
+      if (contactStuff["addresses"] && this.contactService.personalAddress2 !== contactStuff["addresses"][0]["addr-lines"][1]) {
         if (this.contactService.personalAddress2 !== "") differences = true;
         if (!soft) this.contactService.personalAddress2 = contactStuff["addresses"][0]["addr-lines"][1];
       }
-      if (this.contactService.personalCity !== contactStuff["addresses"][0]["city"]) {
+      if (contactStuff["addresses"] && this.contactService.personalCity !== contactStuff["addresses"][0]["city"]) {
         if (this.contactService.personalCity !== "") differences = true;
         if (!soft) this.contactService.personalCity = contactStuff["addresses"][0]["city"];
       }
-      if (this.contactService.personalState !== contactStuff["addresses"][0]["state"]) {
+      if (contactStuff["addresses"] && this.contactService.personalState !== contactStuff["addresses"][0]["state"]) {
         if (this.contactService.personalState !== "") differences = true;
         if (!soft) this.contactService.personalState = contactStuff["addresses"][0]["state"];
       }
-      if (this.contactService.personalCountry !== contactStuff["addresses"][0]["country"]) {
+      if (contactStuff["addresses"] && this.contactService.personalCountry !== contactStuff["addresses"][0]["country"]) {
         if (this.contactService.personalCountry !== "") differences = true;
         if (!soft) this.contactService.personalCountry = contactStuff["addresses"][0]["country"];
       }
-      if (this.contactService.personalPostal !== contactStuff["addresses"][0]["postal-code"]) {
+      if (contactStuff["addresses"] && this.contactService.personalPostal !== contactStuff["addresses"][0]["postal-code"]) {
         if (this.contactService.personalPostal !== "") differences = true;
         if (!soft) this.contactService.personalPostal = contactStuff["addresses"][0]["postal-code"];
       }
-      if (this.contactService.email !== contactStuff["email-addresses"][0]) {
+      if (contactStuff["email-addresses"] && this.contactService.email !== contactStuff["email-addresses"][0]) {
         if (this.contactService.email !== "") differences = true;
         if (!soft) this.contactService.email = contactStuff["email-addresses"][0];
       }
-      if (this.contactService.phone !== contactStuff["telephone-numbers"][0]) {
+      if (contactStuff["telephone-numbers"] && this.contactService.phone !== contactStuff["telephone-numbers"][0]) {
         if (this.contactService.phone !== "") differences = true;
         if (!soft) this.contactService.phone = contactStuff["telephone-numbers"][0];
       }
     }
 
     return differences;
+  }
+
+  interpretSubjects() {
+    let parties = this.stagedJSON["assessment-plan"]["assessment-subjects"][0]
+    let props = parties["props"];
+    let type = "no-selection"
+    if (!props) return;
+    props.forEach((prop: any) => {
+      if (prop.class === "Attestation Type") type = prop.value;
+    });
+    let radio = document.getElementById(type);
+    if (radio instanceof HTMLInputElement) {
+      radio.click();
+    }
   }
 
   loadAttestationData() {
