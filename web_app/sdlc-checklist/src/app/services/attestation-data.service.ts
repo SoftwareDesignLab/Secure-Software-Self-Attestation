@@ -46,7 +46,7 @@ export class AttestationDataService {
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
   private displayIDMap!: Map<String, number>;
-  private catalogPosition: Map<String, number> = new Map<string, number>
+  private catalogPosition!: Map<String, number>;
 
 
 
@@ -161,6 +161,16 @@ export class AttestationDataService {
     let displayID = this.dupIDCheck(controlID);
     let info = new ControlAttestation(displayID);
     this.controlMap.set(UID, info);
+    
+    let catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
+    if (index !== undefined){
+      this.assessmentPlanService.setControlSelection(info.displayID,info.selection, index)
+    }
+    else {
+      console.warn("could not set up controlSelection in assessmentPlanService");
+    }
+
     return info;
   }
 
@@ -196,10 +206,8 @@ export class AttestationDataService {
       this.assessmentPlanService.deleteControl(oldID,index);
       this.assessmentPlanService.setControlSelection(newID, temp.selection, index);
       this.assessmentPlanService.setControlComment(newID, temp.comment, index);
-
-
-
     }
+
     return newID;
     }
     

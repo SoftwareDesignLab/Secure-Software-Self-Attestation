@@ -74,13 +74,6 @@ export class ChecklistItemComponent {
     this.showRollable = this.info.showRollable;
     this.displayID = this.info.displayID;
     this.oldDisplayID = this.info.oldDisplayId;
-    let index = this.attestationDataService.getCatalogIndex(this.catalogUUID);
-    if (index !== undefined){
-      this.assessmentPlanService.setControlSelection(this.displayID,this.selection, index)
-    }
-    else {
-      console.warn("could not set up controlSelection in assessmentPlanService");
-    }
     
   }
 

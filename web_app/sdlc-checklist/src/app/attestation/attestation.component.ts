@@ -60,7 +60,8 @@ export class AttestationComponent {
     this.positionTag = this.attestationService.setTag();
     if (!isUnused) { //kind of hacky, but works just fine
       this.assessmentPlanService.addAssessmentPlan(this.getName());
-      this.assessmentPlanService.addCatalog(catalog as Catalog);
+      const catalogClone = JSON.parse(JSON.stringify(catalog)) as Catalog;
+      this.assessmentPlanService.addCatalog(catalogClone);
     }
   }
 
