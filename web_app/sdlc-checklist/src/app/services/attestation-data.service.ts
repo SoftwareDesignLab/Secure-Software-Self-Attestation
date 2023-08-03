@@ -24,7 +24,7 @@
 import { Injectable } from '@angular/core';
 import { AttestationComponent } from '../attestation/attestation.component';
 import { ControlAttestation, GroupInfo } from '../models/catalogModel';
-
+import { ChecklistItemComponent } from '../control/control.component';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { AssessmentPlanService } from './assessment-plan.service';
 
@@ -45,6 +45,7 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
+  private controlWatch?: ChecklistItemComponent;
 
 
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
@@ -143,6 +144,16 @@ export class AttestationDataService {
 
 
   // Control Methods 
+
+  // set a control component that this service is specifically watching
+  setControlWatch(control: ChecklistItemComponent){
+    this.controlWatch = control;
+  }
+
+  // get the control component this service is specifically watching. 
+  get getControlWatch(){
+    return this.controlWatch;
+  }
 
   /**
    * 

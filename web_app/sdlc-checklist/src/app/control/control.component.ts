@@ -173,6 +173,7 @@ export class ChecklistItemComponent {
       active.blur;
     }
     this.popup = true;
+    this.attestationDataService.setControlWatch(this);
   }
 
   enter(loc: boolean) {
