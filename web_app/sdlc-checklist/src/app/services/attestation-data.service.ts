@@ -49,7 +49,6 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
-  public neededControls: Set<string> = new Set<string>();
   public stagedJSON: any;
   public bypassComments: boolean = false;
 
@@ -396,7 +395,7 @@ export class AttestationDataService {
     if (dialog instanceof HTMLDialogElement) {
       dialog.close();
     }
-    this.interpretParties(false)
+    console.log(this.stagedJSON)
     let catalogs = this.stagedJSON["assessment-plan"]["reviewed-controls"]["control-selections"]
     let props: any[] = [];
     console.log(catalogs);

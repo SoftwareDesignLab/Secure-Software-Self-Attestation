@@ -30,7 +30,7 @@
       </li>
       <li><p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
     </ul>
-    <input type="file" hidden id="load-file-input" (change)="newForm(); processLoadAttestation($event)" accept=".json">
+    <input type="file" hidden id="load-file-input" (change)="processLoadAttestation($event)" accept=".json">
     <p class="bottom" (click)="loadAttestation();">Load Attestation</p>
   </div>
 </nav>
@@ -41,6 +41,8 @@
 
 <dialog id="contact-decision" class="pane" (keydown.escape)="cancelLoad()" (click)="cancelLoad($event)">
   <p>The contact information in this file does not match what you have entered. Which should be used?</p>
+  <button (click)="useExistingContact()">Existing Information</button>
+  <button (click)="useFileContact()">Uploaded File</button>
 </dialog>
 
 <footer>

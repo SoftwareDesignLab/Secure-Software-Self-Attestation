@@ -277,7 +277,7 @@ a {
   cursor: pointer;
 }
 
-#needed-files-upload {
+#contact-decision {
   justify-content: center;
   align-content: center;
   margin: auto;
@@ -286,29 +286,13 @@ a {
   top: -25vh;
 }
 
-#needed-files-upload::backdrop {
+#contact-decision::backdrop {
   background-color: rgba(0, 0, 0, .95)
-}
-
-#needed-files-upload ul {
-  list-style: none;
 }
 
 #needed-files-upload button {
   display: block;
   margin: auto;
-}
-
-#needed-files-upload li {
-  color: rgb(224, 15, 15);
-}
-
-.scroll-box {
-  overflow-y: scroll;
-  border: 1px solid gray;
-  min-height: 100px;
-  max-height: clamp(200px, 40vh, 600px);
-  margin: 30px;
 }
 
 footer {

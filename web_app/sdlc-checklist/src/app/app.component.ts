@@ -323,15 +323,13 @@ export class AppComponent {
    * Cancels the loading of an attestation
    */
   cancelLoad(event?: MouseEvent) {
-    let dialog = document.getElementById("needed-files-upload")
+    let dialog = document.getElementById("contact-decision")
     if (dialog instanceof HTMLDialogElement) {
       if (event) {
-        if (event.clientX > dialog.offsetLeft && event.clientX < (dialog.offsetLeft + dialog.offsetWidth) && event.clientY > dialog.offsetTop && event.clientY < (dialog.offsetHeight + dialog.offsetTop)) return;
+        if ((event.clientX > dialog.offsetLeft && event.clientX < (dialog.offsetLeft + dialog.offsetWidth) && event.clientY > dialog.offsetTop && event.clientY < (dialog.offsetHeight + dialog.offsetTop)) || dialog.offsetHeight === 0) return;
       }
       dialog.close();
     }
-    this.deleteForm(this.attestationService.getCurrentForm.getFormPosition);
-    this.attestationService.neededControls = new Set<string>();
     this.attestationService.stagedJSON = null;
   }
 
@@ -347,10 +345,6 @@ export class AppComponent {
     if (file) {
       this.handleFile(file);
       console.log('File selected:', file);
-      let uploadButton = document.getElementById('file');
-      if (uploadButton instanceof HTMLInputElement) {
-        uploadButton.value = "";
-      }
     } else { return }
     if (input.target instanceof HTMLInputElement) {
       input.target.value = "";
@@ -359,35 +353,50 @@ export class AppComponent {
 
   private handleFile(file: File) {
     let reader = new FileReader();
-    reader.onload = async () => {
+    reader.onload = () => {
       let json = JSON.parse(reader.result as string);
       this.attestationService.stagedJSON = json;
       console.log(json)
-      let include = json["assessment-plan"]["reviewed-controls"]["control-selections"]
-      if (include !== undefined) {
-        include.forEach((catalog: any) => {
-          if (catalog["include-controls"]) {
-            catalog["include-controls"].forEach((control: any) => {
-              if (control["control-id"]) this.attestationService.neededControls.add(control["control-id"]);
-            })
-          } else if (catalog["include-all"]) {
-            catalog["props"].forEach((control: any) => {
-              if (control.class === "Compliance Claim") this.attestationService.neededControls.add(control.name);
-            })
-          }
-        })
+      if (this.attestationService.interpretParties(true)) {
+        let dialog = document.getElementById("contact-decision")
+        if (dialog instanceof HTMLDialogElement) dialog.showModal();
+      } else {
+        this.useFileContact();
       }
-      let catalogs = json["catalogs"];
-      catalogs.forEach((catalog: any) => {
-        console.log(catalog)
-        this.assessmentPlanService.addCatalog(catalog as Catalog);
-        this.attestationService.getCurrentForm.onFileSelected(catalog)
-      })
-      await dela(100);
-      this.attestationService.refresh();
-      this.attestationService.loadAttestationData();
+
     };
     reader.readAsText(file);
+  }
+
+  async useExistingContact() {
+    let dialog = document.getElementById("contact-decision")
+    if (dialog instanceof HTMLDialogElement) dialog.close();
+    this.newForm();
+    let catalogs = this.attestationService.stagedJSON["catalogs"];
+    catalogs.forEach((catalog: any) => {
+      console.log(catalog)
+      this.assessmentPlanService.addCatalog(catalog as Catalog);
+      this.attestationService.getCurrentForm.onFileSelected(catalog)
+    })
+    await dela(100);
+    this.attestationService.refresh();
+    this.attestationService.loadAttestationData();
+  }
+
+  async useFileContact() {
+    let dialog = document.getElementById("contact-decision")
+    if (dialog instanceof HTMLDialogElement) dialog.close();
+    this.newForm();
+    let catalogs = this.attestationService.stagedJSON["catalogs"];
+    catalogs.forEach((catalog: any) => {
+      console.log(catalog)
+      this.assessmentPlanService.addCatalog(catalog as Catalog);
+      this.attestationService.getCurrentForm.onFileSelected(catalog)
+    })
+    await dela(100);
+    this.attestationService.refresh();
+    this.attestationService.interpretParties(false)
+    this.attestationService.loadAttestationData();
   }
 }
 
