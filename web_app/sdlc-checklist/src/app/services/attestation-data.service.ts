@@ -199,16 +199,14 @@ export class AttestationDataService {
    * @returns unique version of the ID given if its not unique
    */
   dupIDCheck(controlID: string): string{
-
-    //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
       let displayID = controlID;
-           
       // looks if a controlID has already been used
       if(this.displayIDMap.has(controlID)){
         let amount = this.displayIDMap.get(controlID);
         if(amount!=undefined){
           displayID = displayID + " (" +  this.displayIDMap.get(controlID) + ")";
           this.displayIDMap.set(controlID, amount+1);
+          this.displayIDMap.set(displayID,1);
         } else {
           console.warn("undefined UID?");
           return controlID;
