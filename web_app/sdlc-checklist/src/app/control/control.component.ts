@@ -23,7 +23,7 @@
  */
 import { Component, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { ControlAttestation } from '../models/catalogModel';
+import { ControlAttestation } from '../models/oscal/catalogModel';
 import { timeInterval } from 'rxjs';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
 

@@ -31,7 +31,7 @@ import { CatalogProcessingComponent } from '../catalog-processing/catalog-proces
 
 import { AttestationDataService } from '../services/attestation-data.service';
 import { attestationComment } from '../models/attestationForm';
-import { CatalogData, Catalog} from '../models/catalogModel';
+import { CatalogData, Catalog} from '../models/oscal/catalogModel';
 import { AttestationComponent } from '../attestation/attestation.component';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
 import { ContactService } from '../services/contact.service';

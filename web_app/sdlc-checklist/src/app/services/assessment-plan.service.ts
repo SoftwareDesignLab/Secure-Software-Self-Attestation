@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
-import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop, AssessmentSubject } from '../models/assessmentPlan';
-import { Catalog } from '../models/catalogModel';
+import { AssessmentPlan } from '../models/oscal/assessmentPlan';
+import { ControlSelection, SubjectID, AssessmentSubject } from '../models/oscal/common';
+import { Prop } from '../models/oscal/common';
+import { Metadata } from '../models/oscal/metadata';
+import { Catalog } from '../models/oscal/catalogModel';
 import { GroupComponent } from '../group/group.component';
 import { ChecklistItemComponent } from '../control/control.component';
 
@@ -18,7 +21,7 @@ export enum ControlSelectionType {
   providedIn: 'root'
 })
 export class AssessmentPlanService {
-  private metadata = new BehaviorSubject<APMetadata>(new APMetadata());
+  private metadata = new BehaviorSubject<Metadata>(new Metadata());
   currentMetadata = this.metadata.asObservable();
   private assessmentPlans = new BehaviorSubject<Array<AssessmentPlan>>(new Array<AssessmentPlan>());
   currentPlans = this.assessmentPlans.asObservable();

@@ -3,8 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { AssessmentPlanService, ControlSelectionType } from './assessment-plan.service';
 import { AttestationDataService } from './attestation-data.service';
 
-import { Prop } from '../models/assessmentPlan';
-import { Catalog } from '../models/catalogModel';
+import { Prop } from '../models/oscal/common';
+import { Catalog } from '../models/oscal/catalogModel';
 import catalog from '../defaultCatalog';
 
 describe('data store and retrieval', () => {

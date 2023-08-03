@@ -1,5 +1,7 @@
 import { v4 as uuid } from 'uuid';
-import { Metadata, Prop, Link, AssessmentSubjectType, AssessmentSubject, ReviewedControls } from './common';
+import { Prop, Link } from './common';
+import { AssessmentSubjectType, AssessmentSubject, ReviewedControls } from './assessment';
+import { Metadata } from './metadata';
 
 class AssessmentPart {
   name: string = "";

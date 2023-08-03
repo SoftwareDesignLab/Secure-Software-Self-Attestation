@@ -23,7 +23,7 @@
  */
 import { Injectable } from '@angular/core';
 import { AttestationComponent } from '../attestation/attestation.component';
-import { ControlAttestation, GroupInfo } from '../models/catalogModel';
+import { ControlAttestation, GroupInfo } from '../models/oscal/catalogModel';
 
 import { BehaviorSubject, Subject } from 'rxjs';
 import { AssessmentPlanService } from './assessment-plan.service';

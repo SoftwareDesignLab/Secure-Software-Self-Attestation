@@ -25,7 +25,7 @@
 import { Component } from '@angular/core';
 import { attestationComment } from '../models/attestationForm';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { Catalog, CatalogData } from '../models/catalogModel';
+import { Catalog, CatalogData } from '../models/oscal/catalogModel';
 import catalog from '../defaultCatalog';
 import { ChecklistItemComponent } from '../control/control.component';
 import { AssessmentPlanService } from '../services/assessment-plan.service';

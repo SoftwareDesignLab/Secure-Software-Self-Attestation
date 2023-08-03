@@ -23,7 +23,7 @@
  */
 import { GroupComponent } from '../../group/group.component'
 import { ChecklistItemComponent } from '../../control/control.component';
-import { Metadata } from './common';
+import { Metadata } from './metadata';
 
     export interface CatalogFileFormat {
         catalog: Catalog;

@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { CatalogFileFormat, metaData, Catalog } from '../models/catalogModel';
+import { CatalogFileFormat, Catalog } from '../models/oscal/catalogModel';
+import { Metadata } from '../models/oscal/metadata';
 import { notifyService } from '../services/notify.service';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
 
@@ -153,7 +154,7 @@ export class CatalogProcessingComponent {
       console.log("Missing/invalid uuid");
     }
     if(catalog.metadata != undefined){
-      let metaData = catalog.metadata as metaData;
+      let metaData = catalog.metadata as Metadata;
       if(metaData.title == undefined){
         isValid = false;
         console.log("Missing MetaData: title ");

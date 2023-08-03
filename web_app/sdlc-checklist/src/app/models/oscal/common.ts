@@ -1,193 +1,16 @@
 //TODO add all OSCAL common classes here: Metadata, Part, Parameter 
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid'
 
-export enum AssessmentSubjectType {
-  Component = "component", 
-  InventoryItem = "inventory-item", 
-  Location = "location",
-  Party = "party",
-  User = "user",
+import { ResponsibleRole, ResponsibleParty } from './metadata';
+
+/*
+  Control Common Classes
+*/
+export enum HowMany {
+  "one",
+  "one-or-more"
 }
 
-export enum SubjectIDType {
-  Component = "component", 
-  InventoryItem = "inventory-item", 
-  Location = "location", 
-  Party = "party", 
-  User = "user", 
-  Resource = "resource",
-}
-
-export class Metadata {
-    title: string = "Assessment Plan";
-    "last-modified": string = new Date().toISOString();
-    version: string = "1.0.0";
-    "oscal-version": string = "1.0.4";
-    published: string = new Date().toISOString();
-    parties: Party[] = [];
-  
-    addParty(party: Party) {
-      this.parties.push(party);
-      this.modify();
-    }
-  
-    addBlankParty() {
-      let newParty = new Party();
-      this.parties.push(newParty);
-    }
-  
-    modify() {
-      this["last-modified"] = new Date().toISOString();
-    }
-  
-    publish() {
-      this.published = new Date().toISOString();
-    }
-  
-    serialize(): object {
-      let serialized = {
-        "title": this.title,
-        "last-modified": this["last-modified"],
-        "version": this.version,
-        "oscal-version": this["oscal-version"],
-        "published": new Date().toISOString(),
-        "parties": this.parties.map(party => party.serialize()),
-      };
-      return serialized;
-    }
-}
-
-export class Party {
-  uuid: string = uuid();
-  type: string = "";
-  name?: string;
-  addresses?: Address[];
-  props?: Prop[];
-  remarks?: string;
-  "email-addresses"?: string[];
-  "telephone-numbers"?: string[];
-  links?: Link[];
-
-
-  setName(name: string){
-    this.name = name;
-  }
-
-  addAddress(addrlines: string[], city: string, state: string, postal: string, country: string) {
-    let newAddress = new Address();
-    newAddress["addr-lines"] = addrlines;
-    newAddress.city = city;
-    newAddress.state = state;
-    newAddress["postal-code"] = postal;
-    newAddress.country = country;
-    this.addresses = [newAddress];
-  }
-
-  setPrimaryAddressLines(lines: string[]) {
-    if (this.addresses === undefined) {
-      this.addresses = [new Address()];
-    }
-    this.addresses[0]["addr-lines"] = lines;
-  }
-  setPrimaryAddressLine1(line: string) {
-    if (this.addresses === undefined) {
-      this.addresses = [new Address()];
-    }
-    this.addresses[0]["addr-lines"][0] = line;
-  }
-  setPrimaryAddressLine2(line: string) {
-    if (this.addresses === undefined) {
-      this.addresses = [new Address()];
-    }
-    this.addresses[0]["addr-lines"][1] = line;
-  }
-  setPrimaryCity(city: string) {
-    if (this.addresses === undefined) {
-      this.addresses = [new Address()];
-    }
-    this.addresses[0].city = city;
-  }
-  setPrimaryState(state: string) {
-    if (this.addresses === undefined) {
-      this.addresses = [new Address()];
-    }
-    this.addresses[0].state = state;
-  }
-  setPrimaryPostalCode(postal: string) {
-    if (this.addresses === undefined) {
-      this.addresses = [new Address()];
-    }
-    this.addresses[0]["postal-code"] = postal;
-  }
-  setPrimaryCountry(country: string) {
-    if (this.addresses === undefined) {
-      this.addresses = [new Address()];
-    }
-    this.addresses[0].country = country;
-  }
-
-  addLink(href: string, rel?: string) {
-    if (this.links === undefined) this.links = [];
-    let newLink = new Link();
-    newLink.href = href;
-    newLink.rel = rel;
-    this.links.push(newLink);
-  }
-
-  addEmailAddress(email: string) {
-    if (this["email-addresses"] === undefined) this["email-addresses"] = [];
-    this["email-addresses"].push(email);
-  }
-
-  addTelephoneNumber(number: string) {
-    if (this["telephone-numbers"] === undefined) this["telephone-numbers"] = [];
-    this["telephone-numbers"].push(number);
-  }
-
-  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
-    if (this.props === undefined) this.props = [];
-    let newProp = new Prop(name, value);
-    newProp.class = class_;
-    newProp.uuid = uuid;
-    newProp.ns = ns;
-    newProp.remarks = remarks;
-    this.props.push(newProp);
-  }
-
-  serialize(): object {
-    let serialized = {
-      "uuid": this.uuid,
-      "type": this.type,
-      "name": this.name,
-      "addresses": this.addresses?.map((address) => address.serialize()),
-      "props": this.props?.map((prop) => prop.serialize()),
-      "remarks": this.remarks,
-      "email-addresses": this["email-addresses"],
-      "telephone-numbers": this["telephone-numbers"],
-      "links": this.links?.map((link) => link.serialize()),
-    };
-    return serialized;
-  }
-}
-class Address {
-  "addr-lines": string[] = [""];
-  city: string = "";
-  state: string = "";
-  "postal-code": string = "";
-  country: string = "";
-
-  serialize(): object {
-    let serialized = {
-      "addr-lines": this["addr-lines"],
-      "city": this.city,
-      "state": this.state,
-      "postal-code": this["postal-code"],
-      "country": this.country,
-    };
-    return serialized;
-  }
-}
-  
 export class Link {
   href: string = "";
   rel?: string;
@@ -231,336 +54,258 @@ export class Prop {
   }
 }
 
-export interface Parameter {
-  id: string;
-  class: string;
-  "depends-on": string;
-  props: Prop[];
-  links: Link[];
-  label: string;
-  usage: string;
-  constrints: any;
-  guidelines: any;
-  values: any;
-  select: any;
-  remarks: any;
+export class Part {
+  name: string;
+  id?: string;
+  ns?: string;
+  class?: string;
+  title?: string;
+  props?: Prop[];
+  prose?: string;
+  parts?: Part[];
+  links?: Link[];
+
+  constructor (name: string) {
+    this.name = name
+  }
 }
 
-export class ControlSelection {
-  description?: string;
+export class Parameter {
+  id: string = uuid();
+  class?: string;
+  "depends-on"?: string;
   props?: Prop[];
   links?: Link[];
+  label?: string;
+  usage?: string;
+  constrints?: ParameterConstraint[];
+  guidelines?: ParameterGuideline[];
+  values?: string[];
+  select?: ParameterSelection;
   remarks?: string;
-  "include-all"?: Boolean | object = false;
 
-  //Controls used for serialization
-  "include-controls"?: ControlID[];
-  "exclude-controls"?: ControlID[];
-
-  //Controls used for remembering
-  private "include-controls-memory"?: ControlID[];
-  private "exclude-controls-memory"?: ControlID[];
-
-
-
-  constructor(description?: string, props?: Prop[], links?: Link[], includeAll?: Boolean, includeControls?: ControlID[], excludeControls?: ControlID[], remarks?: string) {
-    this.description = description;
-    this.props = props;
-    this.links = links;
-    this["include-all"] = includeAll;
-    this["include-controls-memory"] = includeControls;
-    this["exclude-controls-memory"] = excludeControls;
-    this.remarks = remarks;
-  }
-
-  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
-    if (this.props === undefined) this.props = [];
-    let newProp = new Prop(name, value);
-    if (class_ !== undefined) newProp.class = class_;
-    if (uuid !== undefined) newProp.uuid = uuid;
-    if (ns !== undefined) newProp.ns = ns;
-    if (remarks !== undefined) newProp.remarks = remarks;
-    this.props.push(newProp);
-  }
-
-  addLink(href: string, rel?: string) {
-    let link = new Link();
-    link.href = href;
-    if (rel !== undefined) link.rel = rel;
-    if (this.links === undefined) this.links = [];
-    this.links.push(link);
-  }
-
-  addIncludeControl(controlID: string, statementIDs?: string[]) {
-    let newControlID = new ControlID();
-    newControlID["control-id"] = controlID;
-    if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
-    if (this["include-controls"] === undefined) this["include-controls"] = [];
-    this["include-controls"].push(newControlID);
-
-    if (this["include-controls-memory"] === undefined) this["include-controls-memory"] = [];
-    this["include-controls-memory"].push(newControlID);
-  }
-
-  removeIncludeControl(controlID: string) {
-    if (this["include-controls"]===undefined||this['include-controls-memory'] === undefined) return;
-    let index = this["include-controls"].findIndex(control => control["control-id"] === controlID);
-    if (index > -1){
-      this["include-controls"].splice(index, 1);
-      this["include-controls-memory"].splice(index,1);
-    }
-    if (this["include-controls"].length === 0){
-      delete this["include-controls"];
-      }
-  }
-
-  addExcludeControl(controlID: string, statementIDs?: string[]) {
-    let newControlID = new ControlID();
-    newControlID["control-id"] = controlID;
-    if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
-    if (this["exclude-controls"] === undefined) this["exclude-controls"] = [];
-    this["exclude-controls"].push(newControlID);
-
-    if (this["exclude-controls-memory"] === undefined) this["exclude-controls-memory"] = [];
-    this["exclude-controls-memory"].push(newControlID);
-    
-    if(this['include-all']=true){
-      this.setIncludeAll(false);
-    }
-  }
-
-  removeExcludeControl(controlID: string) {
-    if (this["exclude-controls"] === undefined||this['exclude-controls-memory'] === undefined) return;
-    let index = this["exclude-controls"].findIndex(control => control["control-id"] === controlID);
-    if (index > -1){
-      this["exclude-controls"].splice(index, 1);
-      this["exclude-controls-memory"].splice(index,1);
-    }
-    if (this["exclude-controls"].length === 0){
-      this.setIncludeAll(true);
-    }
-  }
-
-  //If include-all is true, then hides all exclude controls/include controls
-  setIncludeAll(includeAll: Boolean) {
-    if(includeAll){
-      this["include-all"] = includeAll;
-      this['include-controls'] = undefined;
-      this['exclude-controls'] = undefined;
-    }
-    else{
-      this["include-all"] = undefined;
-      if(this['include-controls-memory'] !== undefined){
-      this["include-controls"] = JSON.parse(JSON.stringify(this['include-controls-memory']));
-      }
-      if(this['exclude-controls-memory']){      
-        this['exclude-controls'] = JSON.parse(JSON.stringify(this['exclude-controls-memory']));
-      }
-    }
-  }
-
-  propExists(name: string, value: string) {
-    if (this.props === undefined) return false;
-    return this.props.some(prop => prop.name === name && prop.value === value);
-  }
-
-  removeProp(name: string, class_: string) {
-    if (this.props === undefined) return;
-    let index = this.props.findIndex(prop => prop.name === name && prop.class === class_);
-    if (index > -1) this.props.splice(index, 1);
-  }
-
-  serialize(): object {
-    let serialized = {
-      "description": this.description,
-      "props": this.props?.map(prop => prop.serialize()),
-      "links": this.links?.map(link => link.serialize()),
-      "include-all": this["include-all"],
-      "include-controls": this["include-controls-memory"]?.map(control => control.serialize()),
-      "exclude-controls": this["exclude-controls-memory"]?.map(control => control.serialize()),
-      "remarks": this.remarks,
-    };
-    if (serialized['include-all']) {
-      delete serialized['include-controls'];
-      delete serialized['exclude-controls'];
-      serialized['include-all'] = {};
-    }
-    return serialized;
+  serialize() {
+    //TODO 
   }
 }
 
-
-export class ControlID {
-  "control-id": string = "";
-  "statement-ids"?: string[];
-
-  serialize(): object {
-    let serialized = {
-      "control-id": this["control-id"],
-      "statement-ids": this["statement-ids"],
-    };
-    return serialized;
-  }
+export class ConstraintTest {
+  expression: string = ".*";
+  remarks?: string;
 }
 
-export class ReviewedControls {
-  "control-selections": ControlSelection[] = [];
+export class ParameterConstraint {
+  description: string = "";
+  tests?: ConstraintTest[];
+}
+
+export interface ParameterGuideline {
+  prose: string;
+}
+
+export class ParameterSelection {
+  choice: string[];
+  "how-many": HowMany;
+
+  constructor (choice: string[]) {
+    switch (choice.length) {
+      case 0:
+        throw new Error("ParameterSelection must have at least one choice");
+      case 1:
+        this["how-many"] = HowMany.one;
+        break;
+      default:
+        this["how-many"] = HowMany["one-or-more"];
+        break;
+    }
+    this.choice = choice;
+  }
+  //TODO do not serialize choice field if list is empty
+}
+
+
+/*
+  Implementation Common Classes
+*/
+
+enum SystemComponentType {
+  "this-system",
+  "system",
+  "interconnection",
+  "software",
+  "hardware",
+  "service",
+  "policy", 
+  "physical",
+  "process-procedure",
+  "plan",
+  "guidance",
+  "standard",
+  "validation",
+  "network"
+}
+
+enum SystemComponentState {
+  "underdevelopment",
+  "operational",
+  "disposition",
+  "other"
+}
+
+enum TransportType {
+  "TCP",
+  "UDP"
+}
+
+enum ImplementationState {
+  "implemented",
+  "partial",
+  "planned",
+  "alternative",
+  "not-applicable"
+}
+
+enum SystemIDType {
+  "https://fedramp.gov",
+  "https://fedramp.gov/ns/oscal",
+  "https://ietf.org/rfc/rfc4122",
+  "http://ietf.org/rfc/rfc4122",
+}
+
+export class SystemComponent {
+  uuid: string = uuid();
+  type: SystemComponentType;
+  title: string = "";
+  description: string = "";
+  status: SystemComponentState;
+  purpose: string = "";
   props?: Prop[];
   links?: Link[];
-  description?: string;
+  "responsible-roles": ResponsibleRole[] = [];
+  protocols?: Protocol[];
   remarks?: string;
 
-  constructor() {
-  }
-
-  addControlSelection(description: string = "", props: Prop[] = [], links: Link[] = [], includeAll: Boolean = false, includeControls: ControlID[] = [], excludeControls: ControlID[] = [], remarks: string = "") {
-    let newControlSelection = new ControlSelection(description, props, links, includeAll, includeControls, excludeControls, remarks);
-    this["control-selections"].push(newControlSelection);
-  }
-
-  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
-    if (this.props === undefined) this.props = [];
-    let newProp = new Prop(name, value);
-    newProp.class = class_;
-    newProp.uuid = uuid;
-    newProp.ns = ns;
-    newProp.remarks = remarks;
-    this.props.push(newProp);
-  }
-
-  //For serialization, if controlSelection is empty, add a blank controlSelection
-  serialize(): object {
-    let serialized = {
-      "control-selections": this["control-selections"].map(controlSelection => controlSelection.serialize()),
-      "props": this.props?.map(prop => prop.serialize()),
-      "links": this.links?.map(link => link.serialize()),
-      "description": this.description,
-      "remarks": this.remarks,
-    };
-    if (serialized['control-selections'].length === 0) {
-      let newControlSelection = new ControlSelection();
-      serialized['control-selections'].push(newControlSelection.serialize());
-    }
-    return serialized;
-  }
-}
-
-export class SubjectID {
-  type: SubjectIDType = SubjectIDType.Component; //can be component, inventory-item, location, party, user or resource
-  "subject-uuid": string = uuid();
-  props?: Prop[];
-  links?: Link[];
-  remarks?: string;
-
-  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
-    if (this.props === undefined) this.props = [];
-    let newProp = new Prop(name, value);
-    newProp.class = class_;
-    newProp.uuid = uuid;
-    newProp.ns = ns;
-    newProp.remarks = remarks;
-    this.props.push(newProp);
-  }
-
-  removeProp(name: string, class_?: string) {
-    if (this.props === undefined) return;
-    this.props = this.props.filter((prop) => prop.name !== name && ( class_ !== undefined ? prop.class !== class_ : true));
-  }
-
-  addLink(href: string, rel?: string) {
-    if (this.links === undefined) this.links = [];
-    let newLink = new Link();
-    newLink.href = href;
-    newLink.rel = rel;
-    this.links.push(newLink);
-  }
-
-  setType(type: SubjectIDType) {
+  constructor (type: SystemComponentType, title: string, description: string, status: SystemComponentState) {
     this.type = type;
-  }
-
-  serialize(): object {
-    let serialized = {
-      "type": this.type,
-      "subject-uuid": this["subject-uuid"],
-      "props": this.props?.map((prop) => prop.serialize()),
-      "remarks": this.remarks,
-      "links": this.links?.map((link) => link.serialize()),
-    };
-    return serialized;
+    this.title = title;
+    this.description = description;
+    this.status = status;
   }
 }
 
-export class AssessmentSubject {
-  type: AssessmentSubjectType = AssessmentSubjectType.Party;
+export class SystemComponentStatus {
+  state: SystemComponentState
+  remarks?: string;
+
+  constructor (state: SystemComponentState) {
+    this.state = state;
+  }
+}
+
+export class Protocol {
+  name: string = "";
+  uuid?: string;
+  title?: string;
+  "port-ranges"?: PortRange[];
+
+  constructor (name: string) {
+    this.name = name;
+  }
+}
+
+export class PortRange {
+  start: number;
+  end: number;
+  transport: TransportType;
+
+  constructor (start: number, end: number, transport: TransportType) {
+    this.start = start;
+    this.end = end;
+    this.transport = transport;
+  }
+}
+
+export class ImplementationStatus {
+  state: ImplementationState;
+  remarks?: string;
+
+  constructor (state: ImplementationState) {
+    this.state = state;
+  }
+}
+
+export class SystemUser {
+  uuid: string = uuid();
+  title?: string;
+  "short-name"?: string;
   description?: string;
   props?: Prop[];
   links?: Link[];
+  "role-ids"?: string[];
+  "authorized-privileges"?: AuthorizedPrivilege[];
   remarks?: string;
-  "include-all"?: Boolean | object;
-  "include-subjects"?: SubjectID[];
-  "exclude-subjects"?: SubjectID[];
-  private subjectMemory: Array<Array<SubjectID> | undefined> = [[], []];
 
-  includeAll(bool: Boolean) {
-    this["include-all"] = bool;
-    if (bool) {
-      this.subjectMemory[0] = this["include-subjects"];
-      this.subjectMemory[1] = this["exclude-subjects"];
-      this["include-subjects"] = undefined;
-      this["exclude-subjects"] = undefined;
-    } else {
-      this["include-subjects"] = this.subjectMemory[0];
-      this["exclude-subjects"] = this.subjectMemory[1];
-    }
+  constructor (title?: string, shortName?: string, description?: string) {
+    this.title = title;
+    this.description = description;
+    this["short-name"] = shortName;
   }
+}
 
-  includeNewSubject(type: SubjectIDType) {
-    if (this["include-subjects"] === undefined) this["include-subjects"] = [];
-    let newSubjectID = new SubjectID();
-    newSubjectID.type = type;
-    newSubjectID["subject-uuid"] = uuid();
-    this["include-subjects"].push(newSubjectID);
-    this.subjectMemory[0] = this["include-subjects"];
+export class AuthorizedPrivilege {
+  title: string;
+  "functions-performed": string[];
+  description?: string;
+
+  constructor (title: string, functionsPerformed: string[]) {
+    this.title = title;
+    this["functions-performed"] = functionsPerformed;
   }
+}
 
-  excludeNewSubject(type: SubjectIDType) {
-    if (this["exclude-subjects"] === undefined) this["exclude-subjects"] = [];
-    let newSubjectID = new SubjectID();
-    newSubjectID.type = type;
-    newSubjectID["subject-uuid"] = uuid();
-    this["exclude-subjects"].push(newSubjectID);
-    this.subjectMemory[1] = this["exclude-subjects"];
+export class ImplementedComponent {
+  "component-uuid": string;
+  props?: Prop[];
+  links?: Link[];
+  "responsible-parties"?: ResponsibleParty[];
+  remarks?: string;
+
+  constructor (componentUUID: string) {
+    this["component-uuid"] = componentUUID;
   }
+}
 
-  //TODO move subject from exclude -> include or back
+export class InventoryItem {
+  uuid: string = uuid();
+  description: string = "";
+  props?: Prop[];
+  links?: Link[];
+  "responsible-parties"?: ResponsibleParty[];
+  "implemented-components"?: ImplementedComponent[];
+  remarks?: string;
 
-  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
-    if (this.props === undefined) this.props = [];
-    let newProp = new Prop(name, value);
-    newProp.class = class_;
-    newProp.uuid = uuid;
-    newProp.ns = ns;
-    newProp.remarks = remarks;
-    this.props.push(newProp);
+  constructor (description: string) {
+    this.description = description;
   }
+}
 
-  serialize(): object {
-    let serialized = {
-      "type": this.type,
-      "description": this.description,
-      "props": this.props?.map(prop => prop.serialize()),
-      "remarks": this.remarks,
-      "include-all": this["include-all"] ? {} : undefined,
-      "include-subjects": this["include-subjects"]?.map(subject => subject.serialize()),
-      "exclude-subjects": this["exclude-subjects"]?.map(subject => subject.serialize()),
-      "links": this.links?.map(link => link.serialize()),
-    };
-    if (this["include-all"] === true){
-      delete serialized["include-subjects"];
-      delete serialized["exclude-subjects"];
-      serialized["include-all"] = {};
-    };
-    return serialized;
+export class SetParameterValue {
+  "param-id": string;
+  values: string[];
+  remarks?: string;
+
+  constructor (paramID: string, values: string[]) {
+    this["param-id"] = paramID;
+    this.values = values;
+  }
+}
+
+export class SystemID {
+  id: string;
+  "identifier-type"?: string | SystemIDType;
+
+  constructor (id: string, identifierType?: string | SystemIDType) {
+    this.id = id;
+    this["identifier-type"] = identifierType;
   }
 }
