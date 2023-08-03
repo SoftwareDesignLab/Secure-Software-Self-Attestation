@@ -28,6 +28,7 @@ import { ControlAttestation, GroupInfo, Catalog } from '../models/catalogModel';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { AssessmentPlanService } from './assessment-plan.service';
 import { ChecklistItemComponent } from '../control/control.component';
+import { ContactService } from './contact.service';
 
 const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 
@@ -56,7 +57,7 @@ export class AttestationDataService {
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
 
-  constructor(private assessmentPlanService: AssessmentPlanService) {
+  constructor(private assessmentPlanService: AssessmentPlanService, private contactService: ContactService) {
     this.tag = 0;
   }
   
@@ -303,11 +304,99 @@ export class AttestationDataService {
     }
   }
 
+  interpretParties(soft: boolean): boolean {
+    let parties = this.stagedJSON["assessment-plan"]["metadata"]["parties"];
+    let companyStuff: JSON | undefined = undefined;
+    let contactStuff: JSON | undefined = undefined;
+    let differences = false;
+    parties.forEach((party: any) => {
+      if (party.type === "organization") companyStuff = party;
+      if (party.type === "person") contactStuff = party;
+    })
+    
+    if (companyStuff) {
+      if (this.contactService.companyName !== companyStuff["name"]) {
+        if (this.contactService.companyName !== "") differences = true;
+        if (!soft) this.contactService.companyName = companyStuff["name"];
+      }
+      if (this.contactService.companyAddress1 !== companyStuff["addresses"][0]["addr-lines"][0]) {
+        if (this.contactService.companyAddress1 !== "") differences = true
+        if (!soft) this.contactService.companyAddress1 = companyStuff["addresses"][0]["addr-lines"][0];
+      }
+      if (this.contactService.companyAddress2 !== companyStuff["addresses"][0]["addr-lines"][1]) {
+        if (this.contactService.companyAddress2 !== "") differences = true
+        if (!soft) this.contactService.companyAddress2 = companyStuff["addresses"][0]["addr-lines"][1];
+      }
+      if (this.contactService.city !== companyStuff["addresses"][0]["city"]) {
+        if (this.contactService.city !== "") differences = true
+        if (!soft) this.contactService.city = companyStuff["addresses"][0]["city"];
+      }
+      if (this.contactService.state !== companyStuff["addresses"][0]["state"]) {
+        if (this.contactService.state !== "") differences = true
+        if (!soft) this.contactService.state = companyStuff["addresses"][0]["state"];
+      }
+      if (this.contactService.country !== companyStuff["addresses"][0]["country"]) {
+        if (this.contactService.country !== "") differences = true
+        if (!soft) this.contactService.country = companyStuff["addresses"][0]["country"];
+      }
+      if (this.contactService.postalCode !== companyStuff["addresses"][0]["postal-code"]) {
+        if (this.contactService.postalCode !== "") differences = true
+        if (!soft) this.contactService.postalCode = companyStuff["addresses"][0]["postal-code"];
+      }
+    }
+
+    if (contactStuff) {
+      if (this.contactService.firstName !== (contactStuff["name"] as String).split(" ")[0]) {
+        if (this.contactService.firstName !== "") differences = true;
+        if (!soft) this.contactService.firstName = (contactStuff["name"] as String).split(" ")[0];
+      }
+      if (this.contactService.lastName !== (contactStuff["name"] as String).split(" ")[1]) {
+        if (this.contactService.lastName !== "") differences = true;
+        if (!soft) this.contactService.lastName = (contactStuff["name"] as String).split(" ")[1];
+      }
+      if (this.contactService.personalAddress1 !== contactStuff["addresses"][0]["addr-lines"][0]) {
+        if (this.contactService.personalAddress1 !== "") differences = true;
+        if (!soft) this.contactService.personalAddress1 = contactStuff["addresses"][0]["addr-lines"][0];
+      }
+      if (this.contactService.personalAddress2 !== contactStuff["addresses"][0]["addr-lines"][1]) {
+        if (this.contactService.personalAddress2 !== "") differences = true;
+        if (!soft) this.contactService.personalAddress2 = contactStuff["addresses"][0]["addr-lines"][1];
+      }
+      if (this.contactService.personalCity !== contactStuff["addresses"][0]["city"]) {
+        if (this.contactService.personalCity !== "") differences = true;
+        if (!soft) this.contactService.personalCity = contactStuff["addresses"][0]["city"];
+      }
+      if (this.contactService.personalState !== contactStuff["addresses"][0]["state"]) {
+        if (this.contactService.personalState !== "") differences = true;
+        if (!soft) this.contactService.personalState = contactStuff["addresses"][0]["state"];
+      }
+      if (this.contactService.personalCountry !== contactStuff["addresses"][0]["country"]) {
+        if (this.contactService.personalCountry !== "") differences = true;
+        if (!soft) this.contactService.personalCountry = contactStuff["addresses"][0]["country"];
+      }
+      if (this.contactService.personalPostal !== contactStuff["addresses"][0]["postal-code"]) {
+        if (this.contactService.personalPostal !== "") differences = true;
+        if (!soft) this.contactService.personalPostal = contactStuff["addresses"][0]["postal-code"];
+      }
+      if (this.contactService.email !== contactStuff["email-addresses"][0]) {
+        if (this.contactService.email !== "") differences = true;
+        if (!soft) this.contactService.email = contactStuff["email-addresses"][0];
+      }
+      if (this.contactService.phone !== contactStuff["telephone-numbers"][0]) {
+        if (this.contactService.phone !== "") differences = true;
+        if (!soft) this.contactService.phone = contactStuff["telephone-numbers"][0];
+      }
+    }
+
+    return differences;
+  }
+
   loadAttestationData() {
-    let dialog = document.getElementById("needed-files-upload")
+    let dialog = document.getElementById("contact-dialog")
     if (dialog instanceof HTMLDialogElement) {
       dialog.close();
     }
+    this.interpretParties(false)
     let catalogs = this.stagedJSON["assessment-plan"]["reviewed-controls"]["control-selections"]
     let props: any[] = [];
     console.log(catalogs);
