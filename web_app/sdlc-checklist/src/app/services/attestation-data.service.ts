@@ -130,6 +130,10 @@ export class AttestationDataService {
     return this.deletionPosition;
   }
 
+  /**
+   * Sets tag to be used for UID generations of a form
+   * @returns 
+   */
   setTag(){
     this.tag +=1;
     return this.tag;
@@ -147,6 +151,21 @@ export class AttestationDataService {
 
 
   // Control Methods 
+
+
+  /**
+   * Checks if checklist compontent still exists on different attestation page
+   * @param UID 
+   * @returns True if it exists, false if it does not exists
+   */
+  validateUID(UID: string){
+    let catalogUUID = this.uidToUuid(UID);
+    if(this.catalogPosition.has(catalogUUID)){
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   /**
    * 
@@ -174,6 +193,11 @@ export class AttestationDataService {
     return info;
   }
 
+  /**
+   * Cheks if this ID has already been used in this Assessment Plan
+   * @param controlID ID of the control being checked
+   * @returns unique version of the ID given if its not unique
+   */
   dupIDCheck(controlID: string): string{
 
     //const controlID = UID.split("-").at(-1) || ""; // kind of hacky
@@ -195,6 +219,13 @@ export class AttestationDataService {
       return displayID;
   }
 
+  /**
+   * Method for changing ID of control
+   * @param UID Unique Identifier for this control
+   * @param newDisplayID new Id that will be used for everything except UID
+   * @param oldID  old ID that was being displayed
+   * @returns  returns the newID, which is an acceptable version of NewDisplayID
+   */
   setControlID(UID: string, newDisplayID: string, oldID: string): string{
     const catalogUUID = this.uidToUuid(UID);
     let index = this.getCatalogIndex(catalogUUID);
@@ -205,10 +236,13 @@ export class AttestationDataService {
       this.assessmentPlanService.updateCatalogControl(oldID,newID,index);
       this.assessmentPlanService.deleteControl(oldID,index);
       this.assessmentPlanService.setControlSelection(newID, temp.selection, index);
-      this.assessmentPlanService.setControlComment(newID, temp.comment, index);
+      if(temp.comment !== ""){
+        this.assessmentPlanService.setControlComment(newID, temp.comment, index);
+      }
+      return newID;
     }
-
-    return newID;
+    console.warn("Control ID Failed to changed")
+    return oldID;
     }
     
 

@@ -4,9 +4,6 @@ import { v4 as uuid } from 'uuid';
 
 import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop, AssessmentSubject } from '../models/assessmentPlan';
 import { Catalog } from '../models/catalogModel';
-import { GroupComponent } from '../group/group.component';
-import { ChecklistItemComponent } from '../control/control.component';
-import { group } from '@angular/animations';
 
 export enum ControlSelectionType {
   yes = "yes",
@@ -215,7 +212,11 @@ export class AssessmentPlanService {
     }
   }
 
-  //Deletes info associated with Control
+  /**
+   * Deletes info associated with Control
+   * @param controlID ID to be deleted 
+   * @param index Which catalog in the assessment Plan is this ID located in 
+   */
   deleteControl(controlID: string, index: number){
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()];
@@ -227,10 +228,16 @@ export class AssessmentPlanService {
   }
 
 
-  //Finds old id in saved catalogs and changes it to updated catalog.
+
+  /**
+   * Finds old id in saved catalogs and changes it to updated catalog.
+   * @param oldID ID to be change
+   * @param newID What the ID will be changed to
+   * @param index Which catalog is being modified in the assessment plan 
+   */
   updateCatalogControl(oldID: string, newID: string, index:number){
     let catalogs = this.catalogs.getValue();
-    let catalog = catalogs[index][0];
+    let catalog = catalogs[0][index];
     let path = this.findControlID(catalog,oldID);   // finds path to nested control with ID associated to oldID
     if(path!==null){
       let current: any = catalog;
@@ -256,7 +263,13 @@ export class AssessmentPlanService {
     this.catalogs.next(catalogs);
   }
 
-//Recursive helper method to find the path of an control Id in a catalog
+/**
+ * Recursive helper method to find the path of an control Id in a catalog
+ * @param catalog catalog object being parsed 
+ * @param id control being search for 
+ * @param path nested path being generated 
+ * @returns returns path if found or null if unable to find ID
+ */
    findControlID(catalog: any, id: any, path: string[] = []): string[] | null {
     for (const key in catalog) {
       if (catalog[key] === id) {
@@ -271,7 +284,7 @@ export class AssessmentPlanService {
     return null; // ID not found 
   }
 
-  // // control selections list is indexed by attestation. it should match up with assessment-subjects list
+  // control selections list is indexed by attestation. it should match up with assessment-subjects list
 
   setControlSelection(controlID: string, selection: ControlSelectionType | string, index: number) {
     let plans = this.assessmentPlans.getValue();
