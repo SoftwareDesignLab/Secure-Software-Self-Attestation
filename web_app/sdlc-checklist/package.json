@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^15.2.0",
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.0",
+    "angular": "^1.8.3",
     "angular-new-router": "github:angular/router",
     "angular2-notifications": "^12.0.0",
     "file-saver": "^2.0.5",

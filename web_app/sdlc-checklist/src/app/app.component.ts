@@ -380,8 +380,8 @@ export class AppComponent {
     })
     await dela(100);
     this.attestationService.refresh();
-    this.attestationService.loadAttestationData();
     this.attestationService.interpretSubjects();
+    this.attestationService.loadAttestationData();
   }
 
   async useFileContact() {
@@ -397,8 +397,8 @@ export class AppComponent {
     await dela(100);
     this.attestationService.refresh();
     this.attestationService.interpretParties(false)
-    this.attestationService.loadAttestationData();
     this.attestationService.interpretSubjects();
+    this.attestationService.loadAttestationData();
   }
 }
 

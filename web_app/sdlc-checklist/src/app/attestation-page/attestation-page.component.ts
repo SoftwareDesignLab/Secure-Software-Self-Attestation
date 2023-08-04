@@ -127,8 +127,9 @@ export class AttestationPageComponent {
     }
   }
 
-  updateAttestationSubject(index: number, field: string, event: any) {
+  updateAttestationSubject(index: number, field: string, event?: any) {
     console.log(index, field)
+    //if (!event) event = document.getElementById("subject-" + field + "-" + index) as HTMLInputElement;
     switch (field) {
       case 'name':
         this.assessmentPlanService.updateSubject(index, event.target.value);

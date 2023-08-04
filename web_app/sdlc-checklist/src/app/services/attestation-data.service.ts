@@ -391,7 +391,7 @@ export class AttestationDataService {
     return differences;
   }
 
-  interpretSubjects() {
+  async interpretSubjects() {
     let parties = this.stagedJSON["assessment-plan"]["assessment-subjects"][0]
     let props = parties["props"];
     let type = "no-selection"
@@ -399,9 +399,38 @@ export class AttestationDataService {
     props.forEach((prop: any) => {
       if (prop.class === "Attestation Type") type = prop.value;
     });
+    console.log(type)
+    if (type === "product") type = "product-line";
+    if (type === "multi product") type = "multiple";
     let radio = document.getElementById(type);
     if (radio instanceof HTMLInputElement) {
       radio.click();
+    }
+    await dela(100);
+    if (type === "multiple") {
+      let button = document.getElementById("add-subject-row");
+      for (let i=1, j=parties["include-subjects"].length; i < j; i++) {
+        button?.click();
+      }
+      await dela(100);
+    }
+    if (type === "product-line" || type === "individual" || type === "multiple") {
+      let includeSubjects = parties["include-subjects"]
+      for (let i = 0, j=includeSubjects.length; i < j; i++) {
+        let contentProps = includeSubjects[i]["props"];
+        contentProps.forEach((prop: any) => {
+          if (prop.name === "Product Name") {
+            let name = document.getElementById("subject-name-" + i);
+            if (name instanceof HTMLInputElement) {name.value = prop.value; name.click();};
+          } else if (prop.name === "Version") {
+            let version = document.getElementById("subject-version-" + i);
+            if (version instanceof HTMLInputElement) {version.value = prop.value; version.click();}
+          } else if (prop.name === "Date") {
+            let date = document.getElementById("subject-date-" + i);
+            if (date instanceof HTMLInputElement) {date.value = prop.value; date.click();}
+          }
+        });
+      }
     }
   }
 
