@@ -4,14 +4,12 @@ import { v4 as uuid } from 'uuid';
 
 import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop, AssessmentSubject } from '../models/assessmentPlan';
 import { Catalog } from '../models/catalogModel';
-import { GroupComponent } from '../group/group.component';
-import { ChecklistItemComponent } from '../control/control.component';
 
 export enum ControlSelectionType {
   yes = "yes",
   no = "no",
   notApplicable = "n/a",
-  noSelection = "no-selection"
+  noSelection = "no-selection",
 }
 
 @Injectable({
@@ -218,14 +216,83 @@ export class AssessmentPlanService {
     }
   }
 
-  // // control selections list is indexed by attestation. it should match up with assessment-subjects list
+  /**
+   * Deletes info associated with Control
+   * @param controlID ID to be deleted 
+   * @param index Which catalog in the assessment Plan is this ID located in 
+   */
+  deleteControl(controlID: string, index: number){
+    let plans = this.assessmentPlans.getValue();
+    let plan = plans[this.attestationFocus.getValue()];
+    plan['reviewed-controls']['control-selections'][index].removeIncludeControl(controlID);
+    plan['reviewed-controls']['control-selections'][index].removeExcludeControl(controlID);
+    plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Attestation Claim");
+    plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
+    console.log("Deleted: " + controlID);
+  }
 
-  setControlSelection(controlID: string, selection: ControlSelectionType | string) {
+
+
+  /**
+   * Finds old id in saved catalogs and changes it to updated catalog.
+   * @param oldID ID to be change
+   * @param newID What the ID will be changed to
+   * @param index Which catalog is being modified in the assessment plan 
+   */
+  updateCatalogControl(oldID: string, newID: string, index:number){
+    let catalogs = this.catalogs.getValue();
+    let catalog = catalogs[this.attestationFocus.getValue()][index];
+    let path = this.findControlID(catalog,oldID);   // finds path to nested control with ID associated to oldID
+    if(path!==null){
+      let current: any = catalog;
+      for (let i = 0; i < path.length - 1; i++) {
+        const key = path[i];
+        if (current.hasOwnProperty(key)) {
+          current = current[key];
+        } else {
+          console.log('Path not found in the Catalog');
+        }
+      }
+      const destinationKey = path[path.length - 1];
+      if (current.hasOwnProperty(destinationKey)) {
+        current[destinationKey] = newID;
+        console.log("Catalog's control id updated from " + oldID + " to " + newID);
+      } else {
+        console.log('Path not found in the Catalog');
+      }    
+    }
+    else{
+      console.log('Path is not found in the Catalog');
+    }
+    this.catalogs.next(catalogs);
+  }
+
+/**
+ * Recursive helper method to find the path of an control Id in a catalog
+ * @param catalog catalog object being parsed 
+ * @param id control being search for 
+ * @param path nested path being generated 
+ * @returns returns path if found or null if unable to find ID
+ */
+   findControlID(catalog: any, id: any, path: string[] = []): string[] | null {
+    for (const key in catalog) {
+      if (catalog[key] === id) {
+        return path.concat(key); // find path to id and returns it
+      } else if (Array.isArray(catalog[key]) || typeof catalog[key] === 'object') {
+        const nestedPath = this.findControlID(catalog[key], id, path.concat(key));
+        if (nestedPath) {
+          return nestedPath; 
+        }
+      }
+    }
+    return null; // ID not found 
+  }
+
+  // control selections list is indexed by attestation. it should match up with assessment-subjects list
+
+  setControlSelection(controlID: string, selection: ControlSelectionType | string, index: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
-    let catalogs = this.catalogs.getValue();
-
-    let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
     if (index !== undefined) {
       if (typeof selection === "string") {
         switch (selection) {
@@ -266,55 +333,14 @@ export class AssessmentPlanService {
     console.log("Control not found in catalog: " + controlID);
   }
 
-  // controls can contain other controls and groups can contain controls
-  // this function will recursively search to see if a control is a child of a group or control
-  _recursiveContainsControl(controlID: string, controls?: ChecklistItemComponent[], groups?: GroupComponent[]): boolean { // First, check in the list of ChecklistItemComponents
-    for (let item of (controls || [])) {
-      if (item.id === controlID) {
-        return true;
-      }
-      // If the item has nested controls, search within them
-      if (item.controls) {
-        if (this._recursiveContainsControl(controlID, item.controls)) {
-          return true;
-        }
-      }
-    }
-
-    // Then, check in the list of GroupComponents
-    for (let group of groups || []) {
-      // If the group has nested controls, search within them
-      if (group.controls) {
-        if (this._recursiveContainsControl(controlID, group.controls)) {
-          return true;
-        }
-      }
-      // If the group has nested groups, search within them
-      if (group.groups) {
-        if (this._recursiveContainsControl(controlID, [], group.groups)) {
-          return true;
-        }
-      }
-    }
-
-    // If no match is found, return false
-    return false;
-   }
-
 
   
 
-  setControlComment(controlID: string, comment: string) {
+  setControlComment(controlID: string, comment: string, index?: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
 
-    let catalogs = this.catalogs.getValue();
-    let index: number | undefined = undefined;
-
-    //TODO definitely optimize this
-    index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
-
-    if (index === undefined) {
+    if (!index || index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }
     if (index !== -1) {
@@ -329,12 +355,10 @@ export class AssessmentPlanService {
     console.log("Control not found in catalog: " + controlID);
   }
 
-  removeControlComment(controlID: string) {
+  removeControlComment(controlID: string, index: number) {
     let plans = this.assessmentPlans.getValue();
     let plan = plans[this.attestationFocus.getValue()]
-    let catalogs = this.catalogs.getValue();
 
-    let index = catalogs[this.attestationFocus.getValue()].findIndex( catalog => this._recursiveContainsControl(controlID, catalog.controls, catalog.groups));
     if (index === undefined) {
       index = plan['reviewed-controls']['control-selections'].findIndex( control => control.props?.find( prop => prop.name === controlID) !== undefined);
     }

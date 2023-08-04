@@ -5,13 +5,19 @@
         <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" (click)="select(i)" [(ngModel)]="selection" [class]="this.id + '-' + i">
         <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i" (keydown.enter)="select(i)" tabindex=0></label>
       </div>
-    </div>
-    <img alt="Comment Button" 
+       <img alt="Comment Button" 
         [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
         (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!isChecked()" tabindex=0>
-    <label class="checkbox-label" (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
-      {{ id }}: {{ title }}
-    </label>
+    </div>
+    <div class="checkbox-label">
+      <div class="id-box">
+        <p class="checkbox-description" (click)="toggleRollable()"> ID:</p>
+        <input class="id-input"  (blur)="changeDisplayId()" (keydown.enter)="changeDisplayId" [(ngModel)]="displayID" tabindex=0> 
+      </div>
+      <p class="checkbox-description" (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
+         Description : {{ title }}
+      </p>
+    </div>
   </div>
   <app-rollable *ngIf="showRollable"
     [description]="getDescription()"

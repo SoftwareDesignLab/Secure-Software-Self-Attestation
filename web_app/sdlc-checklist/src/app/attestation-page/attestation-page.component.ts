@@ -226,6 +226,7 @@ export class AttestationPageComponent {
    */
   removeCatalog(uuid: string): void {
     this.attestationService.getCurrentForm.removeCatalog(uuid);
+    //this.assessmentPlanService.removeCatalog(uuid);
   }
 
   /**

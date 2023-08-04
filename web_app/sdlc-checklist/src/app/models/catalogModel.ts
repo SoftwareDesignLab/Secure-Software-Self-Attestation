@@ -112,11 +112,15 @@ import { ChecklistItemComponent } from '../control/control.component';
         selection: string;
         finalized: Boolean = false;
         showRollable: boolean = false;
+        displayID: string;
+        oldDisplayId: string
 
     
-        constructor(comment: string = "", selection: string = "no-selection") {
+        constructor(displayID: string, comment: string = "", selection: string = "no-selection") {
             this.comment = comment;
             this.selection = selection;
+            this.displayID = displayID;
+            this.oldDisplayId = displayID;
         }
     }
 

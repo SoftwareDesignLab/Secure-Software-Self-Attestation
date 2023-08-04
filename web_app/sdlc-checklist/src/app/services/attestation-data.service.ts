@@ -51,7 +51,8 @@ export class AttestationDataService {
   public pageName: string = "Contact Info";
   public stagedJSON: any;
   public bypassComments: boolean = false;
-
+  private displayIDMap!: Map<String, number>;
+  private catalogPosition!: Map<String, number>;
 
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
@@ -77,6 +78,7 @@ export class AttestationDataService {
 
   /**
    * Sets the deletion position
+   * does not delete anything itself
    * @param position The deletion position
    */
   setDeletionPosition(position: number){
@@ -92,20 +94,18 @@ export class AttestationDataService {
     return this.forms[position];
   }
 
-  /**
-   * Gets the currently visible attestation component
-   * @returns The currently visible attestation component
-   */
-  get getCurrentForm(): AttestationComponent{
+  get getCurrentForm(){
+    this.catalogPosition = this.forms[this.viewPosition].getCatalogPositions
     return this.forms[this.viewPosition];
   }
 
-  /**
-   * Sets a given component to the view
-   * @param position The position to set the view position of
-   */
+  getCatalogIndex(catalogUUID: string){
+    return this.forms[this.viewPosition].getCatalogPositon(catalogUUID);
+  }
+
   setView(position: number){
     this.assessmentPlanService.setAttestationFocus(position);
+    this.displayIDMap=this.forms[position].displayIDMap;
     this.viewPosition = position;
   }
 
@@ -132,6 +132,10 @@ export class AttestationDataService {
     return this.deletionPosition;
   }
 
+  /**
+   * Sets tag to be used for UID generations of a form
+   * @returns 
+   */
   setTag(){
     this.tag +=1;
     return this.tag;
@@ -150,6 +154,21 @@ export class AttestationDataService {
 
   // Control Methods 
 
+
+  /**
+   * Checks if checklist compontent still exists on different attestation page
+   * @param UID 
+   * @returns True if it exists, false if it does not exists
+   */
+  validateUID(UID: string){
+    let catalogUUID = this.uidToUuid(UID);
+    if(this.catalogPosition.has(catalogUUID)){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /**
    * 
    * @param UID The uuid of the control to set up
@@ -159,11 +178,86 @@ export class AttestationDataService {
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
     }
-    else{
-     let info = new ControlAttestation();
-     this.controlMap.set(UID, info);
-     return info;
+    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
+    let displayID = this.dupIDCheck(controlID);
+    let info = new ControlAttestation(displayID);
+    this.controlMap.set(UID, info);
+    
+    let catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
+    if (index !== undefined){
+      this.assessmentPlanService.setControlSelection(info.displayID,info.selection, index)
     }
+    else {
+      console.warn("could not set up controlSelection in assessmentPlanService");
+    }
+
+    return info;
+  }
+
+  /**
+   * Cheks if this ID has already been used in this Assessment Plan
+   * @param controlID ID of the control being checked
+   * @returns unique version of the ID given if its not unique
+   */
+  dupIDCheck(controlID: string): string{
+      let displayID = controlID;
+      // looks if a controlID has already been used
+      if(this.displayIDMap.has(controlID)){
+        let amount = this.displayIDMap.get(controlID);
+        if(amount!=undefined){
+          displayID = displayID + " (" +  this.displayIDMap.get(controlID) + ")";
+          this.displayIDMap.set(controlID, amount+1);
+          this.displayIDMap.set(displayID,1);
+        } else {
+          console.warn("undefined UID?");
+          return controlID;
+        }
+      } else {
+        this.displayIDMap.set(controlID, 1);
+      }
+      return displayID;
+  }
+
+  /**
+   * Method for changing ID of control
+   * @param UID Unique Identifier for this control
+   * @param newDisplayID new Id that will be used for everything except UID
+   * @param oldID  old ID that was being displayed
+   * @returns  returns the newID, which is an acceptable version of NewDisplayID
+   */
+  setControlID(UID: string, newDisplayID: string, oldID: string): string{
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
+    let temp = this.controlMap.get(UID);
+    let newID = this.dupIDCheck(newDisplayID);
+    if (temp !== undefined && index !== undefined){
+      temp.displayID=newID;
+      this.assessmentPlanService.updateCatalogControl(oldID,newID,index);
+      this.assessmentPlanService.deleteControl(oldID,index);
+      this.assessmentPlanService.setControlSelection(newID, temp.selection, index);
+      if(temp.comment !== ""){
+        this.assessmentPlanService.setControlComment(newID, temp.comment, index);
+      }
+      return newID;
+    }
+    console.warn("Control ID Failed to changed")
+    return oldID;
+    }
+    
+
+  /**
+   * Takes in an UID and reverses it back to its catalog uuid,
+   * @param UID Unique identifier of the object being given
+   * @returns catalogs uuid (string)
+   */
+  uidToUuid(UID: string){
+    let temp = UID.split("-") || ""; // kind of hacky
+    let catalogUUID = "";
+    for (let i = 1; i < temp.length-1; i++) {
+      catalogUUID = catalogUUID + "-" +temp[i]
+    }
+    return catalogUUID.substring(1);
   }
 
   /**
@@ -172,14 +266,15 @@ export class AttestationDataService {
    * @param selection The new selection
    */
   updateControlSelection(UID: string, selection: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.setControlSelection(controlID, selection);
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.setControlSelection(temp.displayID, selection, index);
       temp.selection=selection
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while updating Selection");
     }
   }
 
@@ -195,7 +290,7 @@ export class AttestationDataService {
       temp.comment=comment;
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while saving control comment");
     }
   }
 
@@ -205,16 +300,18 @@ export class AttestationDataService {
    * @param comment The new comment
    */
   finalizeControlComment(UID: string, comment: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.setControlComment(controlID, comment);
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
+
 
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.setControlComment(temp.displayID, comment,index);
       temp.finalized=true;
       temp.comment=comment;
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while finalizing control comment");
     }
   }
 
@@ -224,14 +321,14 @@ export class AttestationDataService {
    * @param UID The control uuid to delete the comment of
    */
   deleteControlComment(UID: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.removeControlComment(controlID);
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
 
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.removeControlComment(temp.displayID, index);
       temp.comment = "";
       temp.finalized = false;
-      this.assessmentPlanService.removeControlComment(UID);
     }
   }
 
