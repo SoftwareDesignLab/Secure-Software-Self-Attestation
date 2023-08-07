@@ -84,13 +84,15 @@ export class AssessmentPlanService {
     if (data.name) metadata.parties[0].name = data.name;
     //TODO update for multiple address lines
     if (data.address) metadata.parties[0].setPrimaryAddressLines([data.address]);
+    if (data.address1) metadata.parties[0].setPrimaryAddressLine1(data.address1);
+    if (data.address2) metadata.parties[0].setPrimaryAddressLine1(data.address2);
     if (data.city) metadata.parties[0].setPrimaryCity(data.city);
     if (data.state) metadata.parties[0].setPrimaryState(data.state);
     if (data.country) metadata.parties[0].setPrimaryCountry(data.country);
     if (data.postal) metadata.parties[0].setPrimaryPostalCode(data.postal);
     if (data.website) {
       metadata.parties[0].addLink(data.website, "website");
-      metadata.parties[0].addProp("webiste", data.website, "Producer Info");
+      metadata.parties[0].addProp("website", data.website, "Producer Info");
     }
 
     plans.forEach(plan => {

@@ -329,7 +329,7 @@ export class Prop {
 }
 
 class Address {
-  "addr-lines": string[] = [""];
+  "addr-lines": string[] = ["", ""];
   city: string = "";
   state: string = "";
   "postal-code": string = "";
