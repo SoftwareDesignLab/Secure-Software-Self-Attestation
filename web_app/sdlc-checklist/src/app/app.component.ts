@@ -148,7 +148,7 @@ export class AppComponent {
   changeAttestation(form: AttestationComponent, fragment?: string){
     this.attestationService.pageName = form.getName();
     this.attestationService.setView(form.getFormPosition);
-    this.attestationService.updateDynamicForm(this.attestationService.getCurrentForm);
+    this.attestationService.updateDynamicForm(form);
     this.attestationService.refresh();
     this.changePage('attestation-form', fragment);
   }
