@@ -22,6 +22,7 @@ export class AssessmentPlanService {
   currentPlans = this.assessmentPlans.asObservable();
   private catalogs = new BehaviorSubject<Array<Array<Catalog>>>(new Array<Array<Catalog>>([]));
   currentCatalogs = this.catalogs.asObservable();
+  public modifiedControlIds: Map<number, Map<String, Map<String, String>>> = new Map<number, Map<String, Map<String, String>>>();
 
   private attestationFocus = new BehaviorSubject<number>(0);
   currentViewState = this.attestationFocus.asObservable();
@@ -53,21 +54,21 @@ export class AssessmentPlanService {
   }
 
   serializeAll(asObject: boolean = false) {
+    this.generateDisplayProps();
     let plans = this.assessmentPlans.getValue();
     const serialized = plans.map(plan => plan.serialize());
     return asObject ? serialized : JSON.stringify(plans.map(plan => plan.serialize()));
   }
 
   serializePlan(index: number, asObject: boolean = false) {
+    this.generateDisplayProps();
     let plans = this.assessmentPlans.getValue();
     const serialized = plans[index].serialize();
     return asObject ? serialized : JSON.stringify(serialized);
   }
 
   serializeCurrentPlan(asObject: boolean = false) {
-    let plans = this.assessmentPlans.getValue();
-    let serialized = plans[this.attestationFocus.getValue()].serialize();
-    return asObject ? serialized : JSON.stringify(serialized);
+    return this.serializePlan(this.attestationFocus.getValue(), asObject);
   }
 
   serializeCurrentCatalogs(asObject: boolean = false) {
@@ -274,7 +275,7 @@ export class AssessmentPlanService {
  * @param path nested path being generated 
  * @returns returns path if found or null if unable to find ID
  */
-   findControlID(catalog: any, id: any, path: string[] = []): string[] | null {
+  findControlID(catalog: any, id: any, path: string[] = []): string[] | null {
     for (const key in catalog) {
       if (catalog[key] === id) {
         return path.concat(key); // find path to id and returns it
@@ -499,9 +500,34 @@ export class AssessmentPlanService {
     this.assessmentPlans.next(plans);
   }
 
-  checkOnPlans() {
-    let plans = this.assessmentPlans.getValue();
-    console.log("Hi")
+  generateDisplayProps() {
+    this.modifiedControlIds.forEach((formMap, formPosition) => {
+      formMap.forEach((catalogMap, catalogUuid) => {
+        let catalogPosition = this.findCatalogPosition(formPosition, catalogUuid);
+        if (catalogPosition === -1) return;
+        let form = this.assessmentPlans.getValue()[formPosition];
+        form['reviewed-controls']['control-selections'][catalogPosition].props?.forEach((prop, index) => {
+          if (prop.class === "Display Name") form['reviewed-controls'].props?.splice(index, 1);
+        })
+        catalogMap.forEach((displayId, originalId) => {
+          form['reviewed-controls']['control-selections'][catalogPosition].addProp(originalId as string, displayId as string, "Display Name");
+        })
+      });
+    });
+  }
+
+  findCatalogPosition(formPosition: number, catalogUuid: String): number {
+    let catalogs = this.assessmentPlans.getValue()[formPosition]['reviewed-controls']['control-selections']
+    for (let i=0, j=catalogs[i].props, k=catalogs.length; i < k; catalogs[++i]) {
+      if (j) {
+        for (let l=0, m=j[l], n=j.length; l<n; m=j[++l]) {
+          if (m.class === "catalog" && m.name === "Catalog ID") {
+            if (m.value === catalogUuid) return i;
+          }
+        }
+      }
+    }
+    return -1;
   }
   //TODO automatically exclude subjects that are unchecked
 }

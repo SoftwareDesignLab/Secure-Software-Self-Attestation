@@ -2,7 +2,7 @@
   <div class="checkbox-container">
     <div class="button-set">
       <div class="individual-button" *ngFor="let i of ['check', 'x', 'na']">
-        <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" (click)="select(i)" [(ngModel)]="selection" [class]="this.id + '-' + i">
+        <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" (click)="select(i)" [(ngModel)]="selection" [class]="this.displayID + '-' + i">
         <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i" (keydown.enter)="select(i)" tabindex=0></label>
       </div>
        <img alt="Comment Button" 
@@ -12,7 +12,7 @@
     <div class="checkbox-label">
       <div class="id-box">
         <p class="checkbox-description" (click)="toggleRollable()"> ID:</p>
-        <input class="id-input"  (blur)="changeDisplayId()" (keydown.enter)="changeDisplayId" [(ngModel)]="displayID" tabindex=0> 
+        <input class="id-input"  (blur)="changeDisplayId()" (keydown.enter)="changeDisplayId()" [(ngModel)]="displayID" tabindex=0> 
       </div>
       <p class="checkbox-description" (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
          Description : {{ title }}

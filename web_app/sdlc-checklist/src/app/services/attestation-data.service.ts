@@ -230,16 +230,20 @@ export class AttestationDataService {
     const catalogUUID = this.uidToUuid(UID);
     let index = this.getCatalogIndex(catalogUUID);
     let temp = this.controlMap.get(UID);
-    let newID = this.dupIDCheck(newDisplayID);
     if (temp !== undefined && index !== undefined){
-      temp.displayID=newID;
-      this.assessmentPlanService.updateCatalogControl(oldID,newID,index);
-      this.assessmentPlanService.deleteControl(oldID,index);
-      this.assessmentPlanService.setControlSelection(newID, temp.selection, index);
-      if(temp.comment !== ""){
-        this.assessmentPlanService.setControlComment(newID, temp.comment, index);
+      temp.displayID=newDisplayID;
+      let catalogMap = this.assessmentPlanService.modifiedControlIds.get(this.getCurrentForm.getFormPosition);
+      if (catalogMap === undefined) {
+        catalogMap = new Map<String, Map<String, String>>();
+        this.assessmentPlanService.modifiedControlIds.set(this.getCurrentForm.getFormPosition, catalogMap);
       }
-      return newID;
+      let idMap = catalogMap.get(catalogUUID);
+      if (idMap === undefined) {
+        idMap = new Map<String, String>();
+        catalogMap.set(catalogUUID, idMap);
+      }
+      idMap.set(oldID, newDisplayID)
+      return newDisplayID;
     }
     console.warn("Control ID Failed to changed")
     return oldID;
@@ -405,7 +409,6 @@ export class AttestationDataService {
     let companyStuff: JSON | undefined = undefined;
     let contactStuff: JSON | undefined = undefined;
     let differences = false;
-    console.log(parties)
     parties.forEach((party: any) => {
       if (party.type === "organization") companyStuff = party;
       if (party.type === "person") contactStuff = party;
@@ -496,7 +499,6 @@ export class AttestationDataService {
     props.forEach((prop: any) => {
       if (prop.class === "Attestation Type") type = prop.value;
     });
-    console.log(type)
     if (type === "product") type = "product-line";
     if (type === "multi product") type = "multiple";
     let radio = document.getElementById(type);
@@ -536,14 +538,11 @@ export class AttestationDataService {
     if (dialog instanceof HTMLDialogElement) {
       dialog.close();
     }
-    console.log(this.stagedJSON)
     let catalogs = this.stagedJSON["assessment-plan"]["reviewed-controls"]["control-selections"]
     let props: any[] = [];
-    console.log(catalogs);
     catalogs.forEach((catalog: any) => {
       props = props.concat(catalog["props"])
     })
-    console.log(props)
     this.bypassComments = true;
     props.forEach((prop: any) => {
       if (prop["class"] === "Compliance Claim") {
@@ -553,7 +552,6 @@ export class AttestationDataService {
             if (control instanceof HTMLInputElement) control.click();
         }
       } else if (prop["class"] === "Attestation Claim") {
-        console.log("Loading comment")
         this.getCurrentForm.getCatalogs.catalogs.forEach((catalog) => {
           catalog.groups.forEach((group) => {
             if (group.controls) {
@@ -566,12 +564,29 @@ export class AttestationDataService {
                     temp.finalized=true;
                     temp.comment=prop["value"];
                   }
-                  return;
                 }
               })
             }
           })
         })
+      } else if (prop["class"] === "Display Name") {
+        this.getCurrentForm.getCatalogs.catalogs.forEach((catalog) => {
+          catalog.groups.forEach((group) => {
+            if (group.controls) {
+              group.controls.forEach((control) => {
+                if (control.id === prop["name"]) {
+                  let uuid = this.getCurrentForm.getPositionTag + '-' + catalog.uuid + '-' + control.id;
+                  this.assessmentPlanService.setControlComment(control.id, prop["value"]);
+                  let temp = this.controlMap.get(uuid);
+                  if (temp!==undefined){
+                    temp.displayID = this.setControlID(uuid, prop["value"], temp.oldDisplayId);
+                    temp.oldDisplayId = temp.displayID;
+                  }
+                }
+              });
+            }
+          });
+        });
       }
     });
     this.bypassComments = false;
