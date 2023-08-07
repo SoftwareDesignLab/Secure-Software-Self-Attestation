@@ -338,6 +338,19 @@ export class ControlSelection {
     }
   }
 
+  export class SubjectReference {
+    "subject-uuid": string = uuid();
+    type: SubjectIDType;
+    title?: string;
+    props?: Prop[];
+    links?: Link[];
+    remarks?: string;
+
+    constructor(type: SubjectIDType) {
+      this.type = type;
+    }
+  }
+
   export class AssessmentPart {
     name: string;
     uuid?: string;

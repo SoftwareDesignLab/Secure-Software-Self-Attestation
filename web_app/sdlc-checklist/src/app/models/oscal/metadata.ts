@@ -50,6 +50,7 @@ export class Metadata {
   }
 }
 
+//TODO other fields??
 export class Party {
   uuid: string = uuid();
   type: string = "";
