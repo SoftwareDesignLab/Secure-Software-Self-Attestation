@@ -79,8 +79,7 @@ export class AppComponent {
   ////// Temp Bypass code (press f2 to toggle generate report button regardless of contact info)
   onKeyPressed(event: KeyboardEvent) {
     if (event.key === "F2") {
-      this.bypass= !this.bypass;
-      this.contactService.bypass = !this.contactService.bypass;
+      this.bypass= !this.bypass;;
     }
   }
   //////
@@ -325,7 +324,10 @@ export class AppComponent {
     return Array.from(Array(num).keys())
   }
 
-
+  /**
+   * Checks if the report can be generated 
+   * @returns if valid true, otherwise false
+   */
   generateAcceptable(){
     if(this.router.url=="/contact-info"){
       return false;
@@ -338,7 +340,10 @@ export class AppComponent {
     }
     return false;
   }
-
+  /**
+   * checks if the contact tool tip should appear
+   * @returns true if the contact info tool-tip should appear
+   */
   invalidContact(){
     if(this.generateAcceptable()){
       return false
@@ -349,6 +354,10 @@ export class AppComponent {
     return true;
   }
 
+  /**
+   * checks if the attestation type missing tool tip should appear
+   * @returns true only if it should appear, otherwise false
+   */
   attestationTypeMissing(){
     if(this.invalidContact()){
       return false

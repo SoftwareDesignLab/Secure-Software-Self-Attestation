@@ -6,9 +6,6 @@ import { Injectable } from '@angular/core';
 export class ContactService {
 
   constructor() { }
-  ///// Temp code for Bypass
-  public bypass = false;
-  /////
 
   public companyName: string = "";
   public companyAddress1: string = "";
@@ -54,9 +51,6 @@ export class ContactService {
       this.personalCountry !== "" &&
       this.phone !== "" &&
       this.email !== "" ) 
-      ////// Temp code for bypass
-      || this.bypass
-      //////
     )
   }
 

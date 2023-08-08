@@ -30,7 +30,6 @@
       </li>
       <li><p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
     </ul>
-    <button class="test">CSS dumb</button>
     <p class="load" (click)="alert('This is a beautiful placeholder button!')">Load Attestation</p>
     <p class="generate" *ngIf="generateAcceptable()" (click)="alert('This is a beautiful placeholder button!')">Generate Report</p>
     <p class="disabled-generate" *ngIf="!generateAcceptable()">Generate Report
