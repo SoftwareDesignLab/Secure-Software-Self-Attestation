@@ -137,8 +137,8 @@ export class AttestationDataService {
    */
   addform(){
     this.assessmentPlanService.setAttestationFocus(this.forms.length);
+    let position = this.forms.length;
     this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
-    let position = this.forms.length-1;
     this.forms[position].setFormPosition(position);
   }
 

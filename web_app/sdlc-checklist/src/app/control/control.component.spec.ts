@@ -24,16 +24,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChecklistItemComponent } from './control.component';
+import { AttestationDataService } from '../services/attestation-data.service';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 describe('ChecklistItemComponent', () => {
   let component: ChecklistItemComponent;
   let fixture: ComponentFixture<ChecklistItemComponent>;
+  let attestationDataService: AttestationDataService;
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ ChecklistItemComponent]
     })
     .compileComponents();
+
+
+    attestationDataService = TestBed.inject(AttestationDataService);
+    attestationDataService.addform();
+    attestationDataService.setView(0);
 
     fixture = TestBed.createComponent(ChecklistItemComponent);
     component = fixture.componentInstance;

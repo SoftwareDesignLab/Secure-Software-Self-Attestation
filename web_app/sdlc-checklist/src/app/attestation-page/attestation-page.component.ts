@@ -52,7 +52,7 @@ export class AttestationPageComponent {
   control: string = "Ungrouped Controls";
   showNav = false;
   viewPosition = 0;
-  position;
+  position!: number;
   observedForm!: AttestationComponent;
   attestationType!: string;
   info: attestationComment[] = [];
@@ -67,10 +67,6 @@ export class AttestationPageComponent {
    * @param contactService global contact data service
    */
   constructor(public attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService){
-      this.attestationType = attestationService.getCurrentForm.getAttestationType;
-      this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
-      this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
-      this.position = this.attestationService.getCurrentForm.getPositionTag;
   }
 
 
@@ -79,7 +75,11 @@ export class AttestationPageComponent {
    * Sets up the parts of the form
    */
   ngOnInit(): void {
+    this.attestationType = this.attestationService.getCurrentForm.getAttestationType;
     this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
+    this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
+    this.position = this.attestationService.getCurrentForm.getPositionTag;
+
     this.attestationService.ComponentRefresh$.subscribe(() => {
       this.refresh();
     });

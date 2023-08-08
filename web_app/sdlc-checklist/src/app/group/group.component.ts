@@ -50,6 +50,7 @@ export class GroupComponent {
      '-' + this.catalogUUID + '-' + this.id
     this.info = this.attestationDataService.setUpGroup(this.UID)!;
     this.showComponents = this.info.showRollable
+    
   }
 
 

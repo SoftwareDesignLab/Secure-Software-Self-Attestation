@@ -24,6 +24,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AttestationComponent } from './attestation.component';
+import { AttestationDataService } from '../services/attestation-data.service';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 describe('AttestationComponent', () => {
   let component: AttestationComponent;
@@ -31,7 +33,10 @@ describe('AttestationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AttestationComponent ]
+      declarations: [ AttestationComponent ],
+      providers: [AttestationDataService,
+                  AssessmentPlanService
+      ],
     })
     .compileComponents();
 

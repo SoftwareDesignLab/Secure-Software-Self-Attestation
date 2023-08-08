@@ -24,13 +24,19 @@
 import { TestBed } from '@angular/core/testing';
 
 import { notifyService } from './notify.service';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 describe('notifyService', () => {
   let service: notifyService;
+  
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+        imports: [SimpleNotificationsModule.forRoot({
+          position: ['bottom', 'right']
+        })]    });
     service = TestBed.inject(notifyService);
+    
   });
 
   it('should be created', () => {

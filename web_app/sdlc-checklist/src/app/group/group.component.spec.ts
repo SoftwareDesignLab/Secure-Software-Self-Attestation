@@ -21,6 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+
+import { AttestationDataService } from '../services/attestation-data.service';
+
+import { Prop } from '../models/assessmentPlan';
+import { Catalog } from '../models/catalogModel';
+import catalog from '../defaultCatalog';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupComponent } from './group.component';
@@ -28,16 +35,21 @@ import { GroupComponent } from './group.component';
 describe('GroupComponent', () => {
   let component: GroupComponent;
   let fixture: ComponentFixture<GroupComponent>;
+  let attestationDataService: AttestationDataService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GroupComponent ]
+      declarations: [ GroupComponent ],
     })
     .compileComponents();
 
+    attestationDataService = TestBed.inject(AttestationDataService);
+    attestationDataService.addform();
+    attestationDataService.setView(0);
     fixture = TestBed.createComponent(GroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
   });
 
   it('should create', () => {

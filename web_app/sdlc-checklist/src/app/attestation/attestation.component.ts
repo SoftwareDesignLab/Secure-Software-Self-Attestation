@@ -42,7 +42,7 @@ export class AttestationComponent {
   private hiddenCatalogs = new Set<string>();
   private attestationType: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
-  private FormPosition: any;
+  private FormPosition: any = -1;
   private positionTag: any;
   private displayName: string = "";
 

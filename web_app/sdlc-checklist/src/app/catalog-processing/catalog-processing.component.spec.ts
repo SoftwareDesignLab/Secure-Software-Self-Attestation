@@ -24,6 +24,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CatalogProcessingComponent } from './catalog-processing.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 describe('CatalogProcessingComponent', () => {
   let component: CatalogProcessingComponent;
@@ -31,7 +32,10 @@ describe('CatalogProcessingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CatalogProcessingComponent ]
+      declarations: [ CatalogProcessingComponent ],
+      imports: [SimpleNotificationsModule.forRoot({
+        position: ['bottom', 'right']
+      })]  
     })
     .compileComponents();
 

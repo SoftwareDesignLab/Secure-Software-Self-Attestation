@@ -26,20 +26,48 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AttestationPageComponent } from './attestation-page.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { CatalogProcessingComponent } from '../catalog-processing/catalog-processing.component';
+import { AttestationDataService } from '../services/attestation-data.service';
+import { FormsModule } from '@angular/forms';
+import { CatalogInfoComponent } from '../catalog-info/catalog-info.component';
+import { GroupComponent } from '../group/group.component';
+import { ChecklistItemComponent } from '../control/control.component';
+
+
+
 
 describe('AttestationPageComponent', () => {
   let component: AttestationPageComponent;
   let fixture: ComponentFixture<AttestationPageComponent>;
+  let attestationDataService: AttestationDataService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AttestationPageComponent ]
+      declarations: [ AttestationPageComponent,
+                      CatalogProcessingComponent,
+                      CatalogInfoComponent,
+                      GroupComponent,
+                      ChecklistItemComponent ],
+      imports:       [SimpleNotificationsModule.forRoot({
+                        position: ['bottom', 'right']
+                      }),
+                      FormsModule
+                      
+              ],
+      providers: [
+        AttestationDataService
+          ]
     })
     .compileComponents();
+    attestationDataService = TestBed.inject(AttestationDataService);
+    attestationDataService.addform();
+    attestationDataService.setView(0);
 
     fixture = TestBed.createComponent(AttestationPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
   });
 
   it('should create', () => {
