@@ -459,11 +459,11 @@ export class AttestationDataService {
       let data = new Map();
       if (contactStuff["name"] && this.contactService.firstName !== (contactStuff["name"] as String).split(" ")[0]) {
         if (this.contactService.firstName !== "") differences = true;
-        if (!soft) {this.contactService.firstName = (contactStuff["name"] as String).split(" ")[0]; data.set("fname", this.contactService.firstName);}
+        if (!soft) {this.contactService.firstName = (contactStuff["name"] as String).split(" ")[0]; data.set("name", contactStuff["name"]);}
       }
       if (contactStuff["name"] && this.contactService.lastName !== (contactStuff["name"] as String).split(" ")[1]) {
         if (this.contactService.lastName !== "") differences = true;
-        if (!soft) {this.contactService.lastName = (contactStuff["name"] as String).split(" ")[1]; data.set("lname", this.contactService.lastName);}
+        if (!soft) {this.contactService.lastName = (contactStuff["name"] as String).split(" ")[1]; data.set("name", contactStuff["name"]);}
       }
       if (contactStuff["addresses"] && this.contactService.personalAddress1 !== contactStuff["addresses"][0]["addr-lines"][0]) {
         if (this.contactService.personalAddress1 !== "") differences = true;
@@ -540,13 +540,13 @@ export class AttestationDataService {
         contentProps.forEach((prop: any) => {
           if (prop.name === "Product Name") {
             let name = document.getElementById("subject-name-" + i);
-            if (name instanceof HTMLInputElement) {name.value = prop.value; name.click();};
+            if (name instanceof HTMLInputElement) {name.value = prop.value; name.click(); name.blur();};
           } else if (prop.name === "Version") {
             let version = document.getElementById("subject-version-" + i);
-            if (version instanceof HTMLInputElement) {version.value = prop.value; version.click();}
+            if (version instanceof HTMLInputElement) {version.value = prop.value; version.click(); version.blur();}
           } else if (prop.name === "Date") {
             let date = document.getElementById("subject-date-" + i);
-            if (date instanceof HTMLInputElement) {date.value = prop.value; date.click();}
+            if (date instanceof HTMLInputElement) {date.value = prop.value; date.click(); date.blur();}
           }
         });
       }
