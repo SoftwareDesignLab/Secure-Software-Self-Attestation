@@ -574,50 +574,40 @@ export class AttestationDataService {
     })
     this.bypassComments = true;
     props.forEach((prop: any) => {
-      if (prop["class"] === "Compliance Claim") {
-        let controls = document.getElementsByClassName(prop["name"] + "-" + this.convertNaming(prop["value"]));
-        for (let i = 0, len = controls.length; i < len; i++){
-          let control = controls.item(i);
-            if (control instanceof HTMLInputElement) control.click();
-        }
-      } else if (prop["class"] === "Attestation Claim") {
-        this.getCurrentForm.getCatalogs.catalogs.forEach((catalog) => {
-          catalog.groups.forEach((group) => {
-            if (group.controls) {
-              group.controls.forEach((control) => {
-                if (control.id === prop["name"]) {
-                  let uuid = this.getCurrentForm.getPositionTag + '-' + catalog.uuid + '-' + control.id;
+      this.getCurrentForm.getCatalogs.catalogs.forEach((catalog) => {
+        catalog.groups.forEach((group) => {
+          if (group.controls) {
+            group.controls.forEach((control) => {
+              if (control.id === prop["name"]) {
+                let uuid = this.getCurrentForm.getPositionTag + '-' + catalog.uuid + '-' + control.id;
+                if (prop["class"] === "Compliance Claim") {
+                  let radio = document.getElementById(uuid + "-" + this.convertNaming(prop["value"]));
+                  console.log(uuid)
+                  if (radio instanceof HTMLInputElement) {
+                    radio.click();
+                  } else {
+                    console.log("Failed to find control called " + prop["name"])
+                  }
+                } else if (prop["class"] === "Attestation Claim") {
                   this.assessmentPlanService.setControlComment(control.id, prop["value"]);
                   let temp = this.controlMap.get(uuid);
                   if (temp!==undefined){
                     temp.finalized=true;
                     temp.comment=prop["value"];
                   }
-                }
-              })
-            }
-          })
-        })
-      } else if (prop["class"] === "Display Name") {
-        this.getCurrentForm.getCatalogs.catalogs.forEach((catalog) => {
-          catalog.groups.forEach((group) => {
-            if (group.controls) {
-              group.controls.forEach((control) => {
-                if (control.id === prop["name"]) {
-                  let uuid = this.getCurrentForm.getPositionTag + '-' + catalog.uuid + '-' + control.id;
-                  this.assessmentPlanService.setControlComment(control.id, prop["value"]);
+                } else if (prop["class"] === "Display Name") {
                   let temp = this.controlMap.get(uuid);
                   if (temp!==undefined){
                     temp.displayID = this.setControlID(uuid, prop["value"], temp.oldDisplayId);
                     temp.oldDisplayId = temp.displayID;
                   }
                 }
-              });
-            }
-          });
-        });
-      }
-    });
+              }
+            })
+          }
+        })
+      })
+    })
     this.bypassComments = false;
     this.refresh();
   }
