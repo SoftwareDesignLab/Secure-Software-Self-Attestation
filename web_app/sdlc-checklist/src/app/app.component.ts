@@ -79,7 +79,7 @@ export class AppComponent {
   ////// Temp Bypass code (press f2 to toggle generate report button regardless of contact info)
   onKeyPressed(event: KeyboardEvent) {
     if (event.key === "F2") {
-      this.bypass=true
+      this.bypass= !this.bypass;
       this.contactService.bypass = !this.contactService.bypass;
     }
   }
@@ -323,6 +323,40 @@ export class AppComponent {
    */
   range(num: number): Array<number> {
     return Array.from(Array(num).keys())
+  }
+
+
+  generateAcceptable(){
+    if(this.router.url=="/contact-info"){
+      return false;
+    }
+    if(this.bypass){
+      return true;
+    }
+    if(this.contactService.isFilled() && this.attestationService.getCurrentForm.getAttestationType!==""){
+      return true;
+    }
+    return false;
+  }
+
+  invalidContact(){
+    if(this.generateAcceptable()){
+      return false
+    }
+    if(this.contactService.isFilled()){
+      return false
+    }
+    return true;
+  }
+
+  attestationTypeMissing(){
+    if(this.invalidContact()){
+      return false
+    } 
+    if(this.router.url=="/contact-info"){
+      return false;
+    }
+    return true;
   }
 }
 
