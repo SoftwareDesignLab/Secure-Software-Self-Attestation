@@ -24,7 +24,6 @@
 import { Injectable } from '@angular/core';
 import { AttestationComponent } from '../attestation/attestation.component';
 import { ControlAttestation, GroupInfo, Catalog } from '../models/catalogModel';
-
 import { BehaviorSubject, Subject } from 'rxjs';
 import { AssessmentPlanService } from './assessment-plan.service';
 import { ChecklistItemComponent } from '../control/control.component';
@@ -53,6 +52,7 @@ export class AttestationDataService {
   public bypassComments: boolean = false;
   private displayIDMap!: Map<String, number>;
   private catalogPosition!: Map<String, number>;
+  private controlWatch?: ChecklistItemComponent;
 
   private dynamicFormSubject: BehaviorSubject<AttestationComponent> = new BehaviorSubject<AttestationComponent>(new AttestationComponent(this, this.assessmentPlanService, true));
   public dynamicForm$ = this.dynamicFormSubject.asObservable();
@@ -154,7 +154,6 @@ export class AttestationDataService {
 
   // Control Methods 
 
-
   /**
    * Checks if checklist compontent still exists on different attestation page
    * @param UID 
@@ -167,6 +166,16 @@ export class AttestationDataService {
     } else {
       return false;
     }
+  }
+
+  // set a control component that this service is specifically watching
+  setControlWatch(control: ChecklistItemComponent){
+    this.controlWatch = control;
+  }
+
+  // get the control component this service is specifically watching. 
+  get getControlWatch(){
+    return this.controlWatch;
   }
 
   /**

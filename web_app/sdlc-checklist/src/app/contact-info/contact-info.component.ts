@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,HostListener  } from '@angular/core';
 import { ContactService } from '../services/contact.service';
 import { Router } from '@angular/router';
 import { AttestationDataService } from '../services/attestation-data.service';
@@ -10,9 +10,38 @@ import { AssessmentPlanService } from '../services/assessment-plan.service';
   styleUrls: ['./contact-info.component.css']
 })
 export class ContactInfoComponent {
+private keysPressed: Set<string> = new Set<string>();
+
 
 constructor( public contactService: ContactService, private router: Router,private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){
 
+}
+
+/**
+ * Checks what keys are pressed and peforms neccessary actions. 
+ * @param event key pressed
+ */
+@HostListener('document:keydown', ['$event'])
+onKeyDown(event: KeyboardEvent) {
+  this.keysPressed.add(event.key);
+  if (this.keysPressed.has('Control') && this.keysPressed.has('Enter')) {
+    if(this.checkAttestations()){
+      // if attestation form already exists, go to the last one viewed
+      this.lastAttestation();
+    } else {
+      // if there is no attestation forms, create a new one. 
+      this.newForm();
+    }
+  }
+}
+
+/**
+ * removes keys that are no longer pressed 
+ * @param event key let go of 
+ */
+@HostListener('document:keyup', ['$event'])
+onKeyUp(event: KeyboardEvent) {
+  this.keysPressed.delete(event.key);
 }
 
   updateCompanyName(event: any){

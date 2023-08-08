@@ -24,7 +24,7 @@
 
 
 import { saveAs } from 'file-saver';
-import { Component, ViewChildren, ViewChild, QueryList } from '@angular/core';
+import { Component, ViewChildren, ViewChild, QueryList, HostListener } from '@angular/core';
 import { GroupComponent } from '../group/group.component';
 import catalog from '../defaultCatalog';
 import { CatalogProcessingComponent } from '../catalog-processing/catalog-processing.component';
@@ -57,6 +57,9 @@ export class AttestationPageComponent {
   attestationType!: string;
   info: attestationComment[] = [];
 
+  private keysPressed: Set<string> = new Set<string>();
+
+
   
   /**
    * A constructor to grab the data to use from the correct attestation
@@ -69,6 +72,8 @@ export class AttestationPageComponent {
       this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
       this.position = this.attestationService.getCurrentForm.getPositionTag;
   }
+
+
 
   /**
    * Sets up the parts of the form
@@ -95,6 +100,32 @@ export class AttestationPageComponent {
     this.childComponents.forEach((child) => {
       child.refresh() 
     });
+  }
+
+  
+    /**
+   * Checks what keys are pressed and peforms neccessary actions. 
+   * @param event key pressed
+   */
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    this.keysPressed.add(event.key);
+    if (this.keysPressed.has('Control') && this.keysPressed.has('Enter')) {
+      if(this.attestationService.getControlWatch){
+        // If a control comment popup is open, submit it.
+        this.attestationService.getControlWatch.done();
+      } 
+
+    }
+  }
+
+  /**
+   * removes keys that are no longer pressed 
+   * @param event key let go of 
+   */
+  @HostListener('document:keyup', ['$event'])
+  onKeyUp(event: KeyboardEvent) {
+    this.keysPressed.delete(event.key);
   }
   
   /**
