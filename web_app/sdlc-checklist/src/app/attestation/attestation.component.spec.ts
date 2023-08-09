@@ -33,8 +33,8 @@ import catalog from '../defaultCatalog';
 
 
 describe('AttestationComponent', () => {
-  let mockAPService: Partial<AssessmentPlanService>; // Create a mock for your service
-  let attestationService: AttestationDataService
+  let mockAPService: Partial<AssessmentPlanService>; 
+  let attestationService: AttestationDataService;
   let Attestation: AttestationComponent;
   let fixture: ComponentFixture<AttestationComponent>;
 

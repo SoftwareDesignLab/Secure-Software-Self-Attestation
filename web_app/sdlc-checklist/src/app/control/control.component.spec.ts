@@ -26,16 +26,39 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChecklistItemComponent } from './control.component';
 import { AttestationDataService } from '../services/attestation-data.service';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
+import { FormStyle } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 describe('ChecklistItemComponent', () => {
-  let component: ChecklistItemComponent;
+  let control: ChecklistItemComponent;
   let fixture: ComponentFixture<ChecklistItemComponent>;
   let attestationDataService: AttestationDataService;
+  let mockAPService: Partial<AssessmentPlanService>; 
+
 
 
   beforeEach(async () => {
+
+
+    mockAPService = {
+      setAttestationType(value){},
+      addAssessmentPlan(value){},
+      addCatalog(value){},
+      setAttestationFocus(value){},
+      removeCatalog(value){},
+      setControlSelection(value){},
+      setControlComment(value){},
+      removeControlComment(value){}
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [ ChecklistItemComponent]
+      declarations: [ ChecklistItemComponent],
+      providers: [
+        {provide: AssessmentPlanService, useValue: mockAPService}
+      ],
+      imports: [
+        FormsModule
+      ]
     })
     .compileComponents();
 
@@ -45,11 +68,60 @@ describe('ChecklistItemComponent', () => {
     attestationDataService.setView(0);
 
     fixture = TestBed.createComponent(ChecklistItemComponent);
-    component = fixture.componentInstance;
+    control = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(control).toBeTruthy();
+  });
+
+  it('unselect control', () => {
+    control.changeSelection("check");
+    control.changeSelection("check");
+    expect(control.isChecked()).toEqual(false);
+  });
+
+  it('is checked', () => {
+    control.select("check");
+    expect(control.isChecked()).toEqual(true);
+  });
+
+  it('Deploy and cancel', () => {
+    control.deploy();
+    control.cancel();
+    expect(control.popup).toEqual(false);
+    expect(control.primed).toEqual(false);
+    expect(control.focused).toEqual(false);
+  });
+
+  it('Comment Focus', () => {
+    control.focused = false;
+    control.commentFocus();
+    expect(control.focused).toEqual(true);
+  });
+
+
+  it('Delete Comment', () => {
+    control.comment = "123";
+    control.done();
+    control.del()
+    expect(control.comment).toEqual("");
+    expect(control.finalized).toEqual(false);
+  });
+
+
+  it('enter', () => {
+    control.onPopup=false;
+    control.enter(true);
+    expect(control.onPopup).toEqual(true);
+  });
+
+  it('down then up', () => {
+    control.down();
+    control.up();
+    expect(control.popup).toEqual(false);
+    expect(control.primed).toEqual(false);
+    expect(control.focused).toEqual(false);
   });
 });
