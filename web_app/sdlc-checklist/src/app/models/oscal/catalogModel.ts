@@ -25,6 +25,9 @@ import { GroupComponent } from '../../group/group.component'
 import { ChecklistItemComponent } from '../../control/control.component';
 import { Metadata } from './metadata';
 
+//TODO convert to class structures 
+//TODO move GroupComponent and ChecklistItemComponent data into here
+
     export interface CatalogFileFormat {
         catalog: Catalog;
     }

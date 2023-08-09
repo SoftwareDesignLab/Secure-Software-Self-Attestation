@@ -3,6 +3,8 @@ import { Prop, Link } from './common';
 import { AssessmentSubjectType, AssessmentSubject, ReviewedControls } from './assessment';
 import { Metadata } from './metadata';
 
+//TODO determine if this should be here or in assessment
+//TODO see if any Part[] implementations should be AssessmentPart[]
 class AssessmentPart {
   name: string = "";
   title?: string;
@@ -72,16 +74,6 @@ class ImportSSP {
     return serialized;
   }
 }
-
-//TODO local definitions
-// class LocalDefinitions {
-
-// }
-
-//TODO assessment assets - will be important for 3rd party tests
-// class AssessmentAssets {
-
-// }
 
 export class AssessmentPlan {
   uuid: string = uuid();
