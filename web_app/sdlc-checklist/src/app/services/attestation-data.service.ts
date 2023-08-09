@@ -568,49 +568,56 @@ export class AttestationDataService {
       dialog.close();
     }
     let catalogs = this.stagedJSON["assessment-plan"]["reviewed-controls"]["control-selections"]
-    let props: any[] = [];
+    let uuidMap = new Map<string, JSON>();
     catalogs.forEach((catalog: any) => {
-      props = props.concat(catalog["props"])
+      for (let i = 0, prop = catalog["props"][i], length = catalog["props"].length; i < length; prop = catalog["props"][++i]) {
+        if (prop["class"] === "catalog" && prop["name"] === "Catalog ID") {
+          uuidMap.set(prop["value"] as string, catalog);
+          return;
+        }
+      }
+      alert("Failed to find necessary catalog, loading incomplete attestation")
     })
+    let controlMap = new Map<string, string>();
+    let commentMap = new Map<string, string>();
+    let nameMap = new Map<string, string>();
     this.bypassComments = true;
-    props.forEach((prop: any) => {
-      this.getCurrentForm.getCatalogs.catalogs.forEach((catalog) => {
-        catalog.groups.forEach((group) => {
-          if (group.controls) {
-            group.controls.forEach((control) => {
-              if (control.id === prop["name"]) {
-                let uuid = this.getCurrentForm.getPositionTag + '-' + catalog.uuid + '-' + control.id;
-                if (prop["class"] === "Compliance Claim") {
-                  let radio = document.getElementById(uuid + "-" + this.convertNaming(prop["value"]));
-                  console.log(uuid)
-                  if (radio instanceof HTMLInputElement) {
-                    radio.click();
-                  } else {
-                    console.log("Failed to find control called " + prop["name"])
-                  }
-                } else if (prop["class"] === "Attestation Claim") {
-                  this.assessmentPlanService.setControlComment(control.id, prop["value"]);
-                  let temp = this.controlMap.get(uuid);
-                  if (temp!==undefined){
-                    temp.finalized=true;
-                    temp.comment=prop["value"];
-                  }
-                } else if (prop["class"] === "Display Name") {
-                  let temp = this.controlMap.get(uuid);
-                  if (temp!==undefined){
-                    temp.displayID = this.setControlID(uuid, prop["value"], temp.oldDisplayId);
-                    temp.oldDisplayId = temp.displayID;
-                  }
-                }
-              }
-            })
+    uuidMap.forEach((catalog: any, uuid: string) => {
+      for (let i = 0, prop = catalog["props"][i], length = catalog["props"].length; i < length; prop = catalog["props"][++i]) {
+        if (prop["class"] === "Compliance Claim" || prop["class"] === "Attestation Claim" || prop["class"] === "Display Name") {
+          let UID = this.getCurrentForm.getPositionTag + "-" + uuid + "-" + prop["name"];
+          switch(prop["class"]) {
+            case "Compliance Claim": controlMap.set(UID, prop["value"]); break;
+            case "Attestation Claim": commentMap.set(UID, prop["value"]); break;
+            case "Display Name": nameMap.set(UID, prop["value"]); break;
           }
-        })
+        }
+      }
+    });
+    this.getCurrentForm.getCatalogs.catalogs.forEach((catalog) => {
+      catalog.groups.forEach((group) => {
+        if (group.controls) {
+          group.controls.forEach((control) => {
+            let controlUID = this.getCurrentForm.getPositionTag + "-" + catalog.uuid + "-" + control.id;
+            console.log(controlUID in controlMap, controlUID in controlMap.keys());
+            if (controlMap.get(controlUID)) {
+              let radio = document.getElementById(controlUID + "-" + this.convertNaming(controlMap.get(controlUID) as string));
+              if (radio instanceof HTMLInputElement) radio.click();
+            }
+            if (commentMap.get(controlUID)) {
+              this.assessmentPlanService.setControlComment(control.id, commentMap.get(controlUID) as string)
+              let temp = this.controlMap.get(controlUID);
+              if (temp !== undefined) {temp.finalized = true; temp.comment = commentMap.get(controlUID) as string}
+            }
+            if (nameMap.get(controlUID)) {
+              let temp = this.controlMap.get(controlUID);
+              if (temp !== undefined) {temp.displayID = this.setControlID(controlUID, nameMap.get(controlUID) as string, temp.oldDisplayId); temp.oldDisplayId = temp.displayID}
+            }
+          })
+        }
       })
     })
     this.bypassComments = false;
     this.refresh();
   }
 }
-
-
