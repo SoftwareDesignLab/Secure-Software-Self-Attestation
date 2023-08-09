@@ -187,9 +187,13 @@ export class AttestationDataService {
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
     }
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    let displayID = this.dupIDCheck(controlID);
-    let info = new ControlAttestation(displayID);
+    let temp = UID.split("-") || ""; // kind of hacky
+    let displayID = "";
+    for (let i = 1; i < temp.length-1; i++) {
+      displayID = displayID + "-" +temp[i]
+    }
+    displayID = displayID.substring(1) + ":" + temp[temp.length-1]; 
+    let info = new ControlAttestation(displayID.substring(1));
     this.controlMap.set(UID, info);
     
     let catalogUUID = this.uidToUuid(UID);
@@ -203,61 +207,6 @@ export class AttestationDataService {
 
     return info;
   }
-
-  /**
-   * Cheks if this ID has already been used in this Assessment Plan
-   * @param controlID ID of the control being checked
-   * @returns unique version of the ID given if its not unique
-   */
-  dupIDCheck(controlID: string): string{
-      let displayID = controlID;
-      // looks if a controlID has already been used
-      if(this.displayIDMap.has(controlID)){
-        let amount = this.displayIDMap.get(controlID);
-        if(amount!=undefined){
-          displayID = displayID + " (" +  this.displayIDMap.get(controlID) + ")";
-          this.displayIDMap.set(controlID, amount+1);
-          this.displayIDMap.set(displayID,1);
-        } else {
-          console.warn("undefined UID?");
-          return controlID;
-        }
-      } else {
-        this.displayIDMap.set(controlID, 1);
-      }
-      return displayID;
-  }
-
-  /**
-   * Method for changing ID of control
-   * @param UID Unique Identifier for this control
-   * @param newDisplayID new Id that will be used for everything except UID
-   * @param oldID  old ID that was being displayed
-   * @returns  returns the newID, which is an acceptable version of NewDisplayID
-   */
-  setControlID(UID: string, newDisplayID: string, oldID: string): string{
-    const catalogUUID = this.uidToUuid(UID);
-    let index = this.getCatalogIndex(catalogUUID);
-    let temp = this.controlMap.get(UID);
-    if (temp !== undefined && index !== undefined){
-      temp.displayID=newDisplayID;
-      let catalogMap = this.assessmentPlanService.modifiedControlIds.get(this.getCurrentForm.getFormPosition);
-      if (catalogMap === undefined) {
-        catalogMap = new Map<String, Map<String, String>>();
-        this.assessmentPlanService.modifiedControlIds.set(this.getCurrentForm.getFormPosition, catalogMap);
-      }
-      let idMap = catalogMap.get(catalogUUID);
-      if (idMap === undefined) {
-        idMap = new Map<String, String>();
-        catalogMap.set(catalogUUID, idMap);
-      }
-      idMap.set(oldID, newDisplayID)
-      return newDisplayID;
-    }
-    console.warn("Control ID Failed to changed")
-    return oldID;
-    }
-    
 
   /**
    * Takes in an UID and reverses it back to its catalog uuid,
@@ -584,12 +533,11 @@ export class AttestationDataService {
     this.bypassComments = true;
     uuidMap.forEach((catalog: any, uuid: string) => {
       for (let i = 0, prop = catalog["props"][i], length = catalog["props"].length; i < length; prop = catalog["props"][++i]) {
-        if (prop["class"] === "Compliance Claim" || prop["class"] === "Attestation Claim" || prop["class"] === "Display Name") {
+        if (prop["class"] === "Compliance Claim" || prop["class"] === "Attestation Claim") {
           let UID = this.getCurrentForm.getPositionTag + "-" + uuid + "-" + prop["name"];
           switch(prop["class"]) {
             case "Compliance Claim": controlMap.set(UID, prop["value"]); break;
             case "Attestation Claim": commentMap.set(UID, prop["value"]); break;
-            case "Display Name": nameMap.set(UID, prop["value"]); break;
           }
         }
       }
@@ -608,10 +556,6 @@ export class AttestationDataService {
               this.assessmentPlanService.setControlComment(control.id, commentMap.get(controlUID) as string)
               let temp = this.controlMap.get(controlUID);
               if (temp !== undefined) {temp.finalized = true; temp.comment = commentMap.get(controlUID) as string}
-            }
-            if (nameMap.get(controlUID)) {
-              let temp = this.controlMap.get(controlUID);
-              if (temp !== undefined) {temp.displayID = this.setControlID(controlUID, nameMap.get(controlUID) as string, temp.oldDisplayId); temp.oldDisplayId = temp.displayID}
             }
           })
         }

@@ -54,14 +54,12 @@ export class AssessmentPlanService {
   }
 
   serializeAll(asObject: boolean = false) {
-    this.generateDisplayProps();
     let plans = this.assessmentPlans.getValue();
     const serialized = plans.map(plan => plan.serialize());
     return asObject ? serialized : JSON.stringify(plans.map(plan => plan.serialize()));
   }
 
   serializePlan(index: number, asObject: boolean = false) {
-    this.generateDisplayProps();
     let plans = this.assessmentPlans.getValue();
     const serialized = plans[index].serialize();
     return asObject ? serialized : JSON.stringify(serialized);
@@ -236,8 +234,6 @@ export class AssessmentPlanService {
     plan['reviewed-controls']['control-selections'][index].removeProp(controlID, "Compliance Claim");
     console.log("Deleted: " + controlID);
   }
-
-
 
   /**
    * Finds old id in saved catalogs and changes it to updated catalog.
@@ -503,22 +499,6 @@ export class AssessmentPlanService {
     plan.metadata['last-modified'] = new Date().toISOString();
 
     this.assessmentPlans.next(plans);
-  }
-
-  generateDisplayProps() {
-    this.modifiedControlIds.forEach((formMap, formPosition) => {
-      formMap.forEach((catalogMap, catalogUuid) => {
-        let catalogPosition = this.findCatalogPosition(formPosition, catalogUuid);
-        if (catalogPosition === -1) return;
-        let form = this.assessmentPlans.getValue()[formPosition];
-        form['reviewed-controls']['control-selections'][catalogPosition].props?.forEach((prop, index) => {
-          if (prop.class === "Display Name") form['reviewed-controls'].props?.splice(index, 1);
-        })
-        catalogMap.forEach((displayId, originalId) => {
-          form['reviewed-controls']['control-selections'][catalogPosition].addProp(originalId as string, displayId as string, "Display Name");
-        })
-      });
-    });
   }
 
   findCatalogPosition(formPosition: number, catalogUuid: String): number {
