@@ -1,6 +1,5 @@
 //TODO add all OSCAL common classes here: Metadata, Part, Parameter 
-import { v4 as uuid } from 'uuid'
-
+import { v4 as uuid } from 'uuid';
 import { ResponsibleRole, ResponsibleParty } from './metadata';
 
 /*
