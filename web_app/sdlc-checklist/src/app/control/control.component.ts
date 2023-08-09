@@ -57,7 +57,6 @@ export class ChecklistItemComponent {
   primed: Boolean = false;
   focused: Boolean = false;
   displayID: any;
-  oldDisplayID: any;
 
   constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){  }
 
@@ -72,7 +71,6 @@ export class ChecklistItemComponent {
       this.finalized = this.info.finalized;
       this.showRollable = this.info.showRollable;
       this.displayID = this.info.displayID;
-      this.oldDisplayID = this.info.oldDisplayId;
     }
     
   }
@@ -87,7 +85,6 @@ export class ChecklistItemComponent {
     if(this.attestationDataService.validateUID(this.UID)){
       this.info = this.attestationDataService.setUpControl(this.UID)!;
       this.displayID= this.info.displayID;
-      this.oldDisplayID = this.info.oldDisplayId;
       this.selection= this.info.selection;
       this.comment = this.info.comment;
       this.finalized = this.info.finalized;
@@ -213,20 +210,6 @@ export class ChecklistItemComponent {
   }
   get getID(){
     return this.id;
-  }
-
-  /**
-   * Changes ID to be used for Displaying of control, if not valid returns back to previous displayID
-   */
-  changeDisplayId(){
-    console.log("click");
-    if(this.displayID.trim() !== "" &&  this.displayID !== this.oldDisplayID){
-      this.displayID = this.attestationDataService.setControlID(this.UID, this.displayID, this.oldDisplayID)
-      this.oldDisplayID = this.displayID;
-    }
-    else{
-      this.displayID = this.oldDisplayID;
-    }
   }
 
 }

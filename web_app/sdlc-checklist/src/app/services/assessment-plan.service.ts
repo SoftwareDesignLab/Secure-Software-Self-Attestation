@@ -228,62 +228,6 @@ export class AssessmentPlanService {
   }
 
 
-
-  /**
-   * Finds old id in saved catalogs and changes it to updated catalog.
-   * @param oldID ID to be change
-   * @param newID What the ID will be changed to
-   * @param index Which catalog is being modified in the assessment plan 
-   */
-  updateCatalogControl(oldID: string, newID: string, index:number){
-    let catalogs = this.catalogs.getValue();
-    let catalog = catalogs[this.attestationFocus.getValue()][index];
-    let path = this.findControlID(catalog,oldID);   // finds path to nested control with ID associated to oldID
-    if(path!==null){
-      let current: any = catalog;
-      for (let i = 0; i < path.length - 1; i++) {
-        const key = path[i];
-        if (current.hasOwnProperty(key)) {
-          current = current[key];
-        } else {
-          console.log('Path not found in the Catalog');
-        }
-      }
-      const destinationKey = path[path.length - 1];
-      if (current.hasOwnProperty(destinationKey)) {
-        current[destinationKey] = newID;
-        console.log("Catalog's control id updated from " + oldID + " to " + newID);
-      } else {
-        console.log('Path not found in the Catalog');
-      }    
-    }
-    else{
-      console.log('Path is not found in the Catalog');
-    }
-    this.catalogs.next(catalogs);
-  }
-
-/**
- * Recursive helper method to find the path of an control Id in a catalog
- * @param catalog catalog object being parsed 
- * @param id control being search for 
- * @param path nested path being generated 
- * @returns returns path if found or null if unable to find ID
- */
-   findControlID(catalog: any, id: any, path: string[] = []): string[] | null {
-    for (const key in catalog) {
-      if (catalog[key] === id) {
-        return path.concat(key); // find path to id and returns it
-      } else if (Array.isArray(catalog[key]) || typeof catalog[key] === 'object') {
-        const nestedPath = this.findControlID(catalog[key], id, path.concat(key));
-        if (nestedPath) {
-          return nestedPath; 
-        }
-      }
-    }
-    return null; // ID not found 
-  }
-
   // control selections list is indexed by attestation. it should match up with assessment-subjects list
 
   setControlSelection(controlID: string, selection: ControlSelectionType | string, index: number) {

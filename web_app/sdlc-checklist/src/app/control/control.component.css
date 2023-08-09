@@ -47,22 +47,6 @@
   text-decoration: underline
 }
 
-.checkbox-label:hover .id-box .id-input{
-  text-decoration: none;
-}
-
-.id-input {
-  width: 80px
-}
-
-.id-box {
-  min-width:130px;
-  max-width:160px;
-  display: flex;
-  align-items: center;
-
-}
-
 .checkbox-description {
   cursor: pointer;
   margin-left: 5px;
