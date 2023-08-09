@@ -192,8 +192,12 @@ export class AttestationDataService {
     for (let i = 1; i < temp.length-1; i++) {
       displayID = displayID + "-" +temp[i]
     }
-    displayID = displayID.substring(1) + ":" + temp[temp.length-1]; 
-    let info = new ControlAttestation(displayID.substring(1));
+    while (displayID[0] === "-") {
+      displayID = displayID.substring(1)
+      console.log("Removed excess -")
+    }
+    displayID = displayID + ":" + temp[temp.length-1]; 
+    let info = new ControlAttestation(displayID);
     this.controlMap.set(UID, info);
     
     let catalogUUID = this.uidToUuid(UID);
@@ -517,24 +521,13 @@ export class AttestationDataService {
       dialog.close();
     }
     let catalogs = this.stagedJSON["assessment-plan"]["reviewed-controls"]["control-selections"]
-    let uuidMap = new Map<string, JSON>();
-    catalogs.forEach((catalog: any) => {
-      for (let i = 0, prop = catalog["props"][i], length = catalog["props"].length; i < length; prop = catalog["props"][++i]) {
-        if (prop["class"] === "catalog" && prop["name"] === "Catalog ID") {
-          uuidMap.set(prop["value"] as string, catalog);
-          return;
-        }
-      }
-      alert("Failed to find necessary catalog, loading incomplete attestation")
-    })
     let controlMap = new Map<string, string>();
     let commentMap = new Map<string, string>();
-    let nameMap = new Map<string, string>();
     this.bypassComments = true;
-    uuidMap.forEach((catalog: any, uuid: string) => {
+    catalogs.forEach((catalog: any) => {
       for (let i = 0, prop = catalog["props"][i], length = catalog["props"].length; i < length; prop = catalog["props"][++i]) {
         if (prop["class"] === "Compliance Claim" || prop["class"] === "Attestation Claim") {
-          let UID = this.getCurrentForm.getPositionTag + "-" + uuid + "-" + prop["name"];
+          let UID = this.getCurrentForm.getPositionTag + "-" + (prop["name"] as string).replace(':', '-');
           switch(prop["class"]) {
             case "Compliance Claim": controlMap.set(UID, prop["value"]); break;
             case "Attestation Claim": commentMap.set(UID, prop["value"]); break;

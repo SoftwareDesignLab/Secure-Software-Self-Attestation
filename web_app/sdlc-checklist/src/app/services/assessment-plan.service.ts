@@ -83,7 +83,7 @@ export class AssessmentPlanService {
     //TODO update for multiple address lines
     if (data.address) metadata.parties[0].setPrimaryAddressLines([data.address]);
     if (data.address1) metadata.parties[0].setPrimaryAddressLine1(data.address1);
-    if (data.address2) metadata.parties[0].setPrimaryAddressLine1(data.address2);
+    if (data.address2) metadata.parties[0].setPrimaryAddressLine2(data.address2);
     if (data.city) metadata.parties[0].setPrimaryCity(data.city);
     if (data.state) metadata.parties[0].setPrimaryState(data.state);
     if (data.country) metadata.parties[0].setPrimaryCountry(data.country);
