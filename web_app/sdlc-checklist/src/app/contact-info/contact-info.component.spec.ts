@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContactInfoComponent } from './contact-info.component';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 
 

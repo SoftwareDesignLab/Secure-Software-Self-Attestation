@@ -102,9 +102,15 @@ describe('AttestationComponent', () => {
     Attestation.setAttestationType('multiple');
     Attestation.addRow();
     Attestation.getInfo[0].addName("Carlos");
+    Attestation.getInfo[0].addVersion("1.9");
     Attestation.getInfo[0].addDate("12/08/2022");
+    expect(Attestation.getInfo[0].getDate()).toEqual("12/08/2022");
+    expect(Attestation.getInfo[0].getVersion()).toEqual("1.9");
+    expect(Attestation.getInfo[0].getName()).toEqual("Carlos");
     expect(Attestation.submitable()).toEqual(true);
   });
+
+
 
 
 
