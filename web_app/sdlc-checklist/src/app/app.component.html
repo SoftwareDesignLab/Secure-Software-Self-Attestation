@@ -29,9 +29,14 @@
         </ul>
       </li>
       <li><p class="add" (click)="newForm()" (keydown.enter)="newForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
+      <li><p class="load" (click)="loadAttestation();">Load Attestation</p></li>
     </ul>
     <input type="file" hidden id="load-file-input" (change)="processLoadAttestation($event)" accept=".json">
-    <p class="bottom" (click)="loadAttestation();">Load Attestation</p>
+    <p class="generate" *ngIf="generateAcceptable()" (click)="alert('This is a beautiful placeholder button!')">Generate Report</p>
+    <p class="disabled-generate" *ngIf="!generateAcceptable()">Generate Report
+      <span class="tool-tip" *ngIf="invalidContact()">Software Producer/Primary Contact Info is incomplete!</span>
+      <span class="tool-tip" *ngIf="attestationTypeMissing()">Missing Attestation Type</span>
+    </p>
   </div>
 </nav>
 
