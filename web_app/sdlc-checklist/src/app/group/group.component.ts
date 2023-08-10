@@ -99,18 +99,7 @@ export class GroupComponent {
     return true;
   }
 
-  deselectAll(selection: string){
-    if (this.childComponents === undefined) {return true;}
-    for (let i = this.childComponents.length - 1; i>=0; i--) {
-      let child = this.childComponents.get(i);
-      if (child instanceof ChecklistItemComponent) {
-        if (child.selection != selection) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
+ 
 
   setAllChildrenSelection(selection: string): void {
     this.childComponents.forEach((child) => {
