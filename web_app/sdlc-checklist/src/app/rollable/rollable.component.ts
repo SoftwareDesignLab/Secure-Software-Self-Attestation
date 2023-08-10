@@ -33,6 +33,7 @@ export class RollableComponent {
   @Input() examples: any;
   @Input() subControls: any;
   @Input() references: any;
+  @Input() otherProps: any;
 
   /**
    * 
@@ -64,5 +65,9 @@ export class RollableComponent {
    */
   hasReferences(): boolean {
     return this.references !== undefined && this.references.length > 0;
+  }
+
+  hasOtherProps(): boolean {
+    return this.otherProps !== undefined && this.otherProps.length > 0;
   }
 }

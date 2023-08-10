@@ -49,7 +49,6 @@ export class AssessmentPlanService {
   }
 
   setAttestationFocus(index: number) {
-    console.log(index);
     this.attestationFocus.next(index);
   }
 
@@ -108,7 +107,6 @@ export class AssessmentPlanService {
     let name = metadata.parties[1].name || " ";
     if (data.fname) {
       data.name = data.fname + " " + name.split(" ")[1];
-      console.log(":" + data.name + ":")
       metadata.parties[1].setName(data.name);
     }
     if (data.lname){

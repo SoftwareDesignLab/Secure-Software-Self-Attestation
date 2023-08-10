@@ -34,4 +34,12 @@
       </li>
     </ul>
   </section>
+  <section *ngIf="hasOtherProps()">
+    <h3>Properties</h3>
+    <ul>
+      <li *ngFor="let prop of references" class="reference">
+        {{prop.name}}: {{prop.value}}
+      </li>
+    </ul>
+  </section>
 </div>
