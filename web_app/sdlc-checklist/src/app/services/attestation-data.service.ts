@@ -540,7 +540,6 @@ export class AttestationDataService {
         if (group.controls) {
           group.controls.forEach((control) => {
             let controlUID = this.getCurrentForm.getPositionTag + "-" + catalog.uuid + "-" + control.id;
-            console.log(controlUID in controlMap, controlUID in controlMap.keys());
             if (controlMap.get(controlUID)) {
               let radio = document.getElementById(controlUID + "-" + this.convertNaming(controlMap.get(controlUID) as string));
               if (radio instanceof HTMLInputElement) radio.click();

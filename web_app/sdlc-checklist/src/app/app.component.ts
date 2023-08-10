@@ -93,7 +93,6 @@ export class AppComponent {
       if (parent instanceof HTMLElement) {
         let newFocus = this.findFirstLandingChildr(parent);
         if (newFocus instanceof HTMLElement) {
-          console.log("Refocus");
           newFocus.focus();
         }
       }
@@ -356,7 +355,6 @@ export class AppComponent {
     reader.onload = () => {
       let json = JSON.parse(reader.result as string);
       this.attestationService.stagedJSON = json;
-      console.log(json)
       if (this.attestationService.interpretParties(true)) {
         let dialog = document.getElementById("contact-decision")
         if (dialog instanceof HTMLDialogElement) dialog.showModal();
@@ -374,7 +372,6 @@ export class AppComponent {
     this.newForm();
     let catalogs = this.attestationService.stagedJSON["catalogs"];
     catalogs.forEach((catalog: any) => {
-      console.log(catalog)
       this.assessmentPlanService.addCatalog(catalog as Catalog);
       this.attestationService.getCurrentForm.onFileSelected(catalog)
     })
@@ -390,7 +387,6 @@ export class AppComponent {
     this.newForm();
     let catalogs = this.attestationService.stagedJSON["catalogs"];
     catalogs.forEach((catalog: any) => {
-      console.log(catalog)
       this.assessmentPlanService.addCatalog(catalog as Catalog);
       this.attestationService.getCurrentForm.onFileSelected(catalog)
     })
