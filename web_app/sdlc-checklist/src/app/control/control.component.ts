@@ -112,7 +112,22 @@ export class ChecklistItemComponent {
   getReferences() {
     if (this.props) {
       // parts are objects. find all parts that have the class "Example"
-      return this.props.filter((prop: any) => prop.property_class === 'Reference');
+      return this.props.filter((prop: any) => {
+        let propClass = prop.property_class;
+        if (propClass === undefined) propClass = prop.class;
+        return propClass === "Reference" || propClass === "References";
+      });
+    }
+  }
+
+  getOtherProps() {
+    if (this.props) {
+      // parts are objects. find all parts that have the class "Example"
+      return this.props.filter((prop: any) => {
+        let propClass = prop.property_class;
+        if (propClass === undefined) propClass = prop.class;
+        return propClass !== "Reference" && propClass !== "References";
+      });
     }
   }
 
