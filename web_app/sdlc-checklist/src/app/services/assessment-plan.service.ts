@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
-import { AssessmentPlan } from '../models/oscal/assessmentPlan';
-import { ControlSelection, SubjectID, AssessmentSubject } from '../models/oscal/common';
+import { AssessmentPlan } from '../models/oscal/assessmentPlanModel';
+import { ControlSelection, SubjectID, AssessmentSubject, SubjectIDType } from '../models/oscal/assessment';
 import { Prop } from '../models/oscal/common';
-import { Metadata } from '../models/oscal/metadata';
+import { Metadata, Party } from '../models/oscal/metadata';
 import { Catalog } from '../models/oscal/catalogModel';
 import { GroupComponent } from '../group/group.component';
 import { ChecklistItemComponent } from '../control/control.component';
@@ -33,10 +33,12 @@ export class AssessmentPlanService {
 
   constructor() {
     let metadata = this.metadata.getValue();
-    metadata.addBlankParty();
-    metadata.addBlankParty();
-    metadata.parties[0].type = "organization";
-    metadata.parties[1].type = "person";
+    let org = new Party();
+    let contact = new Party();
+    org.type = "organization";
+    contact.type = "person";
+    metadata.addParty(org);
+    metadata.addParty(contact);
     metadata["last-modified"] = new Date().toISOString();
     this.metadata.next(metadata);
   }
@@ -82,6 +84,11 @@ export class AssessmentPlanService {
     let metadata = this.metadata.getValue();
     let plans = this.assessmentPlans.getValue();
     
+    if (metadata.parties === undefined) {
+      console.log("no parties exist -- skipping update");
+      return;
+    }
+
     if (data.name) metadata.parties[0].name = data.name;
     //TODO update for multiple address lines
     if (data.address) metadata.parties[0].setPrimaryAddressLines([data.address]);
@@ -108,6 +115,12 @@ export class AssessmentPlanService {
   updateContactInfo(data: any) {
     let metadata = this.metadata.getValue();
     let plans = this.assessmentPlans.getValue();
+
+    if (metadata.parties === undefined) {
+      console.log("no parties exist -- skipping update");
+      return;
+    }
+
     let name = metadata.parties[1].name || " ";
     if (data.fname) {
       data.name = data.fname + " " + name.split(" ")[1];
@@ -386,7 +399,7 @@ export class AssessmentPlanService {
       plan["assessment-subjects"][0]["include-subjects"] = [];
     }
 
-    let subject = new SubjectID();
+    let subject = new SubjectID(SubjectIDType.Component);
     subject.addProp("Product Name", productName, "Product Info");
     subject.addProp("Version", version, "Product Info");
     subject.addProp("Date", date, "Product Info");
@@ -416,7 +429,7 @@ export class AssessmentPlanService {
     }
     
     if (plan["assessment-subjects"][0]["include-subjects"][subjectIndex] === undefined) {
-      plan["assessment-subjects"][0]["include-subjects"].push(new SubjectID());
+      plan["assessment-subjects"][0]["include-subjects"].push(new SubjectID(SubjectIDType.Component));
     }
 
     let subject = plan["assessment-subjects"][0]["include-subjects"][subjectIndex];
@@ -534,6 +547,11 @@ export class AssessmentPlanService {
   convertToAssessmentResults() {
     let plans = this.assessmentPlans.getValue();
     let metadata = this.metadata.getValue();
+
+    if (metadata.parties === undefined) {
+      console.log("Metadata issue -- skipping conversion");
+      return;
+    }
 
     // TODO make it a class for type safety (models/assessmentResults.ts)
     let assessmentResults: any = {
