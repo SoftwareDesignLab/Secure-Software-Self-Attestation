@@ -1,0 +1,51 @@
+{
+    "uuid": "d172b49c-39b4-4745-a961-75341dcf2293",
+    "metadata": {
+        "title": "SSDF Dupe",
+        "last-modified": "2023-06-26T02:54:38Z",
+        "version": "1.0.0",
+        "oscal-version": "1.0.4",
+        "published": "2023-06-26T02:54:38Z"
+    },
+    "groups": [
+        {
+            "id": "4e(i)",
+            "title": "The software was developed and built in secure environments",
+            "controls": [
+                {
+                    "id": "4e(i)(A)",
+                    "title": "Separate and protect each environment involved in developing and building software",
+                    "props": [
+                        {
+                            "name": "NIST SSDF Reference",
+                            "value": "PO.5.1",
+                            "class": "References"
+                        }
+                    ]
+                },
+                {
+                    "id": "4e(i)(B)",
+                    "title": "Regularly logging, monitoring, and auditing trust relationships used for authorization and access to any software development and build environments, andamong components within each environment",
+                    "props": [
+                        {
+                            "name": "NIST SSDF Reference",
+                            "value": "PO.5.1",
+                            "class": "References"
+                        }
+                    ]
+                },
+                {
+                    "id": "4e(i)(C)",
+                    "title": "Enforcing multi-factor authentication and conditional access across the environments relevant to developing and building software in a manner that minimizes security risk",
+                    "props": [
+                        {
+                            "name": "NIST SSDF Reference",
+                            "value": "PO.5.1, PO.5.2",
+                            "class": "References"
+                        }
+                    ]
+                }
+            ]
+		}
+    ]
+}

@@ -45,6 +45,8 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
+  private displayIDMap!: Map<String, number>;
+  private catalogPosition!: Map<String, number>;
   private controlWatch?: ChecklistItemComponent;
 
 
@@ -72,6 +74,7 @@ export class AttestationDataService {
 
   /**
    * Sets the deletion position
+   * does not delete anything itself
    * @param position The deletion position
    */
   setDeletionPosition(position: number){
@@ -87,20 +90,18 @@ export class AttestationDataService {
     return this.forms[position];
   }
 
-  /**
-   * Gets the currently visible attestation component
-   * @returns The currently visible attestation component
-   */
-  get getCurrentForm(): AttestationComponent{
+  get getCurrentForm(){
+    this.catalogPosition = this.forms[this.viewPosition].getCatalogPositions
     return this.forms[this.viewPosition];
   }
 
-  /**
-   * Sets a given component to the view
-   * @param position The position to set the view position of
-   */
+  getCatalogIndex(catalogUUID: string){
+    return this.forms[this.viewPosition].getCatalogPositon(catalogUUID);
+  }
+
   setView(position: number){
     this.assessmentPlanService.setAttestationFocus(position);
+    this.displayIDMap=this.forms[position].displayIDMap;
     this.viewPosition = position;
   }
 
@@ -127,6 +128,10 @@ export class AttestationDataService {
     return this.deletionPosition;
   }
 
+  /**
+   * Sets tag to be used for UID generations of a form
+   * @returns 
+   */
   setTag(){
     this.tag +=1;
     return this.tag;
@@ -145,6 +150,21 @@ export class AttestationDataService {
 
   // Control Methods 
 
+
+  /**
+   * Checks if checklist compontent still exists on different attestation page
+   * @param UID 
+   * @returns True if it exists, false if it does not exists
+   */
+  validateUID(UID: string){
+    let catalogUUID = this.uidToUuid(UID);
+    if(this.catalogPosition.has(catalogUUID)){
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
   // set a control component that this service is specifically watching
   setControlWatch(control: ChecklistItemComponent){
     this.controlWatch = control;
@@ -164,11 +184,40 @@ export class AttestationDataService {
     if(this.controlMap.has(UID)){
       return(this.controlMap.get(UID));
     }
-    else{
-     let info = new ControlAttestation();
-     this.controlMap.set(UID, info);
-     return info;
+    let temp = UID.split("-") || ""; // kind of hacky
+    let displayID = "";
+    for (let i = 1; i < temp.length-1; i++) {
+      displayID = displayID + "-" +temp[i]
     }
+    displayID = displayID.substring(1) + ":" + temp[temp.length-1]; 
+    let info = new ControlAttestation(displayID.substring(1));
+    this.controlMap.set(UID, info);
+    
+    let catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
+    if (index !== undefined){
+      this.assessmentPlanService.setControlSelection(info.displayID,info.selection, index)
+    }
+    else {
+      console.warn("could not set up controlSelection in assessmentPlanService");
+    }
+
+    return info;
+  }
+
+
+  /**
+   * Takes in an UID and reverses it back to its catalog uuid,
+   * @param UID Unique identifier of the object being given
+   * @returns catalogs uuid (string)
+   */
+  uidToUuid(UID: string){
+    let temp = UID.split("-") || ""; // kind of hacky
+    let catalogUUID = "";
+    for (let i = 1; i < temp.length-1; i++) {
+      catalogUUID = catalogUUID + "-" +temp[i]
+    }
+    return catalogUUID.substring(1);
   }
 
   /**
@@ -177,14 +226,15 @@ export class AttestationDataService {
    * @param selection The new selection
    */
   updateControlSelection(UID: string, selection: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.setControlSelection(controlID, selection);
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.setControlSelection(temp.displayID, selection, index);
       temp.selection=selection
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while updating Selection");
     }
   }
 
@@ -200,7 +250,7 @@ export class AttestationDataService {
       temp.comment=comment;
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while saving control comment");
     }
   }
 
@@ -210,16 +260,18 @@ export class AttestationDataService {
    * @param comment The new comment
    */
   finalizeControlComment(UID: string, comment: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.setControlComment(controlID, comment);
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
+
 
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.setControlComment(temp.displayID, comment,index);
       temp.finalized=true;
       temp.comment=comment;
     }
     else{
-      console.log("Something went wrong")
+      console.log("Unable to find index/control id while finalizing control comment");
     }
   }
 
@@ -229,14 +281,14 @@ export class AttestationDataService {
    * @param UID The control uuid to delete the comment of
    */
   deleteControlComment(UID: string){
-    const controlID = UID.split("-").at(-1) || ""; // kind of hacky
-    this.assessmentPlanService.removeControlComment(controlID);
+    const catalogUUID = this.uidToUuid(UID);
+    let index = this.getCatalogIndex(catalogUUID);
 
     let temp = this.controlMap.get(UID);
-    if(temp!==undefined){
+    if(temp!==undefined && index !== undefined){
+      this.assessmentPlanService.removeControlComment(temp.displayID, index);
       temp.comment = "";
       temp.finalized = false;
-      this.assessmentPlanService.removeControlComment(UID);
     }
   }
 
