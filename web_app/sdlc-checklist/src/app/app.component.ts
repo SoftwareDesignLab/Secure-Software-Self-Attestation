@@ -316,13 +316,5 @@ export class AppComponent {
     return this.attestationService.pageName;
   }
 
-  /**
-   * 
-   * @param num The number of numbers to return
-   * @returns Returns a list of numbers 1 to num-1
-   */
-  range(num: number): Array<number> {
-    return Array.from(Array(num).keys())
-  }
 }
 

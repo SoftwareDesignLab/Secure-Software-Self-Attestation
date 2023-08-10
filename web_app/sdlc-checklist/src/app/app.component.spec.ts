@@ -21,12 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture,TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
-
+import { AttestationDataService } from './services/attestation-data.service';
+import { combineLatest } from 'rxjs';
+import { Router } from '@angular/router';
 describe('AppComponent', () => {
+
+  let attestationService: AttestationDataService;
+  let app: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
+  let mockRouter = {
+    navigate: jasmine.createSpy('navigate')
+  };
+
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -38,12 +50,19 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      providers: [ { provide: Router, useValue: mockRouter }]
+
     }).compileComponents();
+
+    attestationService = TestBed.inject(AttestationDataService);
+    attestationService.addform();
+    attestationService.setView(0);
+    fixture = TestBed.createComponent(AppComponent);
+    app = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
@@ -59,4 +78,38 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.content span')?.textContent).toContain('catalog-checklist app is running!');
   });
+
+  it('Add form and delete it', () => {
+    app.newForm();
+    app.deleteForm(attestationService.getView);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['attestation-form']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['contact-info']);
+
+  });
+
+  it('Delete all forms', () => {
+    app.deleteForm(attestationService.getView);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['contact-info']);
+  });
+
+  it('toggle nav, nav tree and footer', () => {
+    app.toggleNav();
+    app.toggleNavTree(0);
+    app.toggleNavTree(1);
+    app.toggleFooter();
+    expect(app.showNav).toEqual(true);
+    expect(app.openTag).toEqual(1);
+    expect(app.showFullFooter).toEqual(true);
+
+
+  });
+
+  
+
+
+
+
+
+
+
 });

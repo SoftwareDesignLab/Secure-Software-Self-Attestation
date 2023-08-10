@@ -124,4 +124,62 @@ describe('ChecklistItemComponent', () => {
     expect(control.primed).toEqual(false);
     expect(control.focused).toEqual(false);
   });
+
+
+  it('get undefines about control with no information', () => {
+    expect(control.getDescription()).toEqual(undefined);
+    expect(control.getReferences()).toEqual(undefined);
+    expect(control.getExamples()).toEqual(undefined);
+  });
+
+  it('updates control when page swaps', () => {
+    attestationDataService.setUpControl(control.UID);
+    attestationDataService.updateControlSelection(control.UID,"select");
+    attestationDataService.finalizeControlComment(control.UID,"final");
+    control.refresh(); 
+    expect(control.selection).toEqual("select");
+    expect(control.finalized).toEqual(true);
+    expect(control.comment).toEqual("final");
+  });
+
+
+  it('Save Control Comment', () => {
+    control.finalized=true;
+    control.save();
+    expect(control.finalized).toEqual(false);
+  });
+
+  it('toggle control information', () => {
+    let before = control.showRollable;
+    control.toggleRollable();
+    expect(control.showRollable).toEqual(!before);
+   
+  });
+
+
+  // Does not fully work due to missing methods of parts/props
+  it('Shows all extra information', () => {
+    control.parts = {
+      Example: "Example"
+    }
+    control.props = {
+      Reference: "Reference",
+      Description: "Description",
+    }
+    control.parts.Example = "Example";
+    control.props.Reference = "Reference";
+    control.props.Description = "Description";
+    expect(control.getReferences()).toEqual("Reference");
+    expect(control.getDescription()).toEqual("Description");
+    expect(control.getExamples()).toEqual("Example");
+  });
+
+
+
+
+
+
+
+
+
 });
