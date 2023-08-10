@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import { Prop, Link, Part, SystemComponent } from './common'
-import { ResponsibleParty } from './metadata';
+import { Prop, Link, Part, SystemComponent, ImplementationStatus } from './common'
+import { ResponsibleParty, ResponsibleRole } from './metadata';
 
 export enum AssessmentSubjectType {
   Component = "component", 
@@ -17,6 +17,73 @@ export enum SubjectIDType {
   Party = "party", 
   User = "user", 
   Resource = "resource",
+}
+
+export enum TaskType {
+  "milestone",
+  "action"
+}
+
+export enum OriginActorType {
+  "tool",
+  "assessment-platform",
+  "party"
+}
+
+export enum FindingTargetType {
+  "statement-id",
+  "objective-id"
+}
+
+export enum ObjectiveStatusState {
+  "satisfied",
+  "not-satisfied"
+}
+
+export enum ObjectiveStatusReason {
+  "pass",
+  "fail",
+  "other"
+}
+
+export enum TimeUnit {
+  "seconds",
+  "minutes",
+  "hours",
+  "days",
+  "months",
+  "years"
+}
+
+export enum RiskStatus {
+  "open",
+  "investigating",
+  "remediating",
+  "deviation-requested",
+  "deviation-approved",
+  "closed"
+}
+
+export enum RemediationIntent {
+  "recommendation",
+  "planned",
+  "completed"
+}
+
+export enum ThreatTypeIDSystem {
+  "http://fedramp.gov",
+  "http://fedramp.gov/ns/oscal"
+}
+
+export enum FacetNamingSystem {
+  "http://fedramp.gov",
+  "http://fedramp.gov/ns/oscal",
+  "http://csrc.nist.gov/ns/oscal",
+  "http://csrc.nist.gov/ns/oscal/unknown",
+  "http://cve.mitre.org",
+  "http://www.first.org/cvss/v2.0",
+  "http://www.first.org/cvss/v3.0",
+  "http://www.first.org/cvss/v3.1"
 }
 
 export class ControlSelection {
@@ -219,11 +286,67 @@ export class ControlSelection {
   }
   
   export class SubjectID {
-    type: SubjectIDType = SubjectIDType.Component; //can be component, inventory-item, location, party, user or resource
     "subject-uuid": string = uuid();
+    type: SubjectIDType; //can be component, inventory-item, location, party, user or resource
     props?: Prop[];
     links?: Link[];
     remarks?: string;
+
+    constructor(type: SubjectIDType) {
+      this.type = type;
+    }
+  
+    addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
+      if (this.props === undefined) this.props = [];
+      let newProp = new Prop(name, value);
+      newProp.class = class_;
+      newProp.uuid = uuid;
+      newProp.ns = ns;
+      newProp.remarks = remarks;
+      this.props.push(newProp);
+    }
+  
+    removeProp(name: string, class_?: string) {
+      if (this.props === undefined) return;
+      this.props = this.props.filter((prop) => prop.name !== name && ( class_ !== undefined ? prop.class !== class_ : true));
+    }
+  
+    addLink(href: string, rel?: string) {
+      if (this.links === undefined) this.links = [];
+      let newLink = new Link();
+      newLink.href = href;
+      newLink.rel = rel;
+      this.links.push(newLink);
+    }
+  
+    setType(type: SubjectIDType) {
+      this.type = type;
+    }
+  
+    serialize(): object {
+      let serialized = {
+        "type": this.type,
+        "subject-uuid": this["subject-uuid"],
+        "props": this.props?.map((prop) => prop.serialize()),
+        "remarks": this.remarks,
+        "links": this.links?.map((link) => link.serialize()),
+      };
+      return serialized;
+    }
+  }
+
+  export class SubjectReference {
+    "subject-uuid": string = uuid();
+    type: SubjectIDType; //can be component, inventory-item, location, party, user or resource
+    title?: string;
+    props?: Prop[];
+    links?: Link[];
+    remarks?: string;
+
+    constructor(type: SubjectIDType, title?: string) {
+      this.type = type;
+      this.title = title;
+    }
   
     addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
       if (this.props === undefined) this.props = [];
@@ -288,19 +411,19 @@ export class ControlSelection {
       }
     }
   
+    //TODO ask for uuid
     includeNewSubject(type: SubjectIDType) {
       if (this["include-subjects"] === undefined) this["include-subjects"] = [];
-      let newSubjectID = new SubjectID();
-      newSubjectID.type = type;
+      let newSubjectID = new SubjectID(type);
       newSubjectID["subject-uuid"] = uuid();
       this["include-subjects"].push(newSubjectID);
       this.subjectMemory[0] = this["include-subjects"];
     }
-  
+    
+    //TODO ask for uuid
     excludeNewSubject(type: SubjectIDType) {
       if (this["exclude-subjects"] === undefined) this["exclude-subjects"] = [];
-      let newSubjectID = new SubjectID();
-      newSubjectID.type = type;
+      let newSubjectID = new SubjectID(type);
       newSubjectID["subject-uuid"] = uuid();
       this["exclude-subjects"].push(newSubjectID);
       this.subjectMemory[1] = this["exclude-subjects"];
@@ -337,20 +460,7 @@ export class ControlSelection {
       return serialized;
     }
   }
-
-  export class SubjectReference {
-    "subject-uuid": string = uuid();
-    type: SubjectIDType;
-    title?: string;
-    props?: Prop[];
-    links?: Link[];
-    remarks?: string;
-
-    constructor(type: SubjectIDType) {
-      this.type = type;
-    }
-  }
-
+  
   export class AssessmentPart {
     name: string;
     uuid?: string;
@@ -359,7 +469,7 @@ export class ControlSelection {
     title?: string;
     props?: Prop[];
     prose?: string;
-    parts?: Part[];
+    parts?: AssessmentPart[];
     links?: Link[];
   
     constructor (name: string) {
@@ -387,3 +497,313 @@ export class ControlSelection {
     "assessment-platforms": AssessmentPlatform[] = [];
     components?: SystemComponent[];
   }
+
+  export class Task {
+    uuid: string = uuid();
+    type: TaskType | string;
+    title: string;
+    description?: string;
+    props?: Prop[];
+    links?: Link[];
+    timing?: EventTiming;
+    dependencies?: TaskDependency[];
+    tasks?: Task[];
+    "associated-activities"?: AssociatedActivity[];
+    subjects?: AssessmentSubject[];
+    "responsible-roles": ResponsibleRole[];
+    remarks?: string;
+
+    constructor(type: TaskType | string, title: string, description?: string, remarks?: string) {
+      this.type = type;
+      this.title = title;
+      this.description = description;
+      this.remarks = remarks;
+    }
+  }
+
+  export class AssociatedActivity {
+    "activity-uuid": string;
+    subjects: AssessmentSubject[];
+    props?: Prop[];
+    links?: Link[];
+    "responsible-roles"?: ResponsibleRole[];
+    remarks?: string;
+
+    constructor(activityUUID: string, subjects: AssessmentSubject[], remarks?: string) {
+      this['activity-uuid'] = activityUUID;
+      this.subjects = subjects;
+      this.remarks = remarks;
+    }
+  }
+
+  export class TaskDependency {
+    "task-uuid": string;
+    remarks?: string;
+
+    constructor(taskUUID: string, remarks?: string) {
+      this['task-uuid'] = taskUUID;
+      this.remarks = remarks;
+    }
+  }
+
+  export class EventTiming {
+    "on-date"?: OnDate;
+    "within-date-range"?: WithinDateRange;
+    "at-frequency"?: AtFrequency;
+
+    constructor(on?: Date, within?: [Date, Date], frequency?: [number, TimeUnit]) {
+      if (on !== undefined) this['on-date'] = {date: on};
+      if (within !== undefined) this['within-date-range'] = {start: within[0], end: within[1]};
+      if (frequency !== undefined) this['at-frequency'] = {period: frequency[0], unit: frequency[1]};
+    }
+  }
+
+  interface OnDate {
+    date: Date; //DateTimeWithTimeZoneDatatype
+  }
+
+  interface WithinDateRange {
+    start: Date;
+    end: Date;
+  }
+
+  interface AtFrequency {
+    period: number;
+    unit: TimeUnit;
+  }
+
+  export class Origin {
+    actors: OriginActor[] = [];
+    "related-tasks"?: RelatedTask[];
+  }
+
+  export class OriginActor {
+    type: OriginActorType;
+    "actor-uuid": string;
+    "role-id"?: string;
+    props?: Prop[];
+    links?: Link[];
+
+    constructor(type: OriginActorType, actorUUID: string, roleID?: string) {
+      this.type = type;
+      this['actor-uuid'] = actorUUID;
+      this['role-id'] = roleID;
+    }
+  }
+
+  export class RelatedTask {
+    "task-uuid": string;
+    props?: Prop[];
+    links?: Link[];
+    "responsible-parties"?: ResponsibleParty[];
+    subjects?: AssessmentSubject[];
+    "identified-subject"? : IdentifiedSubject;
+    remarks?: string;
+
+    constructor(taskUUID: string) {
+        this['task-uuid'] = taskUUID;
+    }
+}
+
+export class IdentifiedSubject {
+    "subject-placeholder-uuid": string = uuid();
+    subjects: AssessmentSubject[] = [];
+}
+
+export class Risk {
+  uuid: string = uuid();
+  title: string;
+  description: string;
+  statement: string;
+  status: string | RiskStatus;
+  props?: Prop[];
+  links?: Link[];
+  origins?: Origin[];
+  "threat-ids"?: ThreatID[];
+  characterizations?: Characterization[];
+  "mitigating-factors"?: MitigatingFactor[];
+  deadline?: Date;
+  remediations?: AssessmentResponse[];
+  "risk-log"?: RiskLog;
+  "related-observations"?: RelatedObservation[];
+
+  constructor(title: string, description: string, statement: string, status: string | RiskStatus) {
+    this.title = title;
+    this.description = description;
+    this.statement = statement;
+    this.status = status;
+  }
+}
+
+export class AssessmentResponse {
+  uuid: string = uuid();
+  lifecycle: string | RemediationIntent;
+  title: string;
+  description: string;
+  props?: Prop[];
+  links?: Link[];
+  origins?: Origin[];
+  "required-assets"?: RequiredAsset[];
+  tasks?: Task[];
+  remarks?: string;
+
+  constructor(lifecycle: string | RemediationIntent, title: string, description: string, remarks?: string) {
+    this.lifecycle = lifecycle,
+    this.title = title
+    this.description = description;
+    this.remarks = remarks
+  }
+}
+
+export class RequiredAsset {
+  uuid: string = uuid();
+  description: string;
+  subjects?: SubjectReference[];
+  title?: string;
+  props?: Prop[];
+  links?: Link[];
+  remarks?: string;
+
+  constructor(description: string, title?: string, remarks?: string) {
+    this.description = description;
+    this.title = title;
+    this.remarks = remarks;
+  }
+}
+
+export class MitigatingFactor {
+  uuid: string = uuid();
+  description: string;
+  "implementation-uuid"?: string;
+  props?: Prop[];
+  links?: Link[];
+  subjects?: SubjectReference[];
+
+  constructor(description: string) {
+    this.description = description;
+  }
+}
+
+export class Characterization {
+  origin: Origin;
+  facets: Facet[] = [];
+  props?: Prop[];
+  links?: Link[];
+
+  constructor(origin: Origin) {
+    this.origin = origin;
+  }
+}
+
+export class Facet {
+  name: string;
+  system: string | FacetNamingSystem;
+  value: string;
+  props?: Prop[];
+  links?: Link[];
+  remarks?: string;
+
+  constructor(name: string, value: string, system: string| FacetNamingSystem) {
+    this.name = name;
+    this.value = value;
+    this.system = system;
+  }
+}
+
+export interface RelatedObservation {
+  "observation-uuid": string //UUID
+}
+
+export interface RiskLog {
+  entries: RiskLogEntry[];
+}
+
+export class RiskLogEntry {
+  uuid: string = uuid();
+  start: Date = new Date(); //DateTimeDataType
+  end?: Date; //DateTimeDataType
+  title?: string;
+  description?: string;
+  props?: Prop[];
+  links?: Link[];
+  "logged-by"?: LoggedBy[];
+  "status-change": RiskStatus
+  "related-responses"?: RelatedTask[];
+  remarks?: string;
+}
+
+
+export class LoggedBy {
+  "party-uuid": string; 
+  "role-id"?: string; //TokenDataType
+
+  constructor(partyUUID: string) {
+      this['party-uuid'] = partyUUID;
+  }
+}
+
+export class ThreatID {
+  id: string;
+  system: string | ThreatTypeIDSystem;
+  href?: string;
+
+  constructor(id: string, system: string | ThreatTypeIDSystem) {
+    this.id = id;
+    this.system = system;
+  }
+}
+
+export class Finding {
+  uuid: string = uuid();
+  title: string;
+  description: string;
+  target: FindingTarget;
+  props?: Prop[];
+  links?: Link[];
+  origins?: Origin[];
+  "implementation-statement-uuid"?: string;
+  "related-observations"?: RelatedObservation[];
+  "related-risks"?: AssociatedRisk[];
+  remarks?: string;
+
+  constructor(title: string, description: string, target: FindingTarget, remarks?: string) {
+    this.title = title;
+    this.description = description;
+    this.target = target;
+    this.remarks = remarks;
+  }
+}
+
+export class FindingTarget {
+  type: FindingTargetType;
+  "target-id": string;
+  status: ObjectiveStatus;
+  title?: string;
+  description?: string;
+  props?: Prop[];
+  links?: Link[];
+  "implementation-status"?: ImplementationStatus;
+  remarks?: string; 
+
+  constructor(type: FindingTargetType, targetID: string, status: ObjectiveStatus) {
+    this.type = type;
+    this['target-id'] = targetID;
+    this.status = status;
+  }
+}
+
+export class ObjectiveStatus {
+  state: ObjectiveStatusState;
+  reason?: string | ObjectiveStatusReason;
+  remarks?: string;
+
+  constructor(state: ObjectiveStatusState, reason?: string | ObjectiveStatusReason, remarks?: string) {
+    this.state = state;
+    this.reason = reason;
+    this.remarks = remarks;
+  }
+}
+
+export interface AssociatedRisk {
+  "risk-uuid": string;
+}
