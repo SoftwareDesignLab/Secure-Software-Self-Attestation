@@ -26,17 +26,26 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AttestationDataService } from './services/attestation-data.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, generate } from 'rxjs';
 import { Router } from '@angular/router';
+import { AttestationComponent } from './attestation/attestation.component';
+import { ContactService } from './services/contact.service';
 describe('AppComponent', () => {
 
   let attestationService: AttestationDataService;
+  let contactService: ContactService;
+
   let app: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
   let mockRouter = {
-    navigate: jasmine.createSpy('navigate')
+    url: '', 
+    navigate: jasmine.createSpy('navigate').and.callFake((commands: any[], extras?: any) => {
+      mockRouter.url = commands.join('/'); 
+    }),
   };
+
+
 
 
   beforeEach(async () => {
@@ -50,13 +59,18 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
-      providers: [ { provide: Router, useValue: mockRouter }]
+      providers: [ 
+        { provide: Router, useValue: mockRouter },
+      ]
 
     }).compileComponents();
 
     attestationService = TestBed.inject(AttestationDataService);
     attestationService.addform();
+    attestationService.addform();
     attestationService.setView(0);
+    contactService = TestBed.inject(ContactService);
+
     fixture = TestBed.createComponent(AppComponent);
     app = fixture.componentInstance;
     fixture.detectChanges();
@@ -100,13 +114,77 @@ describe('AppComponent', () => {
     expect(app.showNav).toEqual(true);
     expect(app.openTag).toEqual(1);
     expect(app.showFullFooter).toEqual(true);
+  });
 
+
+  // Not sure how to stimulate the part that calls findFirstLandingChild with this 
+  it('Go to specific location in a Page', () => {
+    app.changeAttestation(attestationService.getdata(1), "upload");
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['attestation-form'],{fragment: "upload"});
 
   });
 
-  
+
+  it('hmtl children recursion', () => {
+    const mockEmpty = document.createElement('div');
+    const mockParent = document.createElement('div');
+    const mockChild = document.createElement('span');
+    mockChild.textContent = 'Child';
+    mockParent.appendChild(mockChild);
+
+    const mockGrandChild = document.createElement('span');
+    mockGrandChild.textContent = 'GrandChild';
+    mockGrandChild.classList.add("landing");
+    mockChild.appendChild(mockGrandChild);
+    expect(app.findFirstLandingChildr(mockParent)?.className).toEqual("landing");
+    expect(app.findFirstLandingChildr(mockEmpty)).toEqual(null);
+
+  });
 
 
+  it('get sublinks of a given attestation component', () => {
+  let testList = app.getSubLinks(attestationService.getCurrentForm);
+  expect(testList.length).toEqual(3);
+
+  });
+
+  it('all paths for generate report button', () => {
+    mockRouter.url = "/contact-info"; 
+    
+    app.changePage('/contact-info');
+    let test1 = app.attestationTypeMissing();
+
+    contactService.companyName = "Anything";
+    contactService.companyAddress1 = "Anything";
+    contactService.city = "Anything";
+    contactService.state = "Anything";
+    contactService.postalCode = "Anything";
+    contactService.country = "Anything";
+    contactService.website = "Anything";
+    contactService.firstName = "Anything";
+    contactService.lastName = "Anything";
+    contactService.title = "Anything";
+    contactService.personalAddress1 = "Anything";
+    contactService.personalCity = "Anything";
+    contactService.personalState = "Anything";
+    contactService.personalCountry = "Anything";
+    contactService.phone = "Anything";
+    contactService.email = "Anything";
+    let test2 = app.attestationTypeMissing();
+
+    app.changeAttestation(attestationService.getdata(0));
+    let test3 = app.attestationTypeMissing();
+
+    attestationService.getCurrentForm.setAttestationType("multiple");
+    attestationService.getCurrentForm.getInfo[0].addName("Fred");
+    attestationService.getCurrentForm.getInfo[0].addDate("8/1/2022");
+    let test4 = app.invalidContact();
+
+    expect(test1).toEqual(false);
+    expect(test2).toEqual(false);
+    expect(test3).toEqual(true);
+    expect(test4).toEqual(false);
+    });
 
 
 
