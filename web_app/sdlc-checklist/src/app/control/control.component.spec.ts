@@ -67,9 +67,17 @@ describe('ChecklistItemComponent', () => {
     attestationDataService.addform();
     attestationDataService.setView(0);
 
+    
     fixture = TestBed.createComponent(ChecklistItemComponent);
     control = fixture.componentInstance;
     fixture.detectChanges();
+
+
+
+    control.UID = "1-d152b49c-39b4-4765-a961-75051dcf2293-subject";
+    control.catalogUUID = "d152b49c-39b4-4765-a961-75051dcf2293";
+    control.id = "subject";
+
   });
 
   it('should create', () => {
@@ -136,7 +144,12 @@ describe('ChecklistItemComponent', () => {
     attestationDataService.setUpControl(control.UID);
     attestationDataService.updateControlSelection(control.UID,"select");
     attestationDataService.finalizeControlComment(control.UID,"final");
+    console.log("LOCATE:" + control.UID);
+
     control.refresh(); 
+
+    console.log("LOCATE1:" + control.selection + control.finalized + control.comment);
+
     expect(control.selection).toEqual("select");
     expect(control.finalized).toEqual(true);
     expect(control.comment).toEqual("final");

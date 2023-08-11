@@ -29,7 +29,7 @@ import { AssessmentPlanService } from './assessment-plan.service';
 describe('AttestationDataService', () => {
   let attestationService: AttestationDataService;
   let mockAPService: Partial<AssessmentPlanService>; 
-  const UID = '1-test-subject'
+  const UID = '1-d152b49c-39b4-4765-a961-75051dcf2293-subject'
 
   mockAPService = {
     setAttestationType(value){},
@@ -95,7 +95,7 @@ describe('AttestationDataService', () => {
     attestationService.updateControlSelection(UID,'check');
     attestationService.finalizeControlComment(UID,"comment");
     attestationService.toggleControlRollable(UID);
-    attestationService.removeControl('test-subject');
+    attestationService.removeControl('d152b49c-39b4-4765-a961-75051dcf2293-subject');
     let subject = attestationService.setUpControl(UID);
     
     expect(subject?.comment).toEqual('');
