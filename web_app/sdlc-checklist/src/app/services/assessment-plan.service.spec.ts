@@ -91,7 +91,7 @@ describe('data store and retrieval', () => {
     const controlID = "4e(i)(A)";
     APService.addAssessmentPlan("Test Assessment Plan")
     APService.addCatalog(defaultCatalog);
-    APService.setControlSelection(controlID, ControlSelectionType.yes);
+    APService.setControlSelection(controlID, ControlSelectionType.yes,0);
     APService.getAssessmentPlans().subscribe(data => {
       let plan = data[0];
       expect(plan['reviewed-controls']['control-selections'][0].props).toContain(new Prop(controlID, 'yes', "Compliance Claim"));
@@ -102,13 +102,12 @@ describe('data store and retrieval', () => {
     const controlID = "4e(i)(A)";
     APService.addAssessmentPlan("Test Assessment Plan")
     APService.addCatalog(defaultCatalog);
-    APService.setControlSelection(controlID, ControlSelectionType.yes);
-    APService.setControlSelection(controlID, ControlSelectionType.yes);
-    APService.setControlSelection(controlID, ControlSelectionType.yes);
-    APService.setControlComment(controlID, "commmmmmmmmmmment");
-    APService.setControlComment(controlID, "commmmmmmmmmmment");
-    APService.setControlComment(controlID, "commmmmmmmmmmment");
-    APService.setControlSelection(controlID, ControlSelectionType.noSelection);
+    APService.setControlSelection(controlID, ControlSelectionType.yes,0);
+    APService.setControlSelection(controlID, ControlSelectionType.yes,0);
+    APService.setControlComment(controlID, "commmmmmmmmmmment",0);
+    APService.setControlComment(controlID, "commmmmmmmmmmment",0);
+    APService.setControlComment(controlID, "commmmmmmmmmmment",0);
+    APService.setControlSelection(controlID, ControlSelectionType.noSelection,0);
     APService.getAssessmentPlans().subscribe(data => {
       let plan = data[0];
       expect(plan['reviewed-controls']['control-selections'][0].props?.length).toEqual(3);
@@ -121,7 +120,7 @@ describe('data store and retrieval', () => {
     const comment = "This is a comment";
     APService.addAssessmentPlan("Test Assessment Plan");
     APService.addCatalog(defaultCatalog);
-    APService.setControlComment(controlID, comment);
+    APService.setControlComment(controlID, comment,0);
     APService.getAssessmentPlans().subscribe(data => {
       let plan = data[0];
       expect(plan['reviewed-controls']['control-selections'][0].props).toContain(new Prop(controlID, comment, "Attestation Claim"));
@@ -133,8 +132,8 @@ describe('data store and retrieval', () => {
     const comment = "This is a comment";
     APService.addAssessmentPlan("Test Assessment Plan")
     APService.addCatalog(defaultCatalog);
-    APService.setControlComment(controlID, comment);
-    APService.removeControlComment(controlID);
+    APService.setControlComment(controlID, comment,0);
+    APService.removeControlComment(controlID,0);
     APService.getAssessmentPlans().subscribe(data => {
       let plan = data[0];
       expect(plan['reviewed-controls']['control-selections'][0].props?.length).toEqual(2);
@@ -183,10 +182,10 @@ describe('data store and retrieval', () => {
     APService.addCatalog(defaultCatalog);
     APService.addSubject("name", "version", "date");
     APService.addSubject("name2", "version2", "date2");
-    APService.setControlSelection("4e(i)(A)", ControlSelectionType.yes);
-    APService.setControlComment("4e(i)(A)", "comment");
-    APService.setControlSelection("4e(i)(B)", ControlSelectionType.no);
-    APService.setControlComment("4e(i)(B)", "bad");
+    APService.setControlSelection("4e(i)(A)", ControlSelectionType.yes,0);
+    APService.setControlComment("4e(i)(A)", "comment",0);
+    APService.setControlSelection("4e(i)(B)", ControlSelectionType.no,0);
+    APService.setControlComment("4e(i)(B)", "bad",0);
     APService.setAttestationType("Company-wide")
     APService.getAssessmentPlans().subscribe(data => {
       let plan = data[0];

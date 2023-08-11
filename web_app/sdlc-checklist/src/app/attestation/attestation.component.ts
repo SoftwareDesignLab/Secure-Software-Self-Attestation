@@ -45,6 +45,9 @@ export class AttestationComponent {
   private FormPosition: any = -1;
   private positionTag: any;
   private displayName: string = "";
+  catalogPositions: Map<string, number> = new Map<string,number>
+  catalogCount = 1;
+  public displayIDMap: Map<String, number> = new Map<string, number>
 
    /**
    * Constructor
@@ -53,10 +56,12 @@ export class AttestationComponent {
   constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, isUnused: Boolean = false){
     this.info.push(new attestationComment);
     this.catalogData.catalogs.push(catalog as Catalog);
+    this.catalogPositions.set(catalog.uuid,0);
     this.positionTag = this.attestationService.setTag();
     if (!isUnused) { //kind of hacky, but works just fine
       this.assessmentPlanService.addAssessmentPlan(this.getName());
-      this.assessmentPlanService.addCatalog(catalog as Catalog);
+      const catalogClone = JSON.parse(JSON.stringify(catalog)) as Catalog;
+      this.assessmentPlanService.addCatalog(catalogClone);
     }
   }
 
@@ -170,6 +175,8 @@ export class AttestationComponent {
       return {message: "This catalog has already been loaded in this attestation form", success: false}
     }
     this.catalogData.catalogs.push(jsonData);
+    this.catalogPositions.set(jsonData.uuid,this.catalogCount);
+    this.catalogCount++;
     return {message: "New catalog loaded!", success: true}
   }
 
@@ -183,6 +190,24 @@ export class AttestationComponent {
     let removed = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1) as Catalog[];
     this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);  // Contains bug
     this.deleteCache(removed[0]);
+    this.reIndexCatalogPositions(uuid);
+  }
+
+  reIndexCatalogPositions(uuid: string){
+    this.catalogPositions.delete(uuid)
+    this.catalogCount = this.catalogCount-1;
+    let count = 0;
+    this.catalogData.catalogs.forEach(element => {
+      this.catalogPositions.set(element.uuid,count);
+      count++;
+    });
+  }
+
+  getCatalogPositon(catalogUUID: string){
+    return this.catalogPositions.get(catalogUUID);
+  }
+  get getCatalogPositions(){
+    return this.catalogPositions;
   }
 
   /**

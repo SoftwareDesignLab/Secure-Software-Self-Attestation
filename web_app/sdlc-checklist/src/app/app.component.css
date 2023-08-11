@@ -169,9 +169,56 @@ nav {
   animation-fill-mode: backwards;
 }
 
-.bottom {
+.generate {
   position: absolute;
   bottom: 0;
+  padding: 20px 10px 25px;
+  margin: 0;
+  background-color: rgb(0, 94, 162);
+  color: white;
+  width: 400px;
+  text-indent: -20px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.generate:hover {
+  background-color: #003a63;
+}
+
+.disabled-generate {
+  position: absolute;
+  bottom: 0;
+  padding: 20px 10px 25px;
+  margin: 0;
+  background-color: #6e8eef;
+  color: #5f5f5f;
+  width: 400px;
+  text-indent: -20px;
+  user-select: none;
+ }
+ 
+
+ .disabled-generate .tool-tip{
+  visibility: hidden;
+  width: 225px;
+  left: -30px;
+  bottom: 30px;
+  background-color: #cfcfcf;
+  color: #000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+}
+
+.disabled-generate:hover .tool-tip{
+  visibility: visible;
+}
+
+.load {
+  position: absolute;
+  bottom: 65px;
   padding: 20px 10px 25px;
   margin: 0;
   background-color: #005EA2;
@@ -182,7 +229,7 @@ nav {
   cursor: pointer;
 }
 
-.bottom:hover {
+.load:hover {
   background-color: #003a63;
 }
 
