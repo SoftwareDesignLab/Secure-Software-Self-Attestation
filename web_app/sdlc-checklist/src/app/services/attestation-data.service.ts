@@ -45,7 +45,6 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
-  private displayIDMap!: Map<String, number>;
   private catalogPosition!: Map<String, number>;
   private controlWatch?: ChecklistItemComponent;
 
@@ -101,7 +100,6 @@ export class AttestationDataService {
 
   setView(position: number){
     this.assessmentPlanService.setAttestationFocus(position);
-    this.displayIDMap=this.forms[position].displayIDMap;
     this.viewPosition = position;
   }
 

@@ -63,6 +63,7 @@ describe('AttestationDataService', () => {
     let subject = attestationService.setUpControl(UID);
     expect(subject?.selection).toEqual('check');
   });
+
   it('set control comment to done', () => {
     attestationService.setUpControl(UID);
     attestationService.finalizeControlComment(UID,"comment");
