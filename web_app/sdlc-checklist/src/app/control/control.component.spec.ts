@@ -144,12 +144,7 @@ describe('ChecklistItemComponent', () => {
     attestationDataService.setUpControl(control.UID);
     attestationDataService.updateControlSelection(control.UID,"select");
     attestationDataService.finalizeControlComment(control.UID,"final");
-    console.log("LOCATE:" + control.UID);
-
     control.refresh(); 
-
-    console.log("LOCATE1:" + control.selection + control.finalized + control.comment);
-
     expect(control.selection).toEqual("select");
     expect(control.finalized).toEqual(true);
     expect(control.comment).toEqual("final");

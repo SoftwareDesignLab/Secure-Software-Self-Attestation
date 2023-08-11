@@ -54,13 +54,7 @@ describe('CatalogProcessingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('upload acceptable file', () => {
-    
-  });
 
-  it('deny empty file', () => {
-
-  });
 
 
 });

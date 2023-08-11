@@ -186,8 +186,4 @@ describe('AppComponent', () => {
     expect(test4).toEqual(false);
     });
 
-
-
-
-
 });

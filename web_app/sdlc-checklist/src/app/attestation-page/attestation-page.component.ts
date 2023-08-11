@@ -35,6 +35,7 @@ import { CatalogData, Catalog} from '../models/catalogModel';
 import { AttestationComponent } from '../attestation/attestation.component';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
 import { ContactService } from '../services/contact.service';
+import { notifyService } from '../services/notify.service';
 
 
 @Component({
@@ -66,7 +67,8 @@ export class AttestationPageComponent {
    * @param attestationService The global attestation data service
    * @param contactService global contact data service
    */
-  constructor(public attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService){
+  constructor(public attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService,
+    private notifyService: notifyService){
   }
 
 
@@ -214,9 +216,9 @@ export class AttestationPageComponent {
   onFileSelected(jsonData: any): void {
     let message = this.attestationService.getCurrentForm.onFileSelected(jsonData);
     if (message.success) {
-      this.catalogProcessingComponent.notifyOfSuccess(message.message);
+      this.notifyService.success(message.message);
     } else {
-      this.catalogProcessingComponent.notifyOfFailure(message.message);
+      this.notifyService.error(message.message);
     }
   }
 

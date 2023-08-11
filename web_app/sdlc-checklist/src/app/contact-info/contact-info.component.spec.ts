@@ -49,7 +49,6 @@ describe('ContactInfoComponent', () => {
         value: 'anything'
       }
     };
-    console.warn(mock.target.value);
     contact.updateCompanyName(mock);
     contact.updateCompanyAddress1(mock);
     contact.updateCompanyAddress2(mock);

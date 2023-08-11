@@ -192,7 +192,6 @@ describe('Assessment Plan data and retrieval', () => {
     APService.setAttestationType("Company-wide")
     APService.getAssessmentPlans().subscribe(data => {
       let plan = data[0];
-      console.log(JSON.stringify(plan.serialize(), null, 4));
       expect(plan.serialize()).toBeTruthy();
     });
   });

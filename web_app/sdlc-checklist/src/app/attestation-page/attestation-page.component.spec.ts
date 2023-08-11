@@ -38,26 +38,31 @@ import { ChecklistItemComponent } from '../control/control.component';
 
 
 describe('AttestationPageComponent', () => {
-  let component: AttestationPageComponent;
+  let attestationPage: AttestationPageComponent;
   let fixture: ComponentFixture<AttestationPageComponent>;
   let attestationDataService: AttestationDataService;
 
+
+  
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AttestationPageComponent,
-                      CatalogProcessingComponent,
-                      CatalogInfoComponent,
-                      GroupComponent,
-                      ChecklistItemComponent ],
-      imports:       [SimpleNotificationsModule.forRoot({
-                        position: ['bottom', 'right']
-                      }),
-                      FormsModule
-                      
+      declarations: [ 
+        AttestationPageComponent,
+        CatalogProcessingComponent,
+        CatalogInfoComponent,
+        GroupComponent,
+        ChecklistItemComponent 
+      ],
+      imports: [
+        SimpleNotificationsModule.forRoot({
+            position: ['bottom', 'right']
+              }),
+        FormsModule       
               ],
       providers: [
         AttestationDataService
-          ]
+      ]
     })
     .compileComponents();
     attestationDataService = TestBed.inject(AttestationDataService);
@@ -65,12 +70,22 @@ describe('AttestationPageComponent', () => {
     attestationDataService.setView(0);
 
     fixture = TestBed.createComponent(AttestationPageComponent);
-    component = fixture.componentInstance;
+    attestationPage = fixture.componentInstance;
     fixture.detectChanges();
 
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(attestationPage).toBeTruthy();
   });
+
+  it('toggle visibility of children contents', () => {
+    attestationPage.refresh();
+    attestationPage.setAllGroupExpansion(false,"d152b49c-39b4-4765-a961-75051dcf2293");
+    attestationPage.toggleExpansion("d152b49c-39b4-4765-a961-75051dcf2293");
+    let children = attestationPage.childComponents.toArray();
+    expect(attestationDataService.getCurrentForm.getHiddenCatalogs()).toContain("d152b49c-39b4-4765-a961-75051dcf2293");
+    expect(children[0].showComponents).toEqual(false);
+  });
+
 });
