@@ -25,7 +25,8 @@
 import { Component } from '@angular/core';
 import { attestationComment } from '../models/attestationForm';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { Catalog, CatalogData } from '../models/catalogModel';
+import { Catalog } from '../models/attestationModel';
+import { CatalogShell } from '../models/catalogModel'
 import catalog from '../defaultCatalog';
 import { ChecklistItemComponent } from '../control/control.component';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
@@ -38,7 +39,7 @@ import { AssessmentPlanService } from '../services/assessment-plan.service';
 })
 export class AttestationComponent {
 
-  private catalogData: CatalogData = {catalogs: []};
+  private catalogData: {catalogs: any} = {catalogs: []};
   private hiddenCatalogs = new Set<string>();
   private attestationType: string = ''; 
   private info: Array<attestationComment> = new Array<attestationComment>;
@@ -55,9 +56,8 @@ export class AttestationComponent {
    */
   constructor (private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, isUnused: Boolean = false){
     this.info.push(new attestationComment);
-    this.catalogData.catalogs.push(catalog as Catalog);
+    this.catalogData.catalogs.push(catalog as CatalogShell);
     this.catalogPositions.set(catalog.uuid,0);
-    this.positionTag = this.attestationService.setTag();
     if (!isUnused) { //kind of hacky, but works just fine
       this.assessmentPlanService.addAssessmentPlan(this.getName());
       const catalogClone = JSON.parse(JSON.stringify(catalog)) as Catalog;
@@ -188,7 +188,6 @@ export class AttestationComponent {
     this.assessmentPlanService.removeCatalog(uuid);
     let catalogs = this.catalogData.catalogs;
     let removed = catalogs.splice(catalogs.findIndex((value)=>{return value.uuid === uuid}), 1) as Catalog[];
-    this.attestationService.setDeletionPosition(this.attestationService.getCurrentForm.getFormPosition);  // Contains bug
     this.deleteCache(removed[0]);
     this.reIndexCatalogPositions(uuid);
   }

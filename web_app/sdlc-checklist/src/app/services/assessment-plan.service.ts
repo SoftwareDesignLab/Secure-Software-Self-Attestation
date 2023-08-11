@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { AssessmentPlan, APMetadata, ControlSelection, SubjectID, Prop, AssessmentSubject } from '../models/assessmentPlan';
-import { Catalog } from '../models/catalogModel';
+import { Catalog } from '../models/attestationModel';
 
 export enum ControlSelectionType {
   yes = "yes",

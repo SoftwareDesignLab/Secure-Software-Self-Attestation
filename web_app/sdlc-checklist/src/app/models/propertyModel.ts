@@ -22,44 +22,26 @@
  * SOFTWARE.
  */
 
+import { BehaviorSubject } from 'rxjs';
 
-export interface CatalogShell {
-    uuid: string;
-    metadata: MetadataShell
-    groups: GroupShell[];
-}
+export class Prop {
+    #class: BehaviorSubject<string>;
+    #name: BehaviorSubject<string>;
+    #value: BehaviorSubject<string>;
 
-export interface MetadataShell {
-    title: string;
-    "last-modified": string;
-    version: string;
-    "oscal-version": string;
-    published: string;
-}
+    constructor(prop: any) {
+        this.class = prop.class;
+        this.name = prop.name;
+        this.value = prop.value;
+    }
 
-export interface GroupShell {
-    title: string;
-    id: string;
-    controls: ControlShell[];
-}
-
-export interface ControlShell {
-    id: string;
-    title: string;
-    props: PropShell[];
-    parts: PartShell[];
-}
-
-export interface PropShell {
-    name: string;
-    class: string | undefined;
-    property_class: string | undefined;
-    value: string;
-}
-
-export interface PartShell {
-    name: string;
-    title: string;
-    prose: string;
-    part_class: string;
+    get class(): string { return this.#class.getValue(); }
+    get name(): string { return this.#name.getValue(); }
+    get value(): string { return this.#value.getValue(); }
+    get observableClass(): BehaviorSubject<string> { return this.#class; }
+    get observableName(): BehaviorSubject<string> { return this.#name; }
+    get observableValue(): BehaviorSubject<string> { return this.#value; }
+    set class(newClass: string) { this.#class.next(newClass);}
+    set name(name: string) { this.#name.next(name); }
+    set value(value: string) { this.#value.next(value); }
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { CatalogFileFormat, metaData, Catalog } from '../models/catalogModel';
+import { CatalogFileFormat, metaData, Catalog } from '../models/attestationModel';
 import { notifyService } from '../services/notify.service';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
 
