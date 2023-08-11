@@ -416,32 +416,5 @@ export class AssessmentPlanService {
     this.assessmentPlans.next(plans);
   }
 
-  setSingleProduct() {
-    let plans = this.assessmentPlans.getValue();
-    let plan = plans[this.attestationFocus.getValue()]
-
-    if (plan["assessment-subjects"] === undefined) {
-      console.log("assessment-subjects not found in plan, skipping subject update");
-      return;
-    }
-
-    plan["assessment-subjects"][0].includeAll(false)
-    if (plan["assessment-subjects"][0]["include-subjects"] !== undefined) {
-      while (plan["assessment-subjects"][0]["include-subjects"].length > 1) {
-        plan["assessment-subjects"][0]["include-subjects"].pop();
-      }
-    }
-
-    plan["assessment-subjects"][0].props = [new Prop("type", "single product", "Attestation Type")];
-
-    plan.metadata['last-modified'] = new Date().toISOString();
-
-    this.assessmentPlans.next(plans);
-  }
-
-  checkOnPlans() {
-    let plans = this.assessmentPlans.getValue();
-    console.log("Hi")
-  }
   //TODO automatically exclude subjects that are unchecked
 }
