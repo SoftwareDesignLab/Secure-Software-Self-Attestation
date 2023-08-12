@@ -11,18 +11,9 @@
         </div>
     </div>
     <div class="group-rollable-content" [hidden]="!showComponents">
-        <p *ngIf="description">{{ description }}</p>
         <div id="checkbox-container" class="checkbox-container">
             <app-control *ngFor="let item of controls" 
-              [id]="item.id"
-              [title]="item.title"
-              [class]="item.class"
-              [params]="item.params"
-              [parts]="item.parts"
-              [links]="item.links"
-              [props]="item.props"
-              [controls]="item.controls"
-              [catalogUUID]="catalogUUID"
+              [control]="item"
             ></app-control>
         </div>
     </div>

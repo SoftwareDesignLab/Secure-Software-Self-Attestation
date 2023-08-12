@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { CatalogFileFormat, metaData, Catalog } from '../models/attestationModel';
+import { CatalogShell, MetadataShell } from '../models/catalogModel';
 import { notifyService } from '../services/notify.service';
-import { AssessmentPlanService } from '../services/assessment-plan.service';
+import { AttestationDataService } from '../services/attestation-data.service';
 
 
 @Component({
@@ -41,7 +41,7 @@ export class CatalogProcessingComponent {
    * 
    * @param notifications Prepares the notification service
    */
-  constructor(private notifications: notifyService, private assessmentPlanService: AssessmentPlanService){
+  constructor(private notifications: notifyService, private attestationDataService: AttestationDataService ){
   }
 
   /**
@@ -119,7 +119,7 @@ export class CatalogProcessingComponent {
    * @returns Whether there is a nested catalog
    */
   private isNested(data: object): boolean{
-    let oscalObj = data as CatalogFileFormat;
+    let oscalObj = data as {catalog: any};
     if(oscalObj.catalog != undefined){
       return true;
     }
@@ -135,7 +135,7 @@ export class CatalogProcessingComponent {
    */
   private isValidCatalog(data: object): boolean{
     let isValid : boolean = false;
-    let catalog = data as Catalog;
+    let catalog = data as CatalogShell;
     if(catalog.uuid!= undefined){
       var UIDpattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/
       if(UIDpattern.test(catalog.uuid)){
@@ -153,7 +153,7 @@ export class CatalogProcessingComponent {
       console.log("Missing/invalid uuid");
     }
     if(catalog.metadata != undefined){
-      let metaData = catalog.metadata as metaData;
+      let metaData = catalog.metadata as MetadataShell;
       if(metaData.title == undefined){
         isValid = false;
         console.log("Missing MetaData: title ");
@@ -194,8 +194,8 @@ export class CatalogProcessingComponent {
       const catalog = this.isNested(json) ? json.catalog : json;
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
-        const catalogClone = JSON.parse(JSON.stringify(catalog)) as Catalog;
-        this.assessmentPlanService.addCatalog(catalogClone);
+        const catalogClone = JSON.parse(JSON.stringify(catalog)) as CatalogShell;
+        this.attestationDataService.activeForm.addCatalog(catalogClone);
         this.fileSelected.emit(catalog);
       }
     };

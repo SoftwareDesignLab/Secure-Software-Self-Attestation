@@ -21,3 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { Component, Input } from '@angular/core';
+import { Catalog, Group } from '../models/attestationModel';
+import { AttestationDataService } from '../services/attestation-data.service';
+
+@Component({
+  selector: 'app-catalog',
+  templateUrl: './catalog.component.html',
+  styleUrls: ['./catalog.component.css']
+})
+export class CatalogComponent {
+  @Input() catalog: Catalog;
+  groups: Group[];
+  uuid: string;
+  expanded: boolean;
+
+  constructor(private attestationDataService: AttestationDataService) {}
+
+  ngOnInit() {
+    this.groups = this.catalog.groups;
+    this.uuid = this.catalog.uuid;
+    this.expanded = this.catalog.expansion;
+    this.catalog.observableExpansion.subscribe((value) => {this.expanded = value});
+  }
+
+  toggleExpansion() {
+    this.catalog.toggleExpansion();
+  }
+
+  removeCatalog() {
+    this.attestationDataService.activeForm.removeCatalog(this.uuid);
+  }
+}

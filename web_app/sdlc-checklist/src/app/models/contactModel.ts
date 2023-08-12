@@ -23,9 +23,9 @@
  */
 
 import { BehaviorSubject } from 'rxjs';
-import catalog from '../defaultCatalog';
 import { v4 as uuidv4 } from 'uuid';
 import { Prop } from './propertyModel';
+import { PropShell } from './catalogModel';
 
 export class Metadata {
     #title: BehaviorSubject<string> = new BehaviorSubject("");
@@ -53,7 +53,6 @@ export class Metadata {
 export class Party  {
     #uuid: string = uuidv4();
     #type: string;
-    #name: BehaviorSubject<string> = new BehaviorSubject("");
     #address: Address = new Address();
     #props: Prop[] = [];
 
@@ -68,28 +67,29 @@ export class Party  {
      * @param value The value of the prop
      */
     addProp(newClass: string, name: string, value: string): void {
-        this.#props.push(new Prop({class: newClass, name: name, value: value}));
+        this.#props.push(new Prop({class: newClass, name: name, value: value} as PropShell));
     }
 
     get uuid(): string { return this.#uuid; }
     get type(): string { return this.#type; }
-    get name(): string { return this.#name.getValue(); }
-    get addresses(): Address { return this.#address; }
+    get address(): Address { return this.#address; }
     get props(): Prop[] { return this.#props; }
-    get observableName(): BehaviorSubject<string> { return this.#name; }
-    set name(name: string) { this.#name.next(name); }
 }
 
 export class Organization extends Party {
     #website: BehaviorSubject<string> = new BehaviorSubject<string>("");
+    #name: BehaviorSubject<string> = new BehaviorSubject("");
 
     constructor() {
         super("organization");
     }
 
     get website(): string { return this.#website.getValue(); }
+    get name(): string { return this.#name.getValue(); }
     get observableWebsite(): BehaviorSubject<string> { return this.#website; }
-    get propWebsite(): Prop | undefined { if (this.website) { return new Prop({class: "Producer Info", name: "website", value: this.#website.getValue()})}}
+    get observableName(): BehaviorSubject<string> { return this.#name; }
+    get propWebsite(): Prop | undefined { if (this.website) { return new Prop({class: "Producer Info", name: "website", value: this.#website.getValue()} as PropShell)}}
+    set name(name: string) { this.#name.next(name); }
     set website(website: string) { this.#website.next(website); }
 }
 
@@ -97,6 +97,8 @@ export class Person extends Party {
     #email: BehaviorSubject<string> = new BehaviorSubject<string>("");
     #phone: BehaviorSubject<string> = new BehaviorSubject<string>("");
     #title: BehaviorSubject<string> = new BehaviorSubject<string>("");
+    #firstName: BehaviorSubject<string> = new BehaviorSubject("");
+    #lastName: BehaviorSubject<string> = new BehaviorSubject("");
 
     constructor() {
         super("person");
@@ -105,13 +107,21 @@ export class Person extends Party {
     get email(): string { return this.#email.getValue(); }
     get phone(): string { return this.#phone.getValue(); }
     get title(): string { return this.#title.getValue(); }
+    get firstName(): string { return this.#firstName.getValue(); }
+    get lastName(): string { return this.#lastName.getValue(); }
+    get name(): string { return this.firstName + this.lastName; }
     get observableEmail(): BehaviorSubject<string> { return this.#email; }
     get observablePhone(): BehaviorSubject<string> { return this.#phone; }
     get observableTitle(): BehaviorSubject<string> { return this.#title; }
-    get propTitle(): Prop | undefined { if (this.title) { return new Prop({class: "Contact Info", name: "title", value: this.title})}}
+    get observableFirstName(): BehaviorSubject<string> { return this.#firstName; }
+    get observableLastName(): BehaviorSubject<string> {return this.#lastName; }
+    get propTitle(): Prop | undefined { if (this.title) { return new Prop({class: "Contact Info", name: "title", value: this.title} as PropShell)}}
     set email(email: string) { this.#email.next(email); }
     set phone(phone: string) { this.#phone.next(phone); }
     set title(title: string) { this.#title.next(title); }
+    set firstName(name: string) { this.#firstName.next(name); }
+    set lastName(name: string) { this.#lastName.next(name); }
+    set name(name: string) { this.firstName = name.split(" ")[0]; this.lastName = name.split(" ")[1]}
 }
 
 export class Address {
@@ -134,4 +144,11 @@ export class Address {
     get observableState(): BehaviorSubject<string> { return this.#state; }
     get observableCountry(): BehaviorSubject<string> { return this.#country; }
     get observablePostal(): BehaviorSubject<string> { return this.#postal; }
+    set lines(lines: string[]) { this.#lines.map((line, index) => {line.next(lines[index])}); }
+    set line1(line: string) { this.#lines[0].next(line); }
+    set line2(line: string) { this.#lines[1].next(line); }
+    set city(city: string) { this.#city.next(city); }
+    set state(state: string) { this.#state.next(state); }
+    set country(country: string) { this.#country.next(country); }
+    set postal(postal: string) { this.#postal.next(postal); }
 }

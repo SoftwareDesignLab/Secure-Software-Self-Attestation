@@ -2,10 +2,9 @@
   <div class="checkbox-container">
     <div class="button-set">
       <div class="individual-button" *ngFor="let i of ['check', 'x', 'na']">
-        <input [id]="UID + '-' + i" hidden type="radio" [name]="UID + '-selector'" [value]="i" (click)="select(i)" [(ngModel)]="selection">
-        <label [for]="UID + '-' + i"><img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="i" (keydown.enter)="select(i)" tabindex=0></label>
+        <img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="isSelected(i) ? i + '-selected' + i" (click)="select(i)" (keydown.enter)="select(i)" tabindex=0></label>
       </div>
-       <img alt="Comment Button" 
+      <img alt="Comment Button" 
         [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
         (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!isChecked()" tabindex=0>
     </div>
@@ -18,16 +17,15 @@
       </div>
     </div>
   </div>
-  <app-rollable *ngIf="showRollable"
-    [description]="getDescription()"
-    [examples]="getExamples()"
-    [subControls]="controls"
-    [references]="getReferences()"
+  <app-rollable *ngIf="expanded"
+    [examples]="examples"
+    [references]="references"
+    [props]="props"
   ></app-rollable>
 </div>
 
-<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down()" (mouseup)="up()" (mouseenter)="commentFocus()" (keydown.escape)="cancel()">
-  <div class="pane popup" (mouseenter)="enter(true)" (mouseleave)="enter(false)">
+<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down($event)" (mouseup)="up($event)" (mouseenter)="commentFocus()" (keydown.escape)="cancel()">
+  <div class="pane popup">
     <br>
     <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
     <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4"></textarea>

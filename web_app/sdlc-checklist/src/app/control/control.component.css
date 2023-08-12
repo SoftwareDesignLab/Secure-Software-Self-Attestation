@@ -67,15 +67,15 @@ img {
   height: 20px;
 }
 
-input:checked + label>.check {
+.check-selected {
   background-color: rgb(199, 243, 193)
 }
 
-input:checked + label>.x {
+.x-selected {
   background-color: rgb(243, 193, 193)
 }
 
-input:checked + label>.na {
+.na-selected {
   background-color: rgb(193, 229, 243)
 }
 

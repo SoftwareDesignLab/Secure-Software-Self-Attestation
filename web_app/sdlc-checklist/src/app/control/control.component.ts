@@ -21,197 +21,127 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { ControlAttestation } from '../models/attestationModel';
-import { timeInterval } from 'rxjs';
-import { FormsModule } from '@angular/forms';
-
+import { Control, Result } from '../models/attestationModel';
+import { Prop } from '../models/propertyModel';
 
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
-
-
 export class ChecklistItemComponent {
-  @Input() id: any;
-  @Input() title: any;
-  @Input() class: any;
-  @Input() params: any;
-  @Input() parts: any;
-  @Input() links: any;
-  @Input() props: any;
-  @Input() controls?: ChecklistItemComponent[];
-  @Input() catalogUUID: any;
-  @Output() update = new EventEmitter();
-  selection: string = "no-selection";
-  showRollable = false;
-  info!: ControlAttestation; 
-  UID: any; //Unique ID for this control for the program
-  comment: string = "";
-  popup: Boolean = false;
-  finalized: Boolean = false;
-  onPopup: Boolean = false;
-  primed: Boolean = false;
-  focused: Boolean = false;
-  displayID: any;
+  @Input() control: Control;
+  id: string;
+  uid: string;
+  result: Result;
+  comment: string;
+  commentFinalized: boolean;
+  expanded: boolean;
+  title: string;
+  popup: boolean = false;
+  clickOutOfWindow: boolean = false;
+  examples: string[];
+  references: Prop[];
+  props: Prop[];
 
-  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){  }
+  constructor(private attestationDataService: AttestationDataService){  }
 
 
   ngOnInit(){
-    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
-     '-' + this.catalogUUID + '-' + this.id;
-    if(this.attestationDataService.validateUID(this.UID)){
-      this.info = this.attestationDataService.setUpControl(this.UID)!;
-      this.selection= this.info.selection;
-      this.comment = this.info.comment;
-      this.finalized = this.info.finalized;
-      this.showRollable = this.info.showRollable;
-      this.displayID = this.info.displayID;
-    }
-    
-  }
-
-
-  refresh() {
-    // Perform any necessary data updates here
-
-    // Trigger change detection to update the view
-    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
-     '-' + this.catalogUUID + '-' + this.id;
-    if(this.attestationDataService.validateUID(this.UID)){
-      this.info = this.attestationDataService.setUpControl(this.UID)!;
-      this.displayID= this.info.displayID;
-      this.selection= this.info.selection;
-      this.comment = this.info.comment;
-      this.finalized = this.info.finalized;
-      this.showRollable = this.info.showRollable;
-      this.changeDetectorRef.detectChanges();
-    }
+    this.result = this.control.result;
+    this.control.observableResult.subscribe((value: Result) => {this.result = value;});
+    this.comment = this.control.comment;
+    this.control.observableComment.subscribe((value: string) => {this.comment = value});
+    this.commentFinalized = this.control.commentFinalized;
+    this.control.observableCommentFinalized.subscribe((value: boolean) => {this.commentFinalized = value});
+    this.expanded = this.control.expanded;
+    this.control.observableExpanded.subscribe((value) => {this.expanded = value});
+    this.id = this.control.id;
+    this.uid = this.control.uid;
+    this.examples = this.control.examples;
+    this.references = this.control.references;
+    this.props = this.control.props;
   }
 
   toggleRollable() {
-    this.showRollable = !this.showRollable;
-    this.attestationDataService.toggleControlRollable(this.UID);
-  }
-
-  getDescription() {
-    if (this.props) {
-      // props are objects. find the first prop that has the class "description"
-      const descriptionProp = this.props.find((prop: any) => prop.class === 'Description');
-      if (descriptionProp) return descriptionProp.value;
-    }
-    return undefined;
-  }
-
-  getExamples() {
-    if (this.parts) {
-      // parts are objects. find all parts that have the class "Example"
-      return this.parts.filter((part: any) => part.part_class === 'Example');
-    }
-  }
-
-  getReferences() {
-    if (this.props) {
-      // parts are objects. find all parts that have the class "Example"
-      return this.props.filter((prop: any) => prop.property_class === 'Reference');
-    }
+    this.control.toggleExpansion();
   }
 
   isChecked(): boolean {
-    return this.selection !== "no-selection";
+    return this.result !== Result.blank;
+  }
+
+  isSelected(option: string): boolean {
+    return (option === "check" && this.result === Result.yes) || (option === "x" && this.result === Result.no) || (option === "na" && this.result === Result.na);
   }
 
   select(option: string) {
-    if (this.selection === "no-selection" && !this.attestationDataService.bypassComments) {
-      this.deploy();
+    let result = Result.blank;
+    switch (option) {
+      case "check": case "yes": result = Result.yes; break;
+      case "x": case "no": result = Result.no; break;
+      case "na": case "n/a": result = Result.na; break;
     }
-    this.changeSelection(option);
-  }
-
-  changeSelection(option: string) {
-    if (this.selection === option) {
-      this.selection = "no-selection";
-    } else {
-      this.selection = option;
-    }
-    this.attestationDataService.updateControlSelection(this.UID, this.selection);
+    if (result === this.control.result) result = Result.blank;
+    this.control.result = result;
   }
 
   save() {
-    this.finalized = false;
-    let text = document.getElementById("comment")
-    if (text instanceof HTMLTextAreaElement)
-      this.comment = text.value;
-      this.attestationDataService.saveControlComment(this.UID, this.comment);
+    let comment = document.getElementById("comment")
+    if (comment instanceof HTMLTextAreaElement) {
+      this.control.inProgressComment(comment.value);
+    }
     this.cancel();
   }
 
   done() {
-    this.finalized = true;
-    let text = document.getElementById("comment")
-    if (text instanceof HTMLTextAreaElement)
-      this.comment = text.value;
-      this.attestationDataService.finalizeControlComment(this.UID, this.comment);
+    let comment = document.getElementById("comment")
+    if (comment instanceof HTMLTextAreaElement) {
+      this.control.finalizeComment(comment.value);
+    }
     this.cancel();
   }
 
   cancel() {
     this.popup = false;
-    this.primed = false;
-    this.focused = false;
   }
 
   del() {
-    this.comment = "";
-    this.finalized = false;
+    this.control.comment = "";
+    this.control.commentFinalized = false;
     this.cancel();
-    this.attestationDataService.deleteControlComment(this.UID);
   }
 
   deploy() {
-    let active = document.activeElement;
-    if (active instanceof HTMLElement) {
-      active.blur;
-    }
     this.popup = true;
-    this.attestationDataService.setControlWatch(this);
   }
 
-  enter(loc: boolean) {
-    this.onPopup = loc;
+  down(event: MouseEvent) {
+    let popup = document.getElementById("popup");
+    if (popup instanceof HTMLDivElement) {
+      if (popup.clientLeft > event.clientX  || event.clientX > popup.clientLeft + popup.clientWidth || 
+          event.clientY < popup.clientTop || event.clientY + popup.clientTop + popup.clientHeight) {
+        this.clickOutOfWindow = true;
+      }
+    }
   }
 
-  down() {
-    if (!this.onPopup)
-      this.primed = true;
-  }
-
-  up() {
-    if (this.primed) {
-      if (!this.onPopup) {
+  up(event: MouseEvent) {
+    if (!this.clickOutOfWindow) { return; }
+    this.clickOutOfWindow = false;
+    let popup = document.getElementById("popup");
+    if (popup instanceof HTMLDivElement) {
+      if (popup.clientLeft > event.clientX  || event.clientX > popup.clientLeft + popup.clientWidth || 
+          event.clientY < popup.clientTop || event.clientY + popup.clientTop + popup.clientHeight) {
         this.cancel();
-      } else {
-        this.primed = false;
       }
     }
   }
 
   commentFocus() {
-    if (this.focused) 
-      return
-    let comment = document.getElementById("comment");
-    if (comment instanceof HTMLElement) {
-      comment.focus();
-      this.focused = true;
-    }
+    document.getElementById("comment")?.focus();
   }
-  get getID(){
-    return this.id;
-  }
-
 }
 

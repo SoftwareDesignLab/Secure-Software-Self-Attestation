@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 import { Component, Input, ViewChildren, QueryList, ChangeDetectorRef} from '@angular/core';
-import { ChecklistItemComponent } from '../control/control.component'
-import { GroupInfo } from '../models/attestationModel';
 import { AttestationDataService } from '../services/attestation-data.service';
+import { Control, Group, Result } from '../models/attestationModel';
 
 @Component({
   selector: 'app-group',
@@ -32,90 +31,48 @@ import { AttestationDataService } from '../services/attestation-data.service';
   styleUrls: ['./group.component.css']
 })
 export class GroupComponent {
-  @Input() id: any;
-  @Input() title: any;
-  @Input() description: any;
-  @Input() controls?: ChecklistItemComponent[];
-  @Input() groups?: GroupComponent[];
-  @Input() catalogUUID: any;
-  @ViewChildren(ChecklistItemComponent) childComponents!: QueryList<ChecklistItemComponent>;
+  @Input() group: Group;
+  title: string;
+  id: string;
+  catalogUUID: string;
+  controls: Control[];
   showComponents = true;
-  info!: GroupInfo;
-  UID: any;  //Unique ID for this control for the program
 
-  constructor(private attestationDataService: AttestationDataService, private changeDetectorRef: ChangeDetectorRef){}
+  constructor(private attestationDataService: AttestationDataService){}
 
   ngOnInit(){
-    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
-     '-' + this.catalogUUID + '-' + this.id
-    this.info = this.attestationDataService.setUpGroup(this.UID)!;
-    this.showComponents = this.info.showRollable
-  }
-
-
-  refresh(){
-    this.UID = this.attestationDataService.getCurrentForm.getPositionTag +
-    '-' + this.catalogUUID + '-' + this.id
-   this.info = this.attestationDataService.setUpGroup(this.UID)!;
-   this.showComponents = this.info.showRollable
-   this.changeDetectorRef.detectChanges();
-   this.childComponents.forEach((child) => {
-    child.refresh() 
-  });
+    this.title = this.group.title;
+    this.id = this.group.id;
+    this.catalogUUID = this.group.catalogUUID;
+    this.controls = this.group.controls;
+    this.showComponents = this.group.expanded;
+    this.group.observableExpanded.subscribe((value) => {this.showComponents = value});
   }
 
   toggleComponents() {
-    this.showComponents = !this.showComponents;
-    this.attestationDataService.toggleGroupRollable(this.UID);
-    if (!this.showComponents) {
-      this.hideChildRollable();
-    }
+    this.group.toggleExpansion();
   }
 
   setComponents(truth: boolean) {
-    if (!truth) {
-      this.hideChildRollable();
-    }
-    this.showComponents = truth;
+    this.group.expanded = truth;
   }
 
   hideChildRollable() {
-    this.childComponents.forEach((child) => {
-      child.showRollable = false;
-    })
+    this.controls.forEach((control) => control.expanded = false);
   }
 
   areAllChildrenChecked(): boolean {
-    if (this.childComponents === undefined) {return false;}
-    for (let i = this.childComponents.length - 1; i>=0; i--) {
-      let child = this.childComponents.get(i);
-      if (child instanceof ChecklistItemComponent) {
-        if (!child.isChecked()) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  deselectAll(selection: string){
-    if (this.childComponents === undefined) {return true;}
-    for (let i = this.childComponents.length - 1; i>=0; i--) {
-      let child = this.childComponents.get(i);
-      if (child instanceof ChecklistItemComponent) {
-        if (child.selection != selection) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return -1 === this.controls.findIndex((control) => {control.result === Result.blank})
   }
 
   setAllChildrenSelection(selection: string): void {
-    this.childComponents.forEach((child) => {
-      if (child instanceof ChecklistItemComponent) {
-        child.changeSelection(selection);
-      }
-    });
+    let result = Result.blank;
+    switch (selection) {
+      case "check": case "yes": result = Result.yes; break;
+      case "x": case "no": result = Result.no; break;
+      case "na": case "n/a": result = Result.na; break;
+    }
+    if (result !== Result.blank && this.controls.findIndex((control) => {control.result !== result}) === -1) result = Result.blank;
+    this.controls.forEach((control) => {control.result = result});
   }
 }

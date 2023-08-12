@@ -21,32 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BehaviorSubject } from 'rxjs';
-import { PartShell, PropShell } from './catalogModel';
+import { CatalogComponent } from './catalog.component';
 
-export class Prop {
-    #class: BehaviorSubject<string>;
-    #name: BehaviorSubject<string>;
-    #value: BehaviorSubject<string>;
+describe('CatalogComponent', () => {
+  let component: CatalogComponent;
+  let fixture: ComponentFixture<CatalogComponent>;
 
-    constructor(prop: PropShell) {
-        this.#class = new BehaviorSubject<string>(prop.class || prop.property_class || "");
-        this.#name = new BehaviorSubject<string>(prop.name);
-        this.#value = new BehaviorSubject<string>(prop.value);
-    }
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ CatalogComponent ]
+    })
+    .compileComponents();
 
-    getSerialized(): Object {
-        return {class: this.class, name: this.name, value: this.value};
-    }
+    fixture = TestBed.createComponent(CatalogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    get class(): string { return this.#class.getValue(); }
-    get name(): string { return this.#name.getValue(); }
-    get value(): string { return this.#value.getValue(); }
-    get observableClass(): BehaviorSubject<string> { return this.#class; }
-    get observableName(): BehaviorSubject<string> { return this.#name; }
-    get observableValue(): BehaviorSubject<string> { return this.#value; }
-    set class(newClass: string) { this.#class.next(newClass);}
-    set name(name: string) { this.#name.next(name); }
-    set value(value: string) { this.#value.next(value); }
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

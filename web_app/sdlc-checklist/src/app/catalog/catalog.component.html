@@ -1,0 +1,18 @@
+<div class="pane">
+    <div class="button-panel">
+      <p *ngIf="expanded" class="button-caption">Collapse Catalog</p>
+      <p *ngIf="!expanded" class="button-caption">Expand Catalog</p>
+      <div (click)="toggleExpansion()" (keydown.enter)="toggleExpansion(catalog.uuid)" tabindex=0
+           [className]="expanded ? 'circle-button orange landing' : 'circle-button green landing'">     
+      </div><br>
+      <p class="button-caption">Remove Catalog</p>
+      <div (click)="removeCatalog(catalog.uuid)" (keydown.enter)="removeCatalog(catalog.uuid)" tabindex=0 class="circle-button red"></div>
+    </div>
+    <div id="grid-container" [className]="expanded ? 'grid-container' : 'grid-container hidden'">
+      <div id="group-container" class="group-container">
+        <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
+        <app-group *ngFor="let group of groups" 
+          [group] = "group"
+        ></app-group>
+    </div>
+</div>

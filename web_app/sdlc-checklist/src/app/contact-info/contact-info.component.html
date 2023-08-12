@@ -3,21 +3,21 @@
     <div class="form-column">
       <h3>Software Producer Information</h3>
       <label for="company-name">Company Name: </label>
-      <input id="company-name" type="text" (blur)="updateCompanyName($event)" value="{{contactService.companyName}}" autocomplete="organization" >
+      <input id="company-name" type="text" (blur)="update($event, 'orgName')" value="{{contactService.orgName}}" autocomplete="organization" >
       <label for="address1">Address Line 1: </label>
-      <input id="address1" type="text"(blur)="updateCompanyAddress1($event)" value="{{contactService.companyAddress1}}" autocomplete="address-line1">
+      <input id="address1" type="text"(blur)="update($event, 'orgAddressLine1')" value="{{contactService.orgAddressLine1}}" autocomplete="address-line1">
       <label for="address2">Address Line 2: </label>
-      <input id="address2" type="text"(blur)="updateCompanyAddress2($event)" value="{{contactService.companyAddress2}}" autocomplete="address-line2">
+      <input id="address2" type="text"(blur)="update($event, 'orgAddressLine2')" value="{{contactService.orgAddressLine2}}" autocomplete="address-line2">
       <label for="city">City: </label>
-      <input id="city" type="text" (blur)="updateCity($event)" value="{{contactService.city}}" autocomplete="address-level2">
+      <input id="city" type="text" (blur)="update($event, 'orgCity')" value="{{contactService.orgCity}}" autocomplete="address-level2">
       <label for="state">State or Province: </label>
-      <input id="state" type="text" (blur)="updateState($event)" value="{{contactService.state}}" autocomplete="address-level1">
+      <input id="state" type="text" (blur)="update($event)" value="{{contactService.orgState}}" autocomplete="address-level1">
       <label for="country">Country: </label>
-      <input id="country" type="text" (blur)="updateCountry($event)" value="{{contactService.country}}" autocomplete="country-name">
+      <input id="country" type="text" (blur)="updateCountry($event)" value="{{contactService.orgCountry}}" autocomplete="country-name">
       <label for="zip">Postal Code: </label>
-      <input id="zip" type="text" (blur)="updatePostal($event)" value="{{contactService.postalCode}}" autocomplete="postal-code" >
+      <input id="zip" type="text" (blur)="updatePostal($event)" value="{{contactService.orgPostalCode}}" autocomplete="postal-code" >
       <label for="website">Website: </label>
-      <input id="website" type="url" (blur)="updateWebsite($event)" value="{{contactService.website}}" autocomplete="url">
+      <input id="website" type="url" (blur)="updateWebsite($event)" value="{{contactService.orgWebsite}}" autocomplete="url">
     </div>
     <div class="center-line"></div>
     <div class="form-column">
@@ -49,7 +49,7 @@
 </div>
 
 <div class="bot-right">
-  <button  class="blue" *ngIf="checkAttestations()"  (click)="lastAttestation()">Proceed to Attestation Form</button>
-  <button class="green" *ngIf="!checkAttestations()"  (click)="newForm()">+ New Attestation</button>
+  <button  class="blue" (click)="lastAttestation()">Proceed to Attestation Form</button>
+  <button class="green" (click)="newForm()">+ New Attestation</button>
 </div>
 

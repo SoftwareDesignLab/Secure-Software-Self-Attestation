@@ -68,7 +68,7 @@ class TermsAndConditions {
   serialize(): object {
     let serialized = [];
     for (let part of this.parts) {
-      serialized.push(part.serialize());
+      //serialized.push(part.serialize());
     }
     return serialized;
   }

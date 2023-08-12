@@ -34,7 +34,6 @@ import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
 import { notifyService } from './services/notify.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AttestationComponent } from './attestation/attestation.component';
 import { FormsModule } from '@angular/forms'
 import { MatGridListModule } from '@angular/material/grid-list';
 import { attestationComment } from './models/attestationForm';
@@ -45,6 +44,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AttestationDataService } from './services/attestation-data.service';
 import { StartUpService, startUpFactory } from './services/start-up.service';
 import { AssessmentPlanService } from './services/assessment-plan.service';
+import { CatalogComponent } from './catalog/catalog.component';
 
 @NgModule({
   declarations: [
@@ -54,9 +54,9 @@ import { AssessmentPlanService } from './services/assessment-plan.service';
     CatalogProcessingComponent,
     GroupComponent,
     CatalogInfoComponent,
-    AttestationComponent,
     ContactInfoComponent,
-    AttestationPageComponent
+    AttestationPageComponent,
+    CatalogComponent
   ],
   imports: [
     BrowserModule,

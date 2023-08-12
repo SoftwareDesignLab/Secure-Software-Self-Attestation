@@ -32,8 +32,8 @@ const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
   providedIn: 'root'
 })
 export class AttestationDataService {
-  private forms: Form[] = [];
-  public activeForm: number = -1;
+  #forms: Form[] = [];
+  #activeForm: BehaviorSubject<Form | undefined> = new BehaviorSubject<Form | undefined>(undefined);
 
   /**
    * Creates a new form and adds it to forms
@@ -41,7 +41,8 @@ export class AttestationDataService {
    */
   createNewForm() {
     let newForm = new Form();
-    this.forms.push(newForm);
+    this.#forms.push(newForm);
+    this.#activeForm.next(newForm)
     return newForm
   }
 
@@ -49,7 +50,7 @@ export class AttestationDataService {
    * Gets the active form
    * @returns The active form's list of catalogs
    */
-  getActiveForm(): Form {
-    return this.forms[this.activeForm];
-  }
+  get activeForm(): Form | undefined { return this.#activeForm.getValue(); }
+  get forms(): Form[] { return this.#forms; }
+  get observableActiveForm(): BehaviorSubject<Form | undefined> { return this.#activeForm; }
 }

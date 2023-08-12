@@ -36,10 +36,10 @@ import { AttestationComponent } from './attestation/attestation.component';
 import { TemplateLiteral } from '@angular/compiler';
 import { ContactService } from './services/contact.service';
 import { AssessmentPlanService } from './services/assessment-plan.service';
-import { Catalog } from './models/catalogModel';
+import { CatalogShell } from './models/catalogModel';
 
 interface CatalogData {
-  catalogs: Catalog[];
+  catalogs: CatalogShell[];
 }
 
 const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
@@ -62,12 +62,6 @@ export class AppComponent {
     private assessmentPlanService: AssessmentPlanService ){}
   
   ngOnInit(){
-    if (this.attestationService.getdata(0))
-      this.catalogData = this.attestationService.getdata(0).getCatalogs
-    
-      ////// Temp Bypass Code
-      document.addEventListener('keydown', this.onKeyPressed.bind(this));
-      //////
   }
 
   ////// Temp Bypass code (press f2 to toggle generate report button regardless of contact info)
@@ -98,8 +92,6 @@ export class AppComponent {
     } else {
       this.router.navigate([page])
     }
-    if (page === "contact-info")
-      this.attestationService.pageName = "Contact Info";
   }
 
   /**
@@ -129,7 +121,7 @@ export class AppComponent {
    * Gets the array of all attestation components
    */
   get getForms(){
-    return this.attestationService.getRawData;
+    return [];
   }
 
   /**
@@ -138,10 +130,6 @@ export class AppComponent {
    * @param fragment The fragment identifier to scroll to
    */
   changeAttestation(form: AttestationComponent, fragment?: string){
-    this.attestationService.pageName = form.getName();
-    this.attestationService.setView(form.getFormPosition);
-    this.attestationService.updateDynamicForm(form);
-    this.attestationService.refresh();
     this.changePage('attestation-form', fragment);
   }
   
@@ -149,9 +137,6 @@ export class AppComponent {
    * Creates a new attestation form
    */
   newForm(){
-    this.attestationService.addform();
-    let newPage = this.attestationService.getdata(this.attestationService.getRawData.length-1);
-    this.changeAttestation(newPage);
   }
 
   /**
@@ -159,33 +144,6 @@ export class AppComponent {
    * @param position The position of the form to delete
    */
   deleteForm(position: number){
-    this.openTag = 0;
-    this.attestationService.setDeletionPosition(position)
-    let firsthalf = this.attestationService.forms.slice(0,position);
-    let secondhalf = this.attestationService.forms.slice(position+1)
-    this.attestationService.forms[position].deleteAll();
-
-    // remove assessment plan in the assessment plan service
-    this.assessmentPlanService.removeAssessmentPlan(position);
-    if((position)===this.attestationService.getView){
-      this.setNav(true);
-      this.attestationService.pageName = "Contact Info";
-      this.changePage('contact-info');
-    }
-    this.attestationService.forms = firsthalf.concat(secondhalf);
-    
-    if(this.attestationService.getRawData.length>0){
-      this.attestationService.setView(0);
-      let newPos = 0;
-      this.attestationService.forms.forEach(child => {
-        child.setFormPosition(newPos);
-        newPos = newPos+1;
-      });
-    }
-    else{
-      this.attestationService.setView(-1);
-    }
-    
   }
 
   /**
@@ -232,12 +190,8 @@ export class AppComponent {
    * @param catalog The catalog to make a name for
    * @returns The name
    */
-  getLinkName(catalog: Catalog): string {
-    let metadata: any = catalog.metadata;
-    if (metadata.title) {
-      return metadata.title;
-    }
-    return catalog.uuid;
+  getLinkName(catalog: any): string {
+    return "";
   }
 
   /**
@@ -264,7 +218,7 @@ export class AppComponent {
     let listOLinks: Array<{name: string, fragment: string, position: number}> = [];
     let i = 0;
     listOLinks.push({name: "Select Attestation Type", fragment: "attestation", position: i++})
-    form.getCatalogs.catalogs.forEach((catalog) => {
+    form.getCatalogs.catalogs.forEach((catalog: any) => {
       listOLinks.push({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid, position: i++});
     });
     listOLinks.push({name: "Upload new catalog / Generate Report", fragment: "upload", position: i++});
@@ -290,22 +244,13 @@ export class AppComponent {
    * @param form The attestation to rename
    */
   confirmName(form: AttestationComponent) {
-    let input = document.getElementById("renaming-input");
-    if (input instanceof HTMLInputElement) {
-      form.setName(input.value);
-      this.renaming = 0;
-      if (form === this.attestationService.getCurrentForm) {
-        this.attestationService.pageName = form.getName();
-      }
-    }
   }
 
   /**
    * Gets a user-friendly page name
    * @returns The name of the current page
    */
-  getPageName(): string {
-    return this.attestationService.pageName;
+  getPageName() {
   }
 
   /**
@@ -328,7 +273,6 @@ export class AppComponent {
       }
       dialog.close();
     }
-    this.attestationService.stagedJSON = null;
   }
 
   loadAttestation() {
@@ -353,47 +297,14 @@ export class AppComponent {
     let reader = new FileReader();
     reader.onload = () => {
       let json = JSON.parse(reader.result as string);
-      this.attestationService.stagedJSON = json;
-      if (this.attestationService.interpretParties(true)) {
-        let dialog = document.getElementById("contact-decision")
-        if (dialog instanceof HTMLDialogElement) dialog.showModal();
-      } else {
-        this.useFileContact();
-      }
-
     };
     reader.readAsText(file);
   }
 
   async useExistingContact() {
-    let dialog = document.getElementById("contact-decision")
-    if (dialog instanceof HTMLDialogElement) dialog.close();
-    this.newForm();
-    let catalogs = this.attestationService.stagedJSON["catalogs"];
-    catalogs.forEach((catalog: any) => {
-      this.assessmentPlanService.addCatalog(catalog as Catalog);
-      this.attestationService.getCurrentForm.onFileSelected(catalog)
-    })
-    await dela(100);
-    this.attestationService.refresh();
-    this.attestationService.interpretSubjects();
-    this.attestationService.loadAttestationData();
   }
 
   async useFileContact() {
-    let dialog = document.getElementById("contact-decision")
-    if (dialog instanceof HTMLDialogElement) dialog.close();
-    this.newForm();
-    let catalogs = this.attestationService.stagedJSON["catalogs"];
-    catalogs.forEach((catalog: any) => {
-      this.assessmentPlanService.addCatalog(catalog as Catalog);
-      this.attestationService.getCurrentForm.onFileSelected(catalog)
-    })
-    await dela(100);
-    this.attestationService.refresh();
-    this.attestationService.interpretParties(false)
-    this.attestationService.interpretSubjects();
-    this.attestationService.loadAttestationData();
   }
   
    /** Checks if the report can be generated 
@@ -404,9 +315,6 @@ export class AppComponent {
       return false;
     }
     if(this.bypass){
-      return true;
-    }
-    if(this.contactService.isFilled() && this.attestationService.getCurrentForm.getAttestationType!==""){
       return true;
     }
     return false;
