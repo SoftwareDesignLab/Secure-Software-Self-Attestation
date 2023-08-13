@@ -2,25 +2,23 @@
   <div class="checkbox-container">
     <div class="button-set">
       <div class="individual-button" *ngFor="let i of ['check', 'x', 'na']">
-        <img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="isSelected(i) ? i + '-selected' + i" (click)="select(i)" (keydown.enter)="select(i)" tabindex=0></label>
+        <img [src]="'/assets/' + i + '.png'" [alt]="i" [class]="isSelected(i) ? i + '-selected ' + i : i" (click)="select(i)" (keydown.enter)="select(i)" tabindex=0>
       </div>
       <img alt="Comment Button" 
-        [src]="comment === '' ? '/assets/blank.png' : finalized ? '/assets/complete.png' : '/assets/progress.png'" 
-        (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!isChecked()" tabindex=0>
+        [src]="control.comment === '' ? '/assets/blank.png' : control.commentFinalized ? '/assets/complete.png' : '/assets/progress.png'" 
+        (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!control.isChecked" tabindex=0>
     </div>
     <div class="checkbox-label">
-      <div (click)="toggleRollable()" (keydown.enter)="toggleRollable()" tabindex=0>
-        <p class="checkbox-description">ID: {{id}}</p>
-        <p class="checkbox-description">
-          Description : {{ title }}
-        </p>
+      <div (click)="control.toggleExpansion()" (keydown.enter)="control.toggleExpansion()" tabindex=0>
+        <p class="checkbox-description">ID: {{control.id}}</p>
+        <p class="checkbox-description">Description : {{ control.title }}</p>
       </div>
     </div>
   </div>
-  <app-rollable *ngIf="expanded"
-    [examples]="examples"
-    [references]="references"
-    [props]="props"
+  <app-rollable *ngIf="control.expanded"
+    [examples]="control.examples"
+    [references]="control.references"
+    [props]="control.props"
   ></app-rollable>
 </div>
 
@@ -28,7 +26,7 @@
   <div class="pane popup">
     <br>
     <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
-    <textarea id="comment" [value]="comment" placeholder="Explanation" rows="4"></textarea>
+    <textarea id="comment" [value]="control.comment" placeholder="Explanation" rows="4"></textarea>
     <div class="bottom-buttons">
       <div (click)="done()" (keydown.enter)="done()" tabindex=0>
         <div id="done"></div>

@@ -22,42 +22,28 @@
  * SOFTWARE.
  */
 
-import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { Prop } from './propertyModel';
 import { PropShell } from './catalogModel';
 
 export class Metadata {
-    #title: BehaviorSubject<string> = new BehaviorSubject("");
-    #published: string = "";
+    title: string = "";
+    published: string = "";
     "last-Modified": string = "";
-    #version: string = "1.0.0";
+    version: string = "1.0.0";
     "oscal-Version": string = "1.0.4";
-    #organization: Organization = new Organization();
-    #person: Person = new Person();
-
-    get title(): string { return this.#title.getValue(); }
-    get published(): string { return this.#published; }
-    get lastModified(): string { return this['last-Modified']; }
-    get version(): string { return this.#version; }
-    get oscalVersion(): string { return this['oscal-Version']; }
-    get organization(): Organization { return this.#organization; }
-    get person(): Person { return this.#person; }
-    get observableTitle(): BehaviorSubject<string> { return this.#title; }
-    set title(title: string) { this.#title.next(title); }
-    set published(published: string) { this.published = published; }
-    set lastModified(lastModified: string) { this['last-Modified'] = lastModified; }
-    set version(version: string) { this.version = version; }
+    organization: Organization = new Organization();
+    person: Person = new Person();
 }
 
 export class Party  {
-    #uuid: string = uuidv4();
-    #type: string;
-    #address: Address = new Address();
-    #props: Prop[] = [];
+    uuid: string = uuidv4();
+    type: string;
+    address: Address = new Address();
+    props: Prop[] = [];
 
     constructor(type: string) {
-        this.#type = type;
+        this.type = type;
     }
 
     /**
@@ -67,88 +53,45 @@ export class Party  {
      * @param value The value of the prop
      */
     addProp(newClass: string, name: string, value: string): void {
-        this.#props.push(new Prop({class: newClass, name: name, value: value} as PropShell));
+        this.props.push(new Prop({class: newClass, name: name, value: value} as PropShell));
     }
-
-    get uuid(): string { return this.#uuid; }
-    get type(): string { return this.#type; }
-    get address(): Address { return this.#address; }
-    get props(): Prop[] { return this.#props; }
 }
 
 export class Organization extends Party {
-    #website: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    #name: BehaviorSubject<string> = new BehaviorSubject("");
+    website: string = "";
+    name: string = "";
 
     constructor() {
         super("organization");
     }
 
-    get website(): string { return this.#website.getValue(); }
-    get name(): string { return this.#name.getValue(); }
-    get observableWebsite(): BehaviorSubject<string> { return this.#website; }
-    get observableName(): BehaviorSubject<string> { return this.#name; }
-    get propWebsite(): Prop | undefined { if (this.website) { return new Prop({class: "Producer Info", name: "website", value: this.#website.getValue()} as PropShell)}}
-    set name(name: string) { this.#name.next(name); }
-    set website(website: string) { this.#website.next(website); }
+    get propWebsite(): Prop | undefined { if (this.website) { return new Prop({class: "Producer Info", name: "website", value: this.website} as PropShell)} return undefined}
 }
 
 export class Person extends Party {
-    #email: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    #phone: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    #title: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    #firstName: BehaviorSubject<string> = new BehaviorSubject("");
-    #lastName: BehaviorSubject<string> = new BehaviorSubject("");
+    email: string = "";
+    phone: string = "";
+    title: string = "";
+    firstName: string = "";
+    lastName: string = "";
 
     constructor() {
         super("person");
     }
 
-    get email(): string { return this.#email.getValue(); }
-    get phone(): string { return this.#phone.getValue(); }
-    get title(): string { return this.#title.getValue(); }
-    get firstName(): string { return this.#firstName.getValue(); }
-    get lastName(): string { return this.#lastName.getValue(); }
-    get name(): string { return this.firstName + this.lastName; }
-    get observableEmail(): BehaviorSubject<string> { return this.#email; }
-    get observablePhone(): BehaviorSubject<string> { return this.#phone; }
-    get observableTitle(): BehaviorSubject<string> { return this.#title; }
-    get observableFirstName(): BehaviorSubject<string> { return this.#firstName; }
-    get observableLastName(): BehaviorSubject<string> {return this.#lastName; }
-    get propTitle(): Prop | undefined { if (this.title) { return new Prop({class: "Contact Info", name: "title", value: this.title} as PropShell)}}
-    set email(email: string) { this.#email.next(email); }
-    set phone(phone: string) { this.#phone.next(phone); }
-    set title(title: string) { this.#title.next(title); }
-    set firstName(name: string) { this.#firstName.next(name); }
-    set lastName(name: string) { this.#lastName.next(name); }
-    set name(name: string) { this.firstName = name.split(" ")[0]; this.lastName = name.split(" ")[1]}
+    get name(): string { return this.firstName + " " + this.lastName; }
+    get propTitle(): Prop | undefined { if (this.title) { return new Prop({class: "Contact Info", name: "title", value: this.title} as PropShell)} return undefined;}
 }
 
 export class Address {
-    #lines: BehaviorSubject<string>[] = [new BehaviorSubject<string>(""), new BehaviorSubject<string>("")];
-    #city: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    #state: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    #country: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    #postal: BehaviorSubject<string> = new BehaviorSubject<string>("");
+    lines: string[] = ["", ""];
+    city: string = "";
+    state: string = "";
+    country: string = "";
+    postal: string = "";
 
-    get lines(): string[] { return this.#lines.map((line) => {return line.getValue();}); }
-    get line1(): string { return this.#lines[0].getValue(); }
-    get line2(): string { return this.#lines[1].getValue(); }
-    get city(): string { return this.#city.getValue(); }
-    get state(): string { return this.#state.getValue(); }
-    get country(): string { return this.#country.getValue(); }
-    get postal(): string { return this.#postal.getValue(); }
-    get observableLine1(): BehaviorSubject<string> { return this.#lines[0]; }
-    get observableLine2(): BehaviorSubject<string> { return this.#lines[1]; }
-    get observableCity(): BehaviorSubject<string> { return this.#city; }
-    get observableState(): BehaviorSubject<string> { return this.#state; }
-    get observableCountry(): BehaviorSubject<string> { return this.#country; }
-    get observablePostal(): BehaviorSubject<string> { return this.#postal; }
-    set lines(lines: string[]) { this.#lines.map((line, index) => {line.next(lines[index])}); }
-    set line1(line: string) { this.#lines[0].next(line); }
-    set line2(line: string) { this.#lines[1].next(line); }
-    set city(city: string) { this.#city.next(city); }
-    set state(state: string) { this.#state.next(state); }
-    set country(country: string) { this.#country.next(country); }
-    set postal(postal: string) { this.#postal.next(postal); }
+    get line1(): string { return this.lines[0]; }
+    get line2(): string { return this.lines[1]; }
+    set line1(line: string) { this.lines[0] = line; }
+    set line2(line: string) { this.lines[1] = line; }
 }

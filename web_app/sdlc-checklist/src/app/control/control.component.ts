@@ -32,49 +32,18 @@ import { Prop } from '../models/propertyModel';
   styleUrls: ['./control.component.css']
 })
 export class ChecklistItemComponent {
-  @Input() control: Control;
-  id: string;
-  uid: string;
-  result: Result;
-  comment: string;
-  commentFinalized: boolean;
-  expanded: boolean;
-  title: string;
+  @Input() control: any;
   popup: boolean = false;
   clickOutOfWindow: boolean = false;
-  examples: string[];
-  references: Prop[];
-  props: Prop[];
 
   constructor(private attestationDataService: AttestationDataService){  }
 
-
-  ngOnInit(){
-    this.result = this.control.result;
-    this.control.observableResult.subscribe((value: Result) => {this.result = value;});
-    this.comment = this.control.comment;
-    this.control.observableComment.subscribe((value: string) => {this.comment = value});
-    this.commentFinalized = this.control.commentFinalized;
-    this.control.observableCommentFinalized.subscribe((value: boolean) => {this.commentFinalized = value});
-    this.expanded = this.control.expanded;
-    this.control.observableExpanded.subscribe((value) => {this.expanded = value});
-    this.id = this.control.id;
-    this.uid = this.control.uid;
-    this.examples = this.control.examples;
-    this.references = this.control.references;
-    this.props = this.control.props;
-  }
-
-  toggleRollable() {
-    this.control.toggleExpansion();
-  }
-
   isChecked(): boolean {
-    return this.result !== Result.blank;
+    return this.control.result !== Result.blank;
   }
 
   isSelected(option: string): boolean {
-    return (option === "check" && this.result === Result.yes) || (option === "x" && this.result === Result.no) || (option === "na" && this.result === Result.na);
+    return (option === "check" && this.control.result === Result.yes) || (option === "x" && this.control.result === Result.no) || (option === "na" && this.control.result === Result.na);
   }
 
   select(option: string) {

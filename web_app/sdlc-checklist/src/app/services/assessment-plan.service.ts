@@ -12,5 +12,7 @@ export enum ControlSelectionType {
   providedIn: 'root'
 })
 export class AssessmentPlanService {
-
+  generateAssessmentPlan() {
+    
+  }
 }

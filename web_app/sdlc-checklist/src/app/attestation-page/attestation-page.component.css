@@ -31,8 +31,6 @@
 }
 
 .catalog-container {
-  display: grid;
-  grid-template-columns: auto 225px;
   width: clamp(450px, 80vw, 1100px);
   margin: 30px auto;
 }

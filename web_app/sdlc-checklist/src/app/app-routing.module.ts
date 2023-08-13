@@ -23,7 +23,6 @@
  */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AttestationComponent } from './attestation/attestation.component';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 

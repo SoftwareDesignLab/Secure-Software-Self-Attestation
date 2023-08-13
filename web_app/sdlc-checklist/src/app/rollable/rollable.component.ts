@@ -33,6 +33,7 @@ export class RollableComponent {
   @Input() examples: any;
   @Input() subControls: any;
   @Input() references: any;
+  @Input() props: any;
 
   /**
    * 
@@ -47,7 +48,7 @@ export class RollableComponent {
    * @returns Whether there are examples in the parts
    */
   hasExamples(): boolean {
-    return this.examples !== undefined;
+    return this.examples !== undefined && this.examples.length > 0;
   }
 
   /**
@@ -64,5 +65,9 @@ export class RollableComponent {
    */
   hasReferences(): boolean {
     return this.references !== undefined && this.references.length > 0;
+  }
+
+  hasProperties(): boolean {
+    return this.props !== undefined && this.props.length > 0;
   }
 }

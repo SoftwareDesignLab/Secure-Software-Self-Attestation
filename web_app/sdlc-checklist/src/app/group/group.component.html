@@ -1,18 +1,19 @@
 <section class="group">
     <div class="header"> 
-        <div *ngIf="id; else ungrouped" [className]="areAllChildrenChecked() ? 'inline-block gray' : 'inline-block'">
-            <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ id }}: {{ title }}</h2>
+        <div *ngIf="group.id; else ungrouped" [className]="areAllChildrenChecked() ? 'inline-block gray' : 'inline-block'">
+            <h2 (click)="group.toggleExpansion()" [className]="group.expanded ? 'prependDownArrow' : 'prependUpArrow'">{{ group.id }}: {{ group.title }}</h2>
         </div>
         <ng-template #ungrouped>
-            <h2 (click)="toggleComponents()" [className]="showComponents ? 'prependDownArrow' : 'prependUpArrow'">{{ title }}</h2>
+            <h2 (click)="group.toggleExpansion()" [className]="group.expanded ? 'prependDownArrow' : 'prependUpArrow'">{{ group.title }}</h2>
         </ng-template>  
         <div class="button-set">
-            <img *ngFor="let i of ['check', 'x', 'na']" [src]="'/assets/' + i + '.png'" [className]="i" [alt]="i" (click)="setAllChildrenSelection(i)" (keydown.enter)="setAllChildrenSelection(i)" tabindex=0>
+            <img *ngFor="let i of ['check', 'x', 'na']" [src]="'/assets/' + i + '.png'" [className]="i" [alt]="i" 
+                 (click)="setAllChildrenSelection(i)" (keydown.enter)="setAllChildrenSelection(i)" tabindex=0>
         </div>
     </div>
-    <div class="group-rollable-content" [hidden]="!showComponents">
+    <div class="group-rollable-content" [hidden]="!group.expanded">
         <div id="checkbox-container" class="checkbox-container">
-            <app-control *ngFor="let item of controls" 
+            <app-control *ngFor="let item of group.controls" 
               [control]="item"
             ></app-control>
         </div>

@@ -21,22 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
 */
-import { Component, ViewChildren, QueryList, ViewChild, NgModule } from '@angular/core';
-import { GroupComponent } from './group/group.component';
-import catalog from './defaultCatalog';
+import { Component } from '@angular/core';
 import { AttestationDataService } from './services/attestation-data.service';
-import { notifyService } from './services/notify.service';
 import { Router, NavigationEnd, RouterModule  } from '@angular/router';
-import { ChecklistItemComponent } from './control/control.component';
-import { ViewportScroller } from '@angular/common';
-import { delay, filter, takeUntil  } from 'rxjs/operators';
-import { Subject } from 'rxjs'
-import { AttestationPageComponent } from './attestation-page/attestation-page.component';
-import { AttestationComponent } from './attestation/attestation.component';
-import { TemplateLiteral } from '@angular/compiler';
-import { ContactService } from './services/contact.service';
-import { AssessmentPlanService } from './services/assessment-plan.service';
 import { CatalogShell } from './models/catalogModel';
+import { Form } from './models/attestationModel';
 
 interface CatalogData {
   catalogs: CatalogShell[];
@@ -50,27 +39,16 @@ const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  catalogData: CatalogData = {catalogs: []};
   showNav = false;
-  openTag = 0;
-  renaming = 0;
+  openTag: string = "";
+  renaming: string = "";
   showComponents = false;
   showFullFooter = false;
-  bypass = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService, private contactService: ContactService,
-    private assessmentPlanService: AssessmentPlanService ){}
+  constructor(private router: Router, private attestationService: AttestationDataService){}
   
   ngOnInit(){
   }
-
-  ////// Temp Bypass code (press f2 to toggle generate report button regardless of contact info)
-  onKeyPressed(event: KeyboardEvent) {
-    if (event.key === "F2") {
-      this.bypass= !this.bypass;;
-    }
-  }
-  //////
 
   /**
    * Changes the current page
@@ -78,7 +56,8 @@ export class AppComponent {
    * @param fragment The fragment identifier to scroll to
    */
   async changePage(page: string, fragment?: string){
-    this.toggleNav();
+    this.setNav(false);
+    if(page === "contact-info") { this.attestationService.activeForm = undefined; }
     if (fragment) {
       this.router.navigate([page], {fragment: fragment});
       await dela(50);
@@ -118,35 +97,6 @@ export class AppComponent {
   }
 
   /**
-   * Gets the array of all attestation components
-   */
-  get getForms(){
-    return [];
-  }
-
-  /**
-   * Changes the currently visible form
-   * @param form The form to change to
-   * @param fragment The fragment identifier to scroll to
-   */
-  changeAttestation(form: AttestationComponent, fragment?: string){
-    this.changePage('attestation-form', fragment);
-  }
-  
-  /**
-   * Creates a new attestation form
-   */
-  newForm(){
-  }
-
-  /**
-   * Deletes the provided form
-   * @param position The position of the form to delete
-   */
-  deleteForm(position: number){
-  }
-
-  /**
    * Toggles whether the nav is visible
    */
   toggleNav(): void {
@@ -167,8 +117,8 @@ export class AppComponent {
       } else {
         nav.classList.add('nav-closing');
         nav.classList.remove('nav-opening');
-        this.openTag = 0;
-        this.renaming = 0;
+        this.openTag = "";
+        this.renaming = "";
       }
     }
   }
@@ -177,21 +127,12 @@ export class AppComponent {
    * Changes which tree, if any, are open
    * @param formTag The tag of the form that should have it's tree toggled
    */
-  toggleNavTree(formTag: number): void {
-    if (this.openTag === formTag) {
-      this.openTag = 0;
+  toggleNavTree(uuid: string): void {
+    if (this.openTag === uuid) {
+      this.openTag = "";
     } else {
-      this.openTag = formTag;
+      this.openTag = uuid;
     }
-  }
-
-  /**
-   * Gets the user-friendly link name for a given catalog
-   * @param catalog The catalog to make a name for
-   * @returns The name
-   */
-  getLinkName(catalog: any): string {
-    return "";
   }
 
   /**
@@ -201,150 +142,54 @@ export class AppComponent {
     this.showFullFooter = !this.showFullFooter;
   }
 
-  /**
-   * Allows the HTML to push alerts
-   * @param message The message to alert
-   */
-  alert(message: string) {
-    alert(message);
+  renameForm(uuid: string) {
+    this.renaming = uuid;
   }
 
-  /**
-   * Gets a list of sublinks to display in the tree
-   * @param form The Attestation that is being expanded
-   * @returns A list of names, fragments, and indexes to allow the sublinks to work
-   */
-  getSubLinks(form: AttestationComponent): Array<{name: string, fragment: string, position: number}> {
-    let listOLinks: Array<{name: string, fragment: string, position: number}> = [];
-    let i = 0;
-    listOLinks.push({name: "Select Attestation Type", fragment: "attestation", position: i++})
-    form.getCatalogs.catalogs.forEach((catalog: any) => {
-      listOLinks.push({name: this.getLinkName(catalog), fragment: "catalog-" + catalog.uuid, position: i++});
-    });
-    listOLinks.push({name: "Upload new catalog / Generate Report", fragment: "upload", position: i++});
-    return listOLinks;
-  }
-
-  /**
-   * Allows the user to change the name of the form
-   * @param form The attestation to rename
-   */
-  async renameForm(form: AttestationComponent) {
-    this.renaming = form.getPositionTag;
-    this.openTag = 0;
-    await dela(50);
-    let input = document.getElementById("renaming-input");
-    if (input instanceof HTMLInputElement) {
-      input.select();
+  confirmName() {
+    let newName = document.getElementById("renaming-input");
+    if (newName instanceof HTMLInputElement) {
+      let form = this.attestationService.forms.find((form) => form.uuid === this.renaming);
+      if (form)
+        form.name = newName.value;
     }
+    this.renaming = "";
   }
 
-  /**
-   * Sets the name in the "renaming-input" textbox to the attestation
-   * @param form The attestation to rename
-   */
-  confirmName(form: AttestationComponent) {
-  }
+  processLoadAttestation(event: Event) {
 
-  /**
-   * Gets a user-friendly page name
-   * @returns The name of the current page
-   */
-  getPageName() {
-  }
-
-  /**
-   * 
-   * @param num The number of numbers to return
-   * @returns Returns a list of numbers 1 to num-1
-   */
-  range(num: number): Array<number> {
-    return Array.from(Array(num).keys())
-  }
-
-  /**
-   * Cancels the loading of an attestation
-   */
-  cancelLoad(event?: MouseEvent) {
-    let dialog = document.getElementById("contact-decision")
-    if (dialog instanceof HTMLDialogElement) {
-      if (event) {
-        if ((event.clientX > dialog.offsetLeft && event.clientX < (dialog.offsetLeft + dialog.offsetWidth) && event.clientY > dialog.offsetTop && event.clientY < (dialog.offsetHeight + dialog.offsetTop)) || dialog.offsetHeight === 0) return;
-      }
-      dialog.close();
-    }
   }
 
   loadAttestation() {
-    let upload = document.getElementById("load-file-input")
-    if (upload instanceof HTMLElement) {
-      upload.click();
-    }
+
   }
 
-  processLoadAttestation(input: Event) {
-    const file = (input.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.handleFile(file);
-      console.log('File selected:', file);
-    } else { return }
-    if (input.target instanceof HTMLInputElement) {
-      input.target.value = "";
-    }
+  changeAttestation(form: Form, fragment?: string) {
+    this.attestationService.activeForm = form;
+    this.changePage('attestation-form', fragment);
   }
 
-  private handleFile(file: File) {
-    let reader = new FileReader();
-    reader.onload = () => {
-      let json = JSON.parse(reader.result as string);
-    };
-    reader.readAsText(file);
+  getSubLinks(form: Form): {position: number, fragment: string, name: string}[] {
+    let position = 0;
+    let subLinks: {position: number, fragment: string, name: string}[] = [{position: position++, fragment: 'attestation', name: "Attestation"}];
+    form.catalogs.forEach((catalog) => {subLinks.push({position: position++, fragment: "catalog-" + catalog.uuid, name: catalog.metadata.title})});
+    subLinks.push({position: position++, fragment: "upload", name: "Upload a Catalog"});
+    return subLinks;
   }
 
-  async useExistingContact() {
+  addForm() {
+    this.attestationService.createNewForm();
+    this.changePage('attestation-form');
   }
 
-  async useFileContact() {
-  }
-  
-   /** Checks if the report can be generated 
-   * @returns if valid true, otherwise false
-   */
-  generateAcceptable(){
-    if(this.router.url=="/contact-info"){
-      return false;
-    }
-    if(this.bypass){
-      return true;
-    }
-    return false;
-  }
-  /**
-   * checks if the contact tool tip should appear
-   * @returns true if the contact info tool-tip should appear
-   */
-  invalidContact(){
-    if(this.generateAcceptable()){
-      return false
-    }
-    if(this.contactService.isFilled()){
-      return false
-    }
-    return true;
+  deleteForm(uuid: string) {
+    this.attestationService.deleteForm(uuid);
   }
 
-  /**
-   * checks if the attestation type missing tool tip should appear
-   * @returns true only if it should appear, otherwise false
-   */
-  attestationTypeMissing(){
-    if(this.invalidContact()){
-      return false
-    } 
-    if(this.router.url=="/contact-info"){
-      return false;
-    }
-    return true;
+  get activeFormName(): string {
+    return this.attestationService.activeForm?.name || "Contact Info";
   }
+
+  get forms(): Form[] { return this.attestationService.forms; }
 }
 

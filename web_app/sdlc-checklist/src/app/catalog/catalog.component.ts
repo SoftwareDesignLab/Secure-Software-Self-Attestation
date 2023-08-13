@@ -31,25 +31,11 @@ import { AttestationDataService } from '../services/attestation-data.service';
   styleUrls: ['./catalog.component.css']
 })
 export class CatalogComponent {
-  @Input() catalog: Catalog;
-  groups: Group[];
-  uuid: string;
-  expanded: boolean;
+  @Input() catalog: any;
 
   constructor(private attestationDataService: AttestationDataService) {}
 
-  ngOnInit() {
-    this.groups = this.catalog.groups;
-    this.uuid = this.catalog.uuid;
-    this.expanded = this.catalog.expansion;
-    this.catalog.observableExpansion.subscribe((value) => {this.expanded = value});
-  }
-
-  toggleExpansion() {
-    this.catalog.toggleExpansion();
-  }
-
   removeCatalog() {
-    this.attestationDataService.activeForm.removeCatalog(this.uuid);
+    this.attestationDataService.activeForm?.removeCatalog(this.catalog.uuid);
   }
 }

@@ -30,7 +30,6 @@ import { ChecklistItemComponent } from './control/control.component';
 import { RollableComponent } from './rollable/rollable.component';
 import { CatalogProcessingComponent } from './catalog-processing/catalog-processing.component';
 import { GroupComponent } from './group/group.component';
-import { CatalogInfoComponent } from './catalog-info/catalog-info.component';
 import { notifyService } from './services/notify.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -53,7 +52,6 @@ import { CatalogComponent } from './catalog/catalog.component';
     RollableComponent,
     CatalogProcessingComponent,
     GroupComponent,
-    CatalogInfoComponent,
     ContactInfoComponent,
     AttestationPageComponent,
     CatalogComponent

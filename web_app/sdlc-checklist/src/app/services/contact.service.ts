@@ -11,8 +11,6 @@ export class ContactService {
 
   constructor() {}
 
-
-
   /**
    *  Checks if contact form has acceptable amount of info 
    * @returns whether the manditory sections are complete
@@ -31,14 +29,6 @@ export class ContactService {
   get orgCountry(): string { return this.metadata.organization.address.country; }
   get orgPostal(): string { return this.metadata.organization.address.postal; }
   get orgWebsite(): string { return this.metadata.organization.website; }
-  get observableOrgName(): BehaviorSubject<string> { return this.metadata.organization.observableName;}
-  get observableOrgAddressLine1(): BehaviorSubject<string> { return this.metadata.organization.address.observableLine1; }
-  get observableOrgAddressLine2(): BehaviorSubject<string> { return this.metadata.organization.address.observableLine2; }
-  get observableOrgCity(): BehaviorSubject<string> { return this.metadata.organization.address.observableCity; }
-  get observableOrgState(): BehaviorSubject<string> { return this.metadata.organization.address.observableState; }
-  get observableOrgCountry(): BehaviorSubject<string> { return this.metadata.organization.address.observableCountry; }
-  get observableOrgPostal(): BehaviorSubject<string> { return this.metadata.organization.address.observablePostal; }
-  get observableOrgWebsite(): BehaviorSubject<string> { return this.metadata.organization.observableWebsite; }
   set orgName(name: string) { this.metadata.organization.name = name;}
   set orgAddressLine1(line: string) { this.metadata.organization.address.line1 = line; }
   set orgAddressLine2(line: string) { this.metadata.organization.address.line2 = line; }
@@ -59,17 +49,6 @@ export class ContactService {
   get personPostal(): string { return this.metadata.person.address.postal; }
   get personEmail(): string { return this.metadata.person.email; }
   get personPhone(): string { return this.metadata.person.phone; }
-  get observablePersonFirstName(): BehaviorSubject<string> { return this.metadata.person.observableFirstName; }
-  get observablePersonLastName(): BehaviorSubject<string> { return this.metadata.person.observableLastName; }
-  get observablePersonTitle(): BehaviorSubject<string> { return this.metadata.person.observableTitle; }
-  get observablePersonAddressLine1(): BehaviorSubject<string> { return this.metadata.person.address.observableLine1; }
-  get observablePersonAddressLine2(): BehaviorSubject<string> { return this.metadata.person.address.observableLine2; }
-  get observablePersonCity(): BehaviorSubject<string> { return this.metadata.person.address.observableCity; }
-  get observablePersonState(): BehaviorSubject<string> { return this.metadata.person.address.observableState; }
-  get observablePersonCountry(): BehaviorSubject<string> { return this.metadata.person.address.observableCountry; }
-  get observablePersonPostal(): BehaviorSubject<string> { return this.metadata.person.address.observablePostal; }
-  get observablePersonEmail(): BehaviorSubject<string> { return this.metadata.person.observableEmail; }
-  get observablePersonPhone(): BehaviorSubject<string> { return this.metadata.person.observablePhone; }
   set personFirstName(name: string) { this.metadata.person.firstName = name; }
   set personLastName(name: string) { this.metadata.person.lastName = name; }
   set personTitle(title: string) { this.metadata.person.title = title; }

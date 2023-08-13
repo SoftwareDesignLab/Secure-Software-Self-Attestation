@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input, ViewChildren, QueryList, ChangeDetectorRef} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AttestationDataService } from '../services/attestation-data.service';
 import { Control, Group, Result } from '../models/attestationModel';
 
@@ -31,38 +31,20 @@ import { Control, Group, Result } from '../models/attestationModel';
   styleUrls: ['./group.component.css']
 })
 export class GroupComponent {
-  @Input() group: Group;
-  title: string;
-  id: string;
-  catalogUUID: string;
-  controls: Control[];
-  showComponents = true;
+  @Input() group: any;
 
   constructor(private attestationDataService: AttestationDataService){}
-
-  ngOnInit(){
-    this.title = this.group.title;
-    this.id = this.group.id;
-    this.catalogUUID = this.group.catalogUUID;
-    this.controls = this.group.controls;
-    this.showComponents = this.group.expanded;
-    this.group.observableExpanded.subscribe((value) => {this.showComponents = value});
-  }
-
-  toggleComponents() {
-    this.group.toggleExpansion();
-  }
 
   setComponents(truth: boolean) {
     this.group.expanded = truth;
   }
 
   hideChildRollable() {
-    this.controls.forEach((control) => control.expanded = false);
+    this.group.controls.forEach((control: Control) => control.expanded = false);
   }
 
   areAllChildrenChecked(): boolean {
-    return -1 === this.controls.findIndex((control) => {control.result === Result.blank})
+    return this.group.controls.reduce((truth: boolean, control: Control): boolean => { return truth && control.result !== Result.blank}, true)
   }
 
   setAllChildrenSelection(selection: string): void {
@@ -72,7 +54,7 @@ export class GroupComponent {
       case "x": case "no": result = Result.no; break;
       case "na": case "n/a": result = Result.na; break;
     }
-    if (result !== Result.blank && this.controls.findIndex((control) => {control.result !== result}) === -1) result = Result.blank;
-    this.controls.forEach((control) => {control.result = result});
+    if (result !== Result.blank && this.group.controls.findIndex((control: Control) => {control.result !== result}) === -1) result = Result.blank;
+    this.group.controls.forEach((control: Control) => {control.result = result});
   }
 }

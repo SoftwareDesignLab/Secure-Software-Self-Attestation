@@ -1,18 +1,26 @@
-<div class="pane">
-    <div class="button-panel">
-      <p *ngIf="expanded" class="button-caption">Collapse Catalog</p>
-      <p *ngIf="!expanded" class="button-caption">Expand Catalog</p>
-      <div (click)="toggleExpansion()" (keydown.enter)="toggleExpansion(catalog.uuid)" tabindex=0
-           [className]="expanded ? 'circle-button orange landing' : 'circle-button green landing'">     
-      </div><br>
-      <p class="button-caption">Remove Catalog</p>
-      <div (click)="removeCatalog(catalog.uuid)" (keydown.enter)="removeCatalog(catalog.uuid)" tabindex=0 class="circle-button red"></div>
+<div class="catalog-container">
+  <div class="catalog-header">
+    <h2>{{ catalog.metadata.title }}</h2>
+    <p>Published: {{ catalog.metadata.published }}</p>
+    <p>Last Modified: {{ catalog.metadata.lastModified }}</p>
+    <p>Version: {{ catalog.metadata.version }}</p>
+    <p>Oscal Version: {{ catalog.metadata.oscalVersion }}</p>
+  </div>
+  <div class="button-panel">
+    <p *ngIf="catalog.expanded" class="button-caption">Collapse Catalog</p>
+    <p *ngIf="!catalog.expanded" class="button-caption">Expand Catalog</p>
+    <div (click)="catalog.toggleExpansion()" (keydown.enter)="catalog.toggleExpansion()" tabindex=0
+          [className]="catalog.expanded ? 'circle-button orange landing' : 'circle-button green landing'">     
+    </div><br>
+    <p class="button-caption">Remove Catalog</p>
+    <div (click)="removeCatalog()" (keydown.enter)="removeCatalog()" tabindex=0 class="circle-button red"></div>
+  </div>
+  <div id="grid-container" [className]="catalog.expanded ? 'grid-container' : 'grid-container hidden'">
+    <div id="group-container" class="group-container">
+      <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
+      <app-group *ngFor="let group of catalog.groups" 
+        [group] = "group"
+      ></app-group>
     </div>
-    <div id="grid-container" [className]="expanded ? 'grid-container' : 'grid-container hidden'">
-      <div id="group-container" class="group-container">
-        <!-- TODO make groups a list of objects so that descriptions can be fetched with a function-->
-        <app-group *ngFor="let group of groups" 
-          [group] = "group"
-        ></app-group>
-    </div>
+  </div>
 </div>

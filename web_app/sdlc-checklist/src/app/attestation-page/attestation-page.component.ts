@@ -31,7 +31,6 @@ import { CatalogProcessingComponent } from '../catalog-processing/catalog-proces
 
 import { AttestationDataService } from '../services/attestation-data.service';
 import { attestationComment } from '../models/attestationForm';
-import { AttestationComponent } from '../attestation/attestation.component';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
 import { ContactService } from '../services/contact.service';
 import { Catalog, Form } from '../models/attestationModel';
@@ -46,20 +45,13 @@ import { BehaviorSubject } from 'rxjs';
 export class AttestationPageComponent {
 
   form: Form | undefined;
-  catalogs: Map<string, Catalog>;
-  name: string;
 
-  constructor(private attestationDataService: AttestationDataService) {
+  constructor(private attestationDataService: AttestationDataService, private assessmentPlanService: AssessmentPlanService) {
     this.form = this.attestationDataService.activeForm;
     this.attestationDataService.observableActiveForm.subscribe((form) => this.form = form);
   }
 
-  ngOnInit() {
-    if (this.form !== undefined) {
-      this.name = this.form.name;
-      this.form.observableName.subscribe((name) => this.name = name);
-      this.catalogs = this.form.catalogMap;
-      this.form.observableCatalogMap.subscribe((catalogMap) => this.catalogs = catalogMap);
-    }
+  generateAssessmentPlan() {
+    this.assessmentPlanService.generateAssessmentPlan();
   }
 }

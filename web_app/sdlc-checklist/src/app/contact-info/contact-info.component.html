@@ -11,45 +11,45 @@
       <label for="city">City: </label>
       <input id="city" type="text" (blur)="update($event, 'orgCity')" value="{{contactService.orgCity}}" autocomplete="address-level2">
       <label for="state">State or Province: </label>
-      <input id="state" type="text" (blur)="update($event)" value="{{contactService.orgState}}" autocomplete="address-level1">
+      <input id="state" type="text" (blur)="update($event, 'orgState')" value="{{contactService.orgState}}" autocomplete="address-level1">
       <label for="country">Country: </label>
-      <input id="country" type="text" (blur)="updateCountry($event)" value="{{contactService.orgCountry}}" autocomplete="country-name">
+      <input id="country" type="text" (blur)="update($event, 'orgCountry')" value="{{contactService.orgCountry}}" autocomplete="country-name">
       <label for="zip">Postal Code: </label>
-      <input id="zip" type="text" (blur)="updatePostal($event)" value="{{contactService.orgPostalCode}}" autocomplete="postal-code" >
+      <input id="zip" type="text" (blur)="update($event, 'orgPostal')" value="{{contactService.orgPostal}}" autocomplete="postal-code" >
       <label for="website">Website: </label>
-      <input id="website" type="url" (blur)="updateWebsite($event)" value="{{contactService.orgWebsite}}" autocomplete="url">
+      <input id="website" type="url" (blur)="update($event, 'orgWebsite')" value="{{contactService.orgWebsite}}" autocomplete="url">
     </div>
     <div class="center-line"></div>
     <div class="form-column">
       <h3>Primary Contact for this Document</h3>
       <label for="first-name">First Name: </label>
-      <input id="first-name" type="text" (blur)="updateFirstName($event)" value="{{contactService.firstName}}" autocomplete="given-name">
+      <input id="first-name" type="text" (blur)="update($event, 'personFirstName')" value="{{contactService.personFirstName}}" autocomplete="given-name">
       <label for="last-name">Last Name: </label>
-      <input id="last-name" type="text" (blur)="updateLastName($event)" value="{{contactService.lastName}}" autocomplete="family-name">
+      <input id="last-name" type="text" (blur)="update($event, 'personLastName')" value="{{contactService.personLastName}}" autocomplete="family-name">
       <label for="title">Job Title: </label>
-      <input id="title" type="text" (blur)="updateTitle($event)" value="{{contactService.title}}" autocomplete="organization-title">
+      <input id="title" type="text" (blur)="update($event, 'personTitle')" value="{{contactService.personTitle}}" autocomplete="organization-title">
       <label for="contact-address-1">Address Line 1: </label>
-      <input id="contact-address-1" type="text" (blur)="updatePersonalAddress1($event)" value="{{contactService.personalAddress1}} " autocomplete="address-line1">
+      <input id="contact-address-1" type="text" (blur)="update($event, 'personAddressLine1')" value="{{contactService.personAddressLine1}} " autocomplete="address-line1">
       <label for="contact-address-2">Address Line 2: </label>
-      <input id="contact-address-2" type="text" (blur)="updatePersonalAddress2($event)" value="{{contactService.personalAddress2}} " autocomplete="address-line2">
+      <input id="contact-address-2" type="text" (blur)="update($event, 'personAddressLine2')" value="{{contactService.personAddressLine2}} " autocomplete="address-line2">
       <label for="contact-city">City: </label>
-      <input id="contact-city" type="text" (blur)="updatePersonalCity($event)"  value="{{contactService.personalCity}}" autocomplete="address-level2">
+      <input id="contact-city" type="text" (blur)="update($event, 'personCity')"  value="{{contactService.personCity}}" autocomplete="address-level2">
       <label for="contact-state">State: </label>
-      <input id="contact-state" type="text" (blur)="updatePersonalState($event)" value="{{contactService.personalState}}" autocomplete="address-level1">
+      <input id="contact-state" type="text" (blur)="update($event, 'personState')" value="{{contactService.personState}}" autocomplete="address-level1">
       <label for="contact-country">Country: </label>
-      <input id="contact-country" type="text" (blur)="updatePersonalCountry($event)" value="{{contactService.personalCountry}}" autocomplete="country-name">
+      <input id="contact-country" type="text" (blur)="update($event, 'personCountry')" value="{{contactService.personCountry}}" autocomplete="country-name">
       <label for="contact-zip">Postal Code: </label>
-      <input id="contact-zip" type="text" (blur)="updatePersonalPostal($event)"  value="{{contactService.personalPostal}}"autocomplete="postal-code">
+      <input id="contact-zip" type="text" (blur)="update($event, 'personPostal')"  value="{{contactService.personPostal}}"autocomplete="postal-code">
       <label for="phone">Phone: </label>
-      <input id="phone" type="tel" (blur)="updatePhone($event)" value="{{contactService.phone}}" autocomplete="tel">
+      <input id="phone" type="tel" (blur)="update($event, 'personEmail')" value="{{contactService.personPhone}}" autocomplete="tel">
       <label for="email">Email: </label>
-      <input id="email" type="email" (blur)="updateEmail($event)" value="{{contactService.email}}" autocomplete="email">
+      <input id="email" type="email" (blur)="update($event, 'personPhone')" value="{{contactService.personEmail}}" autocomplete="email">
     </div>
   </form>
 </div>
 
-<div class="bot-right">
+<!--<div class="bot-right">
   <button  class="blue" (click)="lastAttestation()">Proceed to Attestation Form</button>
   <button class="green" (click)="newForm()">+ New Attestation</button>
-</div>
+</div>-->
 

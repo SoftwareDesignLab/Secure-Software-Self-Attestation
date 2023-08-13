@@ -1,4 +1,4 @@
-<div class="attestation pane" id="attestation">
+<!--<div class="attestation pane" id="attestation">
   <h2>Select your attestation type:</h2>
   <input type="radio" id="company-wide" name="attestation" [(ngModel)]="attestationType" (change)="updateAtestationType()"  value="company" class="landing">
   <label for="company-wide">Company-wide</label><br>
@@ -24,20 +24,20 @@
     <button class="add" mat-button (click)="addRow()" [hidden]="attestationType!=='multiple'" id="add-subject-row">+</button>
     <button class="add" mat-button (click)="removeRow()" *ngIf="info.length>1">-</button>
   </div>
-</div>
+</div>-->
 
 <div class="catalogs">
-  <div class="catalog-container pane" *ngFor="let catalog of catalogData.catalogs" [id]="'catalog-' + catalog.uuid"> 
+  <div class="catalog-container pane" *ngFor="let catalog of form?.catalogs" [id]="'catalog-' + catalog.uuid"> 
     <app-catalog [catalog] = "catalog"></app-catalog>
   </div>
-  <div class="restore-container" [hidden]="isDefaultPresent()">
+  <div class="restore-container" [hidden]="form?.isDefaultPresent()">
     <p class="pane restore">
       It looks like you deleted the default catalog &nbsp;&nbsp;
-      <span class="blue-text" (click)="restoreDefaultCatalog()" tabindex=0 (keydown.enter)="restoreDefaultCatalog()">Restore it?</span>
+      <span class="blue-text" (click)="form?.addCatalog()" tabindex=0 (keydown.enter)="form?.addCatalog()">Restore it?</span>
     </p>
   </div>
   <div class="lower-div">
-    <app-catalog-processing (fileSelected)="onFileSelected($event)"></app-catalog-processing> 
+    <app-catalog-processing></app-catalog-processing> 
     <div class="generate-report-outer-div">
       <button class="save-progress" (click)="generateAssessmentPlan()">Save Attestation</button>
     </div>

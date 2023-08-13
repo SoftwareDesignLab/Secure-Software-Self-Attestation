@@ -35,7 +35,6 @@ import { AttestationDataService } from '../services/attestation-data.service';
 export class CatalogProcessingComponent {
   @Input() accept = '.json';
   @ViewChild('fileInput') fileInput!: ElementRef;
-  @Output() fileSelected = new EventEmitter<File>();
 
   /**
    * 
@@ -195,8 +194,7 @@ export class CatalogProcessingComponent {
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
         const catalogClone = JSON.parse(JSON.stringify(catalog)) as CatalogShell;
-        this.attestationDataService.activeForm.addCatalog(catalogClone);
-        this.fileSelected.emit(catalog);
+        this.attestationDataService.activeForm?.addCatalog(catalogClone);
       }
     };
     reader.readAsText(file);

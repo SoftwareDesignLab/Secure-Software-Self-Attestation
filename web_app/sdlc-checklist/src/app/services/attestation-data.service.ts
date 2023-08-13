@@ -26,13 +26,11 @@ import { Form } from '../models/attestationModel';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ContactService } from './contact.service';
 
-const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
-
 @Injectable({
   providedIn: 'root'
 })
 export class AttestationDataService {
-  #forms: Form[] = [];
+  forms: Form[] = [];
   #activeForm: BehaviorSubject<Form | undefined> = new BehaviorSubject<Form | undefined>(undefined);
 
   /**
@@ -41,9 +39,21 @@ export class AttestationDataService {
    */
   createNewForm() {
     let newForm = new Form();
-    this.#forms.push(newForm);
+    this.forms.push(newForm);
     this.#activeForm.next(newForm)
     return newForm
+  }
+
+  deleteForm(uuid?: string) {
+    let form: Form | undefined
+    if (uuid) {
+      form = this.forms.find((form) => (form.uuid === uuid))
+    } else {
+      form = this.activeForm;
+    }
+    if (form) {
+      this.forms.splice(this.forms.findIndex(del => del === form), 1)
+    }
   }
 
   /**
@@ -51,6 +61,6 @@ export class AttestationDataService {
    * @returns The active form's list of catalogs
    */
   get activeForm(): Form | undefined { return this.#activeForm.getValue(); }
-  get forms(): Form[] { return this.#forms; }
   get observableActiveForm(): BehaviorSubject<Form | undefined> { return this.#activeForm; }
+  set activeForm(form: Form | undefined) {this.#activeForm.next(form); }
 }
