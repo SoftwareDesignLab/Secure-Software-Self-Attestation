@@ -154,6 +154,7 @@ export class AttestationDataService {
 
   // Control Methods 
 
+
   /**
    * Checks if checklist compontent still exists on different attestation page
    * @param UID 
@@ -168,6 +169,7 @@ export class AttestationDataService {
     }
   }
 
+  
   // set a control component that this service is specifically watching
   setControlWatch(control: ChecklistItemComponent){
     this.controlWatch = control;
