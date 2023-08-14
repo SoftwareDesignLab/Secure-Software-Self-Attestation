@@ -110,18 +110,6 @@
                                         "value": "Test Control 3"
                                     }
                                 ]
-                            },
-                            {
-                                "name": "ctrl-3",
-                                "class": "NVIP Scan Results",
-                                "title": "Compliance for <control>",
-                                "prose": "There are 100 vulnerable packages",
-                                "props": [
-                                    {
-                                        "name": "Control Name",
-                                        "value": "Test Control 3"
-                                    }
-                                ]
                             }
                         ]
                     }
