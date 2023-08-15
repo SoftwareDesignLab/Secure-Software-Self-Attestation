@@ -25,14 +25,15 @@
 import catalog from '../defaultCatalog';
 import {v4 as uuidv4} from 'uuid';
 import { Prop } from './propertyModel';
-import { CatalogShell, ControlShell, GroupShell, MetadataShell } from './catalogModel';
+import { CatalogShell, ControlShell, GroupShell, MetadataShell, PropShell } from './catalogModel';
+import { BehaviorSubject } from 'rxjs';
 
 export class Form {
     uuid: string = uuidv4();
     name: string;
     static nameIndex = 1;
     catalogs: Catalog[] = [];
-    flag = false;
+    subject: Subject = new Subject();
 
     constructor() {
         this.name = "Attestation " + Form.nameIndex++;
@@ -52,11 +53,21 @@ export class Form {
      * @param uuid The uuid of the catalog to remove
      */
     removeCatalog(uuid: string) {
-
+        this.catalogs.splice(this.catalogs.findIndex((catalog) => {return catalog.uuid === uuid}), 1);
     }
 
     isDefaultPresent(): boolean {
         return true;
+    }
+
+    serialize(metadata: any): any {
+        return {
+            uuid: this.uuid,
+            metadata: metadata,
+            "import-ssp": {href: ""},
+            "reviewed-controls": {"control-selections": this.catalogs.map((catalog) => catalog.serialize())},
+            "assessment-subjects": this.subject.serialize()
+        };
     }
 }
 
@@ -75,6 +86,25 @@ export class Catalog {
 
     toggleExpansion() {
         this.expanded = !this.expanded;
+    }
+
+    serialize() {
+        let props = [new Prop({name: "Catalog ID", value: this.uuid, class:"catalog"} as PropShell), 
+                     new Prop({name: "Catalog Name", value : this.metadata.title, class:"catalog"} as PropShell)]
+        let include: {"control-id": string}[] = [];
+        let exclude: {"control-id": string}[] = [];
+        this.groups.forEach((group) => {
+            group.controls.forEach((control) => {
+                if (control.result !== Result.blank) {
+                    props.push(new Prop({name: control.id, value: control.stringResult, class: "Compliance Claim"} as PropShell));
+                    include.push({"control-id": control.id});
+                } else {
+                    exclude.push({"control-id": control.id});
+                }
+                if (control.commentFinalized) props.push(new Prop({name: control.id, value: control.comment , class: "Attestation Claim"} as PropShell));
+            })
+        })
+        return {props: props, "include-controls": include, "exclude-controls": exclude};
     }
 }
 
@@ -141,6 +171,15 @@ export class Control {
     isChecked() {
         return this.result !== Result.blank;
     }
+
+    get stringResult(): string { 
+        switch (this.result) {
+            case Result.yes: return "yes";
+            case Result.no: return "no";
+            case Result.na: return "n/a";
+            default: return "blank";
+        }
+     }
 }
 
 export class CatalogMetadata {
@@ -159,9 +198,84 @@ export class CatalogMetadata {
     }
 }
 
+export class Subject {
+    #type: BehaviorSubject<SubjectType> = new BehaviorSubject<SubjectType>(SubjectType.company);
+    lines: SubjectLine[] = []
+
+    static subjectTypeToString(type: SubjectType): string {
+        switch (type) {
+            case SubjectType.company: return "company";
+            case SubjectType.individual: return "individual";
+            case SubjectType.multiple: return "multiple";
+            case SubjectType.productLine: return "productLine"
+        }
+    }
+
+    static stringToSubjectType(type: string): SubjectType {
+        switch (type) {
+            case "individual": return SubjectType.individual;
+            case "multiple": return SubjectType.multiple;
+            case "productLine": return SubjectType.productLine;
+            default: return SubjectType.company
+        }
+    }
+
+    pruneRows() {
+        switch(this.type) {
+            case SubjectType.company: this.lines = []; break;
+            case SubjectType.individual: case SubjectType.productLine: this.lines = [this.lines[0] || new SubjectLine()]; break;
+            case SubjectType.multiple: if (this.lines.length === 0) this.lines = [new SubjectLine()];
+        }
+    }
+
+    serialize() {
+        return {
+            type: "party",
+            props: {name: "type", value: this.oscalStringType, class: "Attestation Type" },
+            "include-subjects": this.lines.map((line) => {return line.serialize()}),
+            "exclude-subjects": []
+        }
+    }
+    
+    get type(): SubjectType { return this.#type.getValue(); }
+    get stringType(): string { return Subject.subjectTypeToString(this.#type.getValue()); }
+    get oscalStringType(): string { 
+        switch (this.type) {
+            case SubjectType.company: return "company-wide";
+            case SubjectType.individual: return "individual-product";
+            case SubjectType.multiple: return "multiple-products";
+            case SubjectType.productLine: return "product-line";
+        }
+    }
+    get observableType(): BehaviorSubject<SubjectType> { return this.#type; }
+    set type(type: SubjectType) { this.#type.next(type); this.pruneRows(); }
+    set stringType(subject: string) { this.#type.next(Subject.stringToSubjectType(subject)); this.pruneRows(); }
+}
+
+export class SubjectLine {
+    name: string = "";
+    version: string = "";
+    date: string = "";
+
+    serialize() {
+        return {type: "component", "subject-uuid": uuidv4(), props: [
+            {name: "Product Name", value: this.name, class: "Product Info"},
+            {name: "Version", value: this.version, class: "Product Info"},
+            {name: "Date", value: this.date, class: "Product Info"}
+        ]}
+    }
+}
+
 export enum Result {
     yes,
     no,
     na,
     blank
+}
+
+export enum SubjectType {
+    company,
+    productLine,
+    individual,
+    multiple
 }

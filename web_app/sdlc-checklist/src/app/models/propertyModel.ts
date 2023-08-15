@@ -22,31 +22,20 @@
  * SOFTWARE.
  */
 
-import { BehaviorSubject } from 'rxjs';
-import { PartShell, PropShell } from './catalogModel';
+import { PropShell } from './catalogModel';
 
 export class Prop {
-    #class: BehaviorSubject<string>;
-    #name: BehaviorSubject<string>;
-    #value: BehaviorSubject<string>;
+    class: string;
+    name: string;
+    value: string;
 
     constructor(prop: PropShell) {
-        this.#class = new BehaviorSubject<string>(prop.class || prop.property_class || "");
-        this.#name = new BehaviorSubject<string>(prop.name);
-        this.#value = new BehaviorSubject<string>(prop.value);
+        this.class = prop.class || prop.property_class || "";
+        this.name = prop.name;
+        this.value = prop.value;
     }
 
-    getSerialized(): Object {
+    serialize(): Object {
         return {class: this.class, name: this.name, value: this.value};
     }
-
-    get class(): string { return this.#class.getValue(); }
-    get name(): string { return this.#name.getValue(); }
-    get value(): string { return this.#value.getValue(); }
-    get observableClass(): BehaviorSubject<string> { return this.#class; }
-    get observableName(): BehaviorSubject<string> { return this.#name; }
-    get observableValue(): BehaviorSubject<string> { return this.#value; }
-    set class(newClass: string) { this.#class.next(newClass);}
-    set name(name: string) { this.#name.next(name); }
-    set value(value: string) { this.#value.next(value); }
 }

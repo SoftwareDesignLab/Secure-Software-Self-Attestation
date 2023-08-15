@@ -24,17 +24,10 @@
 
 
 import { saveAs } from 'file-saver';
-import { Component, ViewChildren, ViewChild, QueryList, HostListener } from '@angular/core';
-import { GroupComponent } from '../group/group.component';
-import catalog from '../defaultCatalog';
-import { CatalogProcessingComponent } from '../catalog-processing/catalog-processing.component';
-
+import { Component } from '@angular/core';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { attestationComment } from '../models/attestationForm';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
-import { ContactService } from '../services/contact.service';
-import { Catalog, Form } from '../models/attestationModel';
-import { BehaviorSubject } from 'rxjs';
+import { Form, SubjectType, Subject, SubjectLine, Control } from '../models/attestationModel';
 
 
 @Component({
@@ -45,13 +38,37 @@ import { BehaviorSubject } from 'rxjs';
 export class AttestationPageComponent {
 
   form: Form | undefined;
+  subject: Subject;
 
   constructor(private attestationDataService: AttestationDataService, private assessmentPlanService: AssessmentPlanService) {
     this.form = this.attestationDataService.activeForm;
     this.attestationDataService.observableActiveForm.subscribe((form) => this.form = form);
+    this.subject = this.form?.subject || new Subject();
+    this.subject.observableType.subscribe(this.updatePageSubject);
+    this.updatePageSubject(SubjectType.company);
+  }
+
+  updatePageSubject(newSubject: SubjectType) {
+    let company = document.getElementById("company-wide");
+    let productLine = document.getElementById("product-line");
+    let individual = document.getElementById("individual");
+    let multiple = document.getElementById("multiple");
+    if (company instanceof HTMLInputElement) company.checked = newSubject === SubjectType.company;
+    if (productLine instanceof HTMLInputElement) productLine.checked = newSubject === SubjectType.productLine;
+    if (individual instanceof HTMLInputElement) individual.checked = newSubject === SubjectType.individual;
+    if (multiple instanceof HTMLInputElement) multiple.checked = newSubject === SubjectType.multiple;
   }
 
   generateAssessmentPlan() {
-    this.assessmentPlanService.generateAssessmentPlan();
+    if (this.form)
+      this.assessmentPlanService.generateAssessmentPlan(this.form);
+  }
+
+  addRow() {
+    this.subject.lines.push(new SubjectLine());
+  }
+
+  check() {
+    console.log(this.attestationDataService.activeForm?.subject);
   }
 }

@@ -9,8 +9,6 @@ export class ContactService {
 
   metadata: Metadata = new Metadata;
 
-  constructor() {}
-
   /**
    *  Checks if contact form has acceptable amount of info 
    * @returns whether the manditory sections are complete

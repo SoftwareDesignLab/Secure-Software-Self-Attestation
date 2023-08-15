@@ -27,13 +27,26 @@ import { Prop } from './propertyModel';
 import { PropShell } from './catalogModel';
 
 export class Metadata {
-    title: string = "";
     published: string = "";
     "last-Modified": string = "";
     version: string = "1.0.0";
     "oscal-Version": string = "1.0.4";
     organization: Organization = new Organization();
     person: Person = new Person();
+
+    serialize(title: string): any {
+        if (!this.published) {
+            this.published = new Date().toISOString();
+        }
+        this['last-Modified'] = new Date().toISOString();
+        return {
+          "last-modified": this['last-Modified'],
+          version: this.version,
+          "oscal-version": this['oscal-Version'],
+          published: this.published,
+          parties: [this.organization.serialize(), this.person.serialize()]
+        }
+      }
 }
 
 export class Party  {
@@ -55,6 +68,15 @@ export class Party  {
     addProp(newClass: string, name: string, value: string): void {
         this.props.push(new Prop({class: newClass, name: name, value: value} as PropShell));
     }
+
+    serialize(): any {
+        return {
+            uuid: this.uuid,
+            type: this.type,
+            adresses: [this.address.serialize()],
+            props: this.props
+        }
+    }
 }
 
 export class Organization extends Party {
@@ -65,6 +87,15 @@ export class Organization extends Party {
         super("organization");
     }
 
+    override serialize() {
+        let org = {
+            ...super.serialize(), 
+            name: this.name}
+        if (this.propWebsite) {org.props.push(this.propWebsite); org = {...org, "links": this.linkWebsite}}
+        return org;
+    }
+
+    get linkWebsite(): {href: string, rel: string} | undefined { if (this.website) { return {href: this.website, rel: "website"}} return undefined}
     get propWebsite(): Prop | undefined { if (this.website) { return new Prop({class: "Producer Info", name: "website", value: this.website} as PropShell)} return undefined}
 }
 
@@ -79,6 +110,17 @@ export class Person extends Party {
         super("person");
     }
 
+    override serialize() {
+        let person = {
+            ...super.serialize(),
+            name: this.name
+        }
+        if (this.propTitle) person.props.push(this.propTitle);
+        if (this.email) person = {...person, "email-addresses": [this.email]}
+        if (this.phone) person = {...person, "telephone-numbers": [this.phone]}
+        return person;
+    }
+
     get name(): string { return this.firstName + " " + this.lastName; }
     get propTitle(): Prop | undefined { if (this.title) { return new Prop({class: "Contact Info", name: "title", value: this.title} as PropShell)} return undefined;}
 }
@@ -89,6 +131,16 @@ export class Address {
     state: string = "";
     country: string = "";
     postal: string = "";
+
+    serialize() {
+        return {
+            "addr-lines": [this.lines[0], this.lines[1]],
+            city: this.city,
+            state: this.state,
+            country: this.country,
+            "postal-code": this.postal
+        }
+    }
 
     get line1(): string { return this.lines[0]; }
     get line2(): string { return this.lines[1]; }
