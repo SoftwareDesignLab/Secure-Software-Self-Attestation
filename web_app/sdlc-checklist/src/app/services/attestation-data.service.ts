@@ -45,7 +45,6 @@ export class AttestationDataService {
   private viewPosition: number = -1;
   private deletionPosition: number = 0;
   public pageName: string = "Contact Info";
-  private displayIDMap!: Map<String, number>;
   private catalogPosition!: Map<String, number>;
   private controlWatch?: ChecklistItemComponent;
 
@@ -101,7 +100,6 @@ export class AttestationDataService {
 
   setView(position: number){
     this.assessmentPlanService.setAttestationFocus(position);
-    this.displayIDMap=this.forms[position].displayIDMap;
     this.viewPosition = position;
   }
 
@@ -142,8 +140,8 @@ export class AttestationDataService {
    */
   addform(){
     this.assessmentPlanService.setAttestationFocus(this.forms.length);
+    let position = this.forms.length;
     this.forms.push(new AttestationComponent(this, this.assessmentPlanService));
-    let position = this.forms.length-1;
     this.forms[position].setFormPosition(position);
   }
 

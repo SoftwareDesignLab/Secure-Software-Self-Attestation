@@ -35,6 +35,7 @@ import { CatalogData, Catalog} from '../models/catalogModel';
 import { AttestationComponent } from '../attestation/attestation.component';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
 import { ContactService } from '../services/contact.service';
+import { notifyService } from '../services/notify.service';
 
 
 @Component({
@@ -52,7 +53,7 @@ export class AttestationPageComponent {
   control: string = "Ungrouped Controls";
   showNav = false;
   viewPosition = 0;
-  position;
+  position!: number;
   observedForm!: AttestationComponent;
   attestationType!: string;
   info: attestationComment[] = [];
@@ -66,11 +67,8 @@ export class AttestationPageComponent {
    * @param attestationService The global attestation data service
    * @param contactService global contact data service
    */
-  constructor(public attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService){
-      this.attestationType = attestationService.getCurrentForm.getAttestationType;
-      this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
-      this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
-      this.position = this.attestationService.getCurrentForm.getPositionTag;
+  constructor(public attestationService: AttestationDataService, private contactService: ContactService, private assessmentPlanService: AssessmentPlanService,
+    private notifyService: notifyService){
   }
 
 
@@ -79,7 +77,11 @@ export class AttestationPageComponent {
    * Sets up the parts of the form
    */
   ngOnInit(): void {
+    this.attestationType = this.attestationService.getCurrentForm.getAttestationType;
     this.catalogData = this.attestationService.getCurrentForm.getCatalogs;
+    this.hiddenCatalogs = this.attestationService.getCurrentForm.getHiddenCatalogs();
+    this.position = this.attestationService.getCurrentForm.getPositionTag;
+
     this.attestationService.ComponentRefresh$.subscribe(() => {
       this.refresh();
     });
@@ -214,9 +216,9 @@ export class AttestationPageComponent {
   onFileSelected(jsonData: any): void {
     let message = this.attestationService.getCurrentForm.onFileSelected(jsonData);
     if (message.success) {
-      this.catalogProcessingComponent.notifyOfSuccess(message.message);
+      this.notifyService.success(message.message);
     } else {
-      this.catalogProcessingComponent.notifyOfFailure(message.message);
+      this.notifyService.error(message.message);
     }
   }
 

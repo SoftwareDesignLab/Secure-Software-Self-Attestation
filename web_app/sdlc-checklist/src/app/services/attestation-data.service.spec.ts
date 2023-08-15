@@ -24,16 +24,97 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AttestationDataService } from './attestation-data.service';
+import { AssessmentPlanService } from './assessment-plan.service';
 
 describe('AttestationDataService', () => {
-  let service: AttestationDataService;
+  let attestationService: AttestationDataService;
+  let mockAPService: Partial<AssessmentPlanService>; 
+  const UID = '1-d152b49c-39b4-4765-a961-75051dcf2293-subject'
+
+  mockAPService = {
+    setAttestationType(value){},
+    addAssessmentPlan(value){},
+    addCatalog(value){},
+    setAttestationFocus(value){},
+    removeCatalog(value){},
+    setControlSelection(value){},
+    setControlComment(value){},
+    removeControlComment(value){}
+  };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(AttestationDataService);
+    TestBed.configureTestingModule({
+      providers: [
+        {provide: AssessmentPlanService, useValue: mockAPService}
+      ],
+    });
+    attestationService = TestBed.inject(AttestationDataService);
+    attestationService.addform();
+    attestationService.setView(0);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(attestationService).toBeTruthy();
   });
+
+  it('set up control Selection', () => {
+    attestationService.setUpControl(UID);
+    attestationService.updateControlSelection(UID,'check');
+    let subject = attestationService.setUpControl(UID);
+    expect(subject?.selection).toEqual('check');
+  });
+
+  it('set control comment to done', () => {
+    attestationService.setUpControl(UID);
+    attestationService.finalizeControlComment(UID,"comment");
+    let subject = attestationService.setUpControl(UID);
+    expect(subject?.finalized).toEqual(true);
+    expect(subject?.comment).toEqual("comment");
+  });
+
+  it('set control comment to saved', () => {
+    attestationService.setUpControl(UID);
+    attestationService.saveControlComment(UID,'comment');
+    let subject = attestationService.setUpControl(UID);
+    expect(subject?.comment).toEqual('comment');
+    expect(subject?.finalized).toEqual(false);
+  });
+
+  it('delete control comment', () => {
+    attestationService.setUpControl(UID);
+    attestationService.finalizeControlComment(UID,"comment");
+    attestationService.deleteControlComment(UID);
+    let subject = attestationService.setUpControl(UID);
+    expect(subject?.comment).toEqual('');
+    expect(subject?.finalized).toEqual(false);
+  });
+
+  it('fully set up control then delete it', () => {
+    attestationService.setDeletionPosition(0);
+    attestationService.setUpControl(UID);
+    attestationService.updateControlSelection(UID,'check');
+    attestationService.finalizeControlComment(UID,"comment");
+    attestationService.toggleControlRollable(UID);
+    attestationService.removeControl('d152b49c-39b4-4765-a961-75051dcf2293-subject');
+    let subject = attestationService.setUpControl(UID);
+    
+    expect(subject?.comment).toEqual('');
+    expect(subject?.finalized).toEqual(false);
+    expect(subject?.selection).toEqual('no-selection');
+    expect(subject?.showRollable).toEqual(false);
+  });
+
+  
+
+  it('toggle group rollable', () => {
+    attestationService.setUpGroup(UID);
+    let subject = attestationService.setUpGroup(UID);
+    attestationService.toggleGroupRollable(UID);
+    expect(subject?.showRollable).toEqual(false);
+   });
+
+
+ 
+ 
+
 });

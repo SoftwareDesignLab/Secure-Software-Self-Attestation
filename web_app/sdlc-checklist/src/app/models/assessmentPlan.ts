@@ -187,6 +187,7 @@ export class ControlSelection {
     if (this["exclude-controls"] === undefined||this['exclude-controls-memory'] === undefined) return;
     let index = this["exclude-controls"].findIndex(control => control["control-id"] === controlID);
     if (index > -1){
+
       this["exclude-controls"].splice(index, 1);
       this["exclude-controls-memory"].splice(index,1);
     }
@@ -590,7 +591,7 @@ export class APMetadata {
 
   addParty(party: Party) {
     this.parties.push(party);
-    this.modify();
+    this["last-modified"] = new Date().toISOString();
   }
 
   addBlankParty() {
@@ -598,13 +599,6 @@ export class APMetadata {
     this.parties.push(newParty);
   }
 
-  modify() {
-    this["last-modified"] = new Date().toISOString();
-  }
-
-  publish() {
-    this.published = new Date().toISOString();
-  }
 
   serialize(): object {
     let serialized = {

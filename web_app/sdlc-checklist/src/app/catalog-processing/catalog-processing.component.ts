@@ -89,22 +89,6 @@ export class CatalogProcessingComponent {
   }
 
   /**
-   * Displays a green message in the bottom corner
-   * @param message The message to display
-   */
-  notifyOfSuccess(message: string) {
-    this.notifications.success(message);
-  }
-
-  /**
-   * Displays a red message in the bottom corner
-   * @param message The message to display
-   */
-  notifyOfFailure(message: string) {
-    this.notifications.error(message);
-  }
-
-  /**
    * Checks if the file is a json
    * @param file The file to check
    * @returns whether it is a json

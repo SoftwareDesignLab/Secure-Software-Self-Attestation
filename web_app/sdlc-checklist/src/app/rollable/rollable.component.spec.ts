@@ -43,4 +43,17 @@ describe('RollableComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('Filled Rollable', () => {
+    component.description = "anything";
+    component.examples = "anything";
+    component.subControls = "anything";
+    component.references = "anything";
+    expect(component.hasDescription()).toEqual(true);
+    expect(component.hasExamples()).toEqual(true);
+    expect(component.hasSubControls()).toEqual(true);
+    expect(component.hasReferences()).toEqual(true);
+  });
+
+
 });

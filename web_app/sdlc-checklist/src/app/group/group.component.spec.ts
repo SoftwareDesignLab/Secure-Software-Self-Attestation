@@ -21,26 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+
+import { AttestationDataService } from '../services/attestation-data.service';
+
+import { Prop } from '../models/assessmentPlan';
+import { Catalog } from '../models/catalogModel';
+import catalog from '../defaultCatalog';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupComponent } from './group.component';
+import { SelectControlValueAccessor } from '@angular/forms';
 
 describe('GroupComponent', () => {
-  let component: GroupComponent;
+  let group: GroupComponent;
   let fixture: ComponentFixture<GroupComponent>;
+  let attestationDataService: AttestationDataService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GroupComponent ]
+      declarations: [ GroupComponent ],
     })
     .compileComponents();
 
+    attestationDataService = TestBed.inject(AttestationDataService);
+    attestationDataService.addform();
+    attestationDataService.setView(0);
     fixture = TestBed.createComponent(GroupComponent);
-    component = fixture.componentInstance;
+
+    group = fixture.componentInstance;
     fixture.detectChanges();
+
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(group).toBeTruthy();
   });
+
+  it('Toggle Children of groups', () => {
+    group.setComponents(false);
+    group.toggleComponents();
+    let childArray = group.childComponents.toArray()
+    childArray.forEach(child => {
+      expect(child.showRollable).toEqual(true)  });
+    });
+
+
+    it('check all children', () => {
+      group.setAllChildrenSelection("check")
+      expect(group.areAllChildrenChecked()).toEqual(true);
+    });
+
+
 });

@@ -24,17 +24,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CatalogProcessingComponent } from './catalog-processing.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { AssessmentPlanService, ControlSelectionType } from '../services/assessment-plan.service';
+
 
 describe('CatalogProcessingComponent', () => {
   let component: CatalogProcessingComponent;
   let fixture: ComponentFixture<CatalogProcessingComponent>;
+  let APService: AssessmentPlanService;
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CatalogProcessingComponent ]
+      declarations: [ CatalogProcessingComponent ],
+      imports: [SimpleNotificationsModule.forRoot({
+        position: ['bottom', 'right']
+      })],
+      providers: [AssessmentPlanService]  
     })
     .compileComponents();
 
+    APService = TestBed.inject(AssessmentPlanService);
     fixture = TestBed.createComponent(CatalogProcessingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -43,4 +53,8 @@ describe('CatalogProcessingComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+
+
+
 });

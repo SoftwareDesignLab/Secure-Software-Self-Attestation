@@ -147,7 +147,7 @@ onKeyUp(event: KeyboardEvent) {
     this.changeAttestion(newPage)
   }
 
-  isFilled(){
+  isNotFilled(){
     return !this.contactService.isFilled()
   }
 
