@@ -34,6 +34,7 @@ export class Form {
     static nameIndex = 1;
     catalogs: Catalog[] = [];
     subject: Subject = new Subject();
+    catalogDataFiles: any[] = [];
 
     constructor() {
         this.name = "Attestation " + Form.nameIndex++;
@@ -46,6 +47,7 @@ export class Form {
      */
     addCatalog(jsonData: CatalogShell = catalog as CatalogShell) {
         this.catalogs.push(new Catalog(jsonData));
+        this.catalogDataFiles.push(jsonData);
     }
 
     /**
