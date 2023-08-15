@@ -41,9 +41,9 @@
       <label for="contact-zip">Postal Code: </label>
       <input id="contact-zip" type="text" (blur)="update($event, 'personPostal')"  value="{{contactService.personPostal}}"autocomplete="postal-code">
       <label for="phone">Phone: </label>
-      <input id="phone" type="tel" (blur)="update($event, 'personEmail')" value="{{contactService.personPhone}}" autocomplete="tel">
+      <input id="phone" type="tel" (blur)="update($event, 'personPhone')" value="{{contactService.personPhone}}" autocomplete="tel">
       <label for="email">Email: </label>
-      <input id="email" type="email" (blur)="update($event, 'personPhone')" value="{{contactService.personEmail}}" autocomplete="email">
+      <input id="email" type="email" (blur)="update($event, 'personEmail')" value="{{contactService.personEmail}}" autocomplete="email">
     </div>
   </form>
 </div>

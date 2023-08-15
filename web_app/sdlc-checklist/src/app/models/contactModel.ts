@@ -28,7 +28,6 @@ import { PropShell } from './catalogModel';
 
 export class Metadata {
     published: string = "";
-    "last-Modified": string = "";
     version: string = "1.0.0";
     "oscal-Version": string = "1.0.4";
     organization: Organization = new Organization();
@@ -38,13 +37,13 @@ export class Metadata {
         if (!this.published) {
             this.published = new Date().toISOString();
         }
-        this['last-Modified'] = new Date().toISOString();
         return {
-          "last-modified": this['last-Modified'],
-          version: this.version,
-          "oscal-version": this['oscal-Version'],
-          published: this.published,
-          parties: [this.organization.serialize(), this.person.serialize()]
+            title: title,
+            "last-modified": new Date().toISOString(),
+            version: this.version,
+            "oscal-version": this['oscal-Version'],
+            published: this.published,
+            parties: [this.organization.serialize(), this.person.serialize()]
         }
       }
 }
@@ -73,7 +72,7 @@ export class Party  {
         return {
             uuid: this.uuid,
             type: this.type,
-            adresses: [this.address.serialize()],
+            addresses: [this.address.serialize()],
             props: this.props
         }
     }
