@@ -1,4 +1,3 @@
-Saving
 Loading
 Check Main
 Prune unnecessary CSS

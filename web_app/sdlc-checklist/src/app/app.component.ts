@@ -26,6 +26,7 @@ import { AttestationDataService } from './services/attestation-data.service';
 import { Router, NavigationEnd, RouterModule  } from '@angular/router';
 import { CatalogShell } from './models/catalogModel';
 import { Form } from './models/attestationModel';
+import { AssessmentPlanService } from './services/assessment-plan.service';
 
 interface CatalogData {
   catalogs: CatalogShell[];
@@ -45,7 +46,8 @@ export class AppComponent {
   showComponents = false;
   showFullFooter = false;
 
-  constructor(private router: Router, private attestationService: AttestationDataService){}
+  constructor(private router: Router, private attestationService: AttestationDataService, 
+              private assessmentPlanService: AssessmentPlanService){}
   
   ngOnInit(){
   }
@@ -157,11 +159,26 @@ export class AppComponent {
   }
 
   processLoadAttestation(event: Event) {
+    let file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.setNav(false);
+      this.handleFile(file);
+      console.log('File selected:', file);
+      (event.target as HTMLInputElement).value = "";
+    }
+  }
 
+  private handleFile(file: File): void {
+    let reader = new FileReader();
+    reader.onload = () => {
+      let json = JSON.parse(reader.result as string);
+      this.assessmentPlanService.loadFromPlan(json);
+    };
+    reader.readAsText(file);
   }
 
   loadAttestation() {
-
+    document.getElementById("load-file-input")?.click();
   }
 
   changeAttestation(form: Form, fragment?: string) {

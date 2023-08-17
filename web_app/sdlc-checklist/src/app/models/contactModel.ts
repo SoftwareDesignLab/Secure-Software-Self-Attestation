@@ -29,11 +29,9 @@ import { PropShell } from './catalogModel';
 export class Metadata {
     published: string = "";
     version: string = "1.0.0";
-    "oscal-Version": string = "1.0.4";
-    organization: Organization = new Organization();
-    person: Person = new Person();
+    "oscal-version": string = "1.0.4";
 
-    serialize(title: string): any {
+    serialize(title: string, organization: Organization, person: Person): any {
         if (!this.published) {
             this.published = new Date().toISOString();
         }
@@ -41,11 +39,17 @@ export class Metadata {
             title: title,
             "last-modified": new Date().toISOString(),
             version: this.version,
-            "oscal-version": this['oscal-Version'],
+            "oscal-version": this['oscal-version'],
             published: this.published,
-            parties: [this.organization.serialize(), this.person.serialize()]
+            parties: [organization.serialize(), person.serialize()]
         }
-      }
+    }
+
+    load(json: any) {
+        this.published = json.published;
+        this.version = json.version;
+        this["oscal-version"] = json["oscal-version"];
+    }
 }
 
 export class Party  {
@@ -76,6 +80,12 @@ export class Party  {
             props: this.props
         }
     }
+
+    load(json: any) {
+        if (json.uuid instanceof String) this.uuid = json.uuid;
+        if (json.type instanceof String) this.type = json.type;
+        if (json.addresses[0]) this.address.load(json.addresses[0]);
+    }
 }
 
 export class Organization extends Party {
@@ -92,6 +102,18 @@ export class Organization extends Party {
             name: this.name}
         if (this.propWebsite) {org.props.push(this.propWebsite); org = {...org, "links": this.linkWebsite}}
         return org;
+    }
+
+    override load(json: any) {
+        super.load(json);
+        if (json.name) this.name = json.name;
+        if (json.props) json.props.forEach((prop: any) => {
+            if (prop.name === "website") {
+                this.website = prop.value;
+            } else {
+                this.props.push(new Prop(prop as PropShell));
+            }
+        })
     }
 
     get linkWebsite(): {href: string, rel: string} | undefined { if (this.website) { return {href: this.website, rel: "website"}} return undefined}
@@ -120,6 +142,25 @@ export class Person extends Party {
         return person;
     }
 
+    override load(json: any) {
+        super.load(json);
+        let name = json.name;
+        if (name) {
+            let names = name.split(" ");
+            this.firstName = names[0];
+            this.lastName = names.slice(1).join(" ");
+        }
+        if (json.props) json.props.forEach((prop: any) => {
+            if (prop.name === "title") {
+                this.title = prop.value;
+            } else {
+                this.props.push(new Prop(prop as PropShell));
+            }
+        })
+        if (json['email-addresses'] && json['email-addresses'][0]) this.email = json['email-addresses'][0]
+        if (json['telephone-numbers'] && json['telephone-numbers'][0]) this.phone = json['telephone-numbers'][0]
+    }
+
     get name(): string { return this.firstName + " " + this.lastName; }
     get propTitle(): Prop | undefined { if (this.title) { return new Prop({class: "Contact Info", name: "title", value: this.title} as PropShell)} return undefined;}
 }
@@ -139,6 +180,14 @@ export class Address {
             country: this.country,
             "postal-code": this.postal
         }
+    }
+
+    load(json: any) {
+        if (json['addr-lines']) this.lines = json['addr-lines'];
+        if (json.city) this.city = json.city;
+        if (json.state) this.state = json.state;
+        if (json.country) this.country = json.country;
+        if (json['postal-code']) this.postal = json['postal-code'];
     }
 
     get line1(): string { return this.lines[0]; }

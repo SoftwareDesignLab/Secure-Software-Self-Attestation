@@ -27,6 +27,7 @@ import {v4 as uuidv4} from 'uuid';
 import { Prop } from './propertyModel';
 import { CatalogShell, ControlShell, GroupShell, MetadataShell, PropShell } from './catalogModel';
 import { BehaviorSubject } from 'rxjs';
+import { Metadata } from './contactModel';
 
 export class Form {
     uuid: string = uuidv4();
@@ -35,10 +36,11 @@ export class Form {
     catalogs: Catalog[] = [];
     subject: Subject = new Subject();
     catalogDataFiles: any[] = [];
+    metadata: Metadata = new Metadata();
 
-    constructor() {
+    constructor(startingCatalog: boolean = true) {
         this.name = "Attestation " + Form.nameIndex++;
-        this.addCatalog();
+        if (startingCatalog) this.addCatalog();
     }
 
     /**
@@ -70,6 +72,12 @@ export class Form {
             "reviewed-controls": {"control-selections": this.catalogs.map((catalog) => catalog.serialize())},
             "assessment-subjects": this.subject.serialize()
         };
+    }
+
+    load(json: any) {
+        this.name = json.metadata.title
+        this.metadata.load(json["metadata"])
+        if (json["assessment-subjects"]) this.subject.load(json["assessment-subjects"]);
     }
 }
 
@@ -237,6 +245,21 @@ export class Subject {
             "include-subjects": this.lines.map((line) => {return line.serialize()}),
             "exclude-subjects": []
         }
+    }
+
+    load(json: any) {
+        this.type = json.props?.find((prop: any) => {prop.name === "type"})?.value;
+        json["include-subjects"]?.forEach((subject: any) => {
+            let line = new SubjectLine
+            subject?.props.forEach((prop: any) => {
+                switch (prop.name) {
+                    case "Product Name": line.name = prop.value; break;
+                    case "Product Version": line.version = prop.value; break;
+                    case "Product Date": line.date = prop.value; break;
+                }
+            });
+            this.lines.push(line);
+        });
     }
     
     get type(): SubjectType { return this.#type.getValue(); }

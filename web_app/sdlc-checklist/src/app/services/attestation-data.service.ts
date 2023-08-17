@@ -37,8 +37,8 @@ export class AttestationDataService {
    * Creates a new form and adds it to forms
    * @returns The new form
    */
-  createNewForm() {
-    let newForm = new Form();
+  createNewForm(startingCatalog: boolean = true) {
+    let newForm = new Form(startingCatalog);
     this.forms.push(newForm);
     this.#activeForm.next(newForm)
     return newForm
