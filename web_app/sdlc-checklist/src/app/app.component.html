@@ -32,11 +32,8 @@
       <li><p class="load" (click)="loadAttestation()" (keydown.enter)="loadAttestation()" [tabindex]="showNav ? 0 : -1">Load Attestation</p></li>
     </ul>
     <input type="file" hidden id="load-file-input" (change)="processLoadAttestation($event)" accept=".json">
-    <p class="generate" [tabindex]="showNav ? 0 : -1">Generate Report</p>
-    <!--<p class="disabled-generate" *ngIf="!generateAcceptable()">Generate Report
-      <span class="tool-tip" *ngIf="invalidContact()">Software Producer/Primary Contact Info is incomplete!</span>
-      <span class="tool-tip" *ngIf="attestationTypeMissing()">Missing Attestation Type</span>
-    </p>-->
+    <p [className]="isFormComplete() ? 'generate completed' : 'generate in-progress'" [tabindex]="showNav ? 0 : -1">Generate Report</p>
+    <p class="tool-tip">{{ getErrorMessage() }}</p>
   </div>
 </nav>
 

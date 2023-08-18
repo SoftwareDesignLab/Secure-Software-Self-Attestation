@@ -41,7 +41,8 @@
     <div class="generate-report-outer-div">
       <button class="save-progress" (click)="generateAssessmentPlan()">Save Attestation</button>
       <div class="lower-button">
-        <p *ngIf="!isFormComplete()" [title]="getErrorMessage()">!</p>
+        <p *ngIf="!isFormComplete()">!</p>
+        <p class="tool-tip">{{ getErrorMessage() }}</p>
         <button [className]="isFormComplete() ? 'generate-report-button completed' : 'generate-report-button in-progress'">Generate Report</button>
       </div>
     </div>

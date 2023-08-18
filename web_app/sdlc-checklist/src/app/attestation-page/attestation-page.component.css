@@ -109,6 +109,11 @@ tr:last-child td {
   margin-left: 45px;
 }
 
+.completed:hover {
+  background-color: #055188;
+  box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, .3);
+}
+
 .lower-div p {
   display: inline;
   font-size: x-large;
@@ -117,6 +122,24 @@ tr:last-child td {
   border-radius: 10px;
   box-shadow: 4px 4px 2px 0 rgba(0, 0, 0, .4);
   background-color: rgb(250, 200, 200);
+}
+
+.lower-button {
+  position: relative;
+}
+
+.lower-button .tool-tip {
+  position: absolute;
+  font-size: larger;
+  top: 0;
+  left: 0;
+  margin: 0;
+  transform: translateX(-105%) translateY(-15%);
+  display: none;
+}
+
+.lower-div p:hover + .tool-tip {
+  display: block;
 }
 
 .save-progress {

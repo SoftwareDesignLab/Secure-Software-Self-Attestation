@@ -25,6 +25,7 @@ import { Component } from '@angular/core';
 import { AttestationDataService } from './services/attestation-data.service';
 import { Form } from './models/attestationModel';
 import { AssessmentPlanService } from './services/assessment-plan.service';
+import { ContactService } from './services/contact.service';
 
 @Component({
   selector: 'app-root',
@@ -39,7 +40,7 @@ export class AppComponent {
   showFullFooter = false;
   stagedJSON: any = undefined;
 
-  constructor(private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){}
+  constructor(private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, private contactService: ContactService){}
 
   /**
    * Toggles whether the nav is visible
@@ -159,6 +160,15 @@ export class AppComponent {
   changeAttestation(form: Form, fragment?: string) {
     this.showNav = false;
     this.attestationService.changeAttestation(form, fragment);
+  }
+
+  isFormComplete() {
+    return this.contactService.isFilled();
+  }
+
+  getErrorMessage() {
+    if (!this.contactService.isFilled()) return "The contact information page is not adequately completed"
+    return "";
   }
 
   get activeFormName(): string {
