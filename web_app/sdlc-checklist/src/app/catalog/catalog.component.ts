@@ -34,6 +34,9 @@ export class CatalogComponent {
 
   constructor(private attestationDataService: AttestationDataService) {}
 
+  /**
+   * Removes this catalog from the current form
+   */
   removeCatalog() {
     this.attestationDataService.activeForm?.removeCatalog(this.catalog.uuid);
   }

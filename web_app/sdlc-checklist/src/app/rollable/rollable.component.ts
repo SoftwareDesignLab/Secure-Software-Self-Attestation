@@ -58,6 +58,10 @@ export class RollableComponent {
     return this.references !== undefined && this.references.length > 0;
   }
 
+  /**
+   * 
+   * @returns Whether there are properties other than references in the props
+   */
   hasProperties(): boolean {
     return this.props !== undefined && this.props.length > 0;
   }

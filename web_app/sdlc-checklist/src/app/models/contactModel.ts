@@ -31,6 +31,13 @@ export class Metadata {
     version: string = "1.0.0";
     "oscal-version": string = "1.0.4";
 
+    /**
+     * Serializes the metadata section
+     * @param title The title of the form
+     * @param organization The universal Organization object
+     * @param person The universal Person object
+     * @returns The serialized data
+     */
     serialize(title: string, organization: Organization, person: Person): any {
         if (!this.published) {
             this.published = new Date().toISOString();
@@ -45,6 +52,10 @@ export class Metadata {
         }
     }
 
+    /**
+     * Loads data from serialized data
+     * @param json The serialized metadata
+     */
     load(json: any) {
         this.published = json.published;
         this.version = json.version;
@@ -58,6 +69,10 @@ export class Party  {
     address: Address = new Address();
     props: Prop[] = [];
 
+    /**
+     * Creates a new Party
+     * @param type The type the party is
+     */
     constructor(type: string) {
         this.type = type;
     }
@@ -72,6 +87,10 @@ export class Party  {
         this.props.push(new Prop({class: newClass, name: name, value: value} as PropShell));
     }
 
+    /**
+     * Serializes the party for saving
+     * @returns the serialized object
+     */
     serialize(): any {
         return {
             uuid: this.uuid,
@@ -81,6 +100,12 @@ export class Party  {
         }
     }
 
+    /**
+     * Loads a party from a file
+     * @param json The serialized data
+     * @param modify Whether or not to save data (used to check if there are conflicts with existing data)
+     * @returns Whether any data will be overwritten
+     */
     load(json: any, modify: boolean = true): boolean {
         let flag: boolean = true;
         if (json.uuid instanceof String) {
@@ -97,10 +122,17 @@ export class Organization extends Party {
     website: string = "";
     name: string = "";
 
+    /**
+     * Creates a new Organization object
+     */
     constructor() {
         super("organization");
     }
 
+    /**
+     * Serializes the Organization object
+     * @returns The serialized data
+     */
     override serialize() {
         let org = {
             ...super.serialize(), 
@@ -109,6 +141,12 @@ export class Organization extends Party {
         return org;
     }
 
+    /**
+     * Loads an organization from a file
+     * @param json The serialized data
+     * @param modify Whether or not to save data (used to check if there are conflicts with existing data)
+     * @returns Whether any data will be overwritten
+     */
     override load(json: any, modify: boolean = true): boolean {
         let flag = super.load(json, modify);
         if (json.name) {
@@ -140,10 +178,17 @@ export class Person extends Party {
     firstName: string = "";
     lastName: string = "";
 
+    /**
+     * Creates a new person object
+     */
     constructor() {
         super("person");
     }
 
+    /**
+     * Serialized the person data into an object for saving
+     * @returns The serialized object
+     */
     override serialize() {
         let person = {
             ...super.serialize(),
@@ -155,6 +200,12 @@ export class Person extends Party {
         return person;
     }
 
+    /**
+     * Loads a person from a file
+     * @param json The serialized data
+     * @param modify Whether or not to save data (used to check if there are conflicts with existing data)
+     * @returns Whether any data will be overwritten
+     */
     override load(json: any, modify: boolean = true): boolean {
         let flag = super.load(json, modify);
         let name = json.name;
@@ -201,6 +252,10 @@ export class Address {
     country: string = "";
     postal: string = "";
 
+    /**
+     * Serialized the address into an object
+     * @returns The serialized address
+     */
     serialize() {
         return {
             "addr-lines": [this.lines[0], this.lines[1]],
@@ -211,6 +266,12 @@ export class Address {
         }
     }
 
+    /**
+     * Loads an address from a file
+     * @param json The serialized data
+     * @param modify Whether or not to save data (used to check if there are conflicts with existing data)
+     * @returns Whether any data will be overwritten
+     */
     load(json: any, modify: boolean = true): boolean {
         let flag = true;
         if (json['addr-lines']) {

@@ -41,6 +41,9 @@ export class AttestationPageComponent {
   form: Form | undefined;
   subject: Subject;
 
+  /**
+   * Sets up the attestation page and gets the form to load
+   */
   constructor(private attestationDataService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, private contactService: ContactService) {
     this.form = this.attestationDataService.activeForm;
     this.attestationDataService.observableActiveForm.subscribe((form) => this.form = form);
@@ -49,6 +52,10 @@ export class AttestationPageComponent {
     this.updatePageSubject(SubjectType.company);
   }
 
+  /**
+   * Changes the attestation subject, setting the radio buttons to match
+   * @param newSubject The subject to set to
+   */
   updatePageSubject(newSubject: SubjectType) {
     let company = document.getElementById("company-wide");
     let productLine = document.getElementById("product-line");
@@ -60,24 +67,40 @@ export class AttestationPageComponent {
     if (multiple instanceof HTMLInputElement) multiple.checked = newSubject === SubjectType.multiple;
   }
 
+  /**
+   * Generates an assessment plan
+   */
   generateAssessmentPlan() {
-    if (this.form)
-      this.assessmentPlanService.generateAssessmentPlan(this.form);
+    this.assessmentPlanService.generateAssessmentPlan();
   }
 
+  /**
+   * Adds a new row to the subject table
+   */
   addRow() {
     this.subject.lines.push(new SubjectLine());
   }
 
+  /**
+   * Removes the last row from the subject table
+   */
   removeRow() {
     this.subject.lines.pop();
   }
 
-  isFormComplete() {
+  /**
+   * Checks if the form is completed and the generate button should function
+   * @returns Whether the form is completed
+   */
+  isFormComplete(): boolean {
     return this.contactService.isFilled()
   }
 
-  getErrorMessage() {
+  /**
+   * Generates the message to display as a tool tip when hovering over the exclamation point
+   * @returns The message, or an empty string if no message applies
+   */
+  getErrorMessage(): string {
     if (!this.contactService.isFilled()) return "The contact information page is not adequately completed"
     return "";
   }

@@ -48,6 +48,10 @@ export class AttestationDataService {
     return newForm
   }
 
+  /**
+   * Deletes the given form
+   * @param uuid The uuid of the form to delete (defaults to the active form if left blank)
+   */
   deleteForm(uuid?: string) {
     let form: Form | undefined
     if (uuid) {
@@ -109,6 +113,11 @@ export class AttestationDataService {
     return null;
   }
 
+  /**
+   * Changes the current page to attestation-form and changes the active form
+   * @param form The form to change to
+   * @param fragment (optional) The fragment to scroll to
+   */
   changeAttestation(form: Form, fragment?: string) {
     this.activeForm = form;
     this.changePage('attestation-form', fragment);

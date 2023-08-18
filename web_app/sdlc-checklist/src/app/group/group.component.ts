@@ -32,18 +32,25 @@ import { Control, Result } from '../models/attestationModel';
 export class GroupComponent {
   @Input() group: any;
 
-  setComponents(truth: boolean) {
-    this.group.expanded = truth;
-  }
-
+  /**
+   * Hides the rollable components of all child controls
+   */
   hideChildRollable() {
     this.group.controls.forEach((control: Control) => control.expanded = false);
   }
 
+  /**
+   * Determines whether all children are checked
+   * @returns Whether all children are checked
+   */
   areAllChildrenChecked(): boolean {
     return this.group.controls.reduce((truth: boolean, control: Control): boolean => { return truth && control.result !== Result.blank}, true)
   }
 
+  /**
+   * Sets all children to the selection, or sets them all to blank if they all were the selection already
+   * @param selection What to set the chilren to
+   */
   setAllChildrenSelection(selection: string): void {
     let result = Result.blank;
     switch (selection) {

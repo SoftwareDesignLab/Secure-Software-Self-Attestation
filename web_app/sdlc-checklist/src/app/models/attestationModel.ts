@@ -38,6 +38,10 @@ export class Form {
     catalogDataFiles: any[] = [];
     metadata: Metadata = new Metadata();
 
+    /**
+     * The constructor for a new Form
+     * @param startingCatalog Whether or not the default catalog should be added (defaults to true)
+     */
     constructor(startingCatalog: boolean = true) {
         this.name = "Attestation " + Form.nameIndex++;
         if (startingCatalog) this.addCatalog();
@@ -61,10 +65,19 @@ export class Form {
         this.catalogDataFiles.splice(this.catalogDataFiles.findIndex((catalog) => {return catalog.uuid === uuid}), 1);
     }
 
+    /**
+     * Checks whether the default catalog is present
+     * @returns whether the default catalog is present
+     */
     isDefaultPresent(): boolean {
         return -1 !== this.catalogs.findIndex((checkCatalog) => {return checkCatalog.uuid === catalog.uuid})
     }
 
+    /**
+     * Returns the serialized version of the form for saving
+     * @param metadata Any non-form specific metadata to inject
+     * @returns The serialized object
+     */
     serialize(metadata: any): any {
         return {
             uuid: this.uuid,
@@ -75,6 +88,10 @@ export class Form {
         };
     }
 
+    /**
+     * Takes seialized data and unpacks it into the page
+     * @param json The data to load, should be the "assessment-plan" part of a serialized file
+     */
     load(json: any) {
         this.name = json.metadata.title
         this.metadata.load(json["metadata"])
@@ -95,6 +112,10 @@ export class Catalog {
     expanded: boolean = true;
     metadata: CatalogMetadata;
 
+    /**
+     * Creates a new catalog given a catalog file
+     * @param jsonData The catalog file's data
+     */
     constructor(jsonData: CatalogShell) {
         this.uuid = jsonData.uuid;
         jsonData.groups.forEach((group) => {
@@ -105,10 +126,17 @@ export class Catalog {
         this.metadata = new CatalogMetadata(jsonData.metadata);
     }
 
+    /**
+     * Toggles whether or not the catalog should appear expanded when loaded
+     */
     toggleExpansion() {
         this.expanded = !this.expanded;
     }
 
+    /**
+     * Serializes the catalog for saving to a file
+     * @returns The serialized object
+     */
     serialize() {
         let props = [new Prop({name: "Catalog ID", value: this.uuid, class:"catalog"} as PropShell), 
                      new Prop({name: "Catalog Name", value : this.metadata.title, class:"catalog"} as PropShell)]
@@ -128,6 +156,10 @@ export class Catalog {
         return {props: props, "include-controls": include, "exclude-controls": exclude};
     }
 
+    /**
+     * Loads data from a save file into the attestation
+     * @param jsonData The saved data, specifically a single object from within the "control-selections" array
+     */
     load(jsonData: any) {
         jsonData.props?.forEach((prop: any) => {
             if (prop.class === "Compliance Claim") {
@@ -148,6 +180,11 @@ export class Group {
     expanded: boolean = true;
     catalogUUID: string;
 
+    /**
+     * Creates a new group from a blank catalog
+     * @param jsonData The group's section of the catalog
+     * @param catalogID The parent catalog's uuid
+     */
     constructor (jsonData: GroupShell, catalogID: string) {
         this.id = jsonData.id;
         this.title = jsonData.title;
@@ -155,6 +192,9 @@ export class Group {
         jsonData.controls.forEach((control) => {this.controls.push(new Control(control, catalogID))})
     }
 
+    /**
+     * Toggles whether the group should appear expanded
+     */
     toggleExpansion() {
         this.expanded = !this.expanded;
     }
@@ -162,7 +202,7 @@ export class Group {
 
 export class Control {
     id: string;
-    uid: string;
+    uid: string;                            //Of the form "<catalogUUID>:<controlID>"
     title: string;
     result: Result = Result.blank;
     comment: string = "";
@@ -172,6 +212,11 @@ export class Control {
     props: Prop[] = [];
     expanded: boolean = false;
 
+    /**
+     * Creates a control from a blank catalog file
+     * @param jsonData The data about the control
+     * @param catalogID The parent catalog's uuid
+     */
     constructor(jsonData: ControlShell, catalogID: string) {
         this.id = jsonData.id;
         this.uid = catalogID + ":" + jsonData.id;
@@ -187,24 +232,42 @@ export class Control {
         })
     }
 
+    /**
+     * Finalizes a comment
+     * @param comment The comment to finalize
+     */
     finalizeComment(comment: string) {
         this.comment = comment;
         this.commentFinalized = true;
     }
 
+    /**
+     * Saves a comment, but does not mark it as final
+     * @param comment The comment to save
+     */
     inProgressComment(comment: string) {
         this.comment = comment;
         this.commentFinalized = false;
     }
 
+    /**
+     * Toggles whether the rollable parts are expanded
+     */
     toggleExpansion() {
         this.expanded = !this.expanded;
     }
 
+    /**
+     * Determines if a response has been given for the control
+     * @returns Whether a response has been given for the control
+     */
     isChecked() {
         return this.result !== Result.blank;
     }
 
+    /**
+     * Gets the result as a string
+     */
     get stringResult(): string { 
         switch (this.result) {
             case Result.yes: return "yes";
@@ -214,6 +277,9 @@ export class Control {
         }
     }
 
+    /**
+     * Sets the result using a string
+     */
     set stringResult(result: string) {
         switch (result) {
             case "yes": this.result = Result.yes; break;
@@ -231,6 +297,10 @@ export class CatalogMetadata {
     oscalVersion: string;
     published: string;
 
+    /**
+     * Creates a catalog metadata object
+     * @param metadata The catalog's metadata
+     */
     constructor(metadata: MetadataShell) {
         this.title = metadata.title;
         this.lastModified = metadata['last-modified'];

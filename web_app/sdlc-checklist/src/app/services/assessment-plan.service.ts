@@ -4,13 +4,6 @@ import { Form } from '../models/attestationModel';
 import { ContactService } from './contact.service';
 import { AttestationDataService } from './attestation-data.service';
 
-export enum ControlSelectionType {
-  yes = "yes",
-  no = "no",
-  notApplicable = "n/a",
-  noSelection = "no-selection",
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -18,12 +11,25 @@ export class AssessmentPlanService {
 
   constructor(private contactService: ContactService, private attestationDataService: AttestationDataService) {}
 
-  generateAssessmentPlan(form: Form) {
+  /**
+   * Generates a serialized assessment plan of the provided form
+   * @param form The form to generate a plan for (defaults to the active form if left blank)
+   */
+  generateAssessmentPlan(form?: Form) {
+    if (form === undefined) {
+      form = this.attestationDataService.activeForm;
+      if (form === undefined) return;
+    }
     let assessmentPlan = form.serialize(form.metadata.serialize(form.name, this.contactService.organization, this.contactService.person));
     let catalogs: any[] = form.catalogDataFiles;
     saveAs(new Blob([JSON.stringify({"assessment-plan": assessmentPlan, catalogs: catalogs})], {type: 'application/json'}), form.name);
   }
 
+  /**
+   * Loads a serialized json file into a new form
+   * @param plan The plan to load
+   * @param useContact Whether to use the contact information in the file or just keep the contact as it was (defaults to using the file)
+   */
   loadFromPlan(plan: any, useContact: boolean = true) {
     let form: Form = this.attestationDataService.createNewForm(false);
     plan.catalogs.forEach((catalog: any) => form.addCatalog(catalog));
@@ -35,6 +41,11 @@ export class AssessmentPlanService {
     })
   }
 
+  /**
+   * Checks if there are any conflicts between the file's contact info and the page's contact info
+   * @param plan The json data to check
+   * @returns Whether or not conflicts exist (true if no conlicts, false if conflicts)
+   */
   checkContactConflicts(plan: any): boolean {
     let flag = true
     if (plan["assessment-plan"]["metadata"]["parties"]) plan["assessment-plan"]["metadata"]["parties"].forEach((party: any) => {

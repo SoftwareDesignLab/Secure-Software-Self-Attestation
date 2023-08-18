@@ -29,12 +29,20 @@ export class Prop {
     name: string;
     value: string;
 
+    /**
+     * Creates a new prop from an object
+     * @param prop The object with prop attributes
+     */
     constructor(prop: PropShell) {
         this.class = prop.class || prop.property_class || "";
         this.name = prop.name;
         this.value = prop.value;
     }
 
+    /**
+     * Serializes the prop for saving
+     * @returns The serialized object
+     */
     serialize(): Object {
         return {class: this.class, name: this.name, value: this.value};
     }

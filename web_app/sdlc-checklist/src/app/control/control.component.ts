@@ -33,14 +33,19 @@ export class ChecklistItemComponent {
   @Input() control: any;
   clickOutOfWindow: boolean = false;
 
-  isChecked(): boolean {
-    return this.control.result !== Result.blank;
-  }
-
+  /**
+   * Determines if the given option is the one checked
+   * @param option The option to look at
+   * @returns Whether or not that option is checked
+   */
   isSelected(option: string): boolean {
     return (option === "check" && this.control.result === Result.yes) || (option === "x" && this.control.result === Result.no) || (option === "na" && this.control.result === Result.na);
   }
 
+  /**
+   * Selects the provided option, or deselects it if it was already selected
+   * @param option The option that was clicked
+   */
   select(option: string) {
     if (this.control.result === Result.blank) this.deploy();
     let result = Result.blank;
@@ -53,6 +58,9 @@ export class ChecklistItemComponent {
     this.control.result = result;
   }
 
+  /**
+   * Saves the current comment as in-progress and closes the dialog
+   */
   save() {
     let comment = document.getElementById("comment" + this.control.uid)
     if (comment instanceof HTMLTextAreaElement) {
@@ -61,6 +69,9 @@ export class ChecklistItemComponent {
     this.cancel();
   }
 
+  /**
+   * Saves the current comment as final and closes the dialog
+   */
   done() {
     let comment = document.getElementById("comment-" + this.control.uid)
     if (comment instanceof HTMLTextAreaElement) {
@@ -69,25 +80,41 @@ export class ChecklistItemComponent {
     this.cancel();
   }
 
+  /**
+   * Closes the comment dialog
+   */
   cancel() {
     (document.getElementById("comment-popup-" + this.control.uid) as HTMLDialogElement)?.close()
   }
 
+  /**
+   * Deletes the comment and closes the dialog
+   */
   del() {
     this.control.comment = "";
     this.control.commentFinalized = false;
     this.cancel();
   }
 
+  /**
+   * Opens the comment dialog
+   */
   deploy() {
     (document.getElementById("comment-popup-" + this.control.uid) as HTMLDialogElement)?.showModal();
     (document.getElementById("comment-" + this.control.uid) as HTMLTextAreaElement).value = this.control.comment;
   }
 
+  /**
+   * Sets the focus onto the textarea
+   */
   commentFocus() {
     document.getElementById("comment-" + this.control.uid)?.focus();
   }
 
+  /**
+   * Closes the comment dialog if the cursor clicked on the gray background
+   * @param event The cursor click event
+   */
   clicked(event: MouseEvent) {
     let dialog = document.getElementById("comment-popup-" + this.control.uid) as HTMLDialogElement;
     if (0 > event.offsetX || dialog.clientWidth < event.offsetX || 0 > event.offsetY || dialog.clientHeight < event.offsetY) {

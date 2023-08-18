@@ -2,9 +2,14 @@ import { BehaviorSubject } from "rxjs";
 import {v4 as uuidv4} from 'uuid';
 
 export class Subject {
-    #type: BehaviorSubject<SubjectType> = new BehaviorSubject<SubjectType>(SubjectType.company);
+    #type: BehaviorSubject<SubjectType> = new BehaviorSubject<SubjectType>(SubjectType.company);  //This should NOT be accessed directly outside of the getters and setters
     lines: SubjectLine[] = []
 
+    /**
+     * Converts a subjectType enum to a string
+     * @param type The type to convert
+     * @returns The string
+     */
     static subjectTypeToString(type: SubjectType): string {
         switch (type) {
             case SubjectType.company: return "company";
@@ -14,6 +19,11 @@ export class Subject {
         }
     }
 
+    /**
+     * Converts strings to subject type enums
+     * @param type The string to convert
+     * @returns The subjectType
+     */
     static stringToSubjectType(type: string): SubjectType {
         switch (type) {
             case "individual": case "individual-product": return SubjectType.individual;
@@ -23,6 +33,9 @@ export class Subject {
         }
     }
 
+    /**
+     * Deletes rows that are not necessary for the current subject type
+     */
     pruneRows() {
         switch(this.type) {
             case SubjectType.company: this.lines = []; break;
@@ -31,6 +44,10 @@ export class Subject {
         }
     }
 
+    /**
+     * Serializes the data within the subject
+     * @returns The serialized object
+     */
     serialize() {
         return {
             type: "party",
@@ -40,6 +57,10 @@ export class Subject {
         }
     }
 
+    /**
+     * Loads data from a serialized object
+     * @param json The object to load from
+     */
     load(json: any) {
         if (json.props?.find)
             this.stringType = json.props?.find((prop: any) => {return prop.name === "type"})?.value;
@@ -77,6 +98,10 @@ export class SubjectLine {
     version: string = "";
     date: string = "";
 
+    /**
+     * Serializes the subjectLines for saving
+     * @returns The serialized object
+     */
     serialize() {
         return {type: "component", "subject-uuid": uuidv4(), props: [
             {name: "Product Name", value: this.name, class: "Product Info"},

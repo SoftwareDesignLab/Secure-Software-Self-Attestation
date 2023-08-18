@@ -12,6 +12,11 @@ export class ContactInfoComponent {
 
 constructor( public contactService: ContactService, private attestationDataService: AttestationDataService ) {}
 
+  /**
+   * Updates the stored copies of the contact information
+   * @param event The blur event
+   * @param item The item that needs to be updated
+   */
   update(event: Event, item: string) {
     switch (item) {
       case "orgName": this.contactService.orgName = (event.target as HTMLInputElement).value; break;
@@ -36,16 +41,26 @@ constructor( public contactService: ContactService, private attestationDataServi
     }
   }
 
+  /**
+   * Creates a new form and switches to it
+   */
   newForm() {
     this.attestationDataService.createNewForm();
     this.switchToAttestation();
   }
 
+  /**
+   * Switches to the attestation form page
+   */
   switchToAttestation() {
     if (this.attestationDataService.activeForm === undefined) this.attestationDataService.activeForm = this.attestationDataService.forms[0]
     this.attestationDataService.changePage("attestation-form");
   }
 
+  /**
+   * Checks to see if there are any forms loaded
+   * @returns Whether there are forms
+   */
   areForms(): boolean {
     return this.attestationDataService.forms.length > 0;
   }
