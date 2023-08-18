@@ -22,25 +22,25 @@
   ></app-rollable>
 </div>
 
-<dialog class="pane popup" id="comment-popup" (mousedown)="clicked($event)">
+<dialog class="pane popup" [id]="'comment-popup-' + control.uid" (mousedown)="clicked($event)">
   <br>
   <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
-  <textarea id="comment" [value]="control.comment" placeholder="Explanation" rows="4"></textarea>
+  <textarea [id]="'comment-' + control.uid" placeholder="Explanation" rows="4"></textarea>
   <div class="bottom-buttons">
     <div (click)="done()" (keydown.enter)="done()" tabindex=0>
-      <div id="done"></div>
+      <div class="done"></div>
       <p>Done</p>
     </div>
     <div (click)="save()" (keydown.enter)="save()" tabindex=0>
-      <div id="save"></div>
+      <div class="save"></div>
       <p>Save</p>
     </div>
     <div (click)="cancel()" (keydown.enter)="cancel()" tabindex=0>
-      <div id="cancel"></div>
+      <div class="cancel"></div>
       <p>Cancel</p>
     </div>
     <div (click)="del()" (keydown.enter)="del()" tabindex=0>
-      <div id="delete"></div>
+      <div class="delete"></div>
       <p>Delete</p>
     </div>
   </div>

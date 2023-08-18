@@ -54,7 +54,7 @@ export class ChecklistItemComponent {
   }
 
   save() {
-    let comment = document.getElementById("comment")
+    let comment = document.getElementById("comment" + this.control.uid)
     if (comment instanceof HTMLTextAreaElement) {
       this.control.inProgressComment(comment.value);
     }
@@ -62,7 +62,7 @@ export class ChecklistItemComponent {
   }
 
   done() {
-    let comment = document.getElementById("comment")
+    let comment = document.getElementById("comment-" + this.control.uid)
     if (comment instanceof HTMLTextAreaElement) {
       this.control.finalizeComment(comment.value);
     }
@@ -70,7 +70,7 @@ export class ChecklistItemComponent {
   }
 
   cancel() {
-    (document.getElementById("comment-popup") as HTMLDialogElement)?.close()
+    (document.getElementById("comment-popup-" + this.control.uid) as HTMLDialogElement)?.close()
   }
 
   del() {
@@ -80,15 +80,16 @@ export class ChecklistItemComponent {
   }
 
   deploy() {
-    (document.getElementById("comment-popup") as HTMLDialogElement)?.showModal()
+    (document.getElementById("comment-popup-" + this.control.uid) as HTMLDialogElement)?.showModal();
+    (document.getElementById("comment-" + this.control.uid) as HTMLTextAreaElement).value = this.control.comment;
   }
 
   commentFocus() {
-    document.getElementById("comment")?.focus();
+    document.getElementById("comment-" + this.control.uid)?.focus();
   }
 
   clicked(event: MouseEvent) {
-    let dialog = document.getElementById("comment-popup") as HTMLDialogElement;
+    let dialog = document.getElementById("comment-popup-" + this.control.uid) as HTMLDialogElement;
     if (0 > event.offsetX || dialog.clientWidth < event.offsetX || 0 > event.offsetY || dialog.clientHeight < event.offsetY) {
       dialog.close();
     }

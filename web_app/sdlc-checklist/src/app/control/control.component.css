@@ -130,35 +130,35 @@ textarea {
   margin-bottom: 15px;
 }
 
-#done {
+.done {
   background-color: rgb(20, 190, 20);
 }
 
-#save {
+.save {
   background-color: yellow;
 }
 
-#cancel {
+.cancel {
   background-color: skyblue;
 }
 
-#delete {
+.delete {
   background-color: rgb(248, 50, 50);
 }
 
-.bottom-buttons>div:hover>#done {
+.bottom-buttons>div:hover>.done {
   background-color: rgb(14, 155, 14);
 }
 
-.bottom-buttons>div:hover>#save {
+.bottom-buttons>div:hover>.save {
   background-color: rgb(196, 153, 10);
 }
 
-.bottom-buttons>div:hover>#cancel {
+.bottom-buttons>div:hover>.cancel {
   background-color: rgb(86, 146, 170);
 }
 
-.bottom-buttons>div:hover>#delete {
+.bottom-buttons>div:hover>.delete {
   background-color: rgb(185, 26, 47);
 }
 
