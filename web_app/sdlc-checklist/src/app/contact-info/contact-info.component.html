@@ -48,8 +48,8 @@
   </form>
 </div>
 
-<!--<div class="bot-right">
-  <button  class="blue" (click)="lastAttestation()">Proceed to Attestation Form</button>
-  <button class="green" (click)="newForm()">+ New Attestation</button>
-</div>-->
+<div class="bot-right">
+  <button class="blue" (click)="switchToAttestation()" *ngIf="areForms()">Proceed to Attestation Form</button>
+  <button class="green" (click)="newForm()" *ngIf="!areForms()">+ New Attestation</button>
+</div>
 

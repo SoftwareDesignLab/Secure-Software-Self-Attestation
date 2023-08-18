@@ -14,9 +14,9 @@
   <div class="expanded-nav">
     <h2>Attestations</h2>
     <ul>
-      <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1">Software Producer Information / Primary Contact Form</a></li>
+      <li><a routerlink="contact-info" (click)="changePage('contact-info')" (keydown.enter)="changePage('contact-info')" [tabindex]="showNav ? 0 : -1" [className]="isActiveForm(undefined) ? 'selected-page' : ''">Software Producer Information / Primary Contact Form</a></li>
       <li class="list-grid" *ngFor="let form of forms">
-        <p [className]="openTag === form.uuid ? 'prepend-down-arrow arrow' : 'prepend-up-arrow arrow'" (click)="toggleNavTree(form.uuid)" (keydown.enter)="toggleNavTree(form.uuid)" [tabindex]="showNav ? 0 : -1"></p>
+        <p [className]="(openTag === form.uuid ? 'prepend-down-arrow arrow ' : 'prepend-up-arrow arrow ') + (isActiveForm(form) ? 'selected-page' : '')" (click)="toggleNavTree(form.uuid)" (keydown.enter)="toggleNavTree(form.uuid)" [tabindex]="showNav ? 0 : -1"></p>
         <input [tabindex]="showNav ? 0 : -1" *ngIf="renaming === form.uuid" (keydown.enter)="confirmName()" [value]="form.name" id="renaming-input">
         <a routerlink="attestation-form" (click)="changeAttestation(form)" (keydown.enter)="changeAttestation(form)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming !== form.uuid">{{ form.name }}</a>
         <button class="nav-button rename" (click)="renameForm(form.uuid)" (keydown.enter)="renameForm(form.uuid)" [tabindex]="showNav ? 0 : -1" *ngIf="renaming !== form.uuid"> Rename </button>
@@ -29,10 +29,10 @@
         </ul>
       </li>
       <li><p class="add" (click)="addForm()" (keydown.enter)="addForm()" [tabindex]="showNav ? 0 : -1">+ New Attestation</p></li>
-      <li><p class="load" (click)="loadAttestation();">Load Attestation</p></li>
+      <li><p class="load" (click)="loadAttestation()" (keydown.enter)="loadAttestation()" [tabindex]="showNav ? 0 : -1">Load Attestation</p></li>
     </ul>
     <input type="file" hidden id="load-file-input" (change)="processLoadAttestation($event)" accept=".json">
-    <p class="generate">Generate Report</p>
+    <p class="generate" [tabindex]="showNav ? 0 : -1">Generate Report</p>
     <!--<p class="disabled-generate" *ngIf="!generateAcceptable()">Generate Report
       <span class="tool-tip" *ngIf="invalidContact()">Software Producer/Primary Contact Info is incomplete!</span>
       <span class="tool-tip" *ngIf="attestationTypeMissing()">Missing Attestation Type</span>
@@ -43,13 +43,13 @@
 <main [className]="showFullFooter ? 'long-bottom' : ''">
   <router-outlet></router-outlet>
 </main>
-<!--
+
 <dialog id="contact-decision" class="pane" (keydown.escape)="cancelLoad()" (click)="cancelLoad($event)">
   <p>The contact information in this file does not match what you have entered. Which should be used?</p>
   <button (click)="useExistingContact()">Existing Information</button>
   <button (click)="useFileContact()">Uploaded File</button>
 </dialog>
--->
+
 <footer>
   <p [hidden]="showFullFooter">
   &copy;2023 Rochester Institute of Technology (RIT). Developed with government support under contract 70RSAT19CB0000020 

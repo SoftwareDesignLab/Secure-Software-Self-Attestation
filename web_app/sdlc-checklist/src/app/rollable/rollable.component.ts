@@ -31,7 +31,6 @@ import { Component, Input } from '@angular/core';
 export class RollableComponent {
   @Input() description: any;
   @Input() examples: any;
-  @Input() subControls: any;
   @Input() references: any;
   @Input() props: any;
 
@@ -49,14 +48,6 @@ export class RollableComponent {
    */
   hasExamples(): boolean {
     return this.examples !== undefined && this.examples.length > 0;
-  }
-
-  /**
-   * 
-   * @returns Whether there are sub-controls
-   */
-  hasSubControls(): boolean {
-    return this.subControls !== undefined;
   }
 
   /**

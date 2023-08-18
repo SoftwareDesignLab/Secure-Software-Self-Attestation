@@ -22,8 +22,7 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
-import { AttestationDataService } from '../services/attestation-data.service';
-import { Control, Group, Result } from '../models/attestationModel';
+import { Control, Result } from '../models/attestationModel';
 
 @Component({
   selector: 'app-group',
@@ -32,8 +31,6 @@ import { Control, Group, Result } from '../models/attestationModel';
 })
 export class GroupComponent {
   @Input() group: any;
-
-  constructor(private attestationDataService: AttestationDataService){}
 
   setComponents(truth: boolean) {
     this.group.expanded = truth;
@@ -54,7 +51,7 @@ export class GroupComponent {
       case "x": case "no": result = Result.no; break;
       case "na": case "n/a": result = Result.na; break;
     }
-    if (result !== Result.blank && this.group.controls.findIndex((control: Control) => {control.result !== result}) === -1) result = Result.blank;
+    if (result !== Result.blank && this.group.controls.findIndex((control: Control) => {return control.result !== result}) === -1) result = Result.blank;
     this.group.controls.forEach((control: Control) => {control.result = result});
   }
 }

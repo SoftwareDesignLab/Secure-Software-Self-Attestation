@@ -81,10 +81,15 @@ export class Party  {
         }
     }
 
-    load(json: any) {
-        if (json.uuid instanceof String) this.uuid = json.uuid;
-        if (json.type instanceof String) this.type = json.type;
-        if (json.addresses[0]) this.address.load(json.addresses[0]);
+    load(json: any, modify: boolean = true): boolean {
+        let flag: boolean = true;
+        if (json.uuid instanceof String) {
+            flag = flag && (json.uuid === "" || this.uuid === "" || json.uuid === this.uuid)
+            if (modify && json.uuid !== "")
+                this.uuid = json.uuid;
+        }
+        if (json.addresses[0]) flag = flag && this.address.load(json.addresses[0], modify);
+        return flag;
     }
 }
 
@@ -104,16 +109,24 @@ export class Organization extends Party {
         return org;
     }
 
-    override load(json: any) {
-        super.load(json);
-        if (json.name) this.name = json.name;
+    override load(json: any, modify: boolean = true): boolean {
+        let flag = super.load(json, modify);
+        if (json.name) {
+            flag = flag && (json.name === "" || this.name === "" || json.name === this.name)
+            if (modify && json.name !== "")
+                this.name = json.name;
+        }
         if (json.props) json.props.forEach((prop: any) => {
             if (prop.name === "website") {
-                this.website = prop.value;
+                flag = flag && (prop.value === "" || this.website === "" || prop.value === this.website)
+                if (modify && prop.value !== "")
+                    this.website = prop.value;
             } else {
-                this.props.push(new Prop(prop as PropShell));
+                if (modify)
+                    this.props.push(new Prop(prop as PropShell));
             }
         })
+        return flag;
     }
 
     get linkWebsite(): {href: string, rel: string} | undefined { if (this.website) { return {href: this.website, rel: "website"}} return undefined}
@@ -142,23 +155,39 @@ export class Person extends Party {
         return person;
     }
 
-    override load(json: any) {
-        super.load(json);
+    override load(json: any, modify: boolean = true): boolean {
+        let flag = super.load(json, modify);
         let name = json.name;
         if (name) {
             let names = name.split(" ");
-            this.firstName = names[0];
-            this.lastName = names.slice(1).join(" ");
+            flag = flag && (names[0] === "" || this.firstName === "" || names[0] === this.firstName);
+            if (modify && names[0] !== "")
+                this.firstName = names[0];
+            flag = flag && (names[1] === "" || this.lastName === "" || name[1] === this.lastName);
+            if (modify && names[1] !== "")
+                this.lastName = names.slice(1).join(" ");
         }
         if (json.props) json.props.forEach((prop: any) => {
             if (prop.name === "title") {
-                this.title = prop.value;
+                flag = flag && (prop.value === "" || this.title === "" || prop.value === this.title)
+                if (modify && prop.value !== "")
+                    this.title = prop.value;
             } else {
-                this.props.push(new Prop(prop as PropShell));
+                if (modify)
+                    this.props.push(new Prop(prop as PropShell));
             }
         })
-        if (json['email-addresses'] && json['email-addresses'][0]) this.email = json['email-addresses'][0]
-        if (json['telephone-numbers'] && json['telephone-numbers'][0]) this.phone = json['telephone-numbers'][0]
+        if (json['email-addresses'] && json['email-addresses'][0]) {
+            flag = flag && (json['email-addresses'][0] === "" || this.email === "" || json['email-addresses'][0] === this.email);
+            if (modify && json["email-addresses"][0] !== "")
+                this.email = json['email-addresses'][0]
+        }
+        if (json['telephone-numbers'] && json['telephone-numbers'][0]) {
+            flag = flag && (json['telephone-numbers'][0] == "" || this.phone === "" || json['telephone-numbers'][0] === this.phone);
+            if (modify && json['telephone-numbers'][0] !== "")
+                this.phone = json['telephone-numbers'][0]
+        }
+        return flag;
     }
 
     get name(): string { return this.firstName + " " + this.lastName; }
@@ -182,12 +211,39 @@ export class Address {
         }
     }
 
-    load(json: any) {
-        if (json['addr-lines']) this.lines = json['addr-lines'];
-        if (json.city) this.city = json.city;
-        if (json.state) this.state = json.state;
-        if (json.country) this.country = json.country;
-        if (json['postal-code']) this.postal = json['postal-code'];
+    load(json: any, modify: boolean = true): boolean {
+        let flag = true;
+        if (json['addr-lines']) {
+            flag = flag && (json['addr-lines'][0] === "" || this.line1 === "" || json['addr-lines'][0] === this.line1) 
+                        && (json['addr-lines'][1] === "" || this.line2 === "" || json['addr-lines'][1] === this.line2);
+            if (modify && json['addr-lines'][0] !== "") {
+                this.line1 = json['addr-lines'][0];
+            }
+            if (modify && json['addr-lines'][1] !== "") {
+                this.line2 = json['addr-lines'][1];
+            }
+        }
+        if (json.city) {
+            flag = flag && (json.city === "" || this.city === "" || json.city === this.city);
+            if (modify && json.city !== "")
+                this.city = json.city;
+        }
+        if (json.state) {
+            flag = flag && (json.state === "" || this.state === "" || json.state === this.state);
+            if (modify && json.state !== "" )
+                this.state = json.state;
+        }
+        if (json.country) {
+            flag = flag && (json.country === "" || this.country === "" || json.country === this.country);
+            if (modify && json.country !== "")
+                this.country = json.country;
+        }
+        if (json['postal-code']) {
+            flag = flag && (json["postal-code"] === "" || this.postal === "" || json['postal-code'] === this.postal);
+            if (modify && json['postal-code'] !== "")
+                this.postal = json['postal-code'];
+        }
+        return flag;
     }
 
     get line1(): string { return this.lines[0]; }

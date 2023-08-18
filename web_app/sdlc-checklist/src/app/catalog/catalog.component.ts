@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
-import { Catalog, Group } from '../models/attestationModel';
 import { AttestationDataService } from '../services/attestation-data.service';
 
 @Component({

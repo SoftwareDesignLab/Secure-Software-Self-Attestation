@@ -88,22 +88,6 @@ export class CatalogProcessingComponent {
   }
 
   /**
-   * Displays a green message in the bottom corner
-   * @param message The message to display
-   */
-  notifyOfSuccess(message: string) {
-    this.notifications.success(message);
-  }
-
-  /**
-   * Displays a red message in the bottom corner
-   * @param message The message to display
-   */
-  notifyOfFailure(message: string) {
-    this.notifications.error(message);
-  }
-
-  /**
    * Checks if the file is a json
    * @param file The file to check
    * @returns whether it is a json
@@ -135,10 +119,10 @@ export class CatalogProcessingComponent {
   private isValidCatalog(data: object): boolean{
     let isValid : boolean = false;
     let catalog = data as CatalogShell;
-    if(catalog.uuid!= undefined){
+    if(catalog.uuid !== undefined){
       var UIDpattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/
       if(UIDpattern.test(catalog.uuid)){
-      isValid = true;
+        isValid = true;
       }
     } else {
       var UIDkey= /\w+-uuid\b/;
@@ -155,29 +139,34 @@ export class CatalogProcessingComponent {
       let metaData = catalog.metadata as MetadataShell;
       if(metaData.title == undefined){
         isValid = false;
-        console.log("Missing MetaData: title ");
+        console.log("Missing Metadata: Title");
       }
       if(metaData['last-modified']== undefined){
           isValid = false;
-          console.log("Missing MetaData: last-modified ");
+          console.log("Missing Metadata: Last Modified");
       }
       if(metaData.version == undefined){
           isValid = false;
-          console.log("Missing MetaData: version ");
+          console.log("Missing Metadata: Version");
       }
       if(metaData['oscal-version'] == undefined){
           isValid = false;
-          console.log("Missing MetaData: oscal-version ");
+          console.log("Missing Metadata: Oscal Version");
       }
     }
     else{
       isValid = false;
-      console.log("Missing MetaData");
+      console.log("Missing Metadata");
     }
     if (isValid){
+      if (-1 !== this.attestationDataService.activeForm?.catalogs.findIndex((loadedCatalog) => (catalog.uuid === loadedCatalog.uuid))) {
+        this.notifications.error("This catalog has already been loaded");
+        return false;
+      }
+      this.notifications.success("Successfully Loaded Catalog")
       return true;
     }
-    this.notifications.error("Given json file is not a valid OSCAL Catalog")
+    this.notifications.error("Given json file is not a valid OSCAL Catalog");
     return false;
   }
 

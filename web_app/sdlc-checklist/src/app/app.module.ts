@@ -35,7 +35,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms'
 import { MatGridListModule } from '@angular/material/grid-list';
-import { attestationComment } from './models/attestationForm';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
 import { AttestationPageComponent } from './attestation-page/attestation-page.component';
 import { ContactService } from './services/contact.service';
@@ -68,7 +67,6 @@ import { CatalogComponent } from './catalog/catalog.component';
     })
   ],
   providers: [
-    attestationComment,
     ContactService,
     AttestationDataService,
     notifyService,

@@ -23,8 +23,10 @@
  */
 import { Injectable } from '@angular/core';
 import { Form } from '../models/attestationModel';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { ContactService } from './contact.service';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+
+const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +34,8 @@ import { ContactService } from './contact.service';
 export class AttestationDataService {
   forms: Form[] = [];
   #activeForm: BehaviorSubject<Form | undefined> = new BehaviorSubject<Form | undefined>(undefined);
+
+  constructor(private router: Router) {}
 
   /**
    * Creates a new form and adds it to forms
@@ -54,6 +58,60 @@ export class AttestationDataService {
     if (form) {
       this.forms.splice(this.forms.findIndex(del => del === form), 1)
     }
+    if (form === this.activeForm) {
+      this.router.navigate(['contact-info']);
+      this.activeForm = undefined;
+    }
+  }
+
+  /**
+   * Changes the current page
+   * @param page The page name to change to
+   * @param fragment The fragment identifier to scroll to
+   */
+  async changePage(page: string, fragment?: string){
+    if (page === "contact-info") { this.activeForm = undefined; }
+    if (fragment) {
+      this.router.navigate([page], {fragment: fragment});
+      await dela(50);
+      let parent = document.getElementById(fragment);
+      if (parent instanceof HTMLElement) {
+        let newFocus = this.findFirstLandingChildr(parent);
+        if (newFocus instanceof HTMLElement) {
+          newFocus.focus();
+        }
+      }
+    } else {
+      this.router.navigate([page])
+    }
+  }
+
+  /**
+   * Recursively identifies the first descendant element to have the class "landing"
+   * @param parent The parent to search from
+   * @returns The element with "landing", null if none exists
+   */
+  findFirstLandingChildr(parent: HTMLElement): HTMLElement | null {
+    let children = parent.children;
+    for (let i = 0, max = children.length; i < max; i++) {
+      let child = children[i];
+      if (child instanceof HTMLElement) {
+        if (child.classList.contains('landing'))
+          return child;
+      }
+      if (child instanceof HTMLElement) {
+        let recurse = this.findFirstLandingChildr(child);
+        if (recurse instanceof HTMLElement) {
+          return recurse;
+        }
+      }
+    }
+    return null;
+  }
+
+  changeAttestation(form: Form, fragment?: string) {
+    this.activeForm = form;
+    this.changePage('attestation-form', fragment);
   }
 
   /**

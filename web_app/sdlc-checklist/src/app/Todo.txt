@@ -1,9 +1,1 @@
-Loading
 Check Main
-Prune unnecessary CSS
-Prune Typescript
-Check tab support
-clicking off comment
-invalid catalogs
-notifications
-contact form buttons

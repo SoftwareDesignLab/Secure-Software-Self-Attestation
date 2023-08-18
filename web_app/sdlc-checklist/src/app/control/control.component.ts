@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
-import { AttestationDataService } from '../services/attestation-data.service';
-import { Control, Result } from '../models/attestationModel';
-import { Prop } from '../models/propertyModel';
+import { Result } from '../models/attestationModel';
 
 @Component({
   selector: 'app-control',
@@ -33,10 +31,7 @@ import { Prop } from '../models/propertyModel';
 })
 export class ChecklistItemComponent {
   @Input() control: any;
-  popup: boolean = false;
   clickOutOfWindow: boolean = false;
-
-  constructor(private attestationDataService: AttestationDataService){  }
 
   isChecked(): boolean {
     return this.control.result !== Result.blank;
@@ -47,6 +42,7 @@ export class ChecklistItemComponent {
   }
 
   select(option: string) {
+    if (this.control.result === Result.blank) this.deploy();
     let result = Result.blank;
     switch (option) {
       case "check": case "yes": result = Result.yes; break;
@@ -74,7 +70,7 @@ export class ChecklistItemComponent {
   }
 
   cancel() {
-    this.popup = false;
+    (document.getElementById("comment-popup") as HTMLDialogElement)?.close()
   }
 
   del() {
@@ -84,33 +80,18 @@ export class ChecklistItemComponent {
   }
 
   deploy() {
-    this.popup = true;
-  }
-
-  down(event: MouseEvent) {
-    let popup = document.getElementById("popup");
-    if (popup instanceof HTMLDivElement) {
-      if (popup.clientLeft > event.clientX  || event.clientX > popup.clientLeft + popup.clientWidth || 
-          event.clientY < popup.clientTop || event.clientY + popup.clientTop + popup.clientHeight) {
-        this.clickOutOfWindow = true;
-      }
-    }
-  }
-
-  up(event: MouseEvent) {
-    if (!this.clickOutOfWindow) { return; }
-    this.clickOutOfWindow = false;
-    let popup = document.getElementById("popup");
-    if (popup instanceof HTMLDivElement) {
-      if (popup.clientLeft > event.clientX  || event.clientX > popup.clientLeft + popup.clientWidth || 
-          event.clientY < popup.clientTop || event.clientY + popup.clientTop + popup.clientHeight) {
-        this.cancel();
-      }
-    }
+    (document.getElementById("comment-popup") as HTMLDialogElement)?.showModal()
   }
 
   commentFocus() {
     document.getElementById("comment")?.focus();
+  }
+
+  clicked(event: MouseEvent) {
+    let dialog = document.getElementById("comment-popup") as HTMLDialogElement;
+    if (0 > event.offsetX || dialog.clientWidth < event.offsetX || 0 > event.offsetY || dialog.clientHeight < event.offsetY) {
+      dialog.close();
+    }
   }
 }
 

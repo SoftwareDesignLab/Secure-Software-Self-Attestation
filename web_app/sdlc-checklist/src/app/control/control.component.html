@@ -6,7 +6,7 @@
       </div>
       <img alt="Comment Button" 
         [src]="control.comment === '' ? '/assets/blank.png' : control.commentFinalized ? '/assets/complete.png' : '/assets/progress.png'" 
-        (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!control.isChecked" tabindex=0>
+        (click)="deploy()" (keydown.enter)="deploy()" class="pencil" [hidden]="!control.isChecked()" tabindex=0>
     </div>
     <div class="checkbox-label">
       <div (click)="control.toggleExpansion()" (keydown.enter)="control.toggleExpansion()" tabindex=0>
@@ -22,28 +22,27 @@
   ></app-rollable>
 </div>
 
-<div class="full-screen-fixed" *ngIf="popup" (mousedown)="down($event)" (mouseup)="up($event)" (mouseenter)="commentFocus()" (keydown.escape)="cancel()">
-  <div class="pane popup">
-    <br>
-    <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
-    <textarea id="comment" [value]="control.comment" placeholder="Explanation" rows="4"></textarea>
-    <div class="bottom-buttons">
-      <div (click)="done()" (keydown.enter)="done()" tabindex=0>
-        <div id="done"></div>
-        <p>Done</p>
-      </div>
-      <div (click)="save()" (keydown.enter)="save()" tabindex=0>
-        <div id="save"></div>
-        <p>Save</p>
-      </div>
-      <div (click)="cancel()" (keydown.enter)="cancel()" tabindex=0>
-        <div id="cancel"></div>
-        <p>Cancel</p>
-      </div>
-      <div (click)="del()" (keydown.enter)="del()" tabindex=0>
-        <div id="delete"></div>
-        <p>Delete</p>
-      </div>
+<dialog class="pane popup" id="comment-popup" (mousedown)="clicked($event)">
+  <br>
+  <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
+  <textarea id="comment" [value]="control.comment" placeholder="Explanation" rows="4"></textarea>
+  <div class="bottom-buttons">
+    <div (click)="done()" (keydown.enter)="done()" tabindex=0>
+      <div id="done"></div>
+      <p>Done</p>
+    </div>
+    <div (click)="save()" (keydown.enter)="save()" tabindex=0>
+      <div id="save"></div>
+      <p>Save</p>
+    </div>
+    <div (click)="cancel()" (keydown.enter)="cancel()" tabindex=0>
+      <div id="cancel"></div>
+      <p>Cancel</p>
+    </div>
+    <div (click)="del()" (keydown.enter)="del()" tabindex=0>
+      <div id="delete"></div>
+      <p>Delete</p>
     </div>
   </div>
-</div>
+</dialog>
+

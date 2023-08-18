@@ -26,7 +26,7 @@ import catalog from '../defaultCatalog';
 import {v4 as uuidv4} from 'uuid';
 import { Prop } from './propertyModel';
 import { CatalogShell, ControlShell, GroupShell, MetadataShell, PropShell } from './catalogModel';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from './subjectModel';
 import { Metadata } from './contactModel';
 
 export class Form {
@@ -58,10 +58,11 @@ export class Form {
      */
     removeCatalog(uuid: string) {
         this.catalogs.splice(this.catalogs.findIndex((catalog) => {return catalog.uuid === uuid}), 1);
+        this.catalogDataFiles.splice(this.catalogDataFiles.findIndex((catalog) => {return catalog.uuid === uuid}), 1);
     }
 
     isDefaultPresent(): boolean {
-        return true;
+        return -1 !== this.catalogs.findIndex((checkCatalog) => {return checkCatalog.uuid === catalog.uuid})
     }
 
     serialize(metadata: any): any {
@@ -70,27 +71,37 @@ export class Form {
             metadata: metadata,
             "import-ssp": {href: ""},
             "reviewed-controls": {"control-selections": this.catalogs.map((catalog) => catalog.serialize())},
-            "assessment-subjects": this.subject.serialize()
+            "assessment-subjects": [this.subject.serialize()]
         };
     }
 
     load(json: any) {
         this.name = json.metadata.title
         this.metadata.load(json["metadata"])
-        if (json["assessment-subjects"]) this.subject.load(json["assessment-subjects"]);
+        if (json["assessment-subjects"]) this.subject.load(json["assessment-subjects"][0]);
+        if (json["reviewed-controls"]["control-selections"]) {
+            json["reviewed-controls"]["control-selections"].forEach((catalog: any) => {
+                let uuid = catalog.props?.find((prop: any) => {return prop.name === "Catalog ID"}).value;
+                this.catalogs.find((catalog: Catalog) => {return catalog.uuid === uuid})?.load(catalog);
+            });
+        }
     }
 }
 
 export class Catalog {
     groups: Group[] = [];
-    controlsByGroups: Map<string, number> = new Map<string, number>();
     uuid: string;
+    controlMap: Map<string, Control> = new Map<string, Control>();
     expanded: boolean = true;
     metadata: CatalogMetadata;
 
     constructor(jsonData: CatalogShell) {
         this.uuid = jsonData.uuid;
-        jsonData.groups.forEach((group) => {this.groups.push(new Group(group, this.uuid))})
+        jsonData.groups.forEach((group) => {
+            let newGroup = new Group(group, this.uuid);
+            this.groups.push(newGroup);
+            newGroup.controls.forEach((control) => this.controlMap.set(control.id, control));
+        })
         this.metadata = new CatalogMetadata(jsonData.metadata);
     }
 
@@ -115,6 +126,18 @@ export class Catalog {
             })
         })
         return {props: props, "include-controls": include, "exclude-controls": exclude};
+    }
+
+    load(jsonData: any) {
+        jsonData.props?.forEach((prop: any) => {
+            if (prop.class === "Compliance Claim") {
+                let control = this.controlMap.get(prop.name)
+                if (control) control.stringResult = prop.value;
+            } else if (prop.class === "Attestation Claim") {
+                let control = this.controlMap.get(prop.name)
+                if (control) control.finalizeComment(prop.value);
+            }
+        })
     }
 }
 
@@ -189,7 +212,16 @@ export class Control {
             case Result.na: return "n/a";
             default: return "blank";
         }
-     }
+    }
+
+    set stringResult(result: string) {
+        switch (result) {
+            case "yes": this.result = Result.yes; break;
+            case "no": this.result = Result.no; break;
+            case "n/a": this.result = Result.na; break;
+            default: this.result = Result.blank;
+        }
+    }
 }
 
 export class CatalogMetadata {
@@ -208,99 +240,9 @@ export class CatalogMetadata {
     }
 }
 
-export class Subject {
-    #type: BehaviorSubject<SubjectType> = new BehaviorSubject<SubjectType>(SubjectType.company);
-    lines: SubjectLine[] = []
-
-    static subjectTypeToString(type: SubjectType): string {
-        switch (type) {
-            case SubjectType.company: return "company";
-            case SubjectType.individual: return "individual";
-            case SubjectType.multiple: return "multiple";
-            case SubjectType.productLine: return "productLine"
-        }
-    }
-
-    static stringToSubjectType(type: string): SubjectType {
-        switch (type) {
-            case "individual": return SubjectType.individual;
-            case "multiple": return SubjectType.multiple;
-            case "productLine": return SubjectType.productLine;
-            default: return SubjectType.company
-        }
-    }
-
-    pruneRows() {
-        switch(this.type) {
-            case SubjectType.company: this.lines = []; break;
-            case SubjectType.individual: case SubjectType.productLine: this.lines = [this.lines[0] || new SubjectLine()]; break;
-            case SubjectType.multiple: if (this.lines.length === 0) this.lines = [new SubjectLine()];
-        }
-    }
-
-    serialize() {
-        return {
-            type: "party",
-            props: {name: "type", value: this.oscalStringType, class: "Attestation Type" },
-            "include-subjects": this.lines.map((line) => {return line.serialize()}),
-            "exclude-subjects": []
-        }
-    }
-
-    load(json: any) {
-        this.type = json.props?.find((prop: any) => {prop.name === "type"})?.value;
-        json["include-subjects"]?.forEach((subject: any) => {
-            let line = new SubjectLine
-            subject?.props.forEach((prop: any) => {
-                switch (prop.name) {
-                    case "Product Name": line.name = prop.value; break;
-                    case "Product Version": line.version = prop.value; break;
-                    case "Product Date": line.date = prop.value; break;
-                }
-            });
-            this.lines.push(line);
-        });
-    }
-    
-    get type(): SubjectType { return this.#type.getValue(); }
-    get stringType(): string { return Subject.subjectTypeToString(this.#type.getValue()); }
-    get oscalStringType(): string { 
-        switch (this.type) {
-            case SubjectType.company: return "company-wide";
-            case SubjectType.individual: return "individual-product";
-            case SubjectType.multiple: return "multiple-products";
-            case SubjectType.productLine: return "product-line";
-        }
-    }
-    get observableType(): BehaviorSubject<SubjectType> { return this.#type; }
-    set type(type: SubjectType) { this.#type.next(type); this.pruneRows(); }
-    set stringType(subject: string) { this.#type.next(Subject.stringToSubjectType(subject)); this.pruneRows(); }
-}
-
-export class SubjectLine {
-    name: string = "";
-    version: string = "";
-    date: string = "";
-
-    serialize() {
-        return {type: "component", "subject-uuid": uuidv4(), props: [
-            {name: "Product Name", value: this.name, class: "Product Info"},
-            {name: "Version", value: this.version, class: "Product Info"},
-            {name: "Date", value: this.date, class: "Product Info"}
-        ]}
-    }
-}
-
 export enum Result {
+    blank,
     yes,
     no,
     na,
-    blank
-}
-
-export enum SubjectType {
-    company,
-    productLine,
-    individual,
-    multiple
 }

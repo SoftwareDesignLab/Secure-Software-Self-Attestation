@@ -97,23 +97,13 @@ img:hover {
 
 /* Popup Styles */
 
-.full-screen-fixed {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.popup::backdrop {
   background-color: rgba(24, 24, 24, 0.6);
-  z-index: 5;
 }
 
 .popup {
-  width: 30vw;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 35vw;
-  z-index: 6;
+  width: clamp(300px, 30vw, 800px);
+  margin: auto;
 }
 
 .pencil {

@@ -1,8 +1,7 @@
-import { Component,HostListener  } from '@angular/core';
+import { Component } from '@angular/core';
 import { ContactService } from '../services/contact.service';
 import { Router } from '@angular/router';
 import { AttestationDataService } from '../services/attestation-data.service';
-import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 @Component({
   selector: 'app-contact-info',
@@ -12,7 +11,7 @@ import { AssessmentPlanService } from '../services/assessment-plan.service';
 export class ContactInfoComponent {
 
 
-constructor( public contactService: ContactService) {}
+constructor( public contactService: ContactService, private attestationDataService: AttestationDataService ) {}
 
   update(event: Event, item: string) {
     switch (item) {
@@ -36,7 +35,20 @@ constructor( public contactService: ContactService) {}
       case "personEmail": this.contactService.personEmail = (event.target as HTMLInputElement).value; break;
       case "personPhone": this.contactService.personPhone = (event.target as HTMLInputElement).value; break;
     }
-    
+  }
+
+  newForm() {
+    this.attestationDataService.createNewForm();
+    this.switchToAttestation();
+  }
+
+  switchToAttestation() {
+    if (this.attestationDataService.activeForm === undefined) this.attestationDataService.activeForm = this.attestationDataService.forms[0]
+    this.attestationDataService.changePage("attestation-form");
+  }
+
+  areForms(): boolean {
+    return this.attestationDataService.forms.length > 0;
   }
 
 }

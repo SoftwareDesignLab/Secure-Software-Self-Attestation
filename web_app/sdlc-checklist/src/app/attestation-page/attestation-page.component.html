@@ -1,4 +1,4 @@
-<div class="attestation pane" id="attestation" (keydown.enter)="check()">
+<div class="attestation pane" id="attestation">
   <h2>Select your attestation type:</h2>
   <input type="radio" id="company-wide" name="attestation" (click)="subject.stringType='company'" value="company" class="landing" [checked]="subject.stringType==='company'">
   <label for="company-wide">Company-wide</label><br>
@@ -22,7 +22,7 @@
       </tr>
     </table>
     <button class="add" mat-button (click)="addRow()" [hidden]="subject.stringType !== 'multiple'" id="add-subject-row">+</button>
-    <button class="add" mat-button (click)="subject.lines.pop()" *ngIf="subject.lines.length>1">-</button>
+    <button class="add" mat-button (click)="removeRow()" *ngIf="subject.lines.length>1">-</button>
   </div>
 </div>
 
@@ -40,6 +40,10 @@
     <app-catalog-processing></app-catalog-processing> 
     <div class="generate-report-outer-div">
       <button class="save-progress" (click)="generateAssessmentPlan()">Save Attestation</button>
+      <div class="lower-button">
+        <p *ngIf="!isFormComplete()" [title]="getErrorMessage()">!</p>
+        <button [className]="isFormComplete() ? 'generate-report-button completed' : 'generate-report-button in-progress'">Generate Report</button>
+      </div>
     </div>
   </div>
 </div>

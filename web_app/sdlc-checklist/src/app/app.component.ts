@@ -23,16 +23,8 @@
 */
 import { Component } from '@angular/core';
 import { AttestationDataService } from './services/attestation-data.service';
-import { Router, NavigationEnd, RouterModule  } from '@angular/router';
-import { CatalogShell } from './models/catalogModel';
 import { Form } from './models/attestationModel';
 import { AssessmentPlanService } from './services/assessment-plan.service';
-
-interface CatalogData {
-  catalogs: CatalogShell[];
-}
-
-const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 
 @Component({
   selector: 'app-root',
@@ -40,89 +32,20 @@ const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  showNav = false;
+  #showNav = false;
   openTag: string = "";
   renaming: string = "";
   showComponents = false;
   showFullFooter = false;
+  stagedJSON: any = undefined;
 
-  constructor(private router: Router, private attestationService: AttestationDataService, 
-              private assessmentPlanService: AssessmentPlanService){}
-  
-  ngOnInit(){
-  }
-
-  /**
-   * Changes the current page
-   * @param page The page name to change to
-   * @param fragment The fragment identifier to scroll to
-   */
-  async changePage(page: string, fragment?: string){
-    this.setNav(false);
-    if(page === "contact-info") { this.attestationService.activeForm = undefined; }
-    if (fragment) {
-      this.router.navigate([page], {fragment: fragment});
-      await dela(50);
-      let parent = document.getElementById(fragment);
-      if (parent instanceof HTMLElement) {
-        let newFocus = this.findFirstLandingChildr(parent);
-        if (newFocus instanceof HTMLElement) {
-          newFocus.focus();
-        }
-      }
-    } else {
-      this.router.navigate([page])
-    }
-  }
-
-  /**
-   * Recursively identifies the first descendant element to have the class "landing"
-   * @param parent The parent to search from
-   * @returns The element with "landing", null if none exists
-   */
-  findFirstLandingChildr(parent: HTMLElement): HTMLElement | null {
-    let children = parent.children;
-    for (let i = 0, max = children.length; i < max; i++) {
-      let child = children[i];
-      if (child instanceof HTMLElement) {
-        if (child.classList.contains('landing'))
-          return child;
-      }
-      if (child instanceof HTMLElement) {
-        let recurse = this.findFirstLandingChildr(child);
-        if (recurse instanceof HTMLElement) {
-          return recurse;
-        }
-      }
-    }
-    return null;
-  }
+  constructor(private attestationService: AttestationDataService, private assessmentPlanService: AssessmentPlanService){}
 
   /**
    * Toggles whether the nav is visible
    */
   toggleNav(): void {
-    this.setNav(!this.showNav);
-  }
-
-  /**
-   * Sets the nav to the provided state
-   * @param state The state to set the nav to
-   */
-  setNav(state: boolean): void {
-    this.showNav = state;
-    let nav = document.getElementById('nav');
-    if (nav instanceof HTMLElement) {
-      if (this.showNav) {
-        nav.classList.add('nav-opening');
-        nav.classList.remove('nav-closing');
-      } else {
-        nav.classList.add('nav-closing');
-        nav.classList.remove('nav-opening');
-        this.openTag = "";
-        this.renaming = "";
-      }
-    }
+    this.showNav = !this.showNav;
   }
 
   /**
@@ -161,7 +84,7 @@ export class AppComponent {
   processLoadAttestation(event: Event) {
     let file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      this.setNav(false);
+      this.showNav = false;
       this.handleFile(file);
       console.log('File selected:', file);
       (event.target as HTMLInputElement).value = "";
@@ -172,18 +95,38 @@ export class AppComponent {
     let reader = new FileReader();
     reader.onload = () => {
       let json = JSON.parse(reader.result as string);
-      this.assessmentPlanService.loadFromPlan(json);
+      if (this.assessmentPlanService.checkContactConflicts(json)) {
+        this.assessmentPlanService.loadFromPlan(json);
+      } else {
+        (document.getElementById('contact-decision') as HTMLDialogElement)?.showModal();
+        this.stagedJSON = json
+      }
     };
     reader.readAsText(file);
   }
 
-  loadAttestation() {
-    document.getElementById("load-file-input")?.click();
+  cancelLoad(event?: MouseEvent): void {
+    if (event) {
+      let dialog = (document.getElementById('contact-decision') as HTMLDialogElement)
+      if (0 < event.offsetX && dialog.clientWidth > event.offsetX && 0 < event.offsetY && dialog.clientHeight > event.offsetY)
+        return;
+    }
+    (document.getElementById('contact-decision') as HTMLDialogElement)?.close();
+    this.stagedJSON = undefined;
   }
 
-  changeAttestation(form: Form, fragment?: string) {
-    this.attestationService.activeForm = form;
-    this.changePage('attestation-form', fragment);
+  useExistingContact(): void {
+    this.assessmentPlanService.loadFromPlan(this.stagedJSON, false);
+    this.cancelLoad();
+  }
+
+  useFileContact(): void {
+    this.assessmentPlanService.loadFromPlan(this.stagedJSON);
+    this.cancelLoad();
+  }
+
+  loadAttestation() {
+    document.getElementById("load-file-input")?.click();
   }
 
   getSubLinks(form: Form): {position: number, fragment: string, name: string}[] {
@@ -195,12 +138,27 @@ export class AppComponent {
   }
 
   addForm() {
-    this.attestationService.createNewForm();
-    this.changePage('attestation-form');
+    let form = this.attestationService.createNewForm();
+    this.showNav = false;
+    this.attestationService.changeAttestation(form, 'attestation');
   }
 
   deleteForm(uuid: string) {
     this.attestationService.deleteForm(uuid);
+  }
+
+  isActiveForm(activeForm: Form | undefined) {
+    return this.attestationService.activeForm === activeForm;
+  }
+
+  changePage(page: string, fragment?: string) {
+    this.showNav = false;
+    this.attestationService.changePage(page, fragment);
+  }
+
+  changeAttestation(form: Form, fragment?: string) {
+    this.showNav = false;
+    this.attestationService.changeAttestation(form, fragment);
   }
 
   get activeFormName(): string {
@@ -208,5 +166,22 @@ export class AppComponent {
   }
 
   get forms(): Form[] { return this.attestationService.forms; }
+
+  get showNav(): boolean { return this.#showNav; }
+  set showNav(showNav: boolean) {     
+    this.#showNav = showNav;
+    let nav = document.getElementById('nav');
+    if (nav instanceof HTMLElement) {
+      if (showNav) {
+        nav.classList.add('nav-opening');
+        nav.classList.remove('nav-closing');
+      } else {
+        nav.classList.add('nav-closing');
+        nav.classList.remove('nav-opening');
+        this.openTag = "";
+        this.renaming = "";
+      }
+    } 
+  }
 }
 

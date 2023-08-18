@@ -23,11 +23,12 @@
  */
 
 
-import { saveAs } from 'file-saver';
 import { Component } from '@angular/core';
 import { AttestationDataService } from '../services/attestation-data.service';
 import { AssessmentPlanService } from '../services/assessment-plan.service';
-import { Form, SubjectType, Subject, SubjectLine, Control } from '../models/attestationModel';
+import { Form } from '../models/attestationModel';
+import { SubjectType, Subject, SubjectLine } from '../models/subjectModel'
+import { ContactService } from '../services/contact.service';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class AttestationPageComponent {
   form: Form | undefined;
   subject: Subject;
 
-  constructor(private attestationDataService: AttestationDataService, private assessmentPlanService: AssessmentPlanService) {
+  constructor(private attestationDataService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, private contactService: ContactService) {
     this.form = this.attestationDataService.activeForm;
     this.attestationDataService.observableActiveForm.subscribe((form) => this.form = form);
     this.subject = this.form?.subject || new Subject();
@@ -68,7 +69,16 @@ export class AttestationPageComponent {
     this.subject.lines.push(new SubjectLine());
   }
 
-  check() {
-    console.log(this.attestationDataService.activeForm?.subject);
+  removeRow() {
+    this.subject.lines.pop();
+  }
+
+  isFormComplete() {
+    return this.contactService.isFilled()
+  }
+
+  getErrorMessage() {
+    if (!this.contactService.isFilled()) return "The contact information page is not adequately completed"
+    return "";
   }
 }

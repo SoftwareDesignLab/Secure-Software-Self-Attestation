@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Metadata, Organization, Person } from '../models/contactModel'
-import { BehaviorSubject } from 'rxjs';
+import { Organization, Person } from '../models/contactModel'
 
 @Injectable({
   providedIn: 'root'
