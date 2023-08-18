@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ContactService } from '../services/contact.service';
-import { Router } from '@angular/router';
 import { AttestationDataService } from '../services/attestation-data.service';
 
 @Component({

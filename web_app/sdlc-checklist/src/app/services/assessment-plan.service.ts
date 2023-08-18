@@ -3,7 +3,6 @@ import { saveAs } from 'file-saver';
 import { Form } from '../models/attestationModel';
 import { ContactService } from './contact.service';
 import { AttestationDataService } from './attestation-data.service';
-import { Router } from '@angular/router';
 
 export enum ControlSelectionType {
   yes = "yes",
