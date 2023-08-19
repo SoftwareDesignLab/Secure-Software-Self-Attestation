@@ -48,7 +48,7 @@
 </dialog>
 
 <dialog id="incomplete-comment-dialog" class="pane" (keydown.escape)="cancelSave()" (click)="cancelSave($event)">
-  <p>There are one or more comments that are incomplete. These comments will not appear in the saved file.</p>
+  <p>There are one or more comments that are saved as in-progress. These comments will not appear in the saved file.</p>
   <button (click)="finishSave()">Save Anyway</button>
   <button (click)="cancelSave()">Go Back</button>
 </dialog>
