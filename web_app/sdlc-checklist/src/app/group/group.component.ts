@@ -31,6 +31,7 @@ import { Control, Result } from '../models/attestationModel';
 })
 export class GroupComponent {
   @Input() group: any;
+  @Input() nestLevel: number = 0;
 
   /**
    * Hides the rollable components of all child controls
@@ -44,7 +45,7 @@ export class GroupComponent {
    * @returns Whether all children are checked
    */
   areAllChildrenChecked(): boolean {
-    return this.group.controls.reduce((truth: boolean, control: Control): boolean => { return truth && control.result !== Result.blank}, true)
+    return !this.group.getAllControls().some((control: Control) => { return control.result === Result.blank })
   }
 
   /**
@@ -58,7 +59,7 @@ export class GroupComponent {
       case "x": case "no": result = Result.no; break;
       case "na": case "n/a": result = Result.na; break;
     }
-    if (result !== Result.blank && this.group.controls.findIndex((control: Control) => {return control.result !== result}) === -1) result = Result.blank;
-    this.group.controls.forEach((control: Control) => {control.result = result});
+    if (result !== Result.blank && !this.group.getAllControls().some((control: Control) => {return control.result !== result})) result = Result.blank;
+    this.group.getAllControls().forEach((control: Control) => {control.result = result});
   }
 }

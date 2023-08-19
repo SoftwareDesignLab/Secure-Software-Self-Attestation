@@ -40,7 +40,8 @@ export interface MetadataShell {
 export interface GroupShell {
     title: string;
     id: string;
-    controls: ControlShell[];
+    controls: ControlShell[] | undefined;
+    groups: GroupShell[] | undefined;
 }
 
 export interface ControlShell {
@@ -48,6 +49,7 @@ export interface ControlShell {
     title: string;
     props: PropShell[];
     parts: PartShell[];
+    controls: ControlShell[] | undefined;
 }
 
 export interface PropShell {

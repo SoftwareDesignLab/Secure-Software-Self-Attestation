@@ -181,6 +181,7 @@ export class AppComponent {
   }
 
   finishSave() {
+    (document.getElementById('incomplete-comment-dialog') as HTMLDialogElement)?.close();
     this.assessmentPlanService.generateAssessmentPlan();
   }
 

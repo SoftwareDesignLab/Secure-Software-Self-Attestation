@@ -121,7 +121,7 @@ export class Catalog {
         jsonData.groups.forEach((group) => {
             let newGroup = new Group(group, this.uuid);
             this.groups.push(newGroup);
-            newGroup.controls.forEach((control) => this.controlMap.set(control.id, control));
+            newGroup.getAllControls().forEach((control) => this.controlMap.set(control.id, control));
         })
         this.metadata = new CatalogMetadata(jsonData.metadata);
     }
@@ -171,6 +171,8 @@ export class Catalog {
             }
         })
     }
+
+    get controls(): Control[] {return Array.from(this.controlMap.values());}
 }
 
 export class Group {
@@ -179,6 +181,7 @@ export class Group {
     title: string;
     expanded: boolean = true;
     catalogUUID: string;
+    groups: Group[] = []
 
     /**
      * Creates a new group from a blank catalog
@@ -188,8 +191,11 @@ export class Group {
     constructor (jsonData: GroupShell, catalogID: string) {
         this.id = jsonData.id;
         this.title = jsonData.title;
-        this.catalogUUID = catalogID
-        jsonData.controls.forEach((control) => {this.controls.push(new Control(control, catalogID))})
+        this.catalogUUID = catalogID;
+        if (jsonData.controls !== undefined)
+            jsonData.controls.forEach((control) => {this.controls.push(new Control(control, catalogID))});
+        if (jsonData.groups !== undefined) 
+            jsonData.groups.forEach((group) => {this.groups.push(new Group(group, catalogID))});
     }
 
     /**
@@ -197,6 +203,13 @@ export class Group {
      */
     toggleExpansion() {
         this.expanded = !this.expanded;
+    }
+
+    getAllControls(): Control[] {
+        let controls: Control[] = [];
+        this.controls.forEach((control) => {controls = controls.concat(control.getAllControls())})
+        this.groups.forEach((group) => {controls = controls.concat(group.getAllControls())})
+        return controls;
     }
 }
 
@@ -211,6 +224,7 @@ export class Control {
     examples: string[] = [];
     props: Prop[] = [];
     expanded: boolean = false;
+    controls: Control[] = [];
 
     /**
      * Creates a control from a blank catalog file
@@ -230,6 +244,8 @@ export class Control {
                 this.props.push(new Prop(prop));
             }
         })
+        if (jsonData.controls !== undefined)
+            jsonData.controls.forEach((control) => {this.controls.push(new Control(control, catalogID))});
     }
 
     /**
@@ -263,6 +279,12 @@ export class Control {
      */
     isChecked() {
         return this.result !== Result.blank;
+    }
+
+    getAllControls(): Control[] {
+        let controls: Control[] = [this];
+        this.controls.forEach((control: Control) => {controls = controls.concat(control.getAllControls())});
+        return controls;
     }
 
     /**
