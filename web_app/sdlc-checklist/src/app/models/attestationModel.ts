@@ -142,16 +142,14 @@ export class Catalog {
                      new Prop({name: "Catalog Name", value : this.metadata.title, class:"catalog"} as PropShell)]
         let include: {"control-id": string}[] = [];
         let exclude: {"control-id": string}[] = [];
-        this.groups.forEach((group) => {
-            group.controls.forEach((control) => {
-                if (control.result !== Result.blank) {
-                    props.push(new Prop({name: control.id, value: control.stringResult, class: "Compliance Claim"} as PropShell));
-                    include.push({"control-id": control.id});
-                } else {
-                    exclude.push({"control-id": control.id});
-                }
-                if (control.commentFinalized) props.push(new Prop({name: control.id, value: control.comment , class: "Attestation Claim"} as PropShell));
-            })
+        this.controls.forEach((control) => {
+            if (control.result !== Result.blank) {
+                props.push(new Prop({name: control.id, value: control.stringResult, class: "Compliance Claim"} as PropShell));
+                include.push({"control-id": control.id});
+            } else {
+                exclude.push({"control-id": control.id});
+            }
+            if (control.commentFinalized) props.push(new Prop({name: control.id, value: control.comment , class: "Attestation Claim"} as PropShell));
         })
         return {props: props, "include-controls": include, "exclude-controls": exclude};
     }
