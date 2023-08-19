@@ -327,7 +327,7 @@ a {
   cursor: pointer;
 }
 
-#contact-decision {
+dialog {
   justify-content: center;
   align-content: center;
   margin: auto;
@@ -336,15 +336,15 @@ a {
   top: -25vh;
 }
 
-#contact-decision::backdrop {
+dialog::backdrop {
   background-color: rgba(0, 0, 0, .6)
 }
 
-#contact-decision p {
+dialog p {
   text-align: center;
 }
 
-#contact-decision button {
+dialog button {
   display: block;
   margin: 25px auto 0;
   border: none;
@@ -359,7 +359,7 @@ a {
   box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, .4);
 }
 
-#contact-decision button:hover {
+dialog button:hover {
   box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .6);
   background-color: #004577;
 }

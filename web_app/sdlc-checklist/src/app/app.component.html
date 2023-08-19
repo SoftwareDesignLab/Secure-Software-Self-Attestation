@@ -47,6 +47,12 @@
   <button (click)="useFileContact()">Uploaded File</button>
 </dialog>
 
+<dialog id="incomplete-comment-dialog" class="pane" (keydown.escape)="cancelSave()" (click)="cancelSave($event)">
+  <p>There are one or more comments that are incomplete. These comments will not appear in the saved file.</p>
+  <button (click)="finishSave()">Save Anyway</button>
+  <button (click)="cancelSave()">Go Back</button>
+</dialog>
+
 <footer>
   <p [hidden]="showFullFooter">
   &copy;2023 Rochester Institute of Technology (RIT). Developed with government support under contract 70RSAT19CB0000020 

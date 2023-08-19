@@ -71,7 +71,11 @@ export class AttestationPageComponent {
    * Generates an assessment plan
    */
   generateAssessmentPlan() {
-    this.assessmentPlanService.generateAssessmentPlan();
+    if (this.assessmentPlanService.checkInProgressComments()) {
+      this.assessmentPlanService.generateAssessmentPlan();
+    } else {
+      (document.getElementById("incomplete-comment-dialog") as HTMLDialogElement).showModal();
+    }
   }
 
   /**
