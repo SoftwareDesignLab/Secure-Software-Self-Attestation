@@ -25,6 +25,7 @@
 .rollable-content {
   margin-left: 20px; 
   margin-top: 5px;
+  border-left: 1px solid black;
 }
 .example, .reference {
   margin: .1em 3em .3 3em;
@@ -47,4 +48,8 @@ ul {
 .reference {
   margin-left: 30px;
   margin-right: 30px;
+}
+
+.subcontrols-unordered-list {
+  list-style-type: none;
 }

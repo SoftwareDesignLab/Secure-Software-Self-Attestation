@@ -22,15 +22,17 @@
                             "controls": [
                                 {
                                     "id": "4e(iv)(b)",
-                                    "title": "The software producer has a policy or process to address discovered security vulnerabilities prior to product release"
+                                    "title": "The software producer has a policy or process to address discovered security vulnerabilities prior to product release",
+                                    "controls": [
+                                        {
+                                            "id": "4e(iv)(a)",
+                                            "title": "The software producer ensured these processes operate on an ongoing basis and, at a minimum, prior to product, version, or update releases"
+                                        }
+                                    ]
                                 },
                                 {
                                     "id": "4e(iv)(c)",
                                     "title": "The software producer operates a vulnerability disclosure program and accepts, reviews, and addresses disclosed software vulnerabilities in a timely fashion"
-                                },
-                                {
-                                    "id": "4e(iv)(a)",
-                                    "title": "The software producer ensured these processes operate on an ongoing basis and, at a minimum, prior to product, version, or update releases"
                                 }
                             ]
                         }

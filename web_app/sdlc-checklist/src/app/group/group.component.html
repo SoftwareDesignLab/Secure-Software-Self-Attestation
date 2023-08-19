@@ -12,13 +12,11 @@
         </div>
     </div>
     <div class="group-rollable-content" [hidden]="!group.expanded">
+        <div class="checkbox-container">
+            <app-control *ngFor="let item of group.controls" [control]="item"></app-control>
+        </div>
         <div [class]="((nestLevel % 2 === 0) ? 'even ' : 'odd ') + 'group-container'">
             <app-group *ngFor="let subgroup of group.groups" [group]="subgroup" [nestLevel]="nestLevel + 1"></app-group>
-        </div>
-        <div class="checkbox-container">
-            <app-control *ngFor="let item of group.controls" 
-              [control]="item"
-            ></app-control>
         </div>
     </div>
 </section>
