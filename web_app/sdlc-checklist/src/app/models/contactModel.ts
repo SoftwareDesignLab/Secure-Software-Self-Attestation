@@ -137,7 +137,7 @@ export class Organization extends Party {
         let org = {
             ...super.serialize(), 
             name: this.name}
-        if (this.propWebsite) {org.props.push(this.propWebsite); org = {...org, "links": this.linkWebsite}}
+        if (this.propWebsite) {org.props.push(this.propWebsite); org = {...org, "links": [this.linkWebsite]}}
         return org;
     }
 
