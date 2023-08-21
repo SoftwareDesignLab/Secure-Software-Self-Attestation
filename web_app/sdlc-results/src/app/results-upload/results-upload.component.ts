@@ -71,7 +71,7 @@ export class ResultsUploadComponent {
     let reader = new FileReader();
     reader.onload = () => {
       let json = JSON.parse(reader.result as string);
-      this.resultModelService.assessmentResult = new AssessmentResult(json);
+      this.resultModelService.assessmentResult = new AssessmentResult(json["assessment-plan"]);
     };
     reader.readAsText(file);
   }
