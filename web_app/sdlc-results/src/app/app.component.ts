@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component } from '@angular/core';
-import { AssessmentResult, ResultModelService } from './resultsModel';
+import { AssessmentResult, Catalog, ResultModelService } from './resultsModel';
 
 
 @Component({
@@ -34,8 +34,12 @@ export class AppComponent {
   showFullFooter: boolean = false;
   showNav = false;
   poamMode = false;
+  catalogs: Catalog[];
 
-  constructor( public resultModelService: ResultModelService) {}
+  constructor( public resultModelService: ResultModelService ) {
+    this.catalogs = resultModelService.assessmentResult?.catalogs || [];
+    resultModelService.observableAssessmentResult.subscribe((assessmentResult: AssessmentResult | null) => {this.catalogs = assessmentResult?.catalogs || []})
+  }
 
   toggleFooter() {
     this.showFullFooter = !this.showFullFooter;

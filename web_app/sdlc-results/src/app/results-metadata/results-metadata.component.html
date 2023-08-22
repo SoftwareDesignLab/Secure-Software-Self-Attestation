@@ -9,12 +9,12 @@
   <div>
     <h3>Company: {{ org.name }}</h3>
     <p *ngFor="let address of org.addresses">Address: {{ address.getAddressAsString() }}</p>
-    <a *ngFor="let link of org.links" [href]="link.getLinkAsDisplay().link">{{ link.getLinkAsDisplay().label }}</a>
+    <p><a *ngFor="let link of org.links" [href]="link.getLinkAsDisplay().link">Company {{ link.getLinkAsDisplay().label }}</a></p>
   </div>
   <div>
     <h3>Contact: {{ contact.getProperName() }}</h3>
     <p *ngFor="let address of contact.addresses">Address: {{ address.getAddressAsString() }}</p>
-    <a *ngFor="let email of contact['email-addresses']" [href]="'mailto:' + email">{{ email }}</a><br>
-    <a *ngFor="let phone of contact['telephone-numbers']" [href]="'tel:' + phone">{{ phone }}</a>
+    <p>Email: <a *ngFor="let email of contact['email-addresses']" [href]="'mailto:' + email">{{ email }}</a></p>
+    <p>Phone Number: <a *ngFor="let phone of contact['telephone-numbers']" [href]="'tel:' + phone">{{ phone }}</a></p>
   </div>
 </section>

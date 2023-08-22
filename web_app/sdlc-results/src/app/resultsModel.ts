@@ -23,24 +23,46 @@
  */
 
 import { Injectable } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResultModelService {
-  public assessmentResult: AssessmentResult | null = null;
+  #assessmentResult: BehaviorSubject<AssessmentResult | null> = new BehaviorSubject<AssessmentResult | null>(null);
+
+  get assessmentResult(): AssessmentResult | null { return this.#assessmentResult.getValue(); }
+  get observableAssessmentResult(): BehaviorSubject<AssessmentResult | null> { return this.#assessmentResult; }
+  set assessmentResult(assessmentResult: AssessmentResult | null) { this.#assessmentResult.next(assessmentResult); }
 }
 
 export class AssessmentResult {
-  uuid: string = "";
-  metadata: Metadata = new Metadata();
-  "import-ssp": object = {};
-  "reviewed-controls": ReviewedControls[] = [];
-  "assessment-subjects": Subject[] = [];
+  "assessment-plan": AssessmentPlan = new AssessmentPlan();
+  catalogs: Catalog[] = [];
 
   constructor(json: JSON) {
     Object.assign(this, json);
+    this.catalogs = this.catalogs.map((catalog) => {return new Catalog(catalog)});
+    this["assessment-plan"] = new AssessmentPlan(this["assessment-plan"]);
+    this.catalogs.forEach((catalog) => {this["assessment-plan"].catalogs.set(catalog.uuid, catalog)});
+    this["assessment-plan"].loadCatalogData(json["assessment-plan"]);
+  }
+}
+
+export class AssessmentPlan {
+  uuid: string = "";
+  metadata: Metadata = new Metadata();
+  "import-ssp": object = {};
+  catalogs: Map<string, Catalog> = new Map<string, Catalog>();
+  //"assessment-subjects": Subject[] = [];
+
+  constructor(json?: any) {
+    Object.assign(this, json);
     this.metadata = new Metadata(this.metadata);
+  }
+
+  loadCatalogData(json: any) {
+    
   }
 }
 
@@ -159,32 +181,94 @@ export class Link {
   }
 }
 
-export class ReviewedControls {
-  "control-selections": ControlSelection[] = [];
-}
-
-export class ControlSelection {
-  props: Prop[] = [];
-  "include-controls": Control[] = [];
-  "exclude-controls": Control[] = [];
-}
-
-export class Control {
-  "control-id": string = "";
-}
-
-export class Subject {
-  type: string = "";
-  props: Prop[] = [];
-  "include-all": Object = {};
-}
-
 function capitalize(str: String): string {
   return str.split(" ").map((word) => {return word.charAt(0).toUpperCase() + word.slice(1)}).join(" ");
 }
 
+export class Catalog {
+  metadata: CatalogMetadata = new CatalogMetadata();
+  groups: Group[] = [];
+  uuid: string = "";
+  
+  constructor(json?: any) {
+    Object.assign(this, json);
+    this.metadata = new CatalogMetadata(this.metadata);
+    this.groups = this.groups.map((group) => {return new Group(group)});
+  }
+}
 
+export class CatalogMetadata {
+  title: string = "";
+  'last-modified': string = "";
+  published: string = "";
+  'oscal-version': string ="";
+  version: string = "";
 
+  constructor(json?: any) {
+    Object.assign(this, json);
+  }
+}
+
+export class Group {
+  id: string = "";
+  title: string = "";
+  controls: Control[] = [];
+  groups: Group[] = [];
+
+  constructor(json?: any) {
+    Object.assign(this, json);
+    this.controls = this.controls.map((control) => {return new Control(control)});
+    this.groups = this.groups.map((group) => {return new Group(group)});
+  }
+}
+
+export class Control {
+  id: string = "";
+  title: string = "";
+  props: Prop[] = [];
+  parts: Part[] = [];
+  controls: Control[] = [];
+  result: Result = Result.blank;
+  comment: string = "";
+
+  constructor(json?: any) {
+    Object.assign(this, json)
+    this.props = this.props.map((prop) => {return new Prop(prop)});
+    this.controls = this.controls.map((control) => {return new Control(control)});
+  }
+
+  get resultAsAlt(): string {
+    switch (this.result) {
+      case Result.yes: return "Compliant"
+      case Result.no: return "Non-compliant"
+      case Result.na: return "Not Applicable"
+      default: return "Blank"
+    }
+  }
+
+  get resultAsFilename(): string {
+    switch (this.result) {
+      case Result.yes: return "/assets/check.png"
+      case Result.no: return "/assets/x.png"
+      case Result.na: return "/assets/na.png"
+      default: return "Blank"
+    }
+  }
+
+  included(): boolean {
+    return this.result !== Result.blank;
+  }
+}
+
+export interface Part {
+}
+
+export enum Result {
+  yes,
+  no,
+  na,
+  blank
+}
 
 
 

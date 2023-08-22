@@ -1,0 +1,6 @@
+<p><img [alt]="control.resultAsAlt" [src]="control.resultAsFilename">{{control.id + ": " + control.title}}</p>
+<ul>
+  <li *ngFor="let control of control.controls">
+    <app-control [control]="control" *ngIf="control.included()"></app-control>
+  </li>
+</ul>

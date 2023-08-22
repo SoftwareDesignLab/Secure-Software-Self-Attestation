@@ -21,29 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input } from '@angular/core';
-import { ResultModelService, Metadata, Organization, Contact, Address } from '../resultsModel';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-@Component({
-  selector: 'app-results-metadata',
-  templateUrl: './results-metadata.component.html',
-  styleUrls: ['./results-metadata.component.css']
-})
-export class ResultsMetadataComponent {
-  public metadata: Metadata = new Metadata();
-  public org: Organization = new Organization();
-  public contact: Contact = new Contact();
-  constructor( public resultModelService: ResultModelService) {}
+import { GroupComponent } from './group.component';
 
-  ngOnInit() {
-    if (this.resultModelService.assessmentResult) {
-      this.metadata = this.resultModelService.assessmentResult["assessment-plan"].metadata;
-      this.metadata.parties.forEach((party) => {
-        if (party instanceof Organization)
-          this.org = party;
-        if (party instanceof Contact) 
-          this.contact = party;
-      });
-    }
-  }
-}
+describe('groupComponent', () => {
+  let component: GroupComponent;
+  let fixture: ComponentFixture<GroupComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [GroupComponent]
+    });
+    fixture = TestBed.createComponent(GroupComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

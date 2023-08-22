@@ -21,28 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, Input } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-interface ExtraData {
-  [key: string]: any;
-}
+import { ControlComponent } from './control.component';
 
-interface ControlResults {
-  fullName: string;
-  compliance: boolean | undefined;
-  explanation: string | undefined;
-  extra: ExtraData;
-}
+describe('controlComponent', () => {
+  let component: ControlComponent;
+  let fixture: ComponentFixture<ControlComponent>;
 
-interface ControlDict {
-  [key: string]: ControlResults;
-}
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ControlComponent]
+    });
+    fixture = TestBed.createComponent(ControlComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-@Component({
-  selector: 'app-result',
-  templateUrl: './result.component.html',
-  styleUrls: ['./result.component.css']
-})
-export class ResultComponent {
-  
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
