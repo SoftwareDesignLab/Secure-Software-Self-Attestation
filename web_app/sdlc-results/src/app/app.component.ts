@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component } from '@angular/core';
-import { AssessmentResults } from './resultsModel';
+import { AssessmentResult, Catalog, ResultModelService } from './resultsModel';
 
 
 @Component({
@@ -31,13 +31,14 @@ import { AssessmentResults } from './resultsModel';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  assessmentResults: AssessmentResults | undefined;
   showFullFooter: boolean = false;
   showNav = false;
   poamMode = false;
+  catalogs: Catalog[];
 
-  onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
-    this.assessmentResults = jsonData["assessment-results"];
+  constructor( public resultModelService: ResultModelService ) {
+    this.catalogs = resultModelService.assessmentResult?.catalogs || [];
+    resultModelService.observableAssessmentResult.subscribe((assessmentResult: AssessmentResult | null) => {this.catalogs = assessmentResult?.catalogs || []})
   }
 
   toggleFooter() {

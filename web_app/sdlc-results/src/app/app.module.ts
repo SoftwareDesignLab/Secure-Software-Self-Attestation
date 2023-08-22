@@ -27,14 +27,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { ResultsUploadComponent } from './results-upload/results-upload.component';
 import { ResultsMetadataComponent } from './results-metadata/results-metadata.component';
-import { ResultComponent } from './result/result.component';
+import { CatalogComponent } from './catalog/catalog.component';
+import { GroupComponent } from './group/group.component';
+import { ControlComponent } from './control/control.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ResultsUploadComponent,
     ResultsMetadataComponent,
-    ResultComponent
+    CatalogComponent,
+    GroupComponent,
+    ControlComponent
   ],
   imports: [
     BrowserModule

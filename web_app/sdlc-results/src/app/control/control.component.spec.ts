@@ -21,35 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
- .result-container {
-  width: clamp(400px, 90vw, 1000px);
-  margin: 30px auto;
-  padding: 0 2vw;
-}
+import { ControlComponent } from './control.component';
 
-h2, h3, h4, h5, p {
-  text-indent: 20px;
-}
+describe('controlComponent', () => {
+  let component: ControlComponent;
+  let fixture: ComponentFixture<ControlComponent>;
 
-h3 {
-  margin-left: 10px;
-}
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ControlComponent]
+    });
+    fixture = TestBed.createComponent(ControlComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-p {
-  margin-left: 20px;
-}
-
-h4, ul {
-  margin-left: 30px;
-  margin-bottom: 10px;
-}
-
-h5 {
-  margin: 10px 50px;
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

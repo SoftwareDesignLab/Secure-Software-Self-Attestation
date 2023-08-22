@@ -21,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AssessmentResult, ResultModelService } from '../resultsModel';
 
 @Component({
   selector: 'app-results-upload',
@@ -31,7 +32,8 @@ import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from '@
 export class ResultsUploadComponent {
   @Input() accept = '.json';
   @ViewChild('fileInput') fileInput!: ElementRef;
-  @Output() fileSelected = new EventEmitter<File>();
+
+  constructor( private resultModelService: ResultModelService ) {}
 
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -66,10 +68,10 @@ export class ResultsUploadComponent {
   }
 
   private handleFile(file: File): void {
-    const reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = () => {
-      const json = JSON.parse(reader.result as string);
-      this.fileSelected.emit(json);
+      let json = JSON.parse(reader.result as string);
+      this.resultModelService.assessmentResult = new AssessmentResult(json);
     };
     reader.readAsText(file);
   }

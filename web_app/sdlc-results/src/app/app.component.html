@@ -17,15 +17,14 @@
   </div>
 </nav>
 
-<div *ngIf="!poamMode">
-  <div *ngIf="assessmentResults !== undefined">
-    <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
-    <div *ngFor="let result of assessmentResults.results">
-      <app-result [result]="result"></app-result>
-    </div>
+<div *ngIf="!poamMode" class="no-overflow">
+  <div class="pane metadata-pane" *ngIf="resultModelService.assessmentResult">
+    <app-results-metadata *ngIf="resultModelService.assessmentResult['assessment-plan'].metadata"></app-results-metadata>
   </div>
-
-  <app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
+  <div class="pane catalog-pane" *ngFor="let catalog of catalogs">
+    <app-catalog [catalog]="catalog"></app-catalog>
+  </div>
+  <app-results-upload></app-results-upload>
 </div>
 
 <div *ngIf="poamMode">

@@ -1,7 +1,20 @@
-<section class="results-metadata pane">
-  <h2 >{{ metadata.title }}</h2>
-    <!-- metadata contains last_modified, version, oscal_version and published. show these attributes -->
-  <p *ngIf="metadata['last-modified']">Last Modified: {{ metadata['last-modified'] }}</p>
-  <p *ngIf="metadata.version">Version: {{ metadata.version }}</p>
-  <p *ngIf="metadata['oscal-version']">OSCAL Version: {{ metadata['oscal-version'] }}</p>
+<section class="results-metadata">
+  <h2>{{ metadata.title }}</h2>
+  <p>Version: {{ metadata.version }}</p>
+  <p>Last Modified: {{ metadata['last-modified'] }}</p>
+  <p>Published: {{ metadata.published }}</p>
+  <p>Oscal Version {{ metadata['oscal-version'] }}</p>
+</section>
+<section class="results-contact">
+  <div>
+    <h3>Company: {{ org.name }}</h3>
+    <p *ngFor="let address of org.addresses">Address: {{ address.getAddressAsString() }}</p>
+    <p><a *ngFor="let link of org.links" [href]="link.getLinkAsDisplay().link">Company {{ link.getLinkAsDisplay().label }}</a></p>
+  </div>
+  <div>
+    <h3>Contact: {{ contact.getProperName() }}</h3>
+    <p *ngFor="let address of contact.addresses">Address: {{ address.getAddressAsString() }}</p>
+    <p>Email: <a *ngFor="let email of contact['email-addresses']" [href]="'mailto:' + email">{{ email }}</a></p>
+    <p>Phone Number: <a *ngFor="let phone of contact['telephone-numbers']" [href]="'tel:' + phone">{{ phone }}</a></p>
+  </div>
 </section>

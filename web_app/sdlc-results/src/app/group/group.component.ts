@@ -22,28 +22,12 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
-import { ResultModelService, Metadata, Organization, Contact, Address } from '../resultsModel';
 
 @Component({
-  selector: 'app-results-metadata',
-  templateUrl: './results-metadata.component.html',
-  styleUrls: ['./results-metadata.component.css']
+  selector: 'app-group',
+  templateUrl: './group.component.html',
+  styleUrls: ['./group.component.css']
 })
-export class ResultsMetadataComponent {
-  public metadata: Metadata = new Metadata();
-  public org: Organization = new Organization();
-  public contact: Contact = new Contact();
-  constructor( public resultModelService: ResultModelService) {}
-
-  ngOnInit() {
-    if (this.resultModelService.assessmentResult) {
-      this.metadata = this.resultModelService.assessmentResult["assessment-plan"].metadata;
-      this.metadata.parties.forEach((party) => {
-        if (party instanceof Organization)
-          this.org = party;
-        if (party instanceof Contact) 
-          this.contact = party;
-      });
-    }
-  }
+export class GroupComponent {
+  @Input() group: any;
 }

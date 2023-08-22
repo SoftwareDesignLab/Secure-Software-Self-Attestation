@@ -133,6 +133,18 @@ nav {
   background-color: #EFF2F4;
 }
 
+.metadata-pane {
+  width: clamp(400px, 80vw, 1200px);
+}
+
+.catalog-pane {
+  width: clamp(350px, 75vw, 1100px);
+}
+
+.no-overflow {
+  overflow-y: hidden;
+}
+
 @keyframes navOpening {
   from {right: -400px;}
   to {right: 0vw;}
