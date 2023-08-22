@@ -127,7 +127,7 @@ export class ParameterSelection {
   Implementation Common Classes
 */
 
-enum SystemComponentType {
+export enum SystemComponentType {
   "this-system",
   "system",
   "interconnection",
@@ -144,19 +144,19 @@ enum SystemComponentType {
   "network"
 }
 
-enum SystemComponentState {
+export enum SystemComponentState {
   "underdevelopment",
   "operational",
   "disposition",
   "other"
 }
 
-enum TransportType {
+export enum TransportType {
   "TCP",
   "UDP"
 }
 
-enum ImplementationState {
+export enum ImplementationState {
   "implemented",
   "partial",
   "planned",
@@ -164,7 +164,7 @@ enum ImplementationState {
   "not-applicable"
 }
 
-enum SystemIDType {
+export enum SystemIDType {
   "https://fedramp.gov",
   "https://fedramp.gov/ns/oscal",
   "https://ietf.org/rfc/rfc4122",
@@ -176,7 +176,7 @@ export class SystemComponent {
   type: SystemComponentType;
   title: string = "";
   description: string = "";
-  status: SystemComponentState;
+  status: SystemComponentStatus;
   purpose: string = "";
   props?: Prop[];
   links?: Link[];
@@ -184,11 +184,22 @@ export class SystemComponent {
   protocols?: Protocol[];
   remarks?: string;
 
-  constructor (type: SystemComponentType, title: string, description: string, status: SystemComponentState) {
+  constructor (type: SystemComponentType, title: string, description: string, status: SystemComponentStatus) {
     this.type = type;
     this.title = title;
     this.description = description;
     this.status = status;
+  }
+
+  addProp(name: string, value: string, class_?: string, uuid?: string, ns?: string, remarks?: string) {
+    if (this.props === undefined) this.props = [];
+    let newProp = new Prop(name, value, class_, uuid, ns, remarks);
+    this.props.push(newProp);
+  }
+
+  newProp(prop: Prop) {
+    if (this.props === undefined) this.props = [];
+    this.props.push(prop);
   }
 }
 

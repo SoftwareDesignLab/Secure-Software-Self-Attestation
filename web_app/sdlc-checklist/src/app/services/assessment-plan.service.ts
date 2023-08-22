@@ -3,8 +3,9 @@ import { BehaviorSubject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { AssessmentPlan } from '../models/oscal/assessmentPlanModel';
-import { ControlSelection, SubjectID, AssessmentSubject, SubjectIDType } from '../models/oscal/assessment';
-import { Prop } from '../models/oscal/common';
+import { AssessmentResults, Attestation, LocalDefinitions, Result } from '../models/oscal/assessmentResultsModel';
+import { ControlSelection, SubjectID, AssessmentSubject, SubjectIDType, ControlID } from '../models/oscal/assessment';
+import { Prop, SystemComponentState, SystemComponentStatus, SystemComponentType } from '../models/oscal/common';
 import { Metadata, Party } from '../models/oscal/metadata';
 import { Catalog } from '../models/oscal/catalogModel';
 import { GroupComponent } from '../group/group.component';
@@ -529,7 +530,6 @@ export class AssessmentPlanService {
     let plans = this.assessmentPlans.getValue();
     console.log("Hi")
   }
-  //TODO automatically exclude subjects that are unchecked
 
   _uniqueCatalogs() {
     let allCatalogs = this.catalogs.getValue();
@@ -544,35 +544,112 @@ export class AssessmentPlanService {
     return uniqueCatalogs;
   }
 
-  convertToAssessmentResults() {
+  // Given a catalog ID, return a ControlSelection objects where all included controls from all instances of that catalog are aggregated
+  //TODO optimize
+  _aggregateControlSelections(catalogID: String): ControlSelection {
+    let plans = this.assessmentPlans.getValue();
+    let newCS = new ControlSelection();
+    for (let i = 0; i < plans.length; i++) {
+      let plan = plans[i];
+      let first = true;
+      let controlSelections = plan['reviewed-controls']['control-selections'].find(selection => selection.props?.find(prop => prop.name === "Catalog ID" && prop.value === catalogID) !== undefined);
+      if (controlSelections !== undefined) {
+        // start with first control selections's controls
+        if (first) {
+          newCS['include-all'] = controlSelections['include-all'];
+          newCS['include-controls'] = controlSelections['include-controls'];
+          newCS['exclude-controls'] = controlSelections['exclude-controls'];
+          first = false;
+          continue;
+        }
+        // if any control selection includes all, set new control selection to include all
+        if (controlSelections['include-all']) {
+          newCS.setIncludeAll(true);
+          break;
+        };
+        // try to include new (and existing) controls to new control selection 
+        controlSelections['include-controls']?.forEach(control => {
+          newCS.addIncludeControl(control['control-id'], control['statement-ids']);
+        });
+      }
+    }
+    //TODO check if all controls are included but include-all is not set 
+    return newCS;
+  }
+
+  convertToAssessmentResults(): AssessmentResults | undefined {
     let plans = this.assessmentPlans.getValue();
     let metadata = this.metadata.getValue();
-
+    
     if (metadata.parties === undefined) {
       console.log("Metadata issue -- skipping conversion");
       return;
     }
+    
+    let vendorName = metadata.parties[0].name;
+    let catalogs = this._uniqueCatalogs();
 
-    // TODO make it a class for type safety (models/assessmentResults.ts)
-    let assessmentResults: any = {
-      "assessment-results": {
-        uuid: uuid(),
-        metadata: {
-          ...metadata,
-          // Name may be undefined but shouldnt because generate report button will be disabled until contact info is filled
-          title: "Assessment Results for " + metadata.parties[0].name
-        },
-        "import-ap": { href: "" }, //TODO one main assessment plan to describe all attestations ????
-        results: []
-      },
-      catalogs: this._uniqueCatalogs()
-    };
+    let assessmentResults = new AssessmentResults();
+    assessmentResults.metadata = metadata;
+    assessmentResults.metadata.title = "Assessment Results for " + vendorName;
+
+    let resultForAttestations = new Result("Attestation Results", "Secure Software Development Lifecycle Attestations from the software vendor")
+    resultForAttestations.start = new Date(); // start time might need to be logged at start of attestation
+    resultForAttestations.description = "All control catalogs used in" + vendorName + "'s the attestations"
+
+    // resultForAttestations['reviewed-controls'] will house all the catalog information for all attestations
+    // resultForAttestations['reviewed-controls']['props'] will describe the order of the catalogs as stated in .control-selections
+    // resultForAttestations['reviewed-controls']['control-selections'] will determine which controls are included for each catalog
+
+    catalogs.forEach((catalog, index) => {
+      resultForAttestations['reviewed-controls'].addProp(catalog.uuid, index.toString(), "Catalog Order");
+      resultForAttestations['reviewed-controls'].addProp(catalog.uuid, catalog.metadata.title, "Catalog Name");
+      // TODO resultForAttestations['reviewed-controls'].addLink()
+      resultForAttestations['reviewed-controls']['control-selections'].push(this._aggregateControlSelections(catalog.uuid));
+    });
 
     plans.forEach(plan => {
-      // TODO
-      // results[0] will be contain results for the attestations. attestation forms will go in the attestations[] item
+      // results[0] will be contain results for the attestations. at. testation forms will go in the attestations[] item
       //    items with a 'no' attestation will be defined as risks
       // results[1:] will be the results of user defined tests 
+      let attestation = new Attestation()
+      //TODO add product lines as local definitions in results
+      // local definitions.components will contain all the software components that were attested to
+      // each component will contain a prop that describes which attestation it is for
+      let localDefs = new LocalDefinitions();
+      if (plan["assessment-subjects"] !== undefined) {
+        if (plan["assessment-subjects"][0]["include-subjects"] !== undefined) {
+          plan["assessment-subjects"][0]["include-subjects"].forEach(subject => {
+            //TODO ensure these will never be undefined during assessment plan definition
+            const productName = subject.props?.find(prop => prop.name === "Product Name")?.value || "";
+            const version = subject.props?.find(prop => prop.name === "Version")?.value || "";
+            const date = subject.props?.find(prop => prop.name === "Date")?.value || "";
+
+            localDefs.addSystemComponent(
+              SystemComponentType.software, 
+              productName, 
+              "Version: " + version + "\nRelease Date: " + date, 
+              new SystemComponentStatus(SystemComponentState.operational), 
+              [new Prop("Plan ID", plan.uuid, "Plan Information"), ...(subject.props || [])]
+            );
+          });
+        }
+      }
+      
+      plan['reviewed-controls']['control-selections'].forEach(controlSelection => {
+        controlSelection.props?.forEach(prop => {
+          if (prop.class === "Compliance Claim") { 
+            attestation.addPart(prop.name, "Compliance status for " + prop.name, "Compliance", undefined, prop.value);
+          }
+          if (prop.class === "Attestation Claim") { 
+            attestation.addPart(prop.name, "Attestation claim for " + prop.name, "Attestation", undefined, prop.value);
+          }
+        });
+      });
     });
+
+    assessmentResults.addResult(resultForAttestations);
+    console.log(JSON.stringify(assessmentResults))
+    return assessmentResults;
   }
 }

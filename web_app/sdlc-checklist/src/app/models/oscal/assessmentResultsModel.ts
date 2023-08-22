@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Prop, Link } from './common';
+import { Prop, Link, SystemComponentStatus, SystemComponentType } from './common';
 import { ReviewedControls, AssessmentSubject, AssessmentAsset, Task, AssessmentPart, Origin, Risk, Finding, RelatedTask, LoggedBy } from './assessment';
 import { Metadata, BackMatter, ResponsibleParty } from './metadata';
 import { SystemComponent, InventoryItem, SystemUser } from './common';
@@ -26,6 +26,10 @@ export class AssessmentResults {
     results: Result[] = [];
     "local-definitions"?: LocalDefinitions;
     "back-matter"?: BackMatter;
+
+    addResult(result: Result) {
+        this.results.push(result);
+    }
 }
 
 export class ImportAP {
@@ -99,6 +103,18 @@ export class RelevantEvidence {
 export class Attestation {
     parts: AssessmentPart[] = [];
     "responsible-parties"?: ResponsibleParty[];
+
+    addPart(name: string, title?: string, class_?: string, ns?: string, prose?: string, props?: Prop[], parts?: AssessmentPart[], links?: Link[]) {
+        let newPart = new AssessmentPart(name);
+        if (title !== undefined) newPart.title = title;
+        if (ns !== undefined) newPart.ns = ns;
+        if (class_ !== undefined) newPart.class = class_;
+        if (props !== undefined) newPart.props = props;
+        if (prose !== undefined) newPart.prose = prose;
+        if (parts !== undefined) newPart.parts = parts;
+        if (links !== undefined) newPart.links = links;
+        this.parts.push(newPart);
+    }
 }
 
 export class LocalDefinitions {
@@ -107,6 +123,20 @@ export class LocalDefinitions {
     users?: SystemUser[];
     "assessment-assets"?: AssessmentAsset[];
     tasks?: Task[];
+
+    addSystemComponent(type: SystemComponentType, title: string, description: string, status: SystemComponentStatus, props?: Prop[], links?: Link[]) {
+        let newComponent = new SystemComponent(type, title, description, status);
+        if (props !== undefined) newComponent.props = props;
+        if (links !== undefined) newComponent.links = links;
+        this.components?.push(newComponent);
+    }
+
+    addInventoryItem(description: string, props?: Prop[], links?: Link[]) {
+        let newInventoryItem = new InventoryItem(description);
+        if (props !== undefined) newInventoryItem.props = props;
+        if (links !== undefined) newInventoryItem.links = links;
+        this["inventory-items"]?.push(newInventoryItem);
+    }
 }
 
 export class AssessmentLog {

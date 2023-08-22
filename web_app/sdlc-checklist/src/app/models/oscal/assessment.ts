@@ -102,7 +102,7 @@ export class ControlSelection {
     private "exclude-controls-memory"?: ControlID[];
   
   
-  
+    //TODO consider using the catalog to initialize all controls
     constructor(description?: string, props?: Prop[], links?: Link[], includeAll?: Boolean, includeControls?: ControlID[], excludeControls?: ControlID[], remarks?: string) {
       this.description = description;
       this.props = props;
@@ -134,8 +134,10 @@ export class ControlSelection {
     addIncludeControl(controlID: string, statementIDs?: string[]) {
       let newControlID = new ControlID();
       newControlID["control-id"] = controlID;
-      if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
+      newControlID["statement-ids"] = statementIDs;
+
       if (this["include-controls"] === undefined) this["include-controls"] = [];
+      if (this["include-controls"].find(control => control["control-id"] === controlID) !== undefined) return;
       this["include-controls"].push(newControlID);
   
       if (this["include-controls-memory"] === undefined) this["include-controls-memory"] = [];
@@ -157,8 +159,10 @@ export class ControlSelection {
     addExcludeControl(controlID: string, statementIDs?: string[]) {
       let newControlID = new ControlID();
       newControlID["control-id"] = controlID;
-      if (statementIDs !== undefined) newControlID["statement-ids"] = statementIDs;
+      newControlID["statement-ids"] = statementIDs;
+
       if (this["exclude-controls"] === undefined) this["exclude-controls"] = [];
+      if (this["exclude-controls"].find(control => control["control-id"] === controlID) !== undefined) return;
       this["exclude-controls"].push(newControlID);
   
       if (this["exclude-controls-memory"] === undefined) this["exclude-controls-memory"] = [];
@@ -251,6 +255,7 @@ export class ControlSelection {
     remarks?: string;
   
     constructor() {
+    
     }
   
     addControlSelection(description: string = "", props: Prop[] = [], links: Link[] = [], includeAll: Boolean = false, includeControls: ControlID[] = [], excludeControls: ControlID[] = [], remarks: string = "") {
@@ -266,6 +271,14 @@ export class ControlSelection {
       newProp.ns = ns;
       newProp.remarks = remarks;
       this.props.push(newProp);
+    }
+
+    addLink(href: string, rel?: string) {
+      if (this.links === undefined) this.links = [];
+      let newLink = new Link();
+      newLink.href = href;
+      newLink.rel = rel;
+      this.links.push(newLink);
     }
   
     //For serialization, if controlSelection is empty, add a blank controlSelection
@@ -463,7 +476,7 @@ export class ControlSelection {
   
   export class AssessmentPart {
     name: string;
-    uuid?: string;
+    uuid?: string = uuid();
     ns?: string;
     class?: string;
     title?: string;
