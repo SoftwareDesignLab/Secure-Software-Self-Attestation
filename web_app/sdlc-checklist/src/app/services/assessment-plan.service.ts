@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { saveAs } from 'file-saver';
-import { Form } from '../models/attestationModel';
+import { Catalog, Control, Form, Group } from '../models/attestationModel';
 import { ContactService } from './contact.service';
 import { AttestationDataService } from './attestation-data.service';
 
@@ -23,6 +23,21 @@ export class AssessmentPlanService {
     let assessmentPlan = form.serialize(form.metadata.serialize(form.name, this.contactService.organization, this.contactService.person));
     let catalogs: any[] = form.catalogDataFiles;
     saveAs(new Blob([JSON.stringify({"assessment-plan": assessmentPlan, catalogs: catalogs})], {type: 'application/json'}), form.name);
+  }
+
+  checkInProgressComments(form?: Form): boolean {
+    if (form === undefined) {
+      form = this.attestationDataService.activeForm;
+      if (form === undefined) return true;
+    }
+    return form.catalogs.find((catalog: Catalog) => {
+      return catalog.groups.find((group: Group) => {
+        return group.controls.find((control: Control) => {
+          if (control.comment !== "" && !control.commentFinalized) return true;
+          return false;
+        }) !== undefined;
+      }) !== undefined;
+    }) === undefined;
   }
 
   /**

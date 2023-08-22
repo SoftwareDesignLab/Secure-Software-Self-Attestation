@@ -23,6 +23,7 @@
  */
 import { Component, Input } from '@angular/core';
 import { Result } from '../models/attestationModel';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 @Component({
   selector: 'app-control',
@@ -32,6 +33,8 @@ import { Result } from '../models/attestationModel';
 export class ChecklistItemComponent {
   @Input() control: any;
   clickOutOfWindow: boolean = false;
+
+  constructor(private assessmentPlanService: AssessmentPlanService) {}
 
   /**
    * Determines if the given option is the one checked
@@ -62,7 +65,7 @@ export class ChecklistItemComponent {
    * Saves the current comment as in-progress and closes the dialog
    */
   save() {
-    let comment = document.getElementById("comment" + this.control.uid)
+    let comment = document.getElementById("comment-" + this.control.uid)
     if (comment instanceof HTMLTextAreaElement) {
       this.control.inProgressComment(comment.value);
     }

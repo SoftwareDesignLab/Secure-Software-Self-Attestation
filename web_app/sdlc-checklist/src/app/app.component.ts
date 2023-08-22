@@ -171,6 +171,20 @@ export class AppComponent {
     return "";
   }
 
+  cancelSave(event?: MouseEvent) {
+    if (event) {
+      let dialog = (document.getElementById('incomplete-comment-dialog') as HTMLDialogElement)
+      if (0 < event.offsetX && dialog.clientWidth > event.offsetX && 0 < event.offsetY && dialog.clientHeight > event.offsetY)
+        return;
+    }
+    (document.getElementById('incomplete-comment-dialog') as HTMLDialogElement)?.close();
+  }
+
+  finishSave() {
+    (document.getElementById('incomplete-comment-dialog') as HTMLDialogElement)?.close();
+    this.assessmentPlanService.generateAssessmentPlan();
+  }
+
   get activeFormName(): string {
     return this.attestationService.activeForm?.name || "Contact Info";
   }
