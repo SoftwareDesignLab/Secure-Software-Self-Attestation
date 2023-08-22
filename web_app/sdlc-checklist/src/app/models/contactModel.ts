@@ -137,7 +137,10 @@ export class Organization extends Party {
         let org = {
             ...super.serialize(), 
             name: this.name}
-        if (this.propWebsite) {org.props.push(this.propWebsite); org = {...org, "links": [this.linkWebsite]}}
+        if (this.propWebsite) {
+            if (!org.props.find((prop: Prop) => prop.name === "website")) org.props.push(this.propWebsite);
+            org = {...org, "links": [this.linkWebsite]}
+        }
         return org;
     }
 
@@ -194,7 +197,9 @@ export class Person extends Party {
             ...super.serialize(),
             name: this.name
         }
-        if (this.propTitle) person.props.push(this.propTitle);
+        if (this.propTitle) {
+            if (!person.props.find((prop: Prop) => prop.name === "title")) person.props.push(this.propTitle);
+        }
         if (this.email) person = {...person, "email-addresses": [this.email]}
         if (this.phone) person = {...person, "telephone-numbers": [this.phone]}
         return person;
