@@ -97,7 +97,7 @@ nav {
 
 .expanded-nav ul {
   list-style: none;
-  padding: 20px;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
 }
@@ -131,6 +131,25 @@ nav {
 
 .expanded-nav li:hover {
   background-color: #EFF2F4;
+}
+
+.expanded-nav .bottom {
+  position: absolute;
+  bottom: 0;
+  width: 400px;
+  background-color: #005EA2;
+  padding-left: 0;
+  padding-right: 0;
+  color: white;
+}
+
+.expanded-nav .bottom a {
+  text-align: center;
+  text-indent: 0;
+}
+
+.expanded-nav .bottom:hover {
+  background-color: #004577;
 }
 
 .metadata-pane {

@@ -1,20 +1,20 @@
 <section class="results-metadata">
-  <h2>{{ metadata.title }}</h2>
-  <p>Version: {{ metadata.version }}</p>
-  <p>Last Modified: {{ metadata['last-modified'] }}</p>
-  <p>Published: {{ metadata.published }}</p>
-  <p>Oscal Version {{ metadata['oscal-version'] }}</p>
+  <h2>{{ title }}</h2>
+  <p>Version: {{ metadata?.version }}</p>
+  <p>Last Modified: {{ metadata?.lastModified }}</p>
+  <p>Published: {{ metadata?.published }}</p>
+  <p>Oscal Version {{ metadata?.oscalVersion }}</p>
 </section>
 <section class="results-contact">
   <div>
-    <h3>Company: {{ org.name }}</h3>
-    <p *ngFor="let address of org.addresses">Address: {{ address.getAddressAsString() }}</p>
-    <p><a *ngFor="let link of org.links" [href]="link.getLinkAsDisplay().link">Company {{ link.getLinkAsDisplay().label }}</a></p>
+    <h3>Company: {{ org?.name }}</h3>
+    <p *ngFor="let address of org?.addresses">Address: {{ address.str }}</p>
+    <p *ngFor="let link of org?.websites">Website: <a  [href]="link">{{ link }}</a></p>
   </div>
   <div>
-    <h3>Contact: {{ contact.getProperName() }}</h3>
-    <p *ngFor="let address of contact.addresses">Address: {{ address.getAddressAsString() }}</p>
-    <p>Email: <a *ngFor="let email of contact['email-addresses']" [href]="'mailto:' + email">{{ email }}</a></p>
-    <p>Phone Number: <a *ngFor="let phone of contact['telephone-numbers']" [href]="'tel:' + phone">{{ phone }}</a></p>
+    <h3>Contact: {{ person?.name }}</h3>
+    <p *ngFor="let address of person?.addresses">Address: {{ address.str }}</p>
+    <p>Email: <a *ngFor="let email of person?.emails" [href]="'mailto:' + email">{{ email }}</a></p>
+    <p>Phone Number: <a *ngFor="let phone of person?.phones" [href]="'tel:' + phone">{{ phone }}</a></p>
   </div>
 </section>

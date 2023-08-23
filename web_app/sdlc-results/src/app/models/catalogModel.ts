@@ -21,31 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component } from '@angular/core';
-import { Person, Metadata, Organization } from '../models/contactModel';
-import { AttestationDataService } from '../services/attestation-data.service';
 
-@Component({
-  selector: 'app-results-metadata',
-  templateUrl: './results-metadata.component.html',
-  styleUrls: ['./results-metadata.component.css']
-})
-export class ResultsMetadataComponent {
-  metadata: Metadata | undefined;
-  org: Organization | undefined;
-  person: Person | undefined;
-  title: string | undefined;
 
-  constructor( attestationDataService: AttestationDataService ) {
-    this.metadata = attestationDataService.form?.metadata;
-    this.title = attestationDataService.form?.name;
-    this.org = this.metadata?.organization;
-    this.person = this.metadata?.person;
-    attestationDataService.observableForm.subscribe((form) => {
-      this.metadata = form?.metadata;
-      this.org = form?.metadata.organization;
-      this.person = form?.metadata.person;
-      this.title = form?.name;
-    })
-  }
+export interface CatalogShell {
+    uuid: string;
+    metadata: MetadataShell
+    groups: GroupShell[];
+}
+
+export interface MetadataShell {
+    title: string;
+    "last-modified": string;
+    version: string;
+    "oscal-version": string;
+    published: string;
+}
+
+export interface GroupShell {
+    title: string;
+    id: string;
+    controls: ControlShell[] | undefined;
+    groups: GroupShell[] | undefined;
+}
+
+export interface ControlShell {
+    id: string;
+    title: string;
+    props: PropShell[];
+    parts: PartShell[];
+    controls: ControlShell[] | undefined;
+}
+
+export interface PropShell {
+    name: string;
+    class: string | undefined;
+    property_class: string | undefined;
+    value: string;
+}
+
+export interface PartShell {
+    name: string;
+    title: string;
+    prose: string;
+    part_class: string;
 }

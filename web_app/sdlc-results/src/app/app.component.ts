@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 import { Component } from '@angular/core';
-import { AssessmentResult, Catalog, ResultModelService } from './resultsModel';
+import { Form } from './models/attestationModel';
+import { AssessmentPlanService } from './services/assessment-plan.service';
+import { AttestationDataService } from './services/attestation-data.service';
 
 
 @Component({
@@ -33,12 +35,14 @@ import { AssessmentResult, Catalog, ResultModelService } from './resultsModel';
 export class AppComponent {
   showFullFooter: boolean = false;
   showNav = false;
-  poamMode = false;
-  catalogs: Catalog[];
+  currentPage: string;
+  form: Form | undefined;
 
-  constructor( public resultModelService: ResultModelService ) {
-    this.catalogs = resultModelService.assessmentResult?.catalogs || [];
-    resultModelService.observableAssessmentResult.subscribe((assessmentResult: AssessmentResult | null) => {this.catalogs = assessmentResult?.catalogs || []})
+  constructor( private assessmentPlanService: AssessmentPlanService, private attestationDataService: AttestationDataService ) {
+    this.currentPage = assessmentPlanService.currentPage;
+    assessmentPlanService.observableCurrentPage.subscribe((pageName) => this.currentPage = pageName);
+    this.form = attestationDataService.form;
+    attestationDataService.observableForm.subscribe((form) => this.form = form);
   }
 
   toggleFooter() {
@@ -61,6 +65,22 @@ export class AppComponent {
 
   poam(state: boolean): void {
     this.toggleNav();
-    this.poamMode = state;
+    if (state) {
+      this.assessmentPlanService.currentPage = "poam";
+    } else {
+      this.assessmentPlanService.currentPage = "attestation";
+    }
+  }
+
+  newForm(): void {
+    (document.getElementById("file") as HTMLInputElement).click();
+  }
+
+  switchForm(form: Form): void {
+    this.attestationDataService.form = form;
+  }
+
+  getForms(): Form[] {
+    return this.attestationDataService.forms;
   }
 }

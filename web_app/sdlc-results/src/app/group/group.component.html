@@ -1,9 +1,9 @@
 <h3>{{group.id + ": " + group.title}}</h3>
 <ul>
   <li *ngFor="let control of group.controls">
-    <app-control [control]="control" *ngIf="control.included()"></app-control>
+    <app-control [control]="control" *ngIf="control.isCheckedR()"></app-control>
   </li>
   <li *ngFor="let group of group.groups">
-    <app-group [group]="group"></app-group>
+    <app-group [group]="group" *ngIf="group.isCheckedR()"></app-group>
   </li>
 </ul>

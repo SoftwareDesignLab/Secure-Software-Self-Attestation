@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { AssessmentResult, ResultModelService } from '../resultsModel';
+import { AssessmentPlanService } from '../services/assessment-plan.service';
 
 @Component({
   selector: 'app-results-upload',
@@ -33,7 +33,7 @@ export class ResultsUploadComponent {
   @Input() accept = '.json';
   @ViewChild('fileInput') fileInput!: ElementRef;
 
-  constructor( private resultModelService: ResultModelService ) {}
+  constructor( private assessmentPlanService: AssessmentPlanService ) {}
 
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -71,7 +71,7 @@ export class ResultsUploadComponent {
     let reader = new FileReader();
     reader.onload = () => {
       let json = JSON.parse(reader.result as string);
-      this.resultModelService.assessmentResult = new AssessmentResult(json);
+      this.assessmentPlanService.loadFromPlan(json);
     };
     reader.readAsText(file);
   }

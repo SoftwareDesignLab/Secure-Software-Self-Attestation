@@ -21,31 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component } from '@angular/core';
-import { Person, Metadata, Organization } from '../models/contactModel';
-import { AttestationDataService } from '../services/attestation-data.service';
+import { TestBed } from '@angular/core/testing';
 
-@Component({
-  selector: 'app-results-metadata',
-  templateUrl: './results-metadata.component.html',
-  styleUrls: ['./results-metadata.component.css']
-})
-export class ResultsMetadataComponent {
-  metadata: Metadata | undefined;
-  org: Organization | undefined;
-  person: Person | undefined;
-  title: string | undefined;
+import { AttestationDataService } from './attestation-data.service';
 
-  constructor( attestationDataService: AttestationDataService ) {
-    this.metadata = attestationDataService.form?.metadata;
-    this.title = attestationDataService.form?.name;
-    this.org = this.metadata?.organization;
-    this.person = this.metadata?.person;
-    attestationDataService.observableForm.subscribe((form) => {
-      this.metadata = form?.metadata;
-      this.org = form?.metadata.organization;
-      this.person = form?.metadata.person;
-      this.title = form?.name;
-    })
-  }
-}
+describe('AttestationDataService', () => {
+  let service: AttestationDataService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(AttestationDataService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

@@ -1,6 +1,8 @@
-<h2>{{catalog.metadata.title}}</h2>
-<ul>
-  <li *ngFor="let group of catalog.groups">
-    <app-group [group]="group"></app-group>
-  </li>
-</ul>
+<div>
+  <h2>{{catalog.metadata.title}}</h2>
+  <ul>
+    <li *ngFor="let group of catalog.groups">
+      <app-group [group]="group" *ngIf="group.isCheckedR()"></app-group>
+    </li>
+  </ul>
+</div>

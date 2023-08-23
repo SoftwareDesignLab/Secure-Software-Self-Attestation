@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
-import { Catalog, ResultModelService } from '../resultsModel';
 
 @Component({
   selector: 'app-catalog',

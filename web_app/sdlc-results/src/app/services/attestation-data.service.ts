@@ -21,31 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Component } from '@angular/core';
-import { Person, Metadata, Organization } from '../models/contactModel';
-import { AttestationDataService } from '../services/attestation-data.service';
+import { Injectable } from '@angular/core';
+import { Form } from '../models/attestationModel';
+import { BehaviorSubject } from 'rxjs';
 
-@Component({
-  selector: 'app-results-metadata',
-  templateUrl: './results-metadata.component.html',
-  styleUrls: ['./results-metadata.component.css']
+const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
+
+@Injectable({
+  providedIn: 'root'
 })
-export class ResultsMetadataComponent {
-  metadata: Metadata | undefined;
-  org: Organization | undefined;
-  person: Person | undefined;
-  title: string | undefined;
+export class AttestationDataService {
+  #form: BehaviorSubject<Form | undefined> = new BehaviorSubject<Form | undefined>(undefined);
+  forms: Form[] = [];
 
-  constructor( attestationDataService: AttestationDataService ) {
-    this.metadata = attestationDataService.form?.metadata;
-    this.title = attestationDataService.form?.name;
-    this.org = this.metadata?.organization;
-    this.person = this.metadata?.person;
-    attestationDataService.observableForm.subscribe((form) => {
-      this.metadata = form?.metadata;
-      this.org = form?.metadata.organization;
-      this.person = form?.metadata.person;
-      this.title = form?.name;
-    })
+  /**
+   * Creates a new form and adds it to forms
+   * @returns The new form
+   */
+  createNewForm() {
+    let newForm = new Form();
+    this.forms.push(newForm);
+    return newForm;
   }
+
+  /**
+   * Gets the active form
+   * @returns The active form's list of catalogs
+   */
+  get form(): Form | undefined { return this.#form.getValue(); }
+  get observableForm(): BehaviorSubject<Form | undefined> { return this.#form; }
+  set form(form: Form | undefined) {this.#form.next(form); }
 }

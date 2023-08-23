@@ -1,6 +1,7 @@
-<p><img [alt]="control.resultAsAlt" [src]="control.resultAsFilename">{{control.id + ": " + control.title}}</p>
+<p><img [alt]="control.stringResult" [src]="control.filenameResult">{{control.id + ": " + control.title}}</p>
+<p class="comment" *ngIf="control.comment !== ''">Comment: {{ control.comment }}</p>
 <ul>
   <li *ngFor="let control of control.controls">
-    <app-control [control]="control" *ngIf="control.included()"></app-control>
+    <app-control [control]="control" *ngIf="control.isCheckedR()"></app-control>
   </li>
 </ul>
