@@ -93,9 +93,10 @@ nav {
   border-left: 2px solid black;
   box-shadow: -4px 0 4px 0 rgba(0, 0, 0, .4);
   text-align: center;
+  overflow-y: auto;
 }
 
-.expanded-nav ul {
+.expanded-nav>ul {
   list-style: none;
   padding: 20px 0;
   display: flex;
@@ -119,7 +120,6 @@ nav {
   position: relative;
   display: inline-block;
   text-indent: 20px;
-  width: 100%;
   text-align: left;
 }
 
@@ -129,23 +129,19 @@ nav {
   margin: 25px 0;
 }
 
-.expanded-nav li:hover {
-  background-color: #EFF2F4;
-}
-
 .expanded-nav .bottom {
   position: absolute;
   bottom: 0;
   width: 400px;
+  padding: .7em 0;
   background-color: #005EA2;
-  padding-left: 0;
-  padding-right: 0;
-  color: white;
 }
 
 .expanded-nav .bottom a {
   text-align: center;
   text-indent: 0;
+  color: white;
+  width: 100%;
 }
 
 .expanded-nav .bottom:hover {
@@ -164,6 +160,80 @@ nav {
   overflow-y: hidden;
 }
 
+.prepend-up-arrow::before {
+  content: "▲ ";
+  font-size: larger;
+}
+
+.prepend-down-arrow::before {
+  content: "▼ ";
+  font-size: larger;
+}
+
+.sublink {
+  padding-left: 20px;
+  text-decoration: none;
+  position: relative;
+  animation: treeItemFadeIn 300ms;
+  animation-delay: calc(var(--order) * 70ms);
+  animation-fill-mode: backwards;
+}
+
+.expanded-nav .grid-square {
+  display: grid;
+  grid-template-columns: 50px 225px 75px 50px;
+  grid-template-rows: auto auto;
+}
+
+.expanded-nav .grid-square>p {
+  grid-area: 1 / 1 / 2 / 2;
+  padding: 10px;
+  margin: 0;
+}
+
+.expanded-nav .grid-square>a {
+  grid-area: 1 / 2 / 2 / 3;
+}
+
+.expanded-nav .grid-square>button {
+  grid-area: 1 / 3 / 2 / 4;
+  margin: 5px;
+  background-color: rgb(204, 0, 0);
+  box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, .4);
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  font-size: large;
+}
+
+.expanded-nav .grid-square>button:hover {
+  background-color: rgb(119, 0, 0);
+  box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
+}
+
+.expanded-nav .grid-square li {
+  border: 0;
+}
+
+.expanded-nav .grid-square>ul {
+  grid-area: 2 / 1 / 3 / 4;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 25px;
+  border-left: 1px solid gray;
+  display: flex;
+  flex-direction: column;
+}
+
+.expanded-nav .grid-square>p:hover, .expanded-nav .grid-square>a:hover, .expanded-nav .grid-square li:hover {
+  background-color: #EFF2F4;
+}
+
+nav a {
+  text-decoration: none;
+  color: rgb(36, 36, 36);
+}
+
 @keyframes navOpening {
   from {right: -400px;}
   to {right: 0vw;}
@@ -172,4 +242,9 @@ nav {
 @keyframes navClosing {
   from {right: 0vw;}
   to {right: -400px;}
+}
+
+@keyframes treeItemFadeIn {
+  from {top: -20px; opacity: 0}
+  to {top: 0; opacity: 1}
 }

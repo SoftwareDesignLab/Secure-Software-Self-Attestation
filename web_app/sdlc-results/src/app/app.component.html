@@ -1,4 +1,4 @@
-<header>
+<header id="top">
   <h1>SDLC Checklist</h1>
 </header>
 
@@ -11,7 +11,16 @@
   <div class="expanded-nav">
     <h2>SDLC</h2>
     <ul>
-      <li *ngFor="let form of getForms()"><a (click)="switchForm(form)">{{form.name}}</a></li>
+      <li *ngFor="let form of getForms()" class="grid-square">
+        <p [class]="treeForm === form ? 'prepend-down-arrow' : 'prepend-up-arrow'" (click)="toggleTree(form)"></p>
+        <a (click)="switchForm(form)" href="#top">{{form.name}}</a>
+        <button (click)="delete(form)">Delete</button>
+        <ul *ngIf="treeForm === form">
+          <li *ngFor="let sublink of getSublinks(form); let i = index">
+            <a [style]="'--order: ' + i" [href]="'#' + sublink.fragment" class="sublink" (click)="switchForm(form)">{{sublink.name}}</a>
+          </li>
+        </ul>
+      </li>
       <li class="bottom"><a (click)="newForm()">Load Attestation</a></li>
     </ul>
   </div>
@@ -19,10 +28,10 @@
 
 <main>
   <div *ngIf="currentPage === 'attestation'" class="no-overflow">
-    <div class="pane metadata-pane" *ngIf="form">
+    <div class="pane metadata-pane" *ngIf="form" id="metadata">
       <app-results-metadata></app-results-metadata>
     </div>
-    <div *ngFor="let catalog of form?.catalogs">
+    <div *ngFor="let catalog of form?.catalogs" [id]="catalog.uuid">
       <div class="pane catalog-pane" *ngIf="catalog.isChecked()">
         <app-catalog [catalog]="catalog"></app-catalog>
       </div>

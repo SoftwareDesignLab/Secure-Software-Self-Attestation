@@ -37,12 +37,13 @@ export class AppComponent {
   showNav = false;
   currentPage: string;
   form: Form | undefined;
+  treeForm: Form | undefined = undefined;
 
   constructor( private assessmentPlanService: AssessmentPlanService, private attestationDataService: AttestationDataService ) {
     this.currentPage = assessmentPlanService.currentPage;
-    assessmentPlanService.observableCurrentPage.subscribe((pageName) => this.currentPage = pageName);
+    assessmentPlanService.observableCurrentPage.subscribe((pageName) => {this.currentPage = pageName; this.nav = false;});
     this.form = attestationDataService.form;
-    attestationDataService.observableForm.subscribe((form) => this.form = form);
+    attestationDataService.observableForm.subscribe((form) => {this.form = form; this.nav = false;});
   }
 
   toggleFooter() {
@@ -50,17 +51,7 @@ export class AppComponent {
   }
 
   toggleNav(): void {
-    this.showNav = !this.showNav;
-    let nav = document.getElementById('nav');
-    if (nav instanceof HTMLElement) {
-      if (this.showNav) {
-        nav.classList.add('nav-opening');
-        nav.classList.remove('nav-closing');
-      } else {
-        nav.classList.add('nav-closing');
-        nav.classList.remove('nav-opening');
-      }
-    }
+    this.nav = !this.showNav;
   }
 
   poam(state: boolean): void {
@@ -78,9 +69,44 @@ export class AppComponent {
 
   switchForm(form: Form): void {
     this.attestationDataService.form = form;
+    this.nav = false;
   }
 
   getForms(): Form[] {
     return this.attestationDataService.forms;
+  }
+
+  toggleTree(form: Form) {
+    if (this.treeForm === form) {
+      this.treeForm = undefined;
+    } else {
+      this.treeForm = form;
+    }
+  }
+
+  getSublinks(form: Form): {fragment: string, name: string}[] {
+    let sublinks = [{fragment: 'metadata', name: 'Metadata'}]
+    form.catalogs.forEach((catalog) => {sublinks.push({fragment: catalog.uuid, name: catalog.metadata.title})});
+    return sublinks;
+  }
+
+  set nav(truth: boolean) {
+    this.showNav = truth;
+    let nav = document.getElementById('nav');
+    if (nav instanceof HTMLElement) {
+      if (this.showNav) {
+        nav.classList.add('nav-opening');
+        nav.classList.remove('nav-closing');
+      } else {
+        nav.classList.add('nav-closing');
+        nav.classList.remove('nav-opening');
+        this.treeForm = undefined;
+      }
+    }
+  }
+
+  delete(form: Form) {
+    this.attestationDataService.forms.splice(this.attestationDataService.forms.findIndex((checkForm) => {return checkForm === form}), 1);
+    if (form === this.attestationDataService.form) this.attestationDataService.form = undefined;
   }
 }
