@@ -17,21 +17,23 @@
   </div>
 </nav>
 
-<div *ngIf="currentPage === 'attestation'" class="no-overflow">
-  <div class="pane metadata-pane" *ngIf="form">
-    <app-results-metadata></app-results-metadata>
-  </div>
-  <div *ngFor="let catalog of form?.catalogs">
-    <div class="pane catalog-pane" *ngIf="catalog.isChecked()">
-      <app-catalog [catalog]="catalog"></app-catalog>
+<main>
+  <div *ngIf="currentPage === 'attestation'" class="no-overflow">
+    <div class="pane metadata-pane" *ngIf="form">
+      <app-results-metadata></app-results-metadata>
     </div>
+    <div *ngFor="let catalog of form?.catalogs">
+      <div class="pane catalog-pane" *ngIf="catalog.isChecked()">
+        <app-catalog [catalog]="catalog"></app-catalog>
+      </div>
+    </div>
+    <app-results-upload></app-results-upload>
   </div>
-  <app-results-upload></app-results-upload>
-</div>
 
-<div *ngIf="currentPage === 'poam'">
-  <p class="pane" style="text-align: center;">I have no clue what is supposed to go here</p>
-</div>
+  <div *ngIf="currentPage === 'poam'">
+    <p class="pane" style="text-align: center;">I have no clue what is supposed to go here</p>
+  </div>
+</main>
 
 <footer>
   <p [hidden]="showFullFooter">
