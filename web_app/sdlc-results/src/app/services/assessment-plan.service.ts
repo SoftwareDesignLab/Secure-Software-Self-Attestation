@@ -16,15 +16,16 @@ export class AssessmentPlanService {
    * @param plan The plan to load
    * @param useContact Whether to use the contact information in the file or just keep the contact as it was (defaults to using the file)
    */
-  loadFromPlan(plan: any, useContact: boolean = true) {
+  loadFromPlan(plan: any) {
     let form: Form = this.attestationDataService.createNewForm();
     plan.catalogs.forEach((catalog: any) => form.addCatalog(catalog));
     form.load(plan["assessment-plan"])
-    if (useContact && plan["assessment-plan"]["metadata"]["parties"]) plan["assessment-plan"]["metadata"]["parties"].forEach((party: any) => {
-      if (party.type === "organization") form.metadata.organization.load(party);
-      if (party.type === "person") form.metadata.person.load(party);
-    })
     this.attestationDataService.form = form;
+  }
+
+  loadFromResults(results: any) {
+    let form: Form = this.attestationDataService.createNewForm();
+    results.catalogs.forEach((catalog: any) => form.addCatalog(catalog));
   }
 
   get currentPage(): string { return this.#currentPage.getValue(); }

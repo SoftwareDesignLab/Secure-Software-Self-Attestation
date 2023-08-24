@@ -42,6 +42,10 @@ export class Metadata {
         this.version = json.version;
         this.oscalVersion = json["oscal-version"];
         this.lastModified = json["last-modified"];
+        if (json.parties) json.parties.forEach((party: any) => {
+            if (party.type === "organization") this.organization.load(party);
+            if (party.type === "person") this.person.load(party);
+        })
     }
 }
 

@@ -71,7 +71,10 @@ export class ResultsUploadComponent {
     let reader = new FileReader();
     reader.onload = () => {
       let json = JSON.parse(reader.result as string);
-      this.assessmentPlanService.loadFromPlan(json);
+      if (json['assessment-plan'])
+        this.assessmentPlanService.loadFromPlan(json);
+      if (json['assessment-results'])
+        this.assessmentPlanService.loadFromResults(json);
     };
     reader.readAsText(file);
   }
