@@ -25,4 +25,12 @@
       </li>
     </ul>
   </section>
+  <section *ngIf="hasSubControls()">
+    <h3>Sub-Controls</h3>
+    <ul class="subcontrols-unordered-list">
+      <li *ngFor="let control of subControls">
+        <app-control [control]="control"></app-control>
+      </li>
+    </ul>
+  </section>
 </div>

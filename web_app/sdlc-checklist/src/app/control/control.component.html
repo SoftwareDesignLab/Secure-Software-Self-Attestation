@@ -19,12 +19,13 @@
     [examples]="control.examples"
     [references]="control.references"
     [props]="control.props"
+    [subControls]="control.controls"
   ></app-rollable>
 </div>
 
 <dialog class="pane popup" [id]="'comment-popup-' + control.uid" (mousedown)="clicked($event)">
   <br>
-  <label for="comment" class="explanation-label">Brief Explanation: </label><br><br>
+  <label [for]="'comment-' + control.uid" class="explanation-label">Brief Explanation: </label><br><br>
   <textarea [id]="'comment-' + control.uid" placeholder="Explanation" rows="4"></textarea>
   <div class="bottom-buttons">
     <div (click)="done()" (keydown.enter)="done()" tabindex=0>
