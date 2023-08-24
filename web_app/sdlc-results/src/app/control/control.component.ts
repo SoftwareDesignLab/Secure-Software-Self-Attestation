@@ -30,4 +30,9 @@ import { Component, Input } from '@angular/core';
 })
 export class ControlComponent {
   @Input() control: any;
+  rollable: boolean = false;
+
+  toggleRollable() {
+    this.rollable = !this.rollable;
+  }
 }

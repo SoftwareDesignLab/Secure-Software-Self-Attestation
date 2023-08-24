@@ -22,41 +22,63 @@
  * SOFTWARE.
  */
 
- .result-container {
-  width: clamp(400px, 90vw, 1000px);
-  margin: 30px auto;
-  padding: 0 2vw;
-}
-
 h2, h3, h4, h5, p {
   text-indent: 20px;
 }
 
-h3 {
-  margin-left: 10px;
-}
-
 p {
-  margin-left: 20px;
+  margin-left: 5px;
 }
 
-h4, ul {
+.sub-controls {
   margin-bottom: 10px;
-}
-
-h5 {
-  margin: 10px 50px;
-  font-weight: normal;
-}
-
-ul {
   list-style-type: none;
   border-left: 1px solid black;
-  padding-left: 0;
+  padding-left: 10px;
   margin-left: 40px;
 }
 
 .comment {
-  text-indent: 40px;
-  color: gray
+  text-indent: 20px;
+  color: rgb(77, 77, 77);
+  grid-column: 2 / 3;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 20px auto;
+  align-items: center;
+}
+
+img {
+  width: 20px;
+  height: 20px;
+  grid-area: 1 / 1 / 2 / 3;
+}
+
+.control {
+  grid-area: 1 / 2 / 2 / 3;
+}
+
+.control:hover {
+  text-decoration: underline;
+}
+
+.rollable {
+  grid-column: 2 / 3;
+  text-indent: 20px;
+  color: gray;
+}
+
+.reference {
+  margin: .1em 30px .3;
+}
+
+.multi-column {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.rollable li {
+  margin: 10px;
 }

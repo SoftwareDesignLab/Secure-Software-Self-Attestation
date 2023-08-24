@@ -1,6 +1,33 @@
-<p><img [alt]="control.stringResult" [src]="control.filenameResult">{{control.id + ": " + control.title}}</p>
-<p class="comment" *ngIf="control.comment !== ''">Comment: {{ control.comment }}</p>
-<ul>
+<div class="grid-container">
+  <img [alt]="control.stringResult" [src]="control.filenameResult">
+  <p class="control" (click)="toggleRollable()">{{control.id + ": " + control.title}}</p>
+  <p class="comment" *ngIf="control.comment !== ''">Comment: {{ control.comment }}</p>
+  <div class="rollable" *ngIf="rollable">
+    <section *ngIf="control.examples.length > 0">
+      <h5>Examples: </h5>
+      <ul>
+        <li *ngFor="let example of control.examples">{{example}}</li>
+      </ul>
+    </section>
+    <section *ngIf="control.references.length > 0">
+      <h5>References</h5>
+      <ul class="multi-column">
+        <li *ngFor="let prop of control.references" class="reference">
+          {{prop.name}}: {{prop.value}}
+        </li>
+      </ul>
+    </section>
+    <section *ngIf="control.props.length">
+      <h5>Properties</h5>
+      <ul class="multi-column">
+        <li *ngFor="let prop of control.props" class="reference">
+          {{prop.name}}: {{prop.value}}
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>
+<ul class="sub-controls">
   <li *ngFor="let control of control.controls">
     <app-control [control]="control" *ngIf="control.isCheckedR()"></app-control>
   </li>
