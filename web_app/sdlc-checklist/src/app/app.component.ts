@@ -95,7 +95,8 @@ export class AppComponent {
   private handleFile(file: File): void {
     let reader = new FileReader();
     reader.onload = () => {
-      let json = JSON.parse(reader.result as string);
+      let json = JSON.parse(reader.result as string); 
+      //todo load as oscal library types
       if (this.assessmentPlanService.checkContactConflicts(json)) {
         this.assessmentPlanService.loadFromPlan(json);
       } else {

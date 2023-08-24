@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-
+//TODO replace this with oscal library
 export interface CatalogShell {
     uuid: string;
     metadata: MetadataShell
