@@ -1,4 +1,4 @@
-<div class="grid-container">
+<div [class]="'grid-container' + (control.stringResult === 'no' ? ' red-back' : '')">
   <img [alt]="control.stringResult" [src]="control.filenameResult">
   <p class="control" (click)="toggleRollable()">{{control.id + ": " + control.title}}</p>
   <p class="comment" *ngIf="control.comment !== ''">Comment: {{ control.comment }}</p>

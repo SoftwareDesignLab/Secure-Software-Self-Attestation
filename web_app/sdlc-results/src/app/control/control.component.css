@@ -48,6 +48,7 @@ p {
   display: grid;
   grid-template-columns: 20px auto;
   align-items: center;
+  border-radius: 10px;
 }
 
 img {
@@ -81,4 +82,8 @@ img {
 
 .rollable li {
   margin: 10px;
+}
+
+.red-back {
+  background-color: rgba(202, 0, 0, 0.2);
 }
