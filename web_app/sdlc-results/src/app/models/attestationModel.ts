@@ -27,6 +27,7 @@ import { Prop } from './propertyModel';
 import { CatalogShell, ControlShell, GroupShell, MetadataShell, PropShell } from './catalogModel';
 import { Subject } from './subjectModel';
 import { Metadata } from './contactModel';
+import { AssessmentResultsShell } from './resultsModel';
 
 export class Form {
     uuid: string = "";
@@ -60,6 +61,12 @@ export class Form {
                 this.catalogs.find((catalog: Catalog) => {return catalog.uuid === uuid})?.load(catalog);
             });
         }
+    }
+
+    loadResults(results: AssessmentResultsShell) {
+        this.name = results.metadata.title;
+        this.uuid = results.uuid;
+        this.metadata.load(results.metadata);
     }
 }
 

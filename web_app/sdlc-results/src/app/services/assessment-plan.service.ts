@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Form } from '../models/attestationModel';
 import { AttestationDataService } from './attestation-data.service';
 import { BehaviorSubject } from 'rxjs';
+import { AssessmentResultsShell } from '../models/resultsModel';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class AssessmentPlanService {
   loadFromResults(results: any) {
     let form: Form = this.attestationDataService.createNewForm();
     results.catalogs.forEach((catalog: any) => form.addCatalog(catalog));
+    form.loadResults(results["assessment-results"] as AssessmentResultsShell)
   }
 
   get currentPage(): string { return this.#currentPage.getValue(); }
