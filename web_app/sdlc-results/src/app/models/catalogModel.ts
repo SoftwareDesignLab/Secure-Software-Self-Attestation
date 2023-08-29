@@ -64,4 +64,6 @@ export interface PartShell {
     title: string;
     prose: string;
     part_class: string;
+    class: string;
+    props: PropShell[];
 }
