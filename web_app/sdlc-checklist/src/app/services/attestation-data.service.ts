@@ -138,25 +138,39 @@ export class AttestationDataService {
     let metadata = new Metadata().serialize("Attestation results for " + this.contactService.organization.name, this.contactService.organization, this.contactService.person);
     let importAP = { href: "" }; //TODO make master assessment plan for all attestations + 3rd party tests, and reference it here
     let results: any[] = []; 
-    let resultForAttestations = {
+    let resultForAttestations = { //TODO type this
       "uuid": uuidv4(),
       "title": "Attestation Results",
       "description": "Results of the various attestations",
       "start": new Date().toISOString(),
       "reviewed-controls": {
-        "props": [],
-        "links": [],
-        "control-selections:": []
+        "props": new Array(),
+        "links": new Array(),
+        "control-selections:": new Array()
       },
-      "attestations": []
+      "attestations": new Array()
     }
-
+    
+    let catalogCount = 0;
     this.forms.forEach((form) => {
+      
       form.catalogs.forEach((catalog) => {
+        //if catalog not in reviewed-controls props
+        if (resultForAttestations['reviewed-controls'].props.findIndex((prop: any) => (prop.name === catalog.metadata.title)) === -1) {
+          resultForAttestations['reviewed-controls'].props.push({
+            "name": catalog.metadata.title,
+            "value": catalogCount.toString(),
+            "class": "Catalog Order"
+          });
+        }
         Array.from(catalog.controlMap.keys()).forEach((key: string) => {
           const control = catalog.controlMap.get(key);
-          // Your code here
+          if (control) {
+            
+          }
         });
+
+        catalogCount++;
       });
     });
 
