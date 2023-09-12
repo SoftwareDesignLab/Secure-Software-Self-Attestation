@@ -25,6 +25,9 @@ import { Injectable } from '@angular/core';
 import { Form } from '../models/attestationModel';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+import { ContactService } from './contact.service';
+import { Metadata } from '../models/contactModel';
+import { v4 as uuidv4 } from 'uuid';
 
 const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 
@@ -35,7 +38,7 @@ export class AttestationDataService {
   forms: Form[] = [];
   #activeForm: BehaviorSubject<Form | undefined> = new BehaviorSubject<Form | undefined>(undefined);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private contactService: ContactService) {}
 
   /**
    * Creates a new form and adds it to forms
@@ -130,4 +133,38 @@ export class AttestationDataService {
   get activeForm(): Form | undefined { return this.#activeForm.getValue(); }
   get observableActiveForm(): BehaviorSubject<Form | undefined> { return this.#activeForm; }
   set activeForm(form: Form | undefined) {this.#activeForm.next(form); }
+
+  generateAssessmentResults() {
+    let metadata = new Metadata().serialize("Attestation results for " + this.contactService.organization.name, this.contactService.organization, this.contactService.person);
+    let importAP = { href: "" }; //TODO make master assessment plan for all attestations + 3rd party tests, and reference it here
+    let results: any[] = []; 
+    let resultForAttestations = {
+      "uuid": uuidv4(),
+      "title": "Attestation Results",
+      "description": "Results of the various attestations",
+      "start": new Date().toISOString(),
+      "reviewed-controls": {
+        "props": [],
+        "links": [],
+        "control-selections:": []
+      },
+      "attestations": []
+    }
+
+    this.forms.forEach((form) => {
+      form.catalogs.forEach((catalog) => {
+        Array.from(catalog.controlMap.keys()).forEach((key: string) => {
+          const control = catalog.controlMap.get(key);
+          // Your code here
+        });
+      });
+    });
+
+    results.push(resultForAttestations);
+    const assessmentResults = {
+      "metadata": metadata,
+      "import-assessment-plan": importAP,
+      "results": results
+    }
+  }
 }
