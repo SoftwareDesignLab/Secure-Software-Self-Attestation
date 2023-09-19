@@ -32,7 +32,7 @@
       <li><p class="load" (click)="loadAttestation()" (keydown.enter)="loadAttestation()" [tabindex]="showNav ? 0 : -1">Load Attestation</p></li>
     </ul>
     <input type="file" hidden id="load-file-input" (change)="processLoadAttestation($event)" accept=".json">
-    <p [className]="isFormComplete() ? 'generate completed' : 'generate in-progress'" [tabindex]="showNav ? 0 : -1">Generate Report</p>
+    <p [className]="isFormComplete() ? 'generate completed' : 'generate in-progress'" [tabindex]="showNav ? 0 : -1" (click)="generateReport()">Generate Report</p>
     <p class="tool-tip">{{ getErrorMessage() }}</p>
   </div>
 </nav>

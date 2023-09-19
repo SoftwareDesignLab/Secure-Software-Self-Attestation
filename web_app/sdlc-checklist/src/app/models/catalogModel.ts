@@ -23,6 +23,7 @@
  */
 
 //TODO replace this with oscal library
+//TODO does this support catalogs with ungrouped controls?
 export interface CatalogShell {
     uuid: string;
     metadata: MetadataShell

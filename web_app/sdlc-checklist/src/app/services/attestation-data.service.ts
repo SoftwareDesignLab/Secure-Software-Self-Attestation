@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Injectable } from '@angular/core';
-import { Form } from '../models/attestationModel';
+import { Form, Result } from '../models/attestationModel';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ContactService } from './contact.service';
@@ -146,39 +146,71 @@ export class AttestationDataService {
       "reviewed-controls": {
         "props": new Array(),
         "links": new Array(),
-        "control-selections:": new Array()
+        "control-selections": new Array()
       },
       "attestations": new Array()
     }
     
-    let catalogCount = 0;
     this.forms.forEach((form) => {
+
+      let attestation = {
+        "responsible-parties": new Array(),
+        parts: new Array()
+      }
+      // attestation.parts.push({
+      //   "name": "Attestation Title",
+      //   "title": "Name of the attestation",
+      //   "prose": form.name,
+      //   "class": "Attestation Information"
+      // });
       
       form.catalogs.forEach((catalog) => {
         //if catalog not in reviewed-controls props
+        let catalogIndex = resultForAttestations['reviewed-controls'].props.length //IF any other props are necessary this won't work properly
         if (resultForAttestations['reviewed-controls'].props.findIndex((prop: any) => (prop.name === catalog.metadata.title)) === -1) {
           resultForAttestations['reviewed-controls'].props.push({
             "name": catalog.metadata.title,
-            "value": catalogCount.toString(),
+            "value": catalogIndex.toString(), 
             "class": "Catalog Order"
           });
-        }
-        Array.from(catalog.controlMap.keys()).forEach((key: string) => {
-          const control = catalog.controlMap.get(key);
-          if (control) {
-            
-          }
-        });
 
-        catalogCount++;
+          resultForAttestations['reviewed-controls']['control-selections'].push({ "include-controls": [] });
+          
+          Array.from(catalog.controlMap.keys()).forEach((key: string) => {
+            const control = catalog.controlMap.get(key);
+            if (control) {
+              if (control.result !== Result.blank){
+              resultForAttestations['reviewed-controls']['control-selections'][catalogIndex]["include-controls"].push({ "control-id": control.id });
+              attestation.parts.push({
+                "name": control.id,
+                "title": "Compliance status for " + control.id,
+                "prose": control.result.toString(),
+                "class": "Compliance"
+              });
+              if (control.commentFinalized) {
+                attestation.parts.push({
+                  "name": control.id,
+                  "title": "Explanation for " + control.id,
+                  "prose": control.comment,
+                  "class": "Explanation"
+                });
+              }
+            }
+          }
+          });
+        }
       });
+      resultForAttestations.attestations.push(attestation);
     });
 
     results.push(resultForAttestations);
     const assessmentResults = {
+      uuid: uuidv4(),
       "metadata": metadata,
       "import-assessment-plan": importAP,
       "results": results
     }
+
+    return {"assessment-results": assessmentResults};
   }
 }

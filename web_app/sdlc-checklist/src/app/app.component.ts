@@ -26,7 +26,7 @@ import { AttestationDataService } from './services/attestation-data.service';
 import { Form } from './models/attestationModel';
 import { AssessmentPlanService } from './services/assessment-plan.service';
 import { ContactService } from './services/contact.service';
-
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -183,6 +183,11 @@ export class AppComponent {
 
   finishSave() {
     this.assessmentPlanService.generateAssessmentPlan();
+  }
+
+  generateReport() {
+    let report = this.attestationService.generateAssessmentResults();
+    saveAs(new Blob([JSON.stringify(report)]), 'report.json');
   }
 
   get activeFormName(): string {
