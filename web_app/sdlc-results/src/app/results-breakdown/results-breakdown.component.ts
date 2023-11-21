@@ -24,6 +24,11 @@ export class ResultsBreakdownComponent {
       percentChecked: 0
     } as Breakdown;
 
+    let totalCompliant = 0
+    let totalNonCompliant = 0
+    let totalNotApplicable = 0
+    let percentChecked = 0
+
     for (let attestation in this.results.results[0].attestations) {
       console.log(attestation)
       // let [compliant, nonCompliant, notApplicable] = attestation.complianceMetrics();
