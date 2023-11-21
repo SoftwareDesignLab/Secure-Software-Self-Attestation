@@ -47,9 +47,40 @@ export interface Parts {
     props: Props[];
 }
 
-export interface Attestation {
+export class Attestation {
     "responsible-parties": object[]; //TODO define this type
-    parts: Parts[];
+    parts: Parts[] = [];
+
+    writtenAttestationPercentage(): number {
+      if (this.parts.filter((part) => part.class === "Compliance").length === 0) return 0;
+      return this.parts.filter((part) => part.class === "Explanation").length / this.parts.filter((part) => part.class === "Compliance").length;
+    }
+
+    complianceMetrics(): [number, number, number, number] {
+      let compliant = 0;
+      let nonCompliant = 0;
+      let notApplicable = 0;
+      let written = 0;
+      this.parts.forEach((part) => {
+        if (part.class === "Compliance") {
+          if (part.prose === "0") compliant++;
+          if (part.prose === "1") nonCompliant++;
+          if (part.prose === "2") notApplicable++;
+        }
+        else if (part.class === "Explanation") written++;
+      });
+      return [compliant, nonCompliant, notApplicable, written];
+    }
+
+    getAttestationMetadata(): any[] {
+      return this.parts.filter((part) => part.class === "Attestation Metadata");
+    }
+
+    getAttestationTitle(): string {
+      let title = this.getAttestationMetadata().find((part) => part.name === "Attestation Title");
+      if (title) return title.prose;
+      return "";
+    }
 }
 
 export interface ReviewedControls {

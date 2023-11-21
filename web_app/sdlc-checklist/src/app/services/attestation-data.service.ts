@@ -134,6 +134,16 @@ export class AttestationDataService {
   get observableActiveForm(): BehaviorSubject<Form | undefined> { return this.#activeForm; }
   set activeForm(form: Form | undefined) {this.#activeForm.next(form); }
 
+  getAllCatalogs() {
+    let catalogs: any[] = [];
+    this.forms.forEach((form) => {
+      form.catalogs.forEach((catalog) => {
+        catalogs.push(catalog);
+      });
+    });
+    return Array.from(new Set(catalogs));
+  }
+
   generateAssessmentResults() {
     let metadata = new Metadata().serialize("Attestation results for " + this.contactService.organization.name, this.contactService.organization, this.contactService.person);
     let importAP = { href: "" }; //TODO make master assessment plan for all attestations + 3rd party tests, and reference it here
@@ -157,12 +167,12 @@ export class AttestationDataService {
         "responsible-parties": new Array(),
         parts: new Array()
       }
-      // attestation.parts.push({
-      //   "name": "Attestation Title",
-      //   "title": "Name of the attestation",
-      //   "prose": form.name,
-      //   "class": "Attestation Information"
-      // });
+      attestation.parts.push({
+        "name": "Attestation Title",
+        "title": "Name of the attestation",
+        "prose": form.name,
+        "class": "Attestation Metadata"
+      });
       
       form.catalogs.forEach((catalog) => {
         //if catalog not in reviewed-controls props
@@ -211,6 +221,6 @@ export class AttestationDataService {
       "results": results
     }
 
-    return {"assessment-results": assessmentResults};
+    return assessmentResults;
   }
 }

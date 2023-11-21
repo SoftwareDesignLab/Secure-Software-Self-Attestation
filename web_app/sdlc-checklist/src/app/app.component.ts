@@ -186,7 +186,9 @@ export class AppComponent {
   }
 
   generateReport() {
-    let report = this.attestationService.generateAssessmentResults();
+    let results = this.attestationService.generateAssessmentResults();
+    let catalogs = this.attestationService.getAllCatalogs();
+    let report = { "assessment-results": results, "catalogs": catalogs };
     saveAs(new Blob([JSON.stringify(report)]), 'report.json');
   }
 

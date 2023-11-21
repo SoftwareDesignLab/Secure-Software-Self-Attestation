@@ -28,13 +28,15 @@ import { AppComponent } from './app.component';
 import { ResultsUploadComponent } from './results-upload/results-upload.component';
 import { ResultsMetadataComponent } from './results-metadata/results-metadata.component';
 import { ResultComponent } from './result/result.component';
+import { ResultsBreakdownComponent } from './results-breakdown/results-breakdown.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ResultsUploadComponent,
     ResultsMetadataComponent,
-    ResultComponent
+    ResultComponent,
+    ResultsBreakdownComponent
   ],
   imports: [
     BrowserModule

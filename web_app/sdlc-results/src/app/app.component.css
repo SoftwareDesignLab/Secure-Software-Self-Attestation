@@ -142,3 +142,12 @@ nav {
   from {right: 0vw;}
   to {right: -400px;}
 }
+
+
+.prepend-up-arrow::before {
+  content: "▲ "
+}
+
+.prepend-down-arrow::before {
+  content: "▼ "
+}
