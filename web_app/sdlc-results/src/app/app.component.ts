@@ -57,6 +57,19 @@ export class AppComponent {
     return attestations;
   }
 
+  uniqueCatalogs() {
+    // filter all relevantCatalogs that don't have a unique name at relevantCatlalog[i].metadata.name
+    let uniqueCatalogs = [];
+    let catalogNames: any[] = [];
+    for (let i = 0; i < this.relevantCatalogs.length; i++) {
+      if (!catalogNames.includes(this.relevantCatalogs[i].metadata.title)) {
+        catalogNames.push(this.relevantCatalogs[i].metadata.title);
+        uniqueCatalogs.push(this.relevantCatalogs[i]);
+      }
+    }
+    return uniqueCatalogs;
+  }
+
   setAttestationPointer(index: number): void {
     // console.log(index)
     try {

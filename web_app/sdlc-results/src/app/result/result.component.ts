@@ -50,9 +50,12 @@ export class ResultComponent {
   catalogName: string = "Not associated with a catalog";
   links: string[] = [];
   controls: ControlDict = {};
+  subjects: string[] = [];
 
   // TODO inefficient to call this every time anything changes
   ngOnChanges(): void {
+    this.controls = {};
+    this.subjects = [];
     if (this.attestation) {
       // console.log(this.attestation)
       // this.catalogName = getControlCatalogFromReviewedControls(this.result['reviewed-controls']);
@@ -77,6 +80,14 @@ export class ResultComponent {
               this.controls[part.name].extra[part.class] = part.prose;
             }
           }
+          for (const part of this.attestation.parts.filter((p) => p.name === "Attestation Subject")) {
+            this.subjects.push(part.prose);
+          }
         }
+    }
+
+    getSubjects(): string[] {
+      if (this.subjects.length === 0) return ["Company-Wide"];
+      return this.subjects;
     }
   }

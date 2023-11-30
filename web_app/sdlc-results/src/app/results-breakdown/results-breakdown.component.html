@@ -8,15 +8,16 @@
                 <h1>{{getResultsBreakdown().totalNonCompliant}} ❌</h1>
             </div>
             <div style="flex: 1;">
-                <h1>{{getResultsBreakdown().totalNonCompliant}} N/A</h1>
+                <h1>{{getResultsBreakdown().totalNotApplicable}} <span style="color: gray;">N/A</span> </h1>
             </div>
         </div>
         <div style="display: flex; flex-direction: column; height: 100%;">
             <div style="flex: 1; border-right: 1px solid black;">
-                <h3>{{getResultsBreakdown().percentChecked}}% of controls have written attestations</h3>
+                <h3>{{getResultsBreakdown().writtenPercent}}% of controls have written attestations</h3>
             </div>
             <div style="flex: 1;">
                 <h3>Catalogs:</h3>
+                <app-catalog-view *ngFor="let catalog of catalogs" [catalog]="catalog"></app-catalog-view>
             </div>
         </div>
     </div>

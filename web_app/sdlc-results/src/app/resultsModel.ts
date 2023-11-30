@@ -51,6 +51,11 @@ export class Attestation {
     "responsible-parties": object[]; //TODO define this type
     parts: Parts[] = [];
 
+    constructor(attestation: Attestation) {
+      this["responsible-parties"] = attestation["responsible-parties"] || [];
+      this.parts = attestation.parts || [];
+    }
+
     writtenAttestationPercentage(): number {
       if (this.parts.filter((part) => part.class === "Compliance").length === 0) return 0;
       return this.parts.filter((part) => part.class === "Explanation").length / this.parts.filter((part) => part.class === "Compliance").length;
@@ -63,9 +68,9 @@ export class Attestation {
       let written = 0;
       this.parts.forEach((part) => {
         if (part.class === "Compliance") {
-          if (part.prose === "0") compliant++;
-          if (part.prose === "1") nonCompliant++;
-          if (part.prose === "2") notApplicable++;
+          if (part.prose === "1") compliant++;
+          if (part.prose === "2") nonCompliant++;
+          if (part.prose === "3") notApplicable++;
         }
         else if (part.class === "Explanation") written++;
       });

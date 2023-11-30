@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -29,6 +29,7 @@ import { ResultsUploadComponent } from './results-upload/results-upload.componen
 import { ResultsMetadataComponent } from './results-metadata/results-metadata.component';
 import { ResultComponent } from './result/result.component';
 import { ResultsBreakdownComponent } from './results-breakdown/results-breakdown.component';
+import { CatalogViewComponent } from './catalog-view/catalog-view.component';
 
 @NgModule({
   declarations: [
@@ -36,12 +37,14 @@ import { ResultsBreakdownComponent } from './results-breakdown/results-breakdown
     ResultsUploadComponent,
     ResultsMetadataComponent,
     ResultComponent,
-    ResultsBreakdownComponent
+    ResultsBreakdownComponent,
+    CatalogViewComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

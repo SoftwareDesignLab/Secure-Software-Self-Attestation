@@ -26,13 +26,13 @@
   <div class="expanded-nav">
     <h2>Results</h2>
     <ul>
-        <li (click)="showAttestationDashboard()" (keydown.enter)="showAttestationDashboard()" [tabindex]="showNav ? 0 : -1">
+        <li (click)="showAttestationDashboard()" (keydown.enter)="showAttestationDashboard()" [tabindex]="showNav ? 0 : -1" style="cursor: pointer;">
           <p *ngIf="assessmentResultsLoaded()" (click)="toggleAttestationTree()" (keydown.enter)="toggleAttestationTree()" [tabindex]="showNav ? 0 : -1">{{dropdown ? "▼ " : "▲ "}}</p>
           <a>Attestations</a>
         </li>
         <ul *ngIf="dropdown === true">
           <li *ngFor="let attestation of getAttestations(); let i = index">
-            <a [style]="'--order: ' + i" (click)="setAttestationPointer(i)" (keydown.enter)="setAttestationPointer(i)">{{attestationTitles[i]}}</a>
+            <a style="cursor: pointer;" [style]="'--order: ' + i" (click)="setAttestationPointer(i)" (keydown.enter)="setAttestationPointer(i)">{{attestationTitles[i]}}</a>
           </li>
         </ul>
     </ul>
@@ -43,7 +43,7 @@
   <app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
   <div *ngIf="assessmentResults !== undefined">
     <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
-    <app-results-breakdown [results]="assessmentResults"></app-results-breakdown>
+    <app-results-breakdown [results]="assessmentResults" [catalogs]="uniqueCatalogs()"></app-results-breakdown>
   </div>
 
 </div>
