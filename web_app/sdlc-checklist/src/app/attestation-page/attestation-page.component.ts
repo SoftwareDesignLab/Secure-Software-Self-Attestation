@@ -39,7 +39,6 @@ import { ContactService } from '../services/contact.service';
 export class AttestationPageComponent {
 
   form: Form | undefined;
-  // subject: Subject;
 
   /**
    * Sets up the attestation page and gets the form to load
@@ -47,8 +46,6 @@ export class AttestationPageComponent {
   constructor(private attestationDataService: AttestationDataService, private assessmentPlanService: AssessmentPlanService, private contactService: ContactService) {
     this.form = this.attestationDataService.activeForm;
     this.attestationDataService.observableActiveForm.subscribe((form) => this.form = form);
-    // this.subject = this.form?.subject || new Subject();
-    // this.subject.observableType.subscribe(this.updatePageSubject);
     this.updatePageSubject(SubjectType.company);
   }
 
@@ -65,7 +62,6 @@ export class AttestationPageComponent {
     if (productLine instanceof HTMLInputElement) productLine.checked = newSubject === SubjectType.productLine;
     if (individual instanceof HTMLInputElement) individual.checked = newSubject === SubjectType.individual;
     if (multiple instanceof HTMLInputElement) multiple.checked = newSubject === SubjectType.multiple;
-    // if (this.form) this.form.subject = this.subject;
   }
 
   /**
