@@ -27,6 +27,7 @@ import { Form } from './models/attestationModel';
 import { AssessmentPlanService } from './services/assessment-plan.service';
 import { ContactService } from './services/contact.service';
 import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -187,7 +188,7 @@ export class AppComponent {
 
   generateReport() {
     let results = this.attestationService.generateAssessmentResults();
-    let catalogs = this.attestationService.getAllCatalogs();
+    let catalogs = this.attestationService.getUniqueOscalCatalogs();
     let report = { "assessment-results": results, "catalogs": catalogs };
     saveAs(new Blob([JSON.stringify(report)]), 'report.json');
   }

@@ -15,6 +15,7 @@
         <th>Version Number (if applicable)</th>
         <th>Release/Publish Date</th>
       </tr>
+      <!-- TODO use form.subject instead of subject -->
       <tr *ngFor="let row of subject.lines; let i = index">
         <td><input [id]="'subject-name-' + i" type ="text" name="form" [(ngModel)]="subject.lines[i].name" class="table-field"></td>
         <td><input [id]="'subject-version-' + i" type ="text" name="form" [(ngModel)]="subject.lines[i].version" class="table-field"></td>

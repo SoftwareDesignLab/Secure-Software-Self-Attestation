@@ -39,5 +39,6 @@ export class CatalogComponent {
    */
   removeCatalog() {
     this.attestationDataService.activeForm?.removeCatalog(this.catalog.uuid);
+    this.attestationDataService.removeOscalCatalog(this.catalog.uuid)
   }
 }
