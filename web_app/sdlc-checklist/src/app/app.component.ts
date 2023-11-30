@@ -26,6 +26,7 @@ import { AttestationDataService } from './services/attestation-data.service';
 import { Form } from './models/attestationModel';
 import { AssessmentPlanService } from './services/assessment-plan.service';
 import { ContactService } from './services/contact.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-root',
@@ -95,7 +96,8 @@ export class AppComponent {
   private handleFile(file: File): void {
     let reader = new FileReader();
     reader.onload = () => {
-      let json = JSON.parse(reader.result as string);
+      let json = JSON.parse(reader.result as string); 
+      //todo load as oscal library types
       if (this.assessmentPlanService.checkContactConflicts(json)) {
         this.assessmentPlanService.loadFromPlan(json);
       } else {
@@ -182,6 +184,13 @@ export class AppComponent {
 
   finishSave() {
     this.assessmentPlanService.generateAssessmentPlan();
+  }
+
+  generateReport() {
+    let results = this.attestationService.generateAssessmentResults();
+    let catalogs = this.attestationService.getUniqueOscalCatalogs();
+    let report = { "assessment-results": results, "catalogs": catalogs };
+    saveAs(new Blob([JSON.stringify(report)]), 'report.json');
   }
 
   get activeFormName(): string {

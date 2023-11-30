@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component, Input } from '@angular/core';
-import { Result, getControlCatalogFromReviewedControls } from '../resultsModel';
+import { Attestation, Result, getControlCatalogFromReviewedControls } from '../resultsModel';
 
 interface ExtraData {
   [key: string]: any;
@@ -45,21 +45,24 @@ interface ControlDict {
   styleUrls: ['./result.component.css']
 })
 export class ResultComponent {
-  @Input() result: Result = {} as Result;
+  // @Input() result: Result = {} as Result;
+  @Input() attestation: Attestation = {} as Attestation;
   catalogName: string = "Not associated with a catalog";
   links: string[] = [];
   controls: ControlDict = {};
+  subjects: string[] = [];
 
   // TODO inefficient to call this every time anything changes
   ngOnChanges(): void {
-    if (this.result) {
-      this.catalogName = getControlCatalogFromReviewedControls(this.result['reviewed-controls']);
-      if (this.result['reviewed-controls'].links){
-        this.links = this.result['reviewed-controls'].links.map((link: any) => link.href);
-      }
-      if (this.result.attestations) {
-        for (const attestation of this.result.attestations) {
-          for (const part of attestation.parts) {
+    this.controls = {};
+    this.subjects = [];
+    if (this.attestation) {
+      // console.log(this.attestation)
+      // this.catalogName = getControlCatalogFromReviewedControls(this.result['reviewed-controls']);
+      // if (this.result['reviewed-controls'].links){
+      //   this.links = this.result['reviewed-controls'].links.map((link: any) => link.href);
+      // }
+          for (const part of this.attestation.parts.filter((p) => p.class !== "Attestation Metadata")) {
             if (!this.controls[part.name]) {
               this.controls[part.name] = {} as ControlResults;
               this.controls[part.name].extra = {} as ExtraData;
@@ -77,8 +80,14 @@ export class ResultComponent {
               this.controls[part.name].extra[part.class] = part.prose;
             }
           }
+          for (const part of this.attestation.parts.filter((p) => p.name === "Attestation Subject")) {
+            this.subjects.push(part.prose);
+          }
         }
-      }
+    }
+
+    getSubjects(): string[] {
+      if (this.subjects.length === 0) return ["Company-Wide"];
+      return this.subjects;
     }
   }
-}

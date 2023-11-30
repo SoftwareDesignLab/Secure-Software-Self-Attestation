@@ -1,28 +1,29 @@
-<div class="attestation pane" id="attestation">
+<div class="attestation pane" id="attestation" *ngIf="form !== undefined">
   <h2>Select your attestation type:</h2>
-  <input type="radio" id="company-wide" name="attestation" (click)="subject.stringType='company'" value="company" class="landing" [checked]="subject.stringType==='company'">
+  <input type="radio" id="company-wide" name="attestation" (click)="form.subject.stringType='company'" value="company" class="landing" [checked]="form.subject.stringType==='company'">
   <label for="company-wide">Company-wide</label><br>
-  <input type="radio" id="product-line" name="attestation" (click)="subject.stringType='productLine'" [checked]="subject.stringType==='productLine'" value="productLine">
+  <input type="radio" id="product-line" name="attestation" (click)="form.subject.stringType='productLine'" [checked]="form.subject.stringType==='productLine'" value="productLine">
   <label for="product-line">Product line</label><br>
-  <input type="radio" id="individual" name="attestation" (click)="subject.stringType='individual'" [checked]="subject.stringType==='individual'" value="individual">
+  <input type="radio" id="individual" name="attestation" (click)="form.subject.stringType='individual'" [checked]="form.subject.stringType==='individual'" value="individual">
   <label for="individual">Individual Product</label><br>
-  <input type="radio" id="multiple" name="attestation" (click)="subject.stringType='multiple'" [checked]="subject.stringType==='multiple'" value="multiple">
+  <input type="radio" id="multiple" name="attestation" (click)="form.subject.stringType='multiple'" [checked]="form.subject.stringType==='multiple'" value="multiple">
   <label for="multiple">Multiple products or Specific Product Version(s)</label>
-  <div *ngIf="subject.stringType !== 'company'" class="table-section">
+  <div *ngIf="form.subject.stringType !== 'company'" class="table-section">
     <table>
       <tr>
         <th>Product(s) or Product Line Name</th>
         <th>Version Number (if applicable)</th>
         <th>Release/Publish Date</th>
       </tr>
-      <tr *ngFor="let row of subject.lines; let i = index">
-        <td><input [id]="'subject-name-' + i" type ="text" name="form" [(ngModel)]="subject.lines[i].name" class="table-field"></td>
-        <td><input [id]="'subject-version-' + i" type ="text" name="form" [(ngModel)]="subject.lines[i].version" class="table-field"></td>
-        <td><input [id]="'subject-date-' + i" type ="date" name="form" [(ngModel)]="subject.lines[i].date" class="table-field"></td>
+      <!-- TODO use form.subject instead of subject -->
+      <tr *ngFor="let row of form.subject.lines; let i = index">
+        <td><input [id]="'subject-name-' + i" type ="text" name="form" [(ngModel)]="form.subject.lines[i].name" class="table-field"></td>
+        <td><input [id]="'subject-version-' + i" type ="text" name="form" [(ngModel)]="form.subject.lines[i].version" class="table-field"></td>
+        <td><input [id]="'subject-date-' + i" type ="date" name="form" [(ngModel)]="form.subject.lines[i].date" class="table-field"></td>
       </tr>
     </table>
-    <button class="add" mat-button (click)="addRow()" [hidden]="subject.stringType !== 'multiple'" id="add-subject-row">+</button>
-    <button class="add" mat-button (click)="removeRow()" *ngIf="subject.lines.length>1">-</button>
+    <button class="add" mat-button (click)="addRow()" [hidden]="form.subject.stringType !== 'multiple'" id="add-subject-row">+</button>
+    <button class="add" mat-button (click)="removeRow()" *ngIf="form.subject.lines.length>1">-</button>
   </div>
 </div>
 

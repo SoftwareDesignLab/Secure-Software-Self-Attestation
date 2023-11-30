@@ -182,6 +182,7 @@ export class CatalogProcessingComponent {
       const catalog = this.isNested(json) ? json.catalog : json;
       // quality checks OSCAL file
       if(this.isValidCatalog(catalog)){
+        this.attestationDataService.appendNewOscalCatalog(catalog);
         const catalogClone = JSON.parse(JSON.stringify(catalog)) as CatalogShell;
         this.attestationDataService.activeForm?.addCatalog(catalogClone);
       }

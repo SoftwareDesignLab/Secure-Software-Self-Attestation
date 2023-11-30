@@ -2,7 +2,7 @@
   <h1>SDLC Checklist</h1>
 </header>
 
-<nav id="nav">
+<!-- <nav id="nav">
   <div class="nav-icon" (click)="toggleNav()" (keydown.enter)="toggleNav()" tabindex=0>
     <div class="hamburger-line"></div>
     <div class="hamburger-line"></div>
@@ -15,21 +15,43 @@
       <li><a (click)="poam(true)">POA&amp;M</a></li>
     </ul>
   </div>
+</nav> -->
+
+<nav id="nav">
+  <div class="nav-icon" (click)="toggleNav()" (keydown.enter)="toggleNav()" tabindex=0>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+  </div>
+  <div class="expanded-nav">
+    <h2>Results</h2>
+    <ul>
+        <li (click)="showAttestationDashboard()" (keydown.enter)="showAttestationDashboard()" [tabindex]="showNav ? 0 : -1" style="cursor: pointer;">
+          <p *ngIf="assessmentResultsLoaded()" (click)="toggleAttestationTree()" (keydown.enter)="toggleAttestationTree()" [tabindex]="showNav ? 0 : -1">{{dropdown ? "▼ " : "▲ "}}</p>
+          <a>Attestations</a>
+        </li>
+        <ul *ngIf="dropdown === true">
+          <li *ngFor="let attestation of getAttestations(); let i = index">
+            <a style="cursor: pointer;" [style]="'--order: ' + i" (click)="setAttestationPointer(i)" (keydown.enter)="setAttestationPointer(i)">{{attestationTitles[i]}}</a>
+          </li>
+        </ul>
+    </ul>
+  </div>
 </nav>
 
-<div *ngIf="!poamMode">
+<div *ngIf="showDashboard">
+  <app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
   <div *ngIf="assessmentResults !== undefined">
     <app-results-metadata [metadata]="assessmentResults.metadata"></app-results-metadata>
-    <div *ngFor="let result of assessmentResults.results">
-      <app-result [result]="result"></app-result>
-    </div>
+    <app-results-breakdown [results]="assessmentResults" [catalogs]="uniqueCatalogs()"></app-results-breakdown>
   </div>
 
-  <app-results-upload (fileSelected)="onFileSelected($event)"></app-results-upload>
 </div>
 
-<div *ngIf="poamMode">
-  <p class="pane" style="text-align: center;">I have no clue what is supposed to go here</p>
+<div *ngIf="!showDashboard">
+  <div *ngIf="attestationPointer !== undefined">
+    <app-result [attestation]="attestationPointer"></app-result>
+  </div>
 </div>
 
 <footer>

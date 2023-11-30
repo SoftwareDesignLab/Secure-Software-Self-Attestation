@@ -105,6 +105,8 @@ export class Form {
     }
 }
 
+//TODO this needs to support catalogs with ungrouped controls. refer to catalog model in catalog schema
+// research/OSCAL/Schemas/oscal_catalog_schema.json
 export class Catalog {
     groups: Group[] = [];
     uuid: string;

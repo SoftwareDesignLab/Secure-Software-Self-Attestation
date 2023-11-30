@@ -22,9 +22,14 @@
  * SOFTWARE.
  */
 import { Injectable } from '@angular/core';
-import { Form } from '../models/attestationModel';
-import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+
+import { Form, Result } from '../models/attestationModel';
+import { Metadata } from '../models/contactModel';
+import { ContactService } from './contact.service';
+import catalog from '../defaultCatalog';
+import { BehaviorSubject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 
@@ -34,8 +39,9 @@ const dela = (ms : number) => new Promise(res => setTimeout(res, ms))
 export class AttestationDataService {
   forms: Form[] = [];
   #activeForm: BehaviorSubject<Form | undefined> = new BehaviorSubject<Form | undefined>(undefined);
+  #oscalCatalogs: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private contactService: ContactService) {}
 
   /**
    * Creates a new form and adds it to forms
@@ -45,8 +51,27 @@ export class AttestationDataService {
     let newForm = new Form(startingCatalog);
     this.forms.push(newForm);
     this.#activeForm.next(newForm)
+
+    let oscalCatalogs = this.#oscalCatalogs.getValue();
+    oscalCatalogs.push(catalog);
+    this.#oscalCatalogs.next(oscalCatalogs);
+
     return newForm
   }
+
+  appendNewOscalCatalog(catalog: any) {
+    let catalogs = this.#oscalCatalogs.getValue();
+    console.log("pushed catalog");
+    catalogs.push(catalog);
+    this.#oscalCatalogs.next(catalogs);
+  }
+
+  removeOscalCatalog(uuid: string) {
+    let catalogs = this.#oscalCatalogs.getValue();
+    catalogs.splice(catalogs.findIndex((catalog) => (catalog.uuid === uuid)), 1);
+    this.#oscalCatalogs.next(catalogs);
+  }
+
 
   /**
    * Deletes the given form
@@ -130,4 +155,107 @@ export class AttestationDataService {
   get activeForm(): Form | undefined { return this.#activeForm.getValue(); }
   get observableActiveForm(): BehaviorSubject<Form | undefined> { return this.#activeForm; }
   set activeForm(form: Form | undefined) {this.#activeForm.next(form); }
+
+  getUniqueOscalCatalogs() {
+    let catalogs: any[] = this.#oscalCatalogs.getValue();
+    let uniqueCatalogs: any[] = [];
+    let catalogNames: string[] = [];
+    for (let i = 0; i < catalogs.length; i++) {
+      if (!catalogNames.includes(catalogs[i].metadata.title)) {
+        catalogNames.push(catalogs[i].metadata.title);
+        uniqueCatalogs.push(catalogs[i]);
+      }
+    }
+    return uniqueCatalogs;
+  }
+
+  generateAssessmentResults() {
+    let metadata = new Metadata().serialize("Attestation results for " + this.contactService.organization.name, this.contactService.organization, this.contactService.person);
+    let importAP = { href: "" }; //TODO make master assessment plan for all attestations + 3rd party tests, and reference it here
+    let results: any[] = []; 
+    let resultForAttestations = { //TODO type this
+      "uuid": uuidv4(),
+      "title": "Attestation Results",
+      "description": "Results of the various attestations",
+      "start": new Date().toISOString(),
+      "reviewed-controls": {
+        "props": new Array(),
+        "links": new Array(),
+        "control-selections": new Array()
+      },
+      "attestations": new Array()
+    }
+    
+    this.forms.forEach((form) => {
+
+      let attestation = {
+        "responsible-parties": new Array(),
+        parts: new Array()
+      }
+      attestation.parts.push({
+        "name": "Attestation Title",
+        "title": "Name of the attestation",
+        "prose": form.name,
+        "class": "Attestation Metadata"
+      });
+
+      for (let i = 0; i < form.subject.lines.length; i++) {
+        let line = form.subject.lines[i];
+        attestation.parts.push({
+          "name": "Attestation Subject",
+          "title": "What is being attested to?",
+          "prose": "Name: " + line.name + "\nVersion: " + line.version + "\nDate Created: " + line.date,
+          "class": "Attestation Metadata"
+        });
+      }
+      
+      form.catalogs.forEach((catalog) => {
+        //if catalog not in reviewed-controls props
+        let catalogIndex = resultForAttestations['reviewed-controls'].props.length //IF any other props are necessary this won't work properly
+        if (resultForAttestations['reviewed-controls'].props.findIndex((prop: any) => (prop.name === catalog.metadata.title)) === -1) {
+          resultForAttestations['reviewed-controls'].props.push({
+            "name": catalog.metadata.title,
+            "value": catalogIndex.toString(), 
+            "class": "Catalog Order"
+          });
+
+          resultForAttestations['reviewed-controls']['control-selections'].push({ "include-controls": [] });
+          
+          Array.from(catalog.controlMap.keys()).forEach((key: string) => {
+            const control = catalog.controlMap.get(key);
+            if (control) {
+              if (control.result !== Result.blank)  {
+                resultForAttestations['reviewed-controls']['control-selections'][catalogIndex]["include-controls"].push({ "control-id": control.id });
+                attestation.parts.push({
+                  "name": control.id,
+                  "title": "Compliance status for " + control.id,
+                  "prose": control.result.toString(),
+                  "class": "Compliance"
+                });
+                if (control.commentFinalized) {
+                  attestation.parts.push({
+                    "name": control.id,
+                    "title": "Explanation for " + control.id,
+                    "prose": control.comment,
+                    "class": "Explanation"
+                  });
+                }
+            }
+          }
+          });
+        }
+      });
+      resultForAttestations.attestations.push(attestation);
+    });
+
+    results.push(resultForAttestations);
+    const assessmentResults = {
+      uuid: uuidv4(),
+      "metadata": metadata,
+      "import-assessment-plan": importAP,
+      "results": results
+    }
+
+    return assessmentResults;
+  }
 }

@@ -45,6 +45,7 @@ export class AssessmentPlanService {
     }
     let assessmentPlan = form.serialize(form.metadata.serialize(form.name, this.contactService.organization, this.contactService.person));
     let catalogs: any[] = form.catalogDataFiles;
+    //TODO move this to the attestation-page component page
     saveAs(new Blob([JSON.stringify({"assessment-plan": assessmentPlan, catalogs: catalogs})], {type: 'application/json'}), form.name);
   }
 
@@ -63,6 +64,8 @@ export class AssessmentPlanService {
     }) === undefined;
   }
 
+  //TODO use oscal types for plan
+  
   /**
    * Loads a serialized json file into a new form
    * @param plan The plan to load

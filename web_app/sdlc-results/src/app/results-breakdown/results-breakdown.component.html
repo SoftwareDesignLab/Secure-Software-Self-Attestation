@@ -1,0 +1,39 @@
+<div style="width: 100%; text-align: center;">
+    <div class="result-container pane" style="width: 80%; margin: 0 auto;">
+        <div style="display: flex; flex-direction: row; height: 100%;">
+            <div style="flex: 1; border-right: 1px solid black;">
+                <h1>{{getResultsBreakdown().totalCompliant}} ✅</h1>
+            </div>
+            <div style="flex: 1; border-right: 1px solid black;">
+                <h1>{{getResultsBreakdown().totalNonCompliant}} ❌</h1>
+            </div>
+            <div style="flex: 1;">
+                <h1>{{getResultsBreakdown().totalNotApplicable}} <span style="color: gray;">N/A</span> </h1>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: column; height: 100%;">
+            <div style="flex: 1; border-right: 1px solid black;">
+                <h3>{{getResultsBreakdown().writtenPercent}}% of controls have written attestations</h3>
+            </div>
+            <div style="flex: 1;">
+                <h3>Catalogs:</h3>
+                <app-catalog-view *ngFor="let catalog of catalogs" [catalog]="catalog"></app-catalog-view>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- <h3>{{ result.title }}</h3>
+    <p><strong>Description: </strong>{{ result.description }}</p>
+    <p><strong>Relevant catalog:</strong> {{ catalogName }} </p>
+    <p><strong>Relevant links:</strong></p>
+    <ul>
+        <li *ngFor="let link of links"><a href="{{ link }}">{{ link }}</a></li>
+    </ul>
+    <h3>Results by control:</h3>
+    <div *ngFor="let control of controls | keyvalue">
+      <h4>{{ control.key }}: {{ control.value.fullName }}</h4>
+      <h5 *ngIf="control.value.compliance !== undefined">Compliance: {{ control.value.compliance }}</h5>
+      <h5 *ngIf="control.value.explanation !== undefined">Explanation: {{ control.value.explanation }}</h5>
+      <h5 *ngFor="let extraData of control.value.extra | keyvalue">*{{ extraData.key }}: {{ extraData.value }}</h5>
+    </div> -->
+    

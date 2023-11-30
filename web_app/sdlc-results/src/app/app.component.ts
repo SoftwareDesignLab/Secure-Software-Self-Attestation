@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Component } from '@angular/core';
-import { AssessmentResults } from './resultsModel';
+import { AssessmentResults, Attestation } from './resultsModel';
 
 
 @Component({
@@ -32,16 +32,61 @@ import { AssessmentResults } from './resultsModel';
 })
 export class AppComponent {
   assessmentResults: AssessmentResults | undefined;
+  relevantCatalogs: any[] = [];
   showFullFooter: boolean = false;
   showNav = false;
-  poamMode = false;
+  showDashboard = true;
+  dropdown = false;
+  attestationPointer: Attestation | undefined = undefined;
+  attestationTitles: string[] = []; //hacky
 
   onFileSelected(jsonData: any): void { //TODO jsonData should be of type Catalog
     this.assessmentResults = jsonData["assessment-results"];
+    this.relevantCatalogs = jsonData["catalogs"];
+  }
+
+  assessmentResultsLoaded(): boolean {
+    return this.assessmentResults !== undefined;
+  }
+
+  getAttestations(): Attestation[] {
+    if (this.assessmentResults === undefined) return [];
+    let attestations = this.assessmentResults.results[0].attestations ?? [];
+    //hacky
+    this.attestationTitles = attestations.map((attestation) => attestation.parts.find((part) => part.name === "Attestation Title")?.prose ?? "UNNAMED_ATTESTATION");
+    return attestations;
+  }
+
+  uniqueCatalogs() {
+    // filter all relevantCatalogs that don't have a unique name at relevantCatlalog[i].metadata.name
+    let uniqueCatalogs = [];
+    let catalogNames: any[] = [];
+    for (let i = 0; i < this.relevantCatalogs.length; i++) {
+      if (!catalogNames.includes(this.relevantCatalogs[i].metadata.title)) {
+        catalogNames.push(this.relevantCatalogs[i].metadata.title);
+        uniqueCatalogs.push(this.relevantCatalogs[i]);
+      }
+    }
+    return uniqueCatalogs;
+  }
+
+  setAttestationPointer(index: number): void {
+    // console.log(index)
+    try {
+      this.attestationPointer = this.getAttestations()[index];
+      this.showDashboard = false;
+    } catch (e) {
+      this.attestationPointer = undefined;
+      console.log(e);
+    }
   }
 
   toggleFooter() {
     this.showFullFooter = !this.showFullFooter;
+  }
+
+  toggleAttestationTree(): void {
+    this.dropdown = !this.dropdown;
   }
 
   toggleNav(): void {
@@ -58,8 +103,8 @@ export class AppComponent {
     }
   }
 
-  poam(state: boolean): void {
-    this.toggleNav();
-    this.poamMode = state;
+  showAttestationDashboard(): void {
+    this.showDashboard = true;
+    this.attestationPointer = undefined;
   }
 }
