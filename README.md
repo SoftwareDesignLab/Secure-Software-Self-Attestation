@@ -4,10 +4,10 @@ Digital and enhanced version of (the Secure Software Development Lifecycle Attes
 ## Features
 - Comes pre-packaged with the original set of security controls on the form, formatted in OSCAL Catalog JSON format
 - Include any catalog of security controls so long as they're in OSCAL Catalog JSON format
-- View Attestation Results graphically
 - Modular and ready to work with data generated from other sources such as a vulnerability scan
 - Export results of the attestation as an OSCAL Assessment Results file
 - Save and load attestations to work on them later or make edits to existing ones
+- View a breakdown of the Attestation Results 
 - Multiple attestations for different groups of software components or products
 
 ## Components
@@ -17,7 +17,7 @@ For more details about each component please refer to the Readme files under eac
 The vendor facing web app used for creating manual attestations and including additional security control catalogs 
 
 ### sdlc-results
-The purchaser facing web app used for viewing and evaluating results of manual attestations
+The purchaser facing web app used for viewing and evaluating results of manual attestations and additional automated test results
 
 ## Quick Start Steps
 - Install NPM and Angular
