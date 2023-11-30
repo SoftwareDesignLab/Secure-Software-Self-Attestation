@@ -43,7 +43,7 @@ export class AssessmentPlanService {
       form = this.attestationDataService.activeForm;
       if (form === undefined) return;
     }
-    let assessmentPlan = form.serialize(form.metadata.serialize(form.name, this.contactService.organization, this.contactService.person));
+    let assessmentPlan = this.attestationDataService.formToAssessmentPlan(form);
     let catalogs: any[] = form.catalogDataFiles;
     //TODO move this to the attestation-page component page
     saveAs(new Blob([JSON.stringify({"assessment-plan": assessmentPlan, catalogs: catalogs})], {type: 'application/json'}), form.name);

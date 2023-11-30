@@ -27,6 +27,7 @@ import { Router } from '@angular/router';
 import { Form, Result } from '../models/attestationModel';
 import { Metadata } from '../models/contactModel';
 import { ContactService } from './contact.service';
+import { AssessmentPlanService } from './assessment-plan.service';
 import catalog from '../defaultCatalog';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -169,6 +170,10 @@ export class AttestationDataService {
     return uniqueCatalogs;
   }
 
+  formToAssessmentPlan(form: Form): any {
+    return form.serialize(form.metadata.serialize(form.name, this.contactService.organization, this.contactService.person));
+  }
+
   generateAssessmentResults() {
     let metadata = new Metadata().serialize("Attestation results for " + this.contactService.organization.name, this.contactService.organization, this.contactService.person);
     let importAP = { href: "" }; //TODO make master assessment plan for all attestations + 3rd party tests, and reference it here
@@ -226,25 +231,59 @@ export class AttestationDataService {
             if (control) {
               if (control.result !== Result.blank)  {
                 resultForAttestations['reviewed-controls']['control-selections'][catalogIndex]["include-controls"].push({ "control-id": control.id });
-                attestation.parts.push({
-                  "name": control.id,
-                  "title": "Compliance status for " + control.id,
-                  "prose": control.result.toString(),
-                  "class": "Compliance"
-                });
-                if (control.commentFinalized) {
-                  attestation.parts.push({
-                    "name": control.id,
-                    "title": "Explanation for " + control.id,
-                    "prose": control.comment,
-                    "class": "Explanation"
-                  });
-                }
+                // attestation.parts.push({
+                //   "name": control.id,
+                //   "title": "Compliance status for " + control.id,
+                //   "prose": control.result.toString(),
+                //   "class": "Compliance"
+                // });
+                // if (control.commentFinalized) {
+                //   attestation.parts.push({
+                //     "name": control.id,
+                //     "title": "Explanation for " + control.id,
+                //     "prose": control.comment,
+                //     "class": "Explanation"
+                //   });
+                // }
             }
           }
           });
         }
       });
+
+      //control Hack begins here
+      let ap = this.formToAssessmentPlan(form);
+      let controlSelections = ap['reviewed-controls']['control-selections'];
+      controlSelections.forEach((selection: any) => {
+        selection.props.forEach((prop: any) => {
+          let part = {
+            name: prop.name,
+            title: "",
+            class: "",
+            prose: ""
+          }
+          //even hackier
+          const complianceMap: { [key: string]: string } = {
+            "yes": "1",
+            "no": "2",
+            "n/a": "3"
+          }
+          
+          if (prop.class === "Compliance Claim") {
+            part.class = "Compliance";
+            part.title = "Compliance status for " + prop.name;
+            part.prose = complianceMap[prop.value];
+            attestation.parts.push(part);
+          }
+          if (prop.class === "Attestation Claim") {
+            part.class = "Explanation";
+            part.title = "Explanation for " + prop.name;
+            part.prose = prop.value;
+            attestation.parts.push(part);
+          }
+        });
+      });
+
       resultForAttestations.attestations.push(attestation);
     });
 
