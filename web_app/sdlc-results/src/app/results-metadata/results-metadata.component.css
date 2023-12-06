@@ -1,7 +1,7 @@
 /**
  * Copyright 2023 Rochester Institute of Technology (RIT). Developed with
- * government support under contract 70RSAT19CB0000020 awarded by the United
- * States Department of Homeland Security.
+ * government support under contract 70RCSA22C00000008 awarded by the United
+ * States Department of Homeland Security for Cybersecurity and Infrastructure Security Agency.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
