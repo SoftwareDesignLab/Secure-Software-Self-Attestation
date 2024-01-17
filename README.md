@@ -1,4 +1,4 @@
-# SDLC Checklist
+# Secure Software Self-Attestation
 Digital and enhanced version of (the Secure Software Development Lifecycle Attestation Form)[https://www.cisa.gov/sites/default/files/2023-04/secure-software-self-attestation_common-form_508.pdf]
 
 ## Features
