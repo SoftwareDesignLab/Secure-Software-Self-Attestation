@@ -29,7 +29,7 @@ In each component's root directory (/web_app/&lt;component&gt;):
   - `ng serve`
 
 ## Project Team
-- Mehdi Mirakhorli, Principal Investigator
-- Joseph Vita, Researcher & Software Developer Team Lead
+- [Mehdi Tarrit Mirakhorli](https://mehdimirakhorli.github.io/), Project Lead and Principal Investigator
+- Joseph Vita, Researcher & Software Developer
 - Ethan Numan, Developer
 - Patrick Elser, Developer 
