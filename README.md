@@ -1,4 +1,4 @@
-<img width="428" alt="image" src="https://github.com/SoftwareDesignLab/Secure-Software-Self-Attestation/assets/14220640/72c43282-51c1-4c3c-9f9f-a8003083c97b"># Secure Software Self-Attestation
+# Secure Software Self-Attestation
 Digital and enhanced version of (the Secure Software Development Lifecycle Attestation Form)[https://www.cisa.gov/sites/default/files/2023-04/secure-software-self-attestation_common-form_508.pdf]
 
 ## Features
